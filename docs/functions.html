@@ -1,180 +1,126 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-c5e53ffc-ffb4-472f-baf1-56a58933c07e@mhtml.blink" />
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>Functions · Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/style.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
-<script src="jquery-3.4.1.min.js"></script>
-<script src="script.js"></script>
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+
+<!-- Google analytics -->
+
+</head>
 <body id="top">
 <!-- <div class="scrim"></div> -->
 <nav class="wide">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="contents">
-<h3><a href="#top">Functions<small>10</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/functions.html#top"><font papago-translate="splitted"><font papago-translate="translated">기능들</font></font><small>10</small></a></h3>
 <ul>
-<li><a href="#function-calls"><small>10.1</small> Function Calls</a></li>
-<li><a href="#native-functions"><small>10.2</small> Native Functions</a></li>
-<li><a href="#function-declarations"><small>10.3</small> Function Declarations</a></li>
-<li><a href="#function-objects"><small>10.4</small> Function Objects</a></li>
-<li><a href="#return-statements"><small>10.5</small> Return Statements</a></li>
-<li><a href="#local-functions-and-closures"><small>10.6</small> Local Functions and Closures</a></li>
+<li><a href="https://youhogeon-meritz.github.io/functions.html#function-calls"><small>10.1</small><font papago-translate="splitted"><font papago-translate="translated"> 함수 호출</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/functions.html#native-functions"><small>10.2</small><font papago-translate="splitted"><font papago-translate="translated"> 네이티브 함수</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/functions.html#function-declarations"><small>10.3</small><font papago-translate="splitted"><font papago-translate="translated"> 함수 선언</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/functions.html#function-objects"><small>10.4</small><font papago-translate="splitted"><font papago-translate="translated"> 함수 객체</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/functions.html#return-statements"><small>10.5</small><font papago-translate="splitted"><font papago-translate="translated"> 반품 명세서</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/functions.html#local-functions-and-closures"><small>10.6</small><font papago-translate="splitted"><font papago-translate="translated"> 지역 기능 및 폐쇄</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/functions.html#challenges"><font papago-translate="translated">과제들</font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="control-flow.html" title="Control Flow">← Previous</a>
-<a href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑ Up</a>
-<a class="right" href="resolving-and-binding.html" title="Resolving and Binding">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/control-flow.html" title="제어 흐름" papago-attr-id="1"><font papago-translate="translated">← 이전</font></a>
+<a href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="나무 산책 통역사" papago-attr-id="2"><font papago-translate="translated">↑ 위로</font></a>
+<a class="right" href="https://youhogeon-meritz.github.io/resolving-and-binding.html" title="해결 및 바인딩" papago-attr-id="3"><font papago-translate="translated">다음 →</font></a>
 </div> </div>
 </nav>
 <nav class="narrow">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
-<a class="prev" href="control-flow.html" title="Control Flow">←</a>
-<a class="next" href="resolving-and-binding.html" title="Resolving and Binding">→</a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
+<a class="prev" href="https://youhogeon-meritz.github.io/control-flow.html" title="Control Flow">←</a>
+<a class="next" href="https://youhogeon-meritz.github.io/resolving-and-binding.html" title="Resolving and Binding">→</a>
 </nav>
 <div class="page">
 <div class="nav-wrapper">
-<nav class="floating">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<nav class="floating pinned">
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="expandable">
-<h3><a href="#top">Functions<small>10</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/functions.html#top"><font papago-translate="splitted"><font papago-translate="translated">기능들</font></font><small>10</small></a></h3>
 <ul>
-<li><a href="#function-calls"><small>10.1</small> Function Calls</a></li>
-<li><a href="#native-functions"><small>10.2</small> Native Functions</a></li>
-<li><a href="#function-declarations"><small>10.3</small> Function Declarations</a></li>
-<li><a href="#function-objects"><small>10.4</small> Function Objects</a></li>
-<li><a href="#return-statements"><small>10.5</small> Return Statements</a></li>
-<li><a href="#local-functions-and-closures"><small>10.6</small> Local Functions and Closures</a></li>
+<li><a href="https://youhogeon-meritz.github.io/functions.html#function-calls"><small>10.1</small><font papago-translate="splitted"><font papago-translate="translated"> 함수 호출</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/functions.html#native-functions"><small>10.2</small><font papago-translate="splitted"><font papago-translate="translated"> 네이티브 함수</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/functions.html#function-declarations"><small>10.3</small><font papago-translate="splitted"><font papago-translate="translated"> 함수 선언</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/functions.html#function-objects"><small>10.4</small><font papago-translate="splitted"><font papago-translate="translated"> 함수 객체</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/functions.html#return-statements"><small>10.5</small><font papago-translate="splitted"><font papago-translate="translated"> 반품 명세서</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/functions.html#local-functions-and-closures"><small>10.6</small><font papago-translate="splitted"><font papago-translate="translated"> 지역 기능 및 폐쇄</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/functions.html#challenges">Challenges</a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="control-flow.html" title="Control Flow">← Previous</a>
-<a href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑ Up</a>
-<a class="right" href="resolving-and-binding.html" title="Resolving and Binding">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/control-flow.html" title="Control Flow">←&nbsp;Previous</a>
+<a href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑&nbsp;Up</a>
+<a class="right" href="https://youhogeon-meritz.github.io/resolving-and-binding.html" title="Resolving and Binding">Next&nbsp;→</a>
 </div> </div>
 <a id="expand-nav">≡</a>
 </nav>
 </div>
 <article class="chapter">
 <div class="number">10</div>
-<h1>Functions</h1>
+<h1><font papago-translate="translated">기능들</font></h1>
 <blockquote>
-<p>And that is also the way the human mind works<span class="em">—</span>by the compounding of old
-ideas into new structures that become new ideas that can themselves be used in
-compounds, and round and round endlessly, growing ever more remote from the
-basic earthbound imagery that is each language’s soil.</p>
+<p><font papago-translate="translated">그리고 그것이 바로 인간의 마음이 작동하는 방식이기도 합니다. 오래된 생각들이 새로운 구조로 결합되어 새로운 아이디어가 되어 화합물에 사용될 수 있게 되고, 각 언어의<span class="em"></span> 토양인 기본적인 지상 이미지와는 점점 더 멀어지게 됩니다.</font></p>
 <p><cite>Douglas R. Hofstadter, <em>I Am a Strange Loop</em></cite></p>
 </blockquote>
-<p>This chapter marks the culmination of a lot of hard work. The previous chapters
-add useful functionality in their own right, but each also supplies a piece of a
-<span name="lambda">puzzle</span>. We’ll take those pieces<span class="em">—</span>expressions,
-statements, variables, control flow, and lexical scope<span class="em">—</span>add a couple more, and
-assemble them all into support for real user-defined functions and function
-calls.</p>
-<aside name="lambda"><img alt="A lambda puzzle." src="image/functions/lambda.png">
-</img></aside>
-<h2><a href="#function-calls" id="function-calls"><small>10 . 1</small>Function Calls</a></h2>
-<p>You’re certainly familiar with C-style function call syntax, but the grammar is
-more subtle than you may realize. Calls are typically to named functions like:</p>
+<p><font papago-translate="translated">이 장은 많은 노력의 정점을 찍습니다.</font><font papago-translate="translated"> 이전 장들은 그 자체로 유용한 기능을 추가하지만, 각각<span name="lambda"> 퍼즐</span> 조각을 제공하기도 합니다.</font><font papago-translate="translated"> 표현식, 문장, 변수, 제어 흐름, 어휘 범위 등 몇 가지를 더 추가하여 실제 사용자 정의 함수와 함수<span class="em"></span><span class="em"></span> 호출을 지원하기 위해 모든 것을 조립할 것입니다.</font></p>
+<aside name="lambda" style="top: 568px;"><img alt="A lambda puzzle." src="https://youhogeon-meritz.github.io/image/functions/lambda.png">
+</aside>
+<h2><a href="https://youhogeon-meritz.github.io/functions.html#function-calls" id="function-calls"><small><font papago-translate="translated">10 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">함수 호출</font></font></a></h2>
+<p><font papago-translate="translated">당신은 확실히 C 스타일 함수 호출 구문에 익숙하지만, 문법은 생각보다 더 미묘합니다.</font><font papago-translate="translated"> 호출은 일반적으로 다음과 같은 명명된 함수로 이루어집니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">average</span>(<span class="n">1</span>, <span class="n">2</span>);
 </pre></div>
-<p>But the <span name="pascal">name</span> of the function being called isn’t
-actually part of the call syntax. The thing being called<span class="em">—</span>the <strong>callee</strong><span class="em">—</span>can be any expression that evaluates to a function. (Well, it does have to be a
-pretty <em>high precedence</em> expression, but parentheses take care of that.) For
-example:</p>
-<aside name="pascal">
-<p>The name <em>is</em> part of the call syntax in Pascal. You can call only named
-functions or functions stored directly in variables.</p>
+<p><font papago-translate="translated">하지만 호출되는 함수<span name="pascal">의 이름</span>은 실제로 호출 구문의 일부가 아닙니다.</font><font papago-translate="translated"> <strong>호출</strong>되는 것,<strong> 즉 호출자</strong>는 함수에 따라 평가되는 모든 표현일 수 있습니다. (<em>예</em>:<em> 우선순위가</em> 꽤<em> 높은</em> 표현이어야 하지만 괄호가 이<span class="em"></span><span class="em"></span>를 처리합니다.)</font><font papago-translate="translated"> 예를 들어:</font></p>
+<aside name="pascal" style="top: 876px;">
+<p><font papago-translate="translated">그 이름은 파스칼의 호출 구문의 일부<em>입니다</em>.</font><font papago-translate="translated"> 변수에 직접 저장된 이름 있는 함수나 함수만 호출할 수 있습니다.</font></p>
 </aside>
 <div class="codehilite"><pre translate="no"><span class="i">getCallback</span>()();
 </pre></div>
-<p>There are two call expressions here. The first pair of parentheses has
-<code translate="no">getCallback</code> as its callee. But the second call has the entire <code translate="no">getCallback()</code>
-expression as its callee. It is the parentheses following an expression that
-indicate a function call. You can think of a call as sort of like a postfix
-operator that starts with <code translate="no">(</code>.</p>
-<p>This “operator” has higher precedence than any other operator, even the unary
-ones. So we slot it into the grammar by having the <code translate="no">unary</code> rule bubble up to a
-new <code translate="no">call</code> rule.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">여기에는 두 가지 호출 표현이 있습니다.</font><font papago-translate="translated"> 첫 번째 괄호 쌍은 다음과 같습니다 </font></font><code translate="no">getCallback</code><font papago-translate="splitted"><font papago-translate="translated"> 그것의 침착함으로.</font><font papago-translate="translated"> 하지만 두 번째 통화에는 전체가 있습니다 </font></font><code translate="no">getCallback()</code><font papago-translate="splitted"><font papago-translate="translated"> 그것의 호출어로서의 표현.</font><font papago-translate="translated"> 함수 호출을 나타내는 표현 뒤에 오는 괄호입니다.</font><font papago-translate="translated"> 호출을 다음과 같이 시작하는 포스트픽스 연산자와 비슷하다고 생각할 수 있습니다 </font></font><code translate="no">(</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 "연산자"는 단항 연산자들조차도 다른 어떤 연산자보다 높은 우선순위를 가지고 있습니다.</font><font papago-translate="translated"> 그래서 우리는 그것을 문법에 끼워 넣습니다 </font></font><code translate="no">unary</code><font papago-translate="splitted"><font papago-translate="translated"> 새로운 것까지 버블을 지배하기 </font></font><code translate="no">call</code><font papago-translate="splitted"><font papago-translate="translated"> 규칙.</font></font></p>
 <p><span name="curry"></span></p>
 <div class="codehilite"><pre translate="no"><span class="i">unary</span>          → ( <span class="s">"!"</span> | <span class="s">"-"</span> ) <span class="i">unary</span> | <span class="i">call</span> ;
 <span class="i">call</span>           → <span class="i">primary</span> ( <span class="s">"("</span> <span class="i">arguments</span>? <span class="s">")"</span> )* ;
 </pre></div>
-<p>This rule matches a primary expression followed by zero or more function calls.
-If there are no parentheses, this parses a bare primary expression. Otherwise,
-each call is recognized by a pair of parentheses with an optional list of
-arguments inside. The argument list grammar is:</p>
-<aside name="curry">
-<p>The rule uses <code translate="no">*</code> to allow matching a series of calls like <code translate="no">fn(1)(2)(3)</code>. Code
-like that isn’t common in C-style languages, but it is in the family of
-languages derived from ML. There, the normal way of defining a function that
-takes multiple arguments is as a series of nested functions. Each function takes
-one argument and returns a new function. That function consumes the next
-argument, returns yet another function, and so on. Eventually, once all of the
-arguments are consumed, the last function completes the operation.</p>
-<p>This style, called <strong>currying</strong>, after Haskell Curry (the same guy whose first
-name graces that <em>other</em> well-known functional language), is baked directly into
-the language syntax so it’s not as weird looking as it would be here.</p>
+<p><font papago-translate="translated">이 규칙은 기본 표현식 다음에 0개 이상의 함수 호출이 오는 것과 일치합니다.</font><font papago-translate="translated"> 괄호가 없으면, 이것은 기본적인 표현을 생략합니다.</font><font papago-translate="translated"> 그렇지 않으면 각 호출은 내부에 선택적 인수 목록이 있는 괄호 쌍으로 인식됩니다.</font><font papago-translate="translated"> 인수 목록 문법은 다음과 같습니다:</font></p>
+<aside name="curry" style="top: 1278px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">규칙은 다음을 사용합니다 </font></font><code translate="no">*</code><font papago-translate="splitted"><font papago-translate="translated"> 다음과 같은 일련의 호출을 일치시킬 수 있습니다 </font></font><code translate="no">fn(1)(2)(3)</code><font papago-translate="splitted"><font papago-translate="translated">. 이와 같은 코드는 C 스타일 언어에서는 흔하지 않지만 ML에서 파생된 언어 계열에 속합니다. 여기서 여러 인수를 사용하는 함수를 정의하는 일반적인 방법은 중첩된 일련의 함수입니다.</font><font papago-translate="translated"> 각 함수는 하나의 인수를 사용하여 새로운 함수를 반환합니다.</font><font papago-translate="translated"> 그 함수는 다음 인수를 소모하고, 또 다른 함수를 반환합니다.</font><font papago-translate="translated"> 결국 모든 인수가 소모되면 마지막 함수가 연산을 완료합니다.</font></font></p>
+<p><font papago-translate="translated">이 스타일은 하스켈 커리(<em>다른</em> 잘 알려진 기능 언어의 이름을 가진 사람)의 이름을 따서<strong> 커리링</strong>이라고 불립니다. 이 스타일은 언어 구문에 직접 적용되어 여기 있는 것만큼 이상하지 않습니다.</font></p>
 </aside>
 <div class="codehilite"><pre translate="no"><span class="i">arguments</span>      → <span class="i">expression</span> ( <span class="s">","</span> <span class="i">expression</span> )* ;
 </pre></div>
-<p>This rule requires at least one argument expression, followed by zero or more
-other expressions, each preceded by a comma. To handle zero-argument calls, the
-<code translate="no">call</code> rule itself considers the entire <code translate="no">arguments</code> production to be optional.</p>
-<p>I admit, this seems more grammatically awkward than you’d expect for the
-incredibly common “zero or more comma-separated things” pattern. There are some
-sophisticated metasyntaxes that handle this better, but in our BNF and in many
-language specs I’ve seen, it is this cumbersome.</p>
-<p>Over in our syntax tree generator, we add a <span name="call-ast">new
-node</span>.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 규칙은 적어도 하나의 인수 표현식과 0개 이상의 다른 표현식, 그리고 각각 쉼표 앞에 오는 0개 이상의 다른 표현식을 필요로 합니다.</font><font papago-translate="translated"> 제로 인수 호출을 처리하려면 </font></font><code translate="no">call</code><font papago-translate="splitted"><font papago-translate="translated"> 규칙 자체가 전체를 고려합니다 </font></font><code translate="no">arguments</code><font papago-translate="splitted"><font papago-translate="translated"> 생산은 선택 사항입니다.</font></font></p>
+<p><font papago-translate="translated">솔직히 말해서, 이것은 엄청나게 흔한 "0개 이상의 쉼표로 구분된 것들" 패턴에 비해 문법적으로 더 어색해 보입니다.</font><font papago-translate="translated"> 이를 더 잘 처리하는 정교한 메타신세가 몇 가지 있지만, BNF와 제가 본 많은 언어 사양에서는 이렇게 번거롭습니다.</font></p>
+<p><font papago-translate="translated">구문 트리 생성기에<span name="call-ast"> 새 노드</span>를 추가합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      "Binary   : Expr left, Token operator, Expr right",
-</pre><div class="source-file"><em>tool/GenerateAst.java</em><br/>
-in <em>main</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">도구/GenerateAst.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>메인</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="s">"Call     : Expr callee, Token paren, List&lt;Expr&gt; arguments"</span>,
 </pre><pre class="insert-after" translate="no">      "Grouping : Expr expression",
 </pre></div>
 <div class="source-file-narrow"><em>tool/GenerateAst.java</em>, in <em>main</em>()</div>
-<aside name="call-ast">
-<p>The generated code for the new node is in <a href="appendix-ii.html#call-expression">Appendix II</a>.</p>
+<aside name="call-ast" style="top: 1724px;">
+<p><font papago-translate="translated">새 노드에 대한 생성된 코드는 부록<a href="https://youhogeon-meritz.github.io/appendix-ii.html#call-expression"> II</a>에 있습니다.</font></p>
 </aside>
-<p>It stores the callee expression and a list of expressions for the arguments. It
-also stores the token for the closing parenthesis. We’ll use that token’s
-location when we report a runtime error caused by a function call.</p>
-<p>Crack open the parser. Where <code translate="no">unary()</code> used to jump straight to <code translate="no">primary()</code>,
-change it to call, well, <code translate="no">call()</code>.</p>
+<p><font papago-translate="translated">그것은 호출 표현식과 인수에 대한 표현식 목록을 저장합니다.</font><font papago-translate="translated"> 또한 닫는 괄호에 대한 토큰도 저장합니다.</font><font papago-translate="translated"> 함수 호출로 인한 런타임 오류를 보고할 때 해당 토큰의 위치를 사용합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">파서를 열어보세요.</font><font papago-translate="translated"> 어디에 </font></font><code translate="no">unary()</code><font papago-translate="splitted"><font papago-translate="translated"> 바로 다음으로 점프하는 데 사용됩니다 </font></font><code translate="no">primary()</code><font papago-translate="splitted"><font papago-translate="translated">, 호출로 변경합니다, 음, </font></font><code translate="no">call()</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      return new Expr.Unary(operator, right);
     }
 
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>unary</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>단항</em> ()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">    <span class="k">return</span> <span class="i">call</span>();
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>unary</em>(), replace 1 line</div>
-<p>Its definition is:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>unary</em>()</div>
+<p><font papago-translate="translated">그 정의는 다음과 같습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>단항</em> () 후에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Expr</span> <span class="i">call</span>() {
     <span class="t">Expr</span> <span class="i">expr</span> = <span class="i">primary</span>();
 
@@ -190,21 +136,12 @@ add after <em>unary</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>unary</em>()</div>
-<p>The code here doesn’t quite line up with the grammar rules. I moved a few things
-around to make the code cleaner<span class="em">—</span>one of the luxuries we have with a
-handwritten parser. But it’s roughly similar to how we parse infix operators.
-First, we parse a primary expression, the “left operand” to the call. Then, each
-time we see a <code translate="no">(</code>, we call <code translate="no">finishCall()</code> to parse the call expression using the
-previously parsed expression as the callee. The returned expression becomes the
-new <code translate="no">expr</code> and we loop to see if the result is itself called.</p>
-<aside name="while-true">
-<p>This code would be simpler as <code translate="no">while (match(LEFT_PAREN))</code> instead of the silly
-<code translate="no">while (true)</code> and <code translate="no">break</code>. Don’t worry, it will make sense when we expand the
-parser later to handle properties on objects.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">여기 있는 코드는 문법 규칙과 잘 맞지 않습니다.</font><font papago-translate="translated"> 저는 코드를 더 깔끔하게 만들기 위해 몇 가지를 옮겼습니다. 손으로 쓴 파<span class="em"></span>서가 가진 사치품 중 하나입니다.</font><font papago-translate="translated"> 하지만 이는 우리가 인픽스 연산자를 구문 분석하는 방식과 대략 비슷합니다.</font><font papago-translate="translated"> 먼저, 호출에 대한 기본 표현인 "왼쪽 피연산자"를 구문 분석합니다.</font><font papago-translate="translated"> 그러면, 우리가 볼 때마다 </font></font><code translate="no">(</code><font papago-translate="splitted"><font papago-translate="translated">, 우리는 전화합니다 </font></font><code translate="no">finishCall()</code><font papago-translate="splitted"><font papago-translate="translated"> 호출 표현식을 호출자로 사용하여 구문 분석합니다.</font><font papago-translate="translated"> 반환된 표현식이 새로운 표현식이 됩니다 </font></font><code translate="no">expr</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 우리는 결과가 그 자체로 불리는지 확인하기 위해 반복합니다.</font></font></p>
+<aside name="while-true" style="top: 2255px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">이 코드는 다음과 같이 더 간단합니다 </font></font><code translate="no">while (match(LEFT_PAREN))</code><font papago-translate="splitted"><font papago-translate="translated"> 어리석은 사람 대신에 </font></font><code translate="no">while (true)</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">break</code><font papago-translate="splitted"><font papago-translate="translated">. 걱정하지 마세요, 나중에 파서를 확장하여 객체의 속성을 처리하면 이해가 될 것입니다.</font></font></p>
 </aside>
-<p>The code to parse the argument list is in this helper:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>unary</em>()</div>
+<p><font papago-translate="translated">인수 목록을 구문 분석하는 코드는 이 도우미에 있습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>단항</em> () 후에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Expr</span> <span class="i">finishCall</span>(<span class="t">Expr</span> <span class="i">callee</span>) {
     <span class="t">List</span>&lt;<span class="t">Expr</span>&gt; <span class="i">arguments</span> = <span class="k">new</span> <span class="t">ArrayList</span>&lt;&gt;();
     <span class="k">if</span> (!<span class="i">check</span>(<span class="i">RIGHT_PAREN</span>)) {
@@ -220,59 +157,33 @@ add after <em>unary</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>unary</em>()</div>
-<p>This is more or less the <code translate="no">arguments</code> grammar rule translated to code, except
-that we also handle the zero-argument case. We check for that case first by
-seeing if the next token is <code translate="no">)</code>. If it is, we don’t try to parse any arguments.</p>
-<p>Otherwise, we parse an expression, then look for a comma indicating that there
-is another argument after that. We keep doing that as long as we find commas
-after each expression. When we don’t find a comma, then the argument list must
-be done and we consume the expected closing parenthesis. Finally, we wrap the
-callee and those arguments up into a call AST node.</p>
-<h3><a href="#maximum-argument-counts" id="maximum-argument-counts"><small>10 . 1 . 1</small>Maximum argument counts</a></h3>
-<p>Right now, the loop where we parse arguments has no bound. If you want to call a
-function and pass a million arguments to it, the parser would have no problem
-with it. Do we want to limit that?</p>
-<p>Other languages have various approaches. The C standard says a conforming
-implementation has to support <em>at least</em> 127 arguments to a function, but
-doesn’t say there’s any upper limit. The Java specification says a method can
-accept <em>no more than</em> <span name="254">255</span> arguments.</p>
-<aside name="254">
-<p>The limit is 25<em>4</em> arguments if the method is an instance method. That’s because
-<code translate="no">this</code><span class="em">—</span>the receiver of the method<span class="em">—</span>works like an argument that is
-implicitly passed to the method, so it claims one of the slots.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 대체로 다음과 같습니다 </font></font><code translate="no">arguments</code><font papago-translate="splitted"><font papago-translate="translated"> 문법 규칙은 코드로 번역되지만, 제로 argument 경우도 처리합니다.</font><font papago-translate="translated"> 다음 토큰이 다음 토큰인지 확인하여 먼저 해당 케이스를 확인합니다 </font></font><code translate="no">)</code><font papago-translate="splitted"><font papago-translate="translated">. 그렇다면, 우리는 어떤 논거도 분석하려고 하지 않습니다.</font></font></p>
+<p><font papago-translate="translated">그렇지 않으면 식을 구문 분석한 다음 그 뒤에 다른 인수가 있음을 나타내는 쉼표를 찾습니다.</font><font papago-translate="translated"> 각 표현 뒤에 쉼표가 있는 한 계속 그렇게 합니다.</font><font papago-translate="translated"> 쉼표를 찾지 못하면 인수 목록을 작성하고 예상되는 마무리 괄호를 사용해야 합니다.</font><font papago-translate="translated"> 마지막으로, 우리는 호출자와 그 인수들을 호출 AST 노드로 마무리합니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/functions.html#maximum-argument-counts" id="maximum-argument-counts"><small><font papago-translate="translated">10 . 1 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">최대 인수 개수</font></font></a></h3>
+<p><font papago-translate="translated">현재 인수를 구문 분석하는 루프에는 한계가 없습니다.</font><font papago-translate="translated"> 함수를 호출하여 백만 개의 인수를 전달하고 싶다면 파서도 문제가 없을 것입니다.</font><font papago-translate="translated"> 그것을 제한하고 싶으신가요?</font></p>
+<p><font papago-translate="translated">다른 언어들은 다양한 접근 방식을 가지고 있습니다.</font><font papago-translate="translated"> C 표준은 적합한 구현이 함수에 대해<em> 최소</em> 127개의 인수를 지원해야 한다고 말하지만, 상한선이 있다고 말하지는 않습니다.</font><font papago-translate="translated"> Java 사양에 따르면 메서드는<em></em> 최대<span name="254"> 255</span>개의 인수를 허용할 수 없습니다.</font></p>
+<aside name="254" style="top: 3508px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">메서드가 인스턴스<em></em> 메서드인 경우 제한은 254개의 인수입니다.</font><font papago-translate="translated"> 그 이유는 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated">메서드의 수신기는 메서드에 암묵적으로 전달되는 인수처럼 작동하므로<span class="em"></span> 슬롯 중 하나를 주장합니다<span class="em">.</span></font></font></p>
 </aside>
-<p>Our Java interpreter for Lox doesn’t really need a limit, but having a maximum
-number of arguments will simplify our bytecode interpreter in <a href="a-bytecode-virtual-machine.html">Part III</a>. We
-want our two interpreters to be compatible with each other, even in weird corner
-cases like this, so we’ll add the same limit to jlox.</p>
+<p><font papago-translate="translated">Lox용 Java 인터프리터에는 제한이 필요하지 않지만, 최대 인수 수를 확보하면<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html"> Part III</a>의 바이트코드 인터프리터가 간소화됩니다.</font><font papago-translate="translated"> 우리는 두 명의 통역사가 이와 같은 이상한 구석 상황에서도 서로 호환되기를 원하므로, 동일한 제한을 jlox에 추가할 것입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      do {
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>finishCall</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>finish</em>C<em>all</em>()에서</font></font></div>
 <pre class="insert" translate="no">        <span class="k">if</span> (<span class="i">arguments</span>.<span class="i">size</span>() &gt;= <span class="n">255</span>) {
           <span class="i">error</span>(<span class="i">peek</span>(), <span class="s">"Can't have more than 255 arguments."</span>);
         }
 </pre><pre class="insert-after" translate="no">        arguments.add(expression());
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>finishCall</em>()</div>
-<p>Note that the code here <em>reports</em> an error if it encounters too many arguments,
-but it doesn’t <em>throw</em> the error. Throwing is how we kick into panic mode which
-is what we want if the parser is in a confused state and doesn’t know where it
-is in the grammar anymore. But here, the parser is still in a perfectly valid
-state<span class="em">—</span>it just found too many arguments. So it reports the error and keeps on
-keepin’ on.</p>
-<h3><a href="#interpreting-function-calls" id="interpreting-function-calls"><small>10 . 1 . 2</small>Interpreting function calls</a></h3>
-<p>We don’t have any functions we can call, so it seems weird to start implementing
-calls first, but we’ll worry about that when we get there. First, our
-interpreter needs a new import.</p>
+<p><font papago-translate="translated">여기서 코드는 너무 많은 인수를 만나면 오류<em>를 보고하지만</em>, 오류<em>를 발생시키지</em>는 않습니다.</font><font papago-translate="translated"> 던지는 것은 파서가 혼란스러운 상태에 있고 더 이상 문법에서 어디에 있는지 모를 때 우리가 원하는 패닉 모드로 들어가는 방법입니다.</font><font papago-translate="translated"> 하지만 여기서는 파서가 여전히 완벽하게 유효한 상태입니다.<span class="em"></span> 너무 많은 인수를 발견했을 뿐입니다.</font><font papago-translate="translated"> 그래서 오류를 보고하고 계속 진행합니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/functions.html#interpreting-function-calls" id="interpreting-function-calls"><small><font papago-translate="translated">10 . 1 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">함수 호출 해석</font></font></a></h3>
+<p><font papago-translate="translated">우리는 호출할 수 있는 기능이 없어서 먼저 호출을 구현하는 것이 이상해 보이지만, 도착하면 그것에 대해 걱정할 것입니다.</font><font papago-translate="translated"> 먼저, 저희 통역사가 새로운 수입품이 필요합니다.</font></p>
 <div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em></div>
 <pre class="insert" translate="no"><span class="k">import</span> <span class="i">java.util.ArrayList</span>;
 </pre><pre class="insert-after" translate="no">import java.util.List;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em></div>
-<p>As always, interpretation starts with a new visit method for our new call
-expression node.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-add after <em>visitBinaryExpr</em>()</div>
+<p><font papago-translate="translated">언제나 그렇듯이, 통역은 우리의 새로운 호출 표현 노드에 대한 새로운 방문 방법으로 시작됩니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>BinaryExp</em>r<em>() 방문</em> 후 추가</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Object</span> <span class="i">visitCallExpr</span>(<span class="t">Expr</span>.<span class="t">Call</span> <span class="i">expr</span>) {
     <span class="t">Object</span> <span class="i">callee</span> = <span class="i">evaluate</span>(<span class="i">expr</span>.<span class="i">callee</span>);
@@ -287,30 +198,16 @@ add after <em>visitBinaryExpr</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, add after <em>visitBinaryExpr</em>()</div>
-<p>First, we evaluate the expression for the callee. Typically, this expression is
-just an identifier that looks up the function by its name, but it could be
-anything. Then we evaluate each of the argument expressions in order and store
-the resulting values in a list.</p>
-<aside name="in-order">
-<p>This is another one of those subtle semantic choices. Since argument expressions
-may have side effects, the order they are evaluated could be user visible. Even
-so, some languages like Scheme and C don’t specify an order. This gives
-compilers freedom to reorder them for efficiency, but means users may be
-unpleasantly surprised if arguments aren’t evaluated in the order they expect.</p>
+<p><font papago-translate="translated">먼저, 우리는 피호출자의 표현식을 평가합니다.</font><font papago-translate="translated"> 일반적으로 이 표현식은 함수의 이름을 검색하는 식별자일 뿐이지만, 무엇이든 될 수 있습니다.</font><font papago-translate="translated"> 그런 다음 각 인수 표현식을 순서대로 평가하고 결과 값을 목록에 저장합니다.</font></p>
+<aside name="in-order" style="top: 4395px;">
+<p><font papago-translate="translated">이것은 또 다른 미묘한 의미론적 선택 중 하나입니다.</font><font papago-translate="translated"> 인수 표현은 부작용이 있을 수 있으므로 평가되는 순서는 사용자가 볼 수 있습니다.</font><font papago-translate="translated"> 그럼에도 불구하고, Scheme이나 C와 같은 일부 언어들은 순서를 지정하지 않습니다.</font><font papago-translate="translated"> 이는 컴파일러가 효율성을 위해 자유롭게 순서를 변경할 수 있게 해주지만, 인수가 예상되는 순서대로 평가되지 않으면 사용자들이 불쾌하게 놀랄 수 있음을 의미합니다.</font></p>
 </aside>
-<p>Once we’ve got the callee and the arguments ready, all that remains is to
-perform the call. We do that by casting the callee to a <span name="callable">LoxCallable</span> and then invoking a <code translate="no">call()</code> method on it.
-The Java representation of any Lox object that can be called like a function
-will implement this interface. That includes user-defined functions, naturally,
-but also class objects since classes are “called” to construct new instances.
-We’ll also use it for one more purpose shortly.</p>
-<aside name="callable">
-<p>I stuck “Lox” before the name to distinguish it from the Java standard library’s
-own Callable interface. Alas, all the good simple names are already taken.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">호출자와 인수가 준비되면 호출을 수행하기만 하면 됩니다.</font><font papago-translate="translated"> 우리는 발신자를 L<span name="callable">ox</span>C<span name="callable">allable</span>에 캐스팅한 다음 호출하는 방식으로 그렇게 합니다 </font></font><code translate="no">call()</code><font papago-translate="splitted"><font papago-translate="translated"> 방법.</font><font papago-translate="translated"> 함수처럼 호출할 수 있는 모든 Lox 객체의 Java 표현이 이 인터페이스를 구현합니다.</font><font papago-translate="translated"> 여기에는 사용자 정의 함수뿐만 아니라 클래스가 새로운 인스턴스를 구성하기 위해 "호출"되기 때문에 클래스 객체도 포함됩니다.</font><font papago-translate="translated"> 곧 한 가지 용도로도 사용할 예정입니다.</font></font></p>
+<aside name="callable" style="top: 4704px;">
+<p><font papago-translate="translated">Java 표준 라이브러리의 자체 Callable 인터페이스와 구별하기 위해 이름 앞에 "Lox"를 붙였습니다.</font><font papago-translate="translated"> 아, 모든 좋은 간단한 이름들은 이미 사용되고 있습니다.</font></p>
 </aside>
-<p>There isn’t too much to this new interface.</p>
-<div class="codehilite"><div class="source-file"><em>lox/LoxCallable.java</em><br/>
-create new file</div>
+<p><font papago-translate="translated">이 새로운 인터페이스에는 큰 차이가 없습니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/LoxCallable.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 새 파일 만들기</font></font></div>
 <pre translate="no"><span class="k">package</span> <span class="i">com.craftinginterpreters.lox</span>;
 
 <span class="k">import</span> <span class="i">java.util.List</span>;
@@ -320,24 +217,15 @@ create new file</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>lox/LoxCallable.java</em>, create new file</div>
-<p>We pass in the interpreter in case the class implementing <code translate="no">call()</code> needs it. We
-also give it the list of evaluated argument values. The implementer’s job is
-then to return the value that the call expression produces.</p>
-<h3><a href="#call-type-errors" id="call-type-errors"><small>10 . 1 . 3</small>Call type errors</a></h3>
-<p>Before we get to implementing LoxCallable, we need to make the visit method a
-little more robust. It currently ignores a couple of failure modes that we can’t
-pretend won’t occur. First, what happens if the callee isn’t actually something
-you can call? What if you try to do this:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">수업이 실행되는 경우 통역사에게 전달합니다 </font></font><code translate="no">call()</code><font papago-translate="splitted"><font papago-translate="translated"> 필요합니다.</font><font papago-translate="translated"> 또한 평가된 인수 값 목록도 제공합니다.</font><font papago-translate="translated"> 구현자의 임무는 호출 표현식이 생성하는 값을 반환하는 것입니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/functions.html#call-type-errors" id="call-type-errors"><small><font papago-translate="translated">10 . 1 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">호출 유형 오류</font></font></a></h3>
+<p><font papago-translate="translated">LoxCallable을 구현하기 전에 방문 방법을 좀 더 견고하게 만들어야 합니다.</font><font papago-translate="translated"> 현재 발생하지 않을 것이라고 가정할 수 없는 몇 가지 실패 모드를 무시하고 있습니다.</font><font papago-translate="translated"> 먼저, 발신자가 실제로 전화할 수 있는 사람이 아니라면 어떻게 되나요?</font><font papago-translate="translated"> 이렇게 하려고 하면 어떨까요:</font></p>
 <div class="codehilite"><pre translate="no"><span class="s">"totally not a function"</span>();
 </pre></div>
-<p>Strings aren’t callable in Lox. The runtime representation of a Lox string is a
-Java string, so when we cast that to LoxCallable, the JVM will throw a
-ClassCastException. We don’t want our interpreter to vomit out some nasty Java
-stack trace and die. Instead, we need to check the type ourselves first.</p>
+<p><font papago-translate="translated">Lox에서는 문자열을 호출할 수 없습니다.</font><font papago-translate="translated"> Lox 문자열의 런타임 표현은 Java 문자열이므로 이를 LoxCallable로 캐스팅하면 JVM은 ClassCastException을 실행합니다.</font><font papago-translate="translated"> 우리는 통역사가 불쾌한 자바 스택 흔적을 토하고 죽는 것을 원하지 않습니다.</font><font papago-translate="translated"> 대신, 먼저 유형을 직접 확인해야 합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    }
 
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitCallExpr</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>C<em>allExpr</em>()</font></font></div>
 <pre class="insert" translate="no">    <span class="k">if</span> (!(<span class="i">callee</span> <span class="k">instanceof</span> <span class="t">LoxCallable</span>)) {
       <span class="k">throw</span> <span class="k">new</span> <span class="t">RuntimeError</span>(<span class="i">expr</span>.<span class="i">paren</span>,
           <span class="s">"Can only call functions and classes."</span>);
@@ -346,37 +234,21 @@ in <em>visitCallExpr</em>()</div>
 </pre><pre class="insert-after" translate="no">    LoxCallable function = (LoxCallable)callee;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitCallExpr</em>()</div>
-<p>We still throw an exception, but now we’re throwing our own exception type, one
-that the interpreter knows to catch and report gracefully.</p>
-<h3><a href="#checking-arity" id="checking-arity"><small>10 . 1 . 4</small>Checking arity</a></h3>
-<p>The other problem relates to the function’s <strong>arity</strong>. Arity is the fancy term
-for the number of arguments a function or operation expects. Unary operators
-have arity one, binary operators two, etc. With functions, the arity is
-determined by the number of parameters it declares.</p>
+<p><font papago-translate="translated">우리는 여전히 예외를 제시하지만, 이제는 통역사가 우아하게 포착하고 보고할 수 있는 우리만의 예외 유형을 제시하고 있습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/functions.html#checking-arity" id="checking-arity"><small><font papago-translate="translated">10 . 1 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">정체성 확인하기</font></font></a></h3>
+<p><font papago-translate="translated">다른 문제는 함수<strong>의 희소성</strong>과 관련이 있습니다.</font><font papago-translate="translated"> Arity는 함수나 연산이 기대하는 인수의 수를 나타내는 화려한 용어입니다.</font><font papago-translate="translated"> 단항 연산자에는 arity 1, 이진 연산자 2 등이 있습니다.</font><font papago-translate="translated"> 함수의 경우, 희소성은 선언하는 매개변수의 수에 따라 결정됩니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> <span class="i">add</span>(<span class="i">a</span>, <span class="i">b</span>, <span class="i">c</span>) {
   <span class="k">print</span> <span class="i">a</span> + <span class="i">b</span> + <span class="i">c</span>;
 }
 </pre></div>
-<p>This function defines three parameters, <code translate="no">a</code>, <code translate="no">b</code>, and <code translate="no">c</code>, so its arity is
-three and it expects three arguments. So what if you try to call it like this:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 함수는 세 가지 매개변수를 정의합니다, </font></font><code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">b</code><font papago-translate="splitted"><font papago-translate="translated">,그리고. </font></font><code translate="no">c</code><font papago-translate="splitted"><font papago-translate="translated">, 그래서 그것의 희소성은 세 가지이며 세 가지 논거를 기대합니다.</font><font papago-translate="translated"> 그래서 이렇게 부르려고 하면 어떨까요:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="i">add</span>(<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>, <span class="n">4</span>); <span class="c">// Too many.</span>
 <span class="i">add</span>(<span class="n">1</span>, <span class="n">2</span>);       <span class="c">// Too few.</span>
 </pre></div>
-<p>Different languages take different approaches to this problem. Of course, most
-statically typed languages check this at compile time and refuse to compile the
-code if the argument count doesn’t match the function’s arity. JavaScript
-discards any extra arguments you pass. If you don’t pass enough, it fills in the
-missing parameters with the magic sort-of-like-null-but-not-really value
-<code translate="no">undefined</code>. Python is stricter. It raises a runtime error if the argument list
-is too short or too long.</p>
-<p>I think the latter is a better approach. Passing the wrong number of arguments
-is almost always a bug, and it’s a mistake I do make in practice. Given that,
-the sooner the implementation draws my attention to it, the better. So for Lox,
-we’ll take Python’s approach. Before invoking the callable, we check to see if
-the argument list’s length matches the callable’s arity.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">언어마다 이 문제에 대한 접근 방식이 다릅니다.</font><font papago-translate="translated"> 물론 대부분의 정적으로 입력된 언어는 컴파일 시 이를 확인하고 인수 개수가 함수의 arity와 일치하지 않으면 코드 컴파일을 거부합니다.</font><font papago-translate="translated"> JavaScript는 통과한 추가 인수를 폐기합니다.</font><font papago-translate="translated"> 충분히 통과하지 못하면 누락된 매개변수를 마법처럼 널하지만 실제로는 그렇지 않은 값으로 채웁니다 </font></font><code translate="no">undefined</code><font papago-translate="splitted"><font papago-translate="translated">. 파이썬은 더 엄격합니다.</font><font papago-translate="translated"> 인수 목록이 너무 짧거나 길면 런타임 오류가 발생합니다.</font></font></p>
+<p><font papago-translate="translated">후자가 더 나은 접근 방식이라고 생각합니다.</font><font papago-translate="translated"> 인수의 개수를 잘못 전달하는 것은 거의 항상 버그이며, 실제로 실수를 저지릅니다.</font><font papago-translate="translated"> 그런 점을 고려할 때, 구현이 빠르면 빠를수록 좋습니다.</font><font papago-translate="translated"> 그래서 Lox의 경우, 우리는 Python의 접근 방식을 취할 것입니다.</font><font papago-translate="translated"> 호출 가능한 항목을 호출하기 전에 인수 목록의 길이가 호출 가능한 항목과 일치하는지 확인합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    LoxCallable function = (LoxCallable)callee;
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitCallExpr</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>C<em>allExpr</em>()</font></font></div>
 <pre class="insert" translate="no">    <span class="k">if</span> (<span class="i">arguments</span>.<span class="i">size</span>() != <span class="i">function</span>.<span class="i">arity</span>()) {
       <span class="k">throw</span> <span class="k">new</span> <span class="t">RuntimeError</span>(<span class="i">expr</span>.<span class="i">paren</span>, <span class="s">"Expected "</span> +
           <span class="i">function</span>.<span class="i">arity</span>() + <span class="s">" arguments but got "</span> +
@@ -386,104 +258,47 @@ in <em>visitCallExpr</em>()</div>
 </pre><pre class="insert-after" translate="no">    return function.call(this, arguments);
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitCallExpr</em>()</div>
-<p>That requires a new method on the LoxCallable interface to ask it its arity.</p>
+<p><font papago-translate="translated">이를 위해서는 LoxCallable 인터페이스에서 새로운 방법이 필요합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">interface LoxCallable {
-</pre><div class="source-file"><em>lox/LoxCallable.java</em><br/>
-in interface <em>LoxCallable</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/LoxCallable.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 인터페이스 L<em>ox</em>C<em>allable</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="t">int</span> <span class="i">arity</span>();
 </pre><pre class="insert-after" translate="no">  Object call(Interpreter interpreter, List&lt;Object&gt; arguments);
 </pre></div>
 <div class="source-file-narrow"><em>lox/LoxCallable.java</em>, in interface <em>LoxCallable</em></div>
-<p>We <em>could</em> push the arity checking into the concrete implementation of <code translate="no">call()</code>.
-But, since we’ll have multiple classes implementing LoxCallable, that would end
-up with redundant validation spread across a few classes. Hoisting it up into
-the visit method lets us do it in one place.</p>
-<h2><a href="#native-functions" id="native-functions"><small>10 . 2</small>Native Functions</a></h2>
-<p>We can theoretically call functions, but we have no functions to call yet.
-Before we get to user-defined functions, now is a good time to introduce a vital
-but often overlooked facet of language implementations<span class="em">—</span><span name="native"><strong>native functions</strong></span>. These are functions that the
-interpreter exposes to user code but that are implemented in the host language
-(in our case Java), not the language being implemented (Lox).</p>
-<p>Sometimes these are called <strong>primitives</strong>, <strong>external functions</strong>, or <strong>foreign
-functions</strong>. Since these functions can be called while the user’s program is
-running, they form part of the implementation’s runtime. A lot of programming
-language books gloss over these because they aren’t conceptually interesting.
-They’re mostly grunt work.</p>
-<aside name="native">
-<p>Curiously, two names for these functions<span class="em">—</span>“native” and “foreign”<span class="em">—</span>are
-antonyms. Maybe it depends on the perspective of the person choosing the term.
-If you think of yourself as “living” within the runtime’s implementation (in our
-case, Java) then functions written in that are “native”. But if you have the
-mindset of a <em>user</em> of your language, then the runtime is implemented in some
-other “foreign” language.</p>
-<p>Or it may be that “native” refers to the machine code language of the underlying
-hardware. In Java, “native” methods are ones implemented in C or C++ and
-compiled to native machine code.</p><img alt="All a matter of perspective." class="above" src="image/functions/foreign.png">
-</img></aside>
-<p>But when it comes to making your language actually good at doing useful stuff,
-the native functions your implementation provides are key. They provide access
-to the fundamental services that all programs are defined in terms of. If you
-don’t provide native functions to access the file system, a user’s going to have
-a hell of a time writing a program that reads and <span name="print">displays</span> a file.</p>
-<aside name="print">
-<p>A classic native function almost every language provides is one to print text to
-stdout. In Lox, I made <code translate="no">print</code> a built-in statement so that we could get stuff
-on screen in the chapters before this one.</p>
-<p>Once we have functions, we could simplify the language by tearing out the old
-print syntax and replacing it with a native function. But that would mean that
-examples early in the book wouldn’t run on the interpreter from later chapters
-and vice versa. So, for the book, I’ll leave it alone.</p>
-<p>If you’re building an interpreter for your <em>own</em> language, though, you may want
-to consider it.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 다음과 같은 구체적인 구현을 위해 Arity 검사를 추진<em>할 수 있습니다</em> </font></font><code translate="no">call()</code><font papago-translate="splitted"><font papago-translate="translated">. 하지만 LoxCallable을 구현하는 여러 클래스가 있기 때문에 몇 가지 클래스에 걸쳐 중복 검증이 적용될 수 있습니다.</font><font papago-translate="translated"> 방문 방법에 올리면 한 곳에서 할 수 있습니다.</font></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/functions.html#native-functions" id="native-functions"><small><font papago-translate="translated">10 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">네이티브 함수</font></font></a></h2>
+<p><font papago-translate="translated">이론적으로는 함수를 호출할 수 있지만, 아직 호출할 함수가 없습니다.</font><font papago-translate="translated"> 사용자 정의 함수에 도달하기 전에 지금이 중요하지만 종종 간과되는 언어 구현의 측면<span name="native"><strong>인 네이티브</strong></span><span class="em"></span><span name="native"><strong> 함수</strong></span>를 소개하기에 좋은 시기입니다.</font><font papago-translate="translated"> 이것들은 인터프리터가 사용자 코드에 노출되지만, 구현되는 언어(Lox)가 아닌 호스트 언어(Java의 경우)로 구현되는 함수들입니다.</font></p>
+<p><font papago-translate="translated">때때로 이것들은<strong> 원시</strong><strong> 함수, 외부 함수</strong>,<strong> 또는 외부 함수</strong>라고 불립니다.</font><font papago-translate="translated"> 이 기능들은 사용자의 프로그램이 실행되는 동안 호출될 수 있기 때문에 구현 실행 시간의 일부를 구성합니다.</font><font papago-translate="translated"> 많은 프로그래밍 언어 책들은 개념적으로 흥미롭지 않기 때문에 이를 간과합니다.</font><font papago-translate="translated"> 그들은 대부분 투덜거리는 일입니다.</font></p>
+<aside name="native" style="top: 7144px;">
+<p><font papago-translate="translated">흥미롭게도, 이 함수들의 두 가지 이름인 "원어민"과 "외국인<span class="em">"</span>은 반의<span class="em"></span>어입니다.</font><font papago-translate="translated"> 아마도 용어를 선택하는 사람의 관점에 따라 다를 수 있습니다.</font><font papago-translate="translated"> 런타임 구현 내에서 자신을 "살아있는" 존재로 생각한다면(우리의 경우 Java), 그 안에 쓰여진 함수들은 "네이티브"입니다.</font><font papago-translate="translated"> 하지만 당신의 언어<em>를 사용하는 사용자</em>의 사고방식을 가지고 있다면, 런타임은 다른 "외국어" 언어로 구현됩니다.</font></p>
+<p><font papago-translate="translated">또는 "원본"이 기본 하드웨어의 기계 코드 언어를 의미할 수도 있습니다.</font><font papago-translate="translated"> Java에서 "네이티브" 메서드는 C 또는 C++로 구현되어 네이티브 머신 코드로 컴파일된 메서드입니다.</font></p><img alt="All a matter of perspective." class="above" src="https://youhogeon-meritz.github.io/image/functions/foreign.png">
 </aside>
-<p>Many languages also allow users to provide their own native functions. The
-mechanism for doing so is called a <strong>foreign function interface</strong> (<strong>FFI</strong>),
-<strong>native extension</strong>, <strong>native interface</strong>, or something along those lines.
-These are nice because they free the language implementer from providing access
-to every single capability the underlying platform supports. We won’t define an
-FFI for jlox, but we will add one native function to give you an idea of what it
-looks like.</p>
-<h3><a href="#telling-time" id="telling-time"><small>10 . 2 . 1</small>Telling time</a></h3>
-<p>When we get to <a href="a-bytecode-virtual-machine.html">Part III</a> and start working on a much more efficient
-implementation of Lox, we’re going to care deeply about performance. Performance
-work requires measurement, and that in turn means <strong>benchmarks</strong>. These are
-programs that measure the time it takes to exercise some corner of the
-interpreter.</p>
-<p>We could measure the time it takes to start up the interpreter, run the
-benchmark, and exit, but that adds a lot of overhead<span class="em">—</span>JVM startup time, OS
-shenanigans, etc. That stuff does matter, of course, but if you’re just trying
-to validate an optimization to some piece of the interpreter, you don’t want
-that overhead obscuring your results.</p>
-<p>A nicer solution is to have the benchmark script itself measure the time elapsed
-between two points in the code. To do that, a Lox program needs to be able to
-tell time. There’s no way to do that now<span class="em">—</span>you can’t implement a useful clock
-“from scratch” without access to the underlying clock on the computer.</p>
-<p>So we’ll add <code translate="no">clock()</code>, a native function that returns the number of seconds
-that have passed since some fixed point in time. The difference between two
-successive invocations tells you how much time elapsed between the two calls.
-This function is defined in the global scope, so let’s ensure the interpreter
-has access to that.</p>
+<p><font papago-translate="translated">하지만 실제로 유용한 작업을 잘 수행할 수 있도록 언어를 만드는 데 있어서는 구현에서 제공하는 기본 기능이 핵심입니다.</font><font papago-translate="translated"> 그들은 모든 프로그램이 정의된 기본 서비스에 대한 접근을 제공합니다.</font><font papago-translate="translated"> 파일 시스템에 접근할 수 있는 기본 기능을 제공하지 않으면, 사용자는 파일을 읽고<span name="print"> 표시</span>하는 프로그램을 작성하는 데 엄청난 시간을 보내게 될 것입니다.</font></p>
+<aside name="print" style="top: 7504px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">거의 모든 언어가 제공하는 고전적인 네이티브 기능은 텍스트를 stdout으로 출력하는 것입니다.</font><font papago-translate="translated"> 록스에서, 나는 </font></font><code translate="no">print</code><font papago-translate="splitted"><font papago-translate="translated"> 이 문장 앞의 장에서 내용을 화면에 표시할 수 있도록 내장된 문장입니다.</font></font></p>
+<p><font papago-translate="translated">함수가 생기면 기존 인쇄 구문을 제거하고 네이티브 함수로 대체하여 언어를 단순화할 수 있습니다.</font><font papago-translate="translated"> 하지만 그것은 책의 초기 예시들이 나중 장에서 나온 통역사나 그 반대의 경우에는 실행되지 않는다는 것을 의미합니다.</font><font papago-translate="translated"> 그래서 책은 그냥 두겠습니다.</font></p>
+<p><font papago-translate="translated">하지만<em> 자신</em>의 언어를 위한 통역사를 만들고 있다면 고려해 볼 수도 있습니다.</font></p>
+</aside>
+<p><font papago-translate="translated">많은 언어들은 사용자들이 자신만의 고유 기능을 제공할 수 있게 해줍니다.</font><font papago-translate="translated"> 이를 수행하는 메커니즘을<strong> 외부 기능 인터페이스</strong>(F<strong>FI</strong>),<strong> 네이티브 확장</strong><strong>, 네이티브 인터페이스</strong> 또는 이러한 라인을 따라 하는 것이라고 합니다.</font><font papago-translate="translated"> 이것들은 언어 구현자가 기본 플랫폼이 지원하는 모든 기능에 대한 접근을 제공하지 않도록 해주기 때문에 좋습니다.</font><font papago-translate="translated"> Jlox에 대한 FFI를 정의하지는 않겠지만, 하나의 기본 함수를 추가하여 그것이 어떻게 생겼는지 알 수 있도록 하겠습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/functions.html#telling-time" id="telling-time"><small><font papago-translate="translated">10 . 2 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">시간 알려주기</font></font></a></h3>
+<p><font papago-translate="translated">Part<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html"> III</a>에 도달하여 훨씬 더 효율적인 Lox 구현을 위한 작업을 시작하면 성능에 대해 깊이 신경 쓸 것입니다.</font><font papago-translate="translated"> 성과 작업에는 측정이 필요하며<strong>,</strong> 이는<strong> 결국 벤치마크</strong>를 의미합니다.</font><font papago-translate="translated"> 이것들은 통역사의 특정 코너를 연습하는 데 걸리는 시간을 측정하는 프로그램들입니다.</font></p>
+<p><font papago-translate="translated">인터프리터를 시작하고 벤치마크를 실행한 후 종료하는 데 걸리는 시간을 측정할 수 있지만<span class="em"></span>, 이는 많은 오버헤드를 증가시킵니다</font><font papago-translate="translated">JVM 시작 시간, OS 셰니건 등.</font><font papago-translate="translated"> 물론 그것도 중요하지만, 만약 당신이 인터프리터의 일부에 대한 최적화를 검증하려고 한다면, 그 오버헤드가 당신의 결과를 흐리게 하는 것을 원하지 않을 것입니다.</font></p>
+<p><font papago-translate="translated">더 좋은 해결책은 벤치마크 스크립트 자체가 코드의 두 지점 사이의 경과 시간을 측정하도록 하는 것입니다.</font><font papago-translate="translated"> 그러기 위해서는 Lox 프로그램이 시간을 알 수 있어야 합니다.</font><font papago-translate="translated"> 지금은 그렇게 할 방법이 없습니다. 컴퓨터<span class="em"></span>의 기본 시계에 접근하지 않고는 유용한 시계를 "처음부터" 구현할 수 없습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그래서 우리는 추가할 것입니다 </font></font><code translate="no">clock()</code><font papago-translate="splitted"><font papago-translate="translated">, 고정된 시점 이후 경과한 초의 수를 반환하는 기본 함수입니다.</font><font papago-translate="translated"> 연속된 두 호출의 차이는 두 호출 사이에 얼마나 많은 시간이 걸렸는지를 알려줍니다.</font><font papago-translate="translated"> 이 함수는 전역 범위에 정의되어 있으므로 통역사가 이에 접근할 수 있도록 보장해 보겠습니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">class Interpreter implements Expr.Visitor&lt;Object&gt;,
                              Stmt.Visitor&lt;Void&gt; {
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in class <em>Interpreter</em><br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 클래스<em> 인터프리터</em>에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  <span class="k">final</span> <span class="t">Environment</span> <span class="i">globals</span> = <span class="k">new</span> <span class="t">Environment</span>();
   <span class="k">private</span> <span class="t">Environment</span> <span class="i">environment</span> = <span class="i">globals</span>;
 </pre><pre class="insert-after" translate="no">
-
   void interpret(List&lt;Stmt&gt; statements) {
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in class <em>Interpreter</em>, replace 1 line</div>
-<p>The <code translate="no">environment</code> field in the interpreter changes as we enter and exit local
-scopes. It tracks the <em>current</em> environment. This new <code translate="no">globals</code> field holds a
-fixed reference to the outermost global environment.</p>
-<p>When we instantiate an Interpreter, we stuff the native function in that global
-scope.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그 </font></font><code translate="no">environment</code><font papago-translate="splitted"><font papago-translate="translated"> 로컬 스코프에 들어가고 나올 때 인터프리터의 필드가 변경됩니다.</font><font papago-translate="translated"> <em>현재</em> 환경을 추적합니다.</font><font papago-translate="translated"> 이 새로운 </font></font><code translate="no">globals</code><font papago-translate="splitted"><font papago-translate="translated"> 필드는 가장 바깥쪽 글로벌 환경에 대한 고정된 참조를 가지고 있습니다.</font></font></p>
+<p><font papago-translate="translated">인터프리터를 인스턴스화할 때, 기본 함수를 해당 전역 범위에 넣습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  private Environment environment = globals;
 
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in class <em>Interpreter</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 클래스<em> 인터프리터</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="t">Interpreter</span>() {
     <span class="i">globals</span>.<span class="i">define</span>(<span class="s">"clock"</span>, <span class="k">new</span> <span class="t">LoxCallable</span>() {
       <span class="a">@Override</span>
@@ -503,110 +318,68 @@ in class <em>Interpreter</em></div>
 </pre><pre class="insert-after" translate="no">  void interpret(List&lt;Stmt&gt; statements) {
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in class <em>Interpreter</em></div>
-<p>This defines a <span name="lisp-1">variable</span> named “clock”. Its value is a
-Java anonymous class that implements LoxCallable. The <code translate="no">clock()</code> function takes
-no arguments, so its arity is zero. The implementation of <code translate="no">call()</code> calls the
-corresponding Java function and converts the result to a double value in
-seconds.</p>
-<aside name="lisp-1">
-<p>In Lox, functions and variables occupy the same namespace. In Common Lisp, the
-two live in their own worlds. A function and variable with the same name don’t
-collide. If you call the name, it looks up the function. If you refer to it, it
-looks up the variable. This does require jumping through some hoops when you do
-want to refer to a function as a first-class value.</p>
-<p>Richard P. Gabriel and Kent Pitman coined the terms “Lisp-1” to refer to
-languages like Scheme that put functions and variables in the same namespace,
-and “Lisp-2” for languages like Common Lisp that partition them. Despite being
-totally opaque, those names have since stuck. Lox is a Lisp-1.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 "시계"라는<span name="lisp-1"> 변수</span>를 정의합니다.</font><font papago-translate="translated"> 그 값은 LoxCallable을 구현하는 Java 익명 클래스입니다.</font><font papago-translate="translated"> 그 </font></font><code translate="no">clock()</code><font papago-translate="splitted"><font papago-translate="translated"> 함수는 인수를 사용하지 않으므로 그 희소성은 0입니다.</font><font papago-translate="translated"> 구현 </font></font><code translate="no">call()</code><font papago-translate="splitted"><font papago-translate="translated"> 는 해당 Java 함수를 호출하고 결과를 몇 초 만에 두 배 값으로 변환합니다.</font></font></p>
+<aside name="lisp-1" style="top: 9060px;">
+<p><font papago-translate="translated">Lox에서는 함수와 변수가 동일한 네임스페이스를 차지합니다.</font><font papago-translate="translated"> 커먼 리스프에서는 두 사람이 각자의 세계에 살고 있습니다.</font><font papago-translate="translated"> 같은 이름을 가진 함수와 변수는 충돌하지 않습니다.</font><font papago-translate="translated"> 이름을 부르면 함수를 찾습니다.</font><font papago-translate="translated"> 참고하시면 변수를 찾아보실 수 있습니다.</font><font papago-translate="translated"> 함수를 1등급 값으로 지칭하려면 몇 가지 후프를 건너뛰어야 합니다.</font></p>
+<p><font papago-translate="translated">Richard P. Gabriel과 Kent Pitman은 함수와 변수를 같은 네임스페이스에 배치하는 Scheme과 같은 언어를 지칭하기 위해 "Lisp-1"이라는 용어를 만들었고, 이를 분할하는 Common Lisp와 같은 언어를 지칭하기 위해 "Lisp-2"라는 용어를 만들었습니다.</font><font papago-translate="translated"> 완전히 불투명함에도 불구하고, 그 이름들은 그 이후로 계속 남아 있습니다.</font><font papago-translate="translated"> Lox is a Lisp-1.</font></p>
 </aside>
-<p>If we wanted to add other native functions<span class="em">—</span>reading input from the user,
-working with files, etc.<span class="em">—</span>we could add them each as their own anonymous class
-that implements LoxCallable. But for the book, this one is really all we need.</p>
-<p>Let’s get ourselves out of the function-defining business and let our users
-take over<span class="ellipse"> . . . </span></p>
-<h2><a href="#function-declarations" id="function-declarations"><small>10 . 3</small>Function Declarations</a></h2>
-<p>We finally get to add a new production to the <code translate="no">declaration</code> rule we introduced
-back when we added variables. Function declarations, like variables, bind a new
-<span name="name">name</span>. That means they are allowed only in places where
-a declaration is permitted.</p>
-<aside name="name">
-<p>A named function declaration isn’t really a single primitive operation. It’s
-syntactic sugar for two distinct steps: (1) creating a new function object, and
-(2) binding a new variable to it. If Lox had syntax for anonymous functions, we
-wouldn’t need function declaration statements. You could just do:</p>
+<p><font papago-translate="translated">사용자의 입력 읽기, 파일 작업<span class="em"></span> 등 다른 기본 기능을 추가하고 싶다면.</font><font papago-translate="translated"><span class="em">-</span>LoxCallable을 구현하는 자체 익명 클래스로 각각 추가할 수 있습니다<span class="em">.</span></font><font papago-translate="translated"> 하지만 책을 위해 이 책만 있으면 됩니다.</font></p>
+<p><font papago-translate="translated" class="papago-selected">기능 정의 비즈니스에서 벗어나 사용자가 주도권을 잡도록 합시다<span class="ellipse">.</span></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/functions.html#function-declarations" id="function-declarations"><small><font papago-translate="translated">10 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">함수 선언</font></font></a></h2>
+<p><font papago-translate="splitted"><font papago-translate="translated">마침내 새로운 프로덕션을 추가할 수 있게 되었습니다 </font></font><code translate="no">declaration</code><font papago-translate="splitted"><font papago-translate="translated"> 변수를 추가할 때 도입한 규칙입니다.</font><font papago-translate="translated"> 함수 선언은 변수와 마찬가지로 새<span name="name"> 이름</span>을 묶습니다.</font><font papago-translate="translated"> 즉, 선언이 허용되는 장소에서만 허용됩니다.</font></font></p>
+<aside name="name" style="top: 9468px;">
+<p><font papago-translate="translated">명명된 함수 선언은 실제로 단일 원시 연산이 아닙니다.</font><font papago-translate="translated"> 그것은 두 가지 다른 단계를 위한 구문 설탕입니다: (1) 새로운 기능 객체를 생성하고, (2) 새로운 변수를 결합하는 것입니다.</font><font papago-translate="translated"> Lox가 익명 함수에 대한 구문을 가지고 있다면 함수 선언문이 필요하지 않을 것입니다.</font><font papago-translate="translated"> 그냥 할 수 있습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">add</span> = <span class="k">fun</span> (<span class="i">a</span>, <span class="i">b</span>) {
   <span class="k">print</span> <span class="i">a</span> + <span class="i">b</span>;
 };
 </pre></div>
-<p>However, since named functions are the common case, I went ahead and gave Lox
-nice syntax for them.</p>
+<p><font papago-translate="translated">그러나 명명된 함수가 일반적인 경우이기 때문에 Lox에게 좋은 구문을 제공했습니다.</font></p>
 </aside>
 <div class="codehilite"><pre translate="no"><span class="i">declaration</span>    → <span class="i">funDecl</span>
                | <span class="i">varDecl</span>
                | <span class="i">statement</span> ;
 </pre></div>
-<p>The updated <code translate="no">declaration</code> rule references this new rule:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">업데이트된 </font></font><code translate="no">declaration</code><font papago-translate="splitted"><font papago-translate="translated"> 규칙은 이 새로운 규칙을 참조합니다:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="i">funDecl</span>        → <span class="s">"fun"</span> <span class="i">function</span> ;
 <span class="i">function</span>       → <span class="t">IDENTIFIER</span> <span class="s">"("</span> <span class="i">parameters</span>? <span class="s">")"</span> <span class="i">block</span> ;
 </pre></div>
-<p>The main <code translate="no">funDecl</code> rule uses a separate helper rule <code translate="no">function</code>. A function
-<em>declaration statement</em> is the <code translate="no">fun</code> keyword followed by the actual function-y
-stuff. When we get to classes, we’ll reuse that <code translate="no">function</code> rule for declaring
-methods. Those look similar to function declarations, but aren’t preceded by
-<span name="fun"><code translate="no">fun</code></span>.</p>
-<aside name="fun">
-<p>Methods are too classy to have fun.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">주요 </font></font><code translate="no">funDecl</code><font papago-translate="splitted"><font papago-translate="translated"> 규칙은 별도의 도우미 규칙을 사용합니다 </font></font><code translate="no">function</code><font papago-translate="splitted"><font papago-translate="translated">. 함수<em> 선언문은</em> 다음과 같습니다 </font></font><code translate="no">fun</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드 뒤에 실제 함수-y 항목들이 이어집니다.</font><font papago-translate="translated"> 수업에 들어가면 재사용할 수 있습니다 </font></font><code translate="no">function</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드를 선언하는 규칙.</font><font papago-translate="translated"> 그것들은 함수 선언과 비슷해 보이지만, 앞에<span name="fun"> 오는</span> 것은<span name="fun"> 아닙니다.</span></font></font></p>
+<aside name="fun" style="top: 9808px;">
+<p><font papago-translate="translated">방법은 너무 고급스러워서 재미를 느낄 수 없습니다.</font></p>
 </aside>
-<p>The function itself is a name followed by the parenthesized parameter list and
-the body. The body is always a braced block, using the same grammar rule that
-block statements use. The parameter list uses this rule:</p>
+<p><font papago-translate="translated">함수 자체는 괄호로 묶은 매개변수 목록과 본문 뒤에 오는 이름입니다.</font><font papago-translate="translated"> 본문은 항상 문장이 사용하는 동일한 문법 규칙을 사용하여 브레이싱된 블록입니다.</font><font papago-translate="translated"> 매개변수 목록은 이 규칙을 사용합니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">parameters</span>     → <span class="t">IDENTIFIER</span> ( <span class="s">","</span> <span class="t">IDENTIFIER</span> )* ;
 </pre></div>
-<p>It’s like the earlier <code translate="no">arguments</code> rule, except that each parameter is an
-identifier, not an expression. That’s a lot of new syntax for the parser to chew
-through, but the resulting AST <span name="fun-ast">node</span> isn’t too bad.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이전과 같습니다 </font></font><code translate="no">arguments</code><font papago-translate="splitted"><font papago-translate="translated"> 각 매개변수가 표현식이 아닌 식별자라는 점을 제외하고는 규칙입니다.</font><font papago-translate="translated"> 파서가 훑어보기에는 새로운 구문이 많지만, 결과적으로 AST<span name="fun-ast"> 노드도</span> 나쁘지 않습니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      "Expression : Expr expression",
-</pre><div class="source-file"><em>tool/GenerateAst.java</em><br/>
-in <em>main</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">도구/GenerateAst.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>메인</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="s">"Function   : Token name, List&lt;Token&gt; params,"</span> +
                   <span class="s">" List&lt;Stmt&gt; body"</span>,
 </pre><pre class="insert-after" translate="no">      "If         : Expr condition, Stmt thenBranch," +
 </pre></div>
 <div class="source-file-narrow"><em>tool/GenerateAst.java</em>, in <em>main</em>()</div>
-<aside name="fun-ast">
-<p>The generated code for the new node is in <a href="appendix-ii.html#function-statement">Appendix II</a>.</p>
+<aside name="fun-ast" style="top: 10044px;">
+<p><font papago-translate="translated">새 노드에 대한 생성된 코드는 부록<a href="https://youhogeon-meritz.github.io/appendix-ii.html#function-statement"> II</a>에 있습니다.</font></p>
 </aside>
-<p>A function node has a name, a list of parameters (their names), and then the
-body. We store the body as the list of statements contained inside the curly
-braces.</p>
-<p>Over in the parser, we weave in the new declaration.</p>
+<p><font papago-translate="translated">함수 노드에는 이름, 매개변수 목록(이름), 그리고 본문이 있습니다.</font><font papago-translate="translated"> 우리는 몸을 곱슬 교정기 안에 포함된 진술 목록으로 저장합니다.</font></p>
+<p><font papago-translate="translated">파서에서는 새로운 선언문을 엮습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    try {
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>declaration</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>선언</em>문 ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="k">if</span> (<span class="i">match</span>(<span class="i">FUN</span>)) <span class="k">return</span> <span class="i">function</span>(<span class="s">"function"</span>);
 </pre><pre class="insert-after" translate="no">      if (match(VAR)) return varDeclaration();
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>declaration</em>()</div>
-<p>Like other statements, a function is recognized by the leading keyword. When we
-encounter <code translate="no">fun</code>, we call <code translate="no">function</code>. That corresponds to the <code translate="no">function</code> grammar
-rule since we already matched and consumed the <code translate="no">fun</code> keyword. We’ll build the
-method up a piece at a time, starting with this:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>expressionStatement</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">다른 문장들처럼, 함수는 주요 키워드에 의해 인식됩니다.</font><font papago-translate="translated"> 우리가 만날 때 </font></font><code translate="no">fun</code><font papago-translate="splitted"><font papago-translate="translated">, 우리는 전화합니다 </font></font><code translate="no">function</code><font papago-translate="splitted"><font papago-translate="translated">. 이는 다음과 같습니다 </font></font><code translate="no">function</code><font papago-translate="splitted"><font papago-translate="translated"> 문법 규칙은 이미 일치하고 소비했기 때문에 </font></font><code translate="no">fun</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드.</font><font papago-translate="translated"> 우리는 이 방법을 하나씩 구축할 것입니다:</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>식</em> 뒤에 추가St<em>atement</em>()</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Stmt</span>.<span class="t">Function</span> <span class="i">function</span>(<span class="t">String</span> <span class="i">kind</span>) {
     <span class="t">Token</span> <span class="i">name</span> = <span class="i">consume</span>(<span class="i">IDENTIFIER</span>, <span class="s">"Expect "</span> + <span class="i">kind</span> + <span class="s">" name."</span>);
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>expressionStatement</em>()</div>
-<p>Right now, it only consumes the identifier token for the function’s name. You
-might be wondering about that funny little <code translate="no">kind</code> parameter. Just like we reuse
-the grammar rule, we’ll reuse the <code translate="no">function()</code> method later to parse methods
-inside classes. When we do that, we’ll pass in “method” for <code translate="no">kind</code> so that the
-error messages are specific to the kind of declaration being parsed.</p>
-<p>Next, we parse the parameter list and the pair of parentheses wrapped around it.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">현재는 함수 이름의 식별자 토큰만 사용합니다.</font><font papago-translate="translated"> 그 재미있는 작은 것에 대해 궁금해하실 수도 있습니다 </font></font><code translate="no">kind</code><font papago-translate="splitted"><font papago-translate="translated"> 매개변수.</font><font papago-translate="translated"> 문법 규칙을 재사용하는 것처럼, 우리는 다음을 재사용할 것입니다 </font></font><code translate="no">function()</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드를 나중에 클래스 내에서 구문 분석합니다.</font><font papago-translate="translated"> 그렇게 할 때, 우리는 다음을 위해 "방법"을 전달할 것입니다 </font></font><code translate="no">kind</code><font papago-translate="splitted"><font papago-translate="translated"> 오류 메시지가 구문 분석되는 선언의 종류에 따라 달라지도록 합니다.</font></font></p>
+<p><font papago-translate="translated">다음으로, 매개변수 목록과 그 주위를 감싼 괄호 쌍을 분석합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    Token name = consume(IDENTIFIER, "Expect " + kind + " name.");
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>function</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>함수</em> ()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="i">consume</span>(<span class="i">LEFT_PAREN</span>, <span class="s">"Expect '(' after "</span> + <span class="i">kind</span> + <span class="s">" name."</span>);
     <span class="t">List</span>&lt;<span class="t">Token</span>&gt; <span class="i">parameters</span> = <span class="k">new</span> <span class="t">ArrayList</span>&lt;&gt;();
     <span class="k">if</span> (!<span class="i">check</span>(<span class="i">RIGHT_PAREN</span>)) {
@@ -623,42 +396,23 @@ in <em>function</em>()</div>
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>function</em>()</div>
-<p>This is like the code for handling arguments in a call, except not split out
-into a helper method. The outer <code translate="no">if</code> statement handles the zero parameter case,
-and the inner <code translate="no">while</code> loop parses parameters as long as we find commas to
-separate them. The result is the list of tokens for each parameter’s name.</p>
-<p>Just like we do with arguments to function calls, we validate at parse time
-that you don’t exceed the maximum number of parameters a function is allowed to
-have.</p>
-<p>Finally, we parse the body and wrap it all up in a function node.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 통화 중 인수를 처리하는 코드와 비슷하지만, 헬퍼 메서드로 나뉘지는 않습니다.</font><font papago-translate="translated"> 바깥쪽 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 문은 영 매개변수의 경우를 처리하며, 내부는 </font></font><code translate="no">while</code><font papago-translate="splitted"><font papago-translate="translated"> 루프는 매개변수를 구분할 쉼표를 찾는 한 매개변수를 구문 분석합니다.</font><font papago-translate="translated"> 결과는 각 매개변수 이름에 대한 토큰 목록입니다.</font></font></p>
+<p><font papago-translate="translated">함수 호출에 대한 인수와 마찬가지로 구문 분석 시 함수가 허용하는 최대 매개변수 수를 초과하지 않는지 확인합니다.</font></p>
+<p><font papago-translate="translated">마지막으로, 우리는 몸을 분석하고 모든 것을 함수 노드로 마무리합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    consume(RIGHT_PAREN, "Expect ')' after parameters.");
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>function</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>함수</em> ()에서</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="i">consume</span>(<span class="i">LEFT_BRACE</span>, <span class="s">"Expect '{' before "</span> + <span class="i">kind</span> + <span class="s">" body."</span>);
     <span class="t">List</span>&lt;<span class="t">Stmt</span>&gt; <span class="i">body</span> = <span class="i">block</span>();
     <span class="k">return</span> <span class="k">new</span> <span class="t">Stmt</span>.<span class="t">Function</span>(<span class="i">name</span>, <span class="i">parameters</span>, <span class="i">body</span>);
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>function</em>()</div>
-<p>Note that we consume the <code translate="no">{</code> at the beginning of the body here before calling
-<code translate="no">block()</code>. That’s because <code translate="no">block()</code> assumes the brace token has already been
-matched. Consuming it here lets us report a more precise error message if the
-<code translate="no">{</code> isn’t found since we know it’s in the context of a function declaration.</p>
-<h2><a href="#function-objects" id="function-objects"><small>10 . 4</small>Function Objects</a></h2>
-<p>We’ve got some syntax parsed so usually we’re ready to interpret, but first we
-need to think about how to represent a Lox function in Java. We need to keep
-track of the parameters so that we can bind them to argument values when the
-function is called. And, of course, we need to keep the code for the body of the
-function so that we can execute it.</p>
-<p>That’s basically what the Stmt.Function class is. Could we just use that?
-Almost, but not quite. We also need a class that implements LoxCallable so that
-we can call it. We don’t want the runtime phase of the interpreter to bleed into
-the front end’s syntax classes so we don’t want Stmt.Function itself to
-implement that. Instead, we wrap it in a new class.</p>
-<div class="codehilite"><div class="source-file"><em>lox/LoxFunction.java</em><br/>
-create new file</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">참고로, 우리는 다음을 소비합니다 </font></font><code translate="no">{</code><font papago-translate="splitted"><font papago-translate="translated"> 여기서 몸의 시작 부분에서 전화하기 전에 </font></font><code translate="no">block()</code><font papago-translate="splitted"><font papago-translate="translated">. 그 이유는 </font></font><code translate="no">block()</code><font papago-translate="splitted"><font papago-translate="translated"> 괄호 토큰이 이미 일치했다고 가정합니다.</font><font papago-translate="translated"> 여기서 그것을 소비하면 더 정확한 오류 메시지를 보고할 수 있습니다 </font></font><code translate="no">{</code><font papago-translate="splitted"><font papago-translate="translated"> 함수 선언의 맥락에 있다는 것을 알기 때문에 찾을 수 없습니다.</font></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/functions.html#function-objects" id="function-objects"><small><font papago-translate="translated">10 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">함수 객체</font></font></a></h2>
+<p><font papago-translate="translated">구문이 구문 분석되어 있으므로 일반적으로 해석할 준비가 되어 있지만, 먼저 Java에서 Lox 함수를 표현하는 방법에 대해 생각해봐야 합니다.</font><font papago-translate="translated"> 함수가 호출될 때 매개변수를 인수 값에 바인딩할 수 있도록 매개변수를 추적해야 합니다.</font><font papago-translate="translated"> 물론, 우리가 그것을 실행할 수 있도록 함수 본문의 코드를 유지해야 합니다.</font></p>
+<p><font papago-translate="translated">그것이 기본적으로 Stmt가 하는 일입니다.</font><font papago-translate="translated">함수 클래스는.</font><font papago-translate="translated"> 그거 그냥 사용해도 될까요?</font><font papago-translate="translated"> 거의 그렇지만, 그렇지는 않습니다.</font><font papago-translate="translated"> 우리는 또한 LoxCallable을 구현할 수 있는 수업이 필요합니다.</font><font papago-translate="translated"> 우리는 인터프리터의 런타임 단계가 프론트엔드의 구문 클래스에 영향을 미치는 것을 원하지 않기 때문에 Stmt를 원하지 않습니다.</font><font papago-translate="translated">그것을 구현하기 위해 스스로 작동합니다.</font><font papago-translate="translated"> 대신, 우리는 그것을 새로운 수업으로 마무리합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/LoxFunction.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 새 파일 만들기</font></font></div>
 <pre translate="no"><span class="k">package</span> <span class="i">com.craftinginterpreters.lox</span>;
 
 <span class="k">import</span> <span class="i">java.util.List</span>;
@@ -671,9 +425,8 @@ create new file</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>lox/LoxFunction.java</em>, create new file</div>
-<p>We implement the <code translate="no">call()</code> of LoxCallable like so:</p>
-<div class="codehilite"><div class="source-file"><em>lox/LoxFunction.java</em><br/>
-add after <em>LoxFunction</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 다음을 구현합니다 </font></font><code translate="no">call()</code><font papago-translate="splitted"><font papago-translate="translated"> LoxCallable의 경우:</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/LoxFunction.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>LoxFunction</em>() 다음에 추가</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Object</span> <span class="i">call</span>(<span class="t">Interpreter</span> <span class="i">interpreter</span>,
                      <span class="t">List</span>&lt;<span class="t">Object</span>&gt; <span class="i">arguments</span>) {
@@ -688,21 +441,13 @@ add after <em>LoxFunction</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/LoxFunction.java</em>, add after <em>LoxFunction</em>()</div>
-<p>This handful of lines of code is one of the most fundamental, powerful pieces of
-our interpreter. As we saw in <a href="statements-and-state.html">the chapter on statements and <span name="env">state</span></a>, managing name environments is a core part
-of a language implementation. Functions are deeply tied to that.</p>
-<aside name="env">
-<p>We’ll dig even deeper into environments in the <a href="resolving-and-binding.html">next chapter</a>.</p>
+<p><font papago-translate="translated">이 몇 줄의 코드는 우리 통역사의 가장 기본적이고 강력한 작품 중 하나입니다.</font><font papago-translate="translated"> <a href="https://youhogeon-meritz.github.io/statements-and-state.html">문장과<span name="env"> 상태</span>에 관한 장에서</a> 보았듯이, 이름 환경을 관리하는 것은 언어 구현의 핵심 부분입니다.</font><font papago-translate="translated"> 함수들은 그것과 깊이 연관되어 있습니다.</font></p>
+<aside name="env" style="top: 12616px;">
+<p><font papago-translate="translated"><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html">다음 장</a>에서는 환경에 대해 더 자세히 살펴보겠습니다.</font></p>
 </aside>
-<p>Parameters are core to functions, especially the fact that a function
-<em>encapsulates</em> its parameters<span class="em">—</span>no other code outside of the function can see
-them. This means each function gets its own environment where it stores those
-variables.</p>
-<p>Further, this environment must be created dynamically. Each function <em>call</em> gets
-its own environment. Otherwise, recursion would break. If there are multiple
-calls to the same function in play at the same time, each needs its <em>own</em>
-environment, even though they are all calls to the same function.</p>
-<p>For example, here’s a convoluted way to count to three:</p>
+<p><font papago-translate="translated">매개변수는 함수의 핵심이며, 특히 함수가 매개변수<em>를 캡슐화한다는</em> 사실, 즉 함수 외부의 다른 코드는<span class="em"></span> 매개변수를 볼 수 없습니다.</font><font papago-translate="translated"> 이는 각 함수가 해당 변수를 저장하는 고유한 환경을 제공한다는 것을 의미합니다.</font></p>
+<p><font papago-translate="translated">또한, 이 환경은 동적으로 조성되어야 합니다.</font><font papago-translate="translated"> 각 함수<em> 호출은</em> 고유한 환경을 제공합니다.</font><font papago-translate="translated"> 그렇지 않으면 재귀가 끊어질 것입니다.</font><font papago-translate="translated"> 같은 기능에 대한 호출이 동시에 여러 번 재생되면, 비록 모두 같은<em></em> 기능에 대한 호출일지라도 각각 고유한 환경이 필요합니다.</font></p>
+<p><font papago-translate="translated">예를 들어, 세는 복잡한 방법이 있습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> <span class="i">count</span>(<span class="i">n</span>) {
   <span class="k">if</span> (<span class="i">n</span> &gt; <span class="n">1</span>) <span class="i">count</span>(<span class="i">n</span> - <span class="n">1</span>);
   <span class="k">print</span> <span class="i">n</span>;
@@ -710,75 +455,46 @@ environment, even though they are all calls to the same function.</p>
 
 <span class="i">count</span>(<span class="n">3</span>);
 </pre></div>
-<p>Imagine we pause the interpreter right at the point where it’s about to print 1
-in the innermost nested call. The outer calls to print 2 and 3 haven’t printed
-their values yet, so there must be environments somewhere in memory that still
-store the fact that <code translate="no">n</code> is bound to 3 in one context, 2 in another, and 1 in the
-innermost, like:</p><img alt="A separate environment for each recursive call." src="image/functions/recursion.png">
-<p>That’s why we create a new environment at each <em>call</em>, not at the function
-<em>declaration</em>. The <code translate="no">call()</code> method we saw earlier does that. At the beginning of
-the call, it creates a new environment. Then it walks the parameter and argument
-lists in lockstep. For each pair, it creates a new variable with the parameter’s
-name and binds it to the argument’s value.</p>
-<p>So, for a program like this:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">인터프리터가 가장 안쪽 중첩 호출에서 1을 출력하려는 지점에서 일시 중지한다고 상상해 보세요.</font><font papago-translate="translated"> 2와 3을 출력하려는 외부 호출은 아직 값을 출력하지 않았기 때문에 메모리 어딘가에 여전히 다음과 같은 사실을 저장하는 환경이 있어야 합니다 </font></font><code translate="no">n</code><font papago-translate="splitted"><font papago-translate="translated"> 는 한 맥락에서 3개, 다른 맥락에서 2개, 그리고 가장 안쪽에서 1개로 묶여 있습니다:</font></font></p><img alt="A separate environment for each recursive call." src="https://youhogeon-meritz.github.io/image/functions/recursion.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">그래서 우리는 함수<em> 선언</em>이 아닌<em> 호출</em>할 때마다 새로운 환경을 만듭니다.</font><font papago-translate="translated"> 그 </font></font><code translate="no">call()</code><font papago-translate="splitted"><font papago-translate="translated"> 우리가 이전에 본 방법이 그렇게 합니다.</font><font papago-translate="translated"> 통화가 시작되면 새로운 환경이 만들어집니다.</font><font papago-translate="translated"> 그런 다음 매개변수와 인수 목록을 잠금 단계로 이동합니다.</font><font papago-translate="translated"> 각 쌍에 대해 매개변수 이름이 포함된 새 변수를 생성하고 인수 값에 바인딩합니다.</font></font></p>
+<p><font papago-translate="translated">그래서, 이와 같은 프로그램의 경우:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> <span class="i">add</span>(<span class="i">a</span>, <span class="i">b</span>, <span class="i">c</span>) {
   <span class="k">print</span> <span class="i">a</span> + <span class="i">b</span> + <span class="i">c</span>;
 }
 
 <span class="i">add</span>(<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>);
 </pre></div>
-<p>At the point of the call to <code translate="no">add()</code>, the interpreter creates something like
-this:</p><img alt="Binding arguments to their parameters." src="image/functions/binding.png"/>
-<p>Then <code translate="no">call()</code> tells the interpreter to execute the body of the function in this
-new function-local environment. Up until now, the current environment was the
-environment where the function was being called. Now, we teleport from there
-inside the new parameter space we’ve created for the function.</p>
-<p>This is all that’s required to pass data into the function. By using different
-environments when we execute the body, calls to the same function with the
-same code can produce different results.</p>
-<p>Once the body of the function has finished executing, <code translate="no">executeBlock()</code> discards
-that function-local environment and restores the previous one that was active
-back at the callsite. Finally, <code translate="no">call()</code> returns <code translate="no">null</code>, which returns <code translate="no">nil</code> to
-the caller. (We’ll add return values later.)</p>
-<p>Mechanically, the code is pretty simple. Walk a couple of lists. Bind some new
-variables. Call a method. But this is where the crystalline <em>code</em> of the
-function declaration becomes a living, breathing <em>invocation</em>. This is one of my
-favorite snippets in this entire book. Feel free to take a moment to meditate on
-it if you’re so inclined.</p>
-<p>Done? OK. Note when we bind the parameters, we assume the parameter and argument
-lists have the same length. This is safe because <code translate="no">visitCallExpr()</code> checks the
-arity before calling <code translate="no">call()</code>. It relies on the function reporting its arity to
-do that.</p>
-<div class="codehilite"><div class="source-file"><em>lox/LoxFunction.java</em><br/>
-add after <em>LoxFunction</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">호출 지점에서 </font></font><code translate="no">add()</code><font papago-translate="splitted"><font papago-translate="translated">, 통역사는 다음과 같은 것을 만듭니다:</font></font></p><img alt="Binding arguments to their parameters." src="https://youhogeon-meritz.github.io/image/functions/binding.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">그리고나서 </font></font><code translate="no">call()</code><font papago-translate="splitted"><font papago-translate="translated"> 해석자에게 이 새로운 함수 로컬 환경에서 함수의 본문을 실행하라고 지시합니다.</font><font papago-translate="translated"> 지금까지 현재 환경은 함수가 호출되는 환경이었습니다.</font><font papago-translate="translated"> 이제 함수를 위해 새로 만든 매개변수 공간 안에서 텔레포테이션을 합니다.</font></font></p>
+<p><font papago-translate="translated">이것이 데이터를 함수에 전달하는 데 필요한 전부입니다.</font><font papago-translate="translated"> 우리가 신체를 실행할 때 다른 환경을 사용함으로써, 동일한 코드로 같은 기능을 호출하면 다른 결과를 얻을 수 있습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">함수의 본문 실행이 완료되면, </font></font><code translate="no">executeBlock()</code><font papago-translate="splitted"><font papago-translate="translated"> 해당 기능 로컬 환경을 폐기하고 호출 사이트에서 활성화되었던 이전 환경을 복원합니다.</font><font papago-translate="translated"> 마침내. </font></font><code translate="no">call()</code><font papago-translate="splitted"><font papago-translate="translated"> 돌아온다 </font></font><code translate="no">null</code><font papago-translate="splitted"><font papago-translate="translated">, 돌아오는 것 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 발신자에게. (나중에 반환 값을 추가하겠습니다.)</font></font></p>
+<p><font papago-translate="translated">기계적으로 코드는 꽤 간단합니다.</font><font papago-translate="translated"> 몇 가지 목록을 살펴보세요.</font><font papago-translate="translated"> 새로운 변수를 바인딩합니다.</font><font papago-translate="translated"> 메서드를 호출합니다.</font><font papago-translate="translated"> 하지만 여기서 함수 선언의 결정<em> 코드</em>가 살아 숨 쉬는<em> 호출</em>이 됩니다.</font><font papago-translate="translated"> 이 책 전체에서 제가 가장 좋아하는 단편 중 하나입니다.</font><font papago-translate="translated"> 마음이 좋으시다면 잠시 시간을 내어 명상해 보세요.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">완료되었나요? 알겠습니다. 매개변수를 바인딩할 때는 매개변수와 인수 목록의 길이가 동일하다고 가정합니다.</font><font papago-translate="translated"> 이것은 다음과 같은 이유로 안전합니다 </font></font><code translate="no">visitCallExpr()</code><font papago-translate="splitted"><font papago-translate="translated"> 호출하기 전에 희귀성을 확인합니다 </font></font><code translate="no">call()</code><font papago-translate="splitted"><font papago-translate="translated">. 그것은 그것을 수행하기 위해 희소성을 보고하는 함수에 의존합니다.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/LoxFunction.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>LoxFunction</em>() 다음에 추가</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">int</span> <span class="i">arity</span>() {
     <span class="k">return</span> <span class="i">declaration</span>.<span class="i">params</span>.<span class="i">size</span>();
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/LoxFunction.java</em>, add after <em>LoxFunction</em>()</div>
-<p>That’s most of our object representation. While we’re in here, we may as well
-implement <code translate="no">toString()</code>.</p>
-<div class="codehilite"><div class="source-file"><em>lox/LoxFunction.java</em><br/>
-add after <em>LoxFunction</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">그것이 우리의 객체 표현의 대부분입니다.</font><font papago-translate="translated"> 여기 있는 동안에는 다음을 구현하는 것이 좋습니다 </font></font><code translate="no">toString()</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/LoxFunction.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>LoxFunction</em>() 다음에 추가</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">String</span> <span class="i">toString</span>() {
     <span class="k">return</span> <span class="s">"&lt;fn "</span> + <span class="i">declaration</span>.<span class="i">name</span>.<span class="i">lexeme</span> + <span class="s">"&gt;"</span>;
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/LoxFunction.java</em>, add after <em>LoxFunction</em>()</div>
-<p>This gives nicer output if a user decides to print a function value.</p>
+<p><font papago-translate="translated">사용자가 함수 값을 출력하기로 결정하면 더 나은 출력을 제공합니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> <span class="i">add</span>(<span class="i">a</span>, <span class="i">b</span>) {
   <span class="k">print</span> <span class="i">a</span> + <span class="i">b</span>;
 }
 
 <span class="k">print</span> <span class="i">add</span>; <span class="c">// "&lt;fn add&gt;".</span>
 </pre></div>
-<h3><a href="#interpreting-function-declarations" id="interpreting-function-declarations"><small>10 . 4 . 1</small>Interpreting function declarations</a></h3>
-<p>We’ll come back and refine LoxFunction soon, but that’s enough to get started.
-Now we can visit a function declaration.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-add after <em>visitExpressionStmt</em>()</div>
+<h3><a href="https://youhogeon-meritz.github.io/functions.html#interpreting-function-declarations" id="interpreting-function-declarations"><small><font papago-translate="translated">10 . 4 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">함수 선언 해석</font></font></a></h3>
+<p><font papago-translate="translated">곧 돌아와서 LoxFunction을 개선할 예정이지만, 이 정도면 시작할 수 있습니다.</font><font papago-translate="translated"> 이제 함수 선언을 방문할 수 있습니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가Ex<em>pressionStmt</em>()</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitFunctionStmt</span>(<span class="t">Stmt</span>.<span class="t">Function</span> <span class="i">stmt</span>) {
     <span class="t">LoxFunction</span> <span class="i">function</span> = <span class="k">new</span> <span class="t">LoxFunction</span>(<span class="i">stmt</span>);
@@ -787,34 +503,20 @@ add after <em>visitExpressionStmt</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, add after <em>visitExpressionStmt</em>()</div>
-<p>This is similar to how we interpret other literal expressions. We take a
-function <em>syntax node</em><span class="em">—</span>a compile-time representation of the function<span class="em">—</span>and
-convert it to its runtime representation. Here, that’s a LoxFunction that wraps
-the syntax node.</p>
-<p>Function declarations are different from other literal nodes in that the
-declaration <em>also</em> binds the resulting object to a new variable. So, after
-creating the LoxFunction, we create a new binding in the current environment and
-store a reference to it there.</p>
-<p>With that, we can define and call our own functions all within Lox. Give it a
-try:</p>
+<p><font papago-translate="translated">이것은 우리가 다른 문자 그대로의 표현을 해석하는 방식과 유사합니다.</font><font papago-translate="translated"> 함수<em>의</em> 컴파일 타임 표현<em>인</em> 함수<em> 구문 노드</em>를 가져와 런타임<span class="em"></span><span class="em"></span> 표현으로 변환합니다.</font><font papago-translate="translated"> 여기, 구문 노드를 감싸는 LoxFunction입니다.</font></p>
+<p><font papago-translate="translated">함수 선언은 선언이 결과 객체를 새로운 변수에 결합<em>한다는</em> 점에서 다른 리터럴 노드와 다릅니다.</font><font papago-translate="translated"> 그래서 LoxFunction을 생성한 후, 현재 환경에서 새로운 바인딩을 생성하고 이에 대한 참조를 저장합니다.</font></p>
+<p><font papago-translate="translated">이를 통해 우리는 Lox 내에서 우리만의 함수를 정의하고 부를 수 있습니다.</font><font papago-translate="translated"> 한 번 시도해 보세요:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> <span class="i">sayHi</span>(<span class="i">first</span>, <span class="i">last</span>) {
   <span class="k">print</span> <span class="s">"Hi, "</span> + <span class="i">first</span> + <span class="s">" "</span> + <span class="i">last</span> + <span class="s">"!"</span>;
 }
 
 <span class="i">sayHi</span>(<span class="s">"Dear"</span>, <span class="s">"Reader"</span>);
 </pre></div>
-<p>I don’t know about you, but that looks like an honest-to-God programming
-language to me.</p>
-<h2><a href="#return-statements" id="return-statements"><small>10 . 5</small>Return Statements</a></h2>
-<p>We can get data into functions by passing parameters, but we’ve got no way to
-get results back <span name="hotel"><em>out</em></span>. If Lox were an
-expression-oriented language like Ruby or Scheme, the body would be an
-expression whose value is implicitly the function’s result. But in Lox, the body
-of a function is a list of statements which don’t produce values, so we need
-dedicated syntax for emitting a result. In other words, <code translate="no">return</code> statements. I’m
-sure you can guess the grammar already.</p>
-<aside name="hotel">
-<p>The Hotel California of data.</p>
+<p><font papago-translate="translated">당신에 대해 잘 모르겠지만, 제게는 그것이 정직한 프로그래밍 언어처럼 보입니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/functions.html#return-statements" id="return-statements"><small><font papago-translate="translated">10 . 5</font></small><font papago-translate="splitted"><font papago-translate="translated">반품 명세서</font></font></a></h2>
+<p><font papago-translate="splitted"><font papago-translate="translated">매개변수를 통과시켜 데이터를 함수로 가져올 수는 있지만, 결과를 다시<span name="hotel"><em> 얻을</em></span> 방법은 없습니다.</font><font papago-translate="translated"> Lox가 Ruby나 Scheme과 같은 표현 지향 언어라면, 본문은 암묵적으로 함수의 결과 값을 가지는 표현일 것입니다.</font><font papago-translate="translated"> 하지만 Lox에서는 함수의 본문이 값을 생성하지 않는 명제들의 목록이므로, 결과를 내기 위해서는 전용 구문이 필요합니다.</font><font papago-translate="translated"> 다시 말해서, </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 진술들.</font><font papago-translate="translated"> 이미 문법을 맞출 수 있을 거라고 확신합니다.</font></font></p>
+<aside name="hotel" style="top: 15808.5px;">
+<p><font papago-translate="translated">데이터의 캘리포니아 호텔.</font></p>
 </aside>
 <div class="codehilite"><pre translate="no"><span class="i">statement</span>      → <span class="i">exprStmt</span>
                | <span class="i">forStmt</span>
@@ -826,15 +528,8 @@ sure you can guess the grammar already.</p>
 
 <span class="i">returnStmt</span>     → <span class="s">"return"</span> <span class="i">expression</span>? <span class="s">";"</span> ;
 </pre></div>
-<p>We’ve got one more<span class="em">—</span>the final, in fact<span class="em">—</span>production under the venerable
-<code translate="no">statement</code> rule. A <code translate="no">return</code> statement is the <code translate="no">return</code> keyword followed by an
-optional expression and terminated with a semicolon.</p>
-<p>The return value is optional to support exiting early from a function that
-doesn’t return a useful value. In statically typed languages, “void” functions
-don’t return a value and non-void ones do. Since Lox is dynamically typed, there
-are no true void functions. The compiler has no way of preventing you from
-taking the result value of a call to a function that doesn’t contain a <code translate="no">return</code>
-statement.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><span class="em"></span><span class="em"></span>우리는 또 하나의, 사실상 마지막 제작이 있습니다 </font></font><code translate="no">statement</code><font papago-translate="splitted"><font papago-translate="translated"> 규칙. A </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 문장은 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드 뒤에 선택적인 표현이 있고 세미콜론으로 종료됩니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">반환 값은 유용한 값을 반환하지 않는 함수에서 조기 종료를 지원하기 위해 선택 사항입니다.</font><font papago-translate="translated"> 정적으로 입력된 언어에서는 "공백" 함수가 값을 반환하지 않고, 비공백 함수는 반환하지 않습니다.</font><font papago-translate="translated"> Lox는 동적으로 입력되므로 진정한 공백 함수는 존재하지 않습니다.</font><font papago-translate="translated"> 컴파일러는 호출의 결과 값을 포함하지 않은 함수로 가져오는 것을 막을 방법이 없습니다 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 진술.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> <span class="i">procedure</span>() {
   <span class="k">print</span> <span class="s">"don't return anything"</span>;
 }
@@ -842,36 +537,28 @@ statement.</p>
 <span class="k">var</span> <span class="i">result</span> = <span class="i">procedure</span>();
 <span class="k">print</span> <span class="i">result</span>; <span class="c">// ?</span>
 </pre></div>
-<p>This means every Lox function must return <em>something</em>, even if it contains no
-<code translate="no">return</code> statements at all. We use <code translate="no">nil</code> for this, which is why LoxFunction’s
-implementation of <code translate="no">call()</code> returns <code translate="no">null</code> at the end. In that same vein, if you
-omit the value in a <code translate="no">return</code> statement, we simply treat it as equivalent to:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">즉, 모든 Lox 함수는 다음을 포함하지 않더라도<em> 무언가</em>를 반환해야 합니다 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 진술서가 전혀 없습니다.</font><font papago-translate="translated"> 우리는 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 이를 위해 LoxFunction의 구현은 다음과 같습니다 </font></font><code translate="no">call()</code><font papago-translate="splitted"><font papago-translate="translated"> 돌아온다 </font></font><code translate="no">null</code><font papago-translate="splitted"><font papago-translate="translated"> 마지막에.</font><font papago-translate="translated"> 같은 맥락에서, 만약 a의 값을 생략한다면 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 문장, 우리는 단순히 그것을 다음과 동등한 것으로 취급합니다:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">return</span> <span class="k">nil</span>;
 </pre></div>
-<p>Over in our AST generator, we add a <span name="return-ast">new node</span>.</p>
+<p><font papago-translate="translated">AST 생성기에<span name="return-ast"> 새로운 노드</span>를 추가합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      "Print      : Expr expression",
-</pre><div class="source-file"><em>tool/GenerateAst.java</em><br/>
-in <em>main</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">도구/GenerateAst.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>메인</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="s">"Return     : Token keyword, Expr value"</span>,
 </pre><pre class="insert-after" translate="no">      "Var        : Token name, Expr initializer",
 </pre></div>
 <div class="source-file-narrow"><em>tool/GenerateAst.java</em>, in <em>main</em>()</div>
-<aside name="return-ast">
-<p>The generated code for the new node is in <a href="appendix-ii.html#return-statement">Appendix II</a>.</p>
+<aside name="return-ast" style="top: 16704.5px;">
+<p><font papago-translate="translated">새 노드에 대한 생성된 코드는 부록<a href="https://youhogeon-meritz.github.io/appendix-ii.html#return-statement"> II</a>에 있습니다.</font></p>
 </aside>
-<p>It keeps the <code translate="no">return</code> keyword token so we can use its location for error
-reporting, and the value being returned, if any. We parse it like other
-statements, first by recognizing the initial keyword.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그것은 다음을 유지합니다 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드 토큰을 사용하여 오류 보고 및 반환되는 값을 확인할 수 있습니다.</font><font papago-translate="translated"> 우리는 먼저 초기 키워드를 인식하여 다른 문장들처럼 그것을 분석합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    if (match(PRINT)) return printStatement();
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>statement</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>성명</em>서 ()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">if</span> (<span class="i">match</span>(<span class="i">RETURN</span>)) <span class="k">return</span> <span class="i">returnStatement</span>();
 </pre><pre class="insert-after" translate="no">    if (match(WHILE)) return whileStatement();
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>statement</em>()</div>
-<p>That branches out to:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>printStatement</em>()</div>
+<p><font papago-translate="translated">그것은 다음과 같이 확장됩니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>print</em>St<em>atement</em>() 후에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Stmt</span> <span class="i">returnStatement</span>() {
     <span class="t">Token</span> <span class="i">keyword</span> = <span class="i">previous</span>();
     <span class="t">Expr</span> <span class="i">value</span> = <span class="k">null</span>;
@@ -884,19 +571,10 @@ add after <em>printStatement</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>printStatement</em>()</div>
-<p>After snagging the previously consumed <code translate="no">return</code> keyword, we look for a value
-expression. Since many different tokens can potentially start an expression,
-it’s hard to tell if a return value is <em>present</em>. Instead, we check if it’s
-<em>absent</em>. Since a semicolon can’t begin an expression, if the next token is
-that, we know there must not be a value.</p>
-<h3><a href="#returning-from-calls" id="returning-from-calls"><small>10 . 5 . 1</small>Returning from calls</a></h3>
-<p>Interpreting a <code translate="no">return</code> statement is tricky. You can return from anywhere within
-the body of a function, even deeply nested inside other statements. When the
-return is executed, the interpreter needs to jump all the way out of whatever
-context it’s currently in and cause the function call to complete, like some
-kind of jacked up control flow construct.</p>
-<p>For example, say we’re running this program and we’re about to execute the
-<code translate="no">return</code> statement:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이전에 소비된 것을 잡은 후 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드, 우리는 가치 표현을 찾습니다.</font><font papago-translate="translated"> 다양한 토큰이 잠재적으로 표현식을 시작할 수 있기 때문에 수익률 값이<em> 존재</em>하는지 구분하기 어렵습니다.</font><font papago-translate="translated"> 대신<em> 부재</em> 여부를 확인합니다.</font><font papago-translate="translated"> 세미콜론은 표현식을 시작할 수 없으므로 다음 토큰이 그런 경우 값이 없어야 한다는 것을 알고 있습니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/functions.html#returning-from-calls" id="returning-from-calls"><small><font papago-translate="translated">10 . 5 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">전화에서 돌아오기</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">해석하기 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 진술은 까다롭습니다.</font><font papago-translate="translated"> 함수의 본문 내 어디에서나, 심지어 다른 문장 내부에 깊이 중첩된 상태에서도 돌아올 수 있습니다.</font><font papago-translate="translated"> 반환이 실행될 때, 인터프리터는 현재 어떤 상황에 있든 완전히 벗어나서 함수 호출을 완료하게 해야 합니다. 마치 일종의 잭업 제어 흐름 구조처럼 말이죠.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">예를 들어, 우리가 이 프로그램을 실행하고 있고 곧 실행할 것이라고 가정해 보겠습니다 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 진술:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> <span class="i">count</span>(<span class="i">n</span>) {
   <span class="k">while</span> (<span class="i">n</span> &lt; <span class="n">100</span>) {
     <span class="k">if</span> (<span class="i">n</span> == <span class="n">3</span>) <span class="k">return</span> <span class="i">n</span>; <span class="c">// &lt;--</span>
@@ -907,7 +585,7 @@ kind of jacked up control flow construct.</p>
 
 <span class="i">count</span>(<span class="n">1</span>);
 </pre></div>
-<p>The Java call stack currently looks roughly like this:</p>
+<p><font papago-translate="translated">Java 호출 스택은 현재 대략 다음과 같습니다:</font></p>
 <div class="codehilite"><pre translate="no">Interpreter.visitReturnStmt()
 Interpreter.visitIfStmt()
 Interpreter.executeBlock()
@@ -917,14 +595,9 @@ Interpreter.executeBlock()
 LoxFunction.call()
 Interpreter.visitCallExpr()
 </pre></div>
-<p>We need to get from the top of the stack all the way back to <code translate="no">call()</code>. I don’t
-know about you, but to me that sounds like exceptions. When we execute a
-<code translate="no">return</code> statement, we’ll use an exception to unwind the interpreter past the
-visit methods of all of the containing statements back to the code that began
-executing the body.</p>
-<p>The visit method for our new AST node looks like this:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-add after <em>visitPrintStmt</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">스택의 맨 위에서 다시 시작해야 합니다 </font></font><code translate="no">call()</code><font papago-translate="splitted"><font papago-translate="translated">. 당신에 대해 잘 모르겠지만, 저에게는 그것이 예외처럼 들립니다.</font><font papago-translate="translated"> 실행할 때 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 문장, 우리는 예외를 사용하여 해석자가 본문을 실행하기 시작한 코드로 돌아가는 모든 문장의 방문 방법을 지나쳐 풀어낼 것입니다.</font></font></p>
+<p><font papago-translate="translated">새로운 AST 노드의 방문 방법은 다음과 같습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가<em>PrintStmt</em>()</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitReturnStmt</span>(<span class="t">Stmt</span>.<span class="t">Return</span> <span class="i">stmt</span>) {
     <span class="t">Object</span> <span class="i">value</span> = <span class="k">null</span>;
@@ -934,10 +607,8 @@ add after <em>visitPrintStmt</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, add after <em>visitPrintStmt</em>()</div>
-<p>If we have a return value, we evaluate it, otherwise, we use <code translate="no">nil</code>. Then we take
-that value and wrap it in a custom exception class and throw it.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Return.java</em><br/>
-create new file</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">반환 값이 있으면 평가하고, 그렇지 않으면 다음을 사용합니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">. 그런 다음 해당 값을 사용자 지정 예외 클래스에 묶어 던집니다.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Return.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 새 파일 만들기</font></font></div>
 <pre translate="no"><span class="k">package</span> <span class="i">com.craftinginterpreters.lox</span>;
 
 <span class="k">class</span> <span class="t">Return</span> <span class="k">extends</span> <span class="t">RuntimeException</span> {
@@ -950,26 +621,15 @@ create new file</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Return.java</em>, create new file</div>
-<p>This class wraps the return value with the accoutrements Java requires for a
-runtime exception class. The weird super constructor call with those <code translate="no">null</code> and
-<code translate="no">false</code> arguments disables some JVM machinery that we don’t need. Since we’re
-using our exception class for <span name="exception">control flow</span> and not
-actual error handling, we don’t need overhead like stack traces.</p>
-<aside name="exception">
-<p>For the record, I’m not generally a fan of using exceptions for control flow.
-But inside a heavily recursive tree-walk interpreter, it’s the way to go. Since
-our own syntax tree evaluation is so heavily tied to the Java call stack, we’re
-pressed to do some heavyweight call stack manipulation occasionally, and
-exceptions are a handy tool for that.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 클래스는 런타임 예외 클래스에 Java가 요구하는 계정으로 반환 값을 마무리합니다.</font><font papago-translate="translated"> 이상한 슈퍼 컨스트럭터 호출은 다음과 같습니다 </font></font><code translate="no">null</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated"> 인수는 우리가 필요하지 않은 일부 JVM 기계를 비활성화합니다.</font><font papago-translate="translated"> 우리는 실제 오류 처리가 아닌<span name="exception"> 제어 흐름</span>을 위해 예외 클래스를 사용하고 있기 때문에 스택 트레이스와 같은 오버헤드가 필요하지 않습니다.</font></font></p>
+<aside name="exception" style="top: 18832.5px;">
+<p><font papago-translate="translated">참고로, 저는 일반적으로 제어 흐름에 예외를 사용하는 것을 좋아하지 않습니다.</font><font papago-translate="translated"> 하지만 매우 재귀적인 트리워크 인터프리터 안에서는 그렇게 할 수 있습니다.</font><font papago-translate="translated"> 우리의 구문 트리 평가가 Java 호출 스택과 너무 밀접하게 연관되어 있기 때문에, 때때로 무거운 호출 스택 조작을 해야 한다는 압박을 받습니다. 예외는 이를 위한 유용한 도구입니다.</font></p>
 </aside>
-<p>We want this to unwind all the way to where the function call began, the
-<code translate="no">call()</code> method in LoxFunction.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 이것이 함수 호출이 시작된 곳까지 완전히 풀리기를 원합니다 </font></font><code translate="no">call()</code><font papago-translate="splitted"><font papago-translate="translated"> LoxFunction의 메서드.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">          arguments.get(i));
     }
 
-</pre><div class="source-file"><em>lox/LoxFunction.java</em><br/>
-in <em>call</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/LoxFunction.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>콜</em> ()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">    <span class="k">try</span> {
       <span class="i">interpreter</span>.<span class="i">executeBlock</span>(<span class="i">declaration</span>.<span class="i">body</span>, <span class="i">environment</span>);
     } <span class="k">catch</span> (<span class="t">Return</span> <span class="i">returnValue</span>) {
@@ -978,13 +638,8 @@ replace 1 line</div>
 </pre><pre class="insert-after" translate="no">    return null;
 </pre></div>
 <div class="source-file-narrow"><em>lox/LoxFunction.java</em>, in <em>call</em>(), replace 1 line</div>
-<p>We wrap the call to <code translate="no">executeBlock()</code> in a try-catch block. When it catches a
-return exception, it pulls out the value and makes that the return value from
-<code translate="no">call()</code>. If it never catches one of these exceptions, it means the function
-reached the end of its body without hitting a <code translate="no">return</code> statement. In that case,
-it implicitly returns <code translate="no">nil</code>.</p>
-<p>Let’s try it out. We finally have enough power to support this classic
-example<span class="em">—</span>a recursive function to calculate Fibonacci numbers:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">전화를 마치겠습니다 </font></font><code translate="no">executeBlock()</code><font papago-translate="splitted"><font papago-translate="translated"> 트라이 catch 블록에서.</font><font papago-translate="translated"> 반환 예외를 포착하면 값을 꺼내어 다음과 같은 반환 값을 만듭니다 </font></font><code translate="no">call()</code><font papago-translate="splitted"><font papago-translate="translated">. 이러한 예외 중 하나를 결코 포착하지 못하면 함수가 몸의 끝에 도달하지 않고 다음과 같은 결과를 초래한다는 의미입니다 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 진술.</font><font papago-translate="translated"> 이 경우 암묵적으로 반환됩니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="translated">한번 시도해 보겠습니다.</font><font papago-translate="translated"> 마침내 피보나치<span class="em"></span> 수를 계산하는 재귀 함수인 이 고전적인 예제를 지원할 수 있는 충분한 힘을 얻었습니다:</font></p>
 <p><span name="slow"></span></p>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> <span class="i">fib</span>(<span class="i">n</span>) {
   <span class="k">if</span> (<span class="i">n</span> &lt;= <span class="n">1</span>) <span class="k">return</span> <span class="i">n</span>;
@@ -995,33 +650,17 @@ example<span class="em">—</span>a recursive function to calculate Fibonacci nu
   <span class="k">print</span> <span class="i">fib</span>(<span class="i">i</span>);
 }
 </pre></div>
-<p>This tiny program exercises almost every language feature we have spent the past
-several chapters implementing<span class="em">—</span>expressions, arithmetic, branching, looping,
-variables, functions, function calls, parameter binding, and returns.</p>
-<aside name="slow">
-<p>You might notice this is pretty slow. Obviously, recursion isn’t the most
-efficient way to calculate Fibonacci numbers, but as a microbenchmark, it does
-a good job of stress testing how fast our interpreter implements function calls.</p>
-<p>As you can see, the answer is “not very fast”. That’s OK. Our C interpreter will
-be faster.</p>
+<p><font papago-translate="translated">이 작은 프로그램은 표현, 산술, 분기, 루프, 변수, 함수, 함수 호출, 매개변수 바인딩,<span class="em"></span> 반환 등 지난 몇 장에서 구현한 거의 모든 언어 기능을 다룹니다.</font></p>
+<aside name="slow" style="top: 19370.5px;">
+<p><font papago-translate="translated">이것이 꽤 느리다는 것을 눈치챌 수도 있습니다.</font><font papago-translate="translated"> 물론 재귀는 피보나치 수를 계산하는 가장 효율적인 방법은 아니지만, 마이크로벤치마크로서 인터프리터가 함수 호출을 얼마나 빠르게 구현하는지 스트레스 테스트를 잘 수행합니다.</font></p>
+<p><font papago-translate="translated">보시다시피, 답은 "매우 빠르지 않다"입니다.</font><font papago-translate="translated"> 괜찮습니다.</font><font papago-translate="translated"> 저희 C 통역사가 더 빠를 것입니다.</font></p>
 </aside>
-<h2><a href="#local-functions-and-closures" id="local-functions-and-closures"><small>10 . 6</small>Local Functions and Closures</a></h2>
-<p>Our functions are pretty full featured, but there is one hole to patch. In fact,
-it’s a big enough gap that we’ll spend most of the <a href="resolving-and-binding.html">next chapter</a> sealing it
-up, but we can get started here.</p>
-<p>LoxFunction’s implementation of <code translate="no">call()</code> creates a new environment where it
-binds the function’s parameters. When I showed you that code, I glossed over one
-important point: What is the <em>parent</em> of that environment?</p>
-<p>Right now, it is always <code translate="no">globals</code>, the top-level global environment. That way,
-if an identifier isn’t defined inside the function body itself, the interpreter
-can look outside the function in the global scope to find it. In the Fibonacci
-example, that’s how the interpreter is able to look up the recursive call to
-<code translate="no">fib</code> inside the function’s own body<span class="em">—</span><code translate="no">fib</code> is a global variable.</p>
-<p>But recall that in Lox, function declarations are allowed <em>anywhere</em> a name can
-be bound. That includes the top level of a Lox script, but also the inside of
-blocks or other functions. Lox supports <strong>local functions</strong> that are defined
-inside another function, or nested inside a block.</p>
-<p>Consider this classic example:</p>
+<h2><a href="https://youhogeon-meritz.github.io/functions.html#local-functions-and-closures" id="local-functions-and-closures"><small><font papago-translate="translated">10 . 6</font></small><font papago-translate="splitted"><font papago-translate="translated">지역 기능 및 폐쇄</font></font></a></h2>
+<p><font papago-translate="translated">우리의 기능은 꽤 완벽하게 갖추고 있지만, 한 가지 해결해야 할 문제가 있습니다.</font><font papago-translate="translated"> 사실<a href="https://youhogeon-meritz.github.io/resolving-and-binding.html">, 다음 장</a>의 대부분을 마무리하는 데 할애할 만큼 큰 공백이지만, 여기서부터 시작할 수 있습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">LoxFunction의 구현 </font></font><code translate="no">call()</code><font papago-translate="splitted"><font papago-translate="translated"> 함수의 매개변수를 묶는 새로운 환경을 만듭니다.</font><font papago-translate="translated"> 제가 그 코드를 보여드릴 때, 한 가지 중요한 점을 간과했습니다:</font><font papago-translate="translated"> 그 환경<em>의 부모</em>는 무엇인가요?</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">지금은 항상 그렇습니다 </font></font><code translate="no">globals</code><font papago-translate="splitted"><font papago-translate="translated">, 최고 수준의 글로벌 환경.</font><font papago-translate="translated"> 그렇게 하면, 함수 본체 내부에 식별자가 정의되지 않으면, 해석자는 전역 범위에서 함수 외부를 보고 그것을 찾을 수 있습니다.</font><font papago-translate="translated"> 피보나치 예시에서, 이것이 통역사가 재귀적 호출을 조회할 수 있는 방법입니다 </font></font><code translate="no">fib</code><font papago-translate="splitted"><font papago-translate="translated"> 함수 자체<span class="em"></span>의 내부—</font></font><code translate="no">fib</code><font papago-translate="splitted"><font papago-translate="translated"> 는 글로벌 변수입니다.</font></font></p>
+<p><font papago-translate="translated">하지만 Lox에서는 이름을 묶을<em> 수 있는 모든 곳에서</em> 함수 선언이 허용된다는 점을 기억하세요.</font><font papago-translate="translated"> 여기에는 Lox 스크립트의 최상위 레벨뿐만 아니라 블록 또는 기타 기능의 내부도 포함됩니다.</font><font papago-translate="translated"> Lox는 다른 함수 내부에 정의되거나 블록 내부에 중첩된<strong> 로컬 함수</strong>를 지원합니다.</font></p>
+<p><font papago-translate="translated">이 고전적인 예를 생각해 보세요:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> <span class="i">makeCounter</span>() {
   <span class="k">var</span> <span class="i">i</span> = <span class="n">0</span>;
   <span class="k">fun</span> <span class="i">count</span>() {
@@ -1036,108 +675,56 @@ inside another function, or nested inside a block.</p>
 <span class="i">counter</span>(); <span class="c">// "1".</span>
 <span class="i">counter</span>(); <span class="c">// "2".</span>
 </pre></div>
-<p>Here, <code translate="no">count()</code> uses <code translate="no">i</code>, which is declared outside of itself in the containing
-function <code translate="no">makeCounter()</code>. <code translate="no">makeCounter()</code> returns a reference to the <code translate="no">count()</code>
-function and then its own body finishes executing completely.</p>
-<p>Meanwhile, the top-level code invokes the returned <code translate="no">count()</code> function. That
-executes the body of <code translate="no">count()</code>, which assigns to and reads <code translate="no">i</code>, even though the
-function where <code translate="no">i</code> was defined has already exited.</p>
-<p>If you’ve never encountered a language with nested functions before, this might
-seem crazy, but users do expect it to work. Alas, if you run it now, you get an
-undefined variable error in the call to <code translate="no">counter()</code> when the body of <code translate="no">count()</code>
-tries to look up <code translate="no">i</code>. That’s because the environment chain in effect looks like
-this:</p><img alt="The environment chain from count()'s body to the global scope." src="image/functions/global.png"/>
-<p>When we call <code translate="no">count()</code> (through the reference to it stored in <code translate="no">counter</code>), we
-create a new empty environment for the function body. The parent of that is the
-global environment. We lost the environment for <code translate="no">makeCounter()</code> where <code translate="no">i</code> is
-bound.</p>
-<p>Let’s go back in time a bit. Here’s what the environment chain looked like right
-when we declared <code translate="no">count()</code> inside the body of <code translate="no">makeCounter()</code>:</p><img alt="The environment chain inside the body of makeCounter()." src="image/functions/body.png"/>
-<p>So at the point where the function is declared, we can see <code translate="no">i</code>. But when we
-return from <code translate="no">makeCounter()</code> and exit its body, the interpreter discards that
-environment. Since the interpreter doesn’t keep the environment surrounding
-<code translate="no">count()</code> around, it’s up to the function object itself to hang on to it.</p>
-<p>This data structure is called a <span name="closure"><strong>closure</strong></span> because
-it “closes over” and holds on to the surrounding variables where the function is
-declared. Closures have been around since the early Lisp days, and language
-hackers have come up with all manner of ways to implement them. For jlox, we’ll
-do the simplest thing that works. In LoxFunction, we add a field to store an
-environment.</p>
-<aside name="closure">
-<p>“Closure” is yet another term coined by Peter J. Landin. I assume before he came
-along that computer scientists communicated with each other using only primitive
-grunts and pawing hand gestures.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">여기서, </font></font><code translate="no">count()</code><font papago-translate="splitted"><font papago-translate="translated"> 사용하다 </font></font><code translate="no">i</code><font papago-translate="splitted"><font papago-translate="translated">, 포함 함수에서 자신 외부에 선언된 </font></font><code translate="no">makeCounter()</code><font papago-translate="splitted"><font papago-translate="translated">. </font></font><code translate="no">makeCounter()</code><font papago-translate="splitted"><font papago-translate="translated"> 참조를 반환합니다 </font></font><code translate="no">count()</code><font papago-translate="splitted"><font papago-translate="translated"> 기능을 수행한 후 자체 본체가 완전히 실행됩니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">한편, 최상위 코드는 반환된 코드를 호출합니다 </font></font><code translate="no">count()</code><font papago-translate="splitted"><font papago-translate="translated"> 기능.</font><font papago-translate="translated"> 그것은 다음과 같은 본문을 실행합니다 </font></font><code translate="no">count()</code><font papago-translate="splitted"><font papago-translate="translated">, 할당하고 읽습니다 </font></font><code translate="no">i</code><font papago-translate="splitted"><font papago-translate="translated">, 비록 함수가 다음과 같더라도 </font></font><code translate="no">i</code><font papago-translate="splitted"><font papago-translate="translated"> 정의된 항목이 이미 종료되었습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">중첩 기능이 있는 언어를 한 번도 접해본 적이 없다면 미친 듯이 보일 수 있지만, 사용자들은 이 언어가 작동할 것이라고 기대합니다.</font><font papago-translate="translated"> 아, 지금 실행하면 다음과 같은 호출에서 정의되지 않은 변수 오류가 발생합니다 </font></font><code translate="no">counter()</code><font papago-translate="splitted"><font papago-translate="translated"> 다음과 같은 경우 </font></font><code translate="no">count()</code><font papago-translate="splitted"><font papago-translate="translated"> 위를 보려고 합니다 </font></font><code translate="no">i</code><font papago-translate="splitted"><font papago-translate="translated">. 그것은 사실상 환경 사슬이 다음과 같이 보이기 때문입니다:</font></font></p><img alt="The environment chain from count()'s body to the global scope." src="https://youhogeon-meritz.github.io/image/functions/global.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">우리가 전화할 때 </font></font><code translate="no">count()</code><font papago-translate="splitted"><font papago-translate="translated"> (저장된 참조를 통해) </font></font><code translate="no">counter</code><font papago-translate="splitted"><font papago-translate="translated">), 함수 본문을 위한 새로운 빈 환경을 만듭니다.</font><font papago-translate="translated"> 그 부모는 지구 환경입니다.</font><font papago-translate="translated"> 우리는 다음과 같은 이유로 환경을 잃었습니다 </font></font><code translate="no">makeCounter()</code><font papago-translate="splitted"><font papago-translate="translated"> 어디에 </font></font><code translate="no">i</code><font papago-translate="splitted"><font papago-translate="translated"> 묶여 있습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">시간을 조금 거슬러 올라가 보겠습니다.</font><font papago-translate="translated"> 다음은 우리가 선언했을 때 환경 사슬의 모습입니다 </font></font><code translate="no">count()</code><font papago-translate="splitted"><font papago-translate="translated"> 몸 안에서 </font></font><code translate="no">makeCounter()</code><font papago-translate="splitted"><font papago-translate="translated">:</font></font></p><img alt="The environment chain inside the body of makeCounter()." src="https://youhogeon-meritz.github.io/image/functions/body.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">따라서 함수가 선언되는 지점에서 다음을 확인할 수 있습니다 </font></font><code translate="no">i</code><font papago-translate="splitted"><font papago-translate="translated">. 하지만 우리가 돌아왔을 때 </font></font><code translate="no">makeCounter()</code><font papago-translate="splitted"><font papago-translate="translated"> 몸 밖으로 나가면 통역사는 그 환경을 버립니다.</font><font papago-translate="translated"> 통역사가 주변 환경을 유지하지 않기 때문에 </font></font><code translate="no">count()</code><font papago-translate="splitted"><font papago-translate="translated"> 함수 객체 자체에 매달리는 것은 함수 객체 자체에 달려 있습니다.</font></font></p>
+<p><font papago-translate="translated">이 데이터 구조는 함수가 선언된 주변 변수를 "닫히고" 유지하기 때문에<span name="closure"><strong> 폐쇄</strong></span>라고 불립니다.</font><font papago-translate="translated"> 리스프 초창기부터 폐쇄가 계속되어 왔으며, 언어 해커들은 이를 구현하기 위한 다양한 방법을 제시해 왔습니다.</font><font papago-translate="translated"> Jlox의 경우 가장 간단한 작업을 수행합니다.</font><font papago-translate="translated"> LoxFunction에서는 환경을 저장하기 위해 필드를 추가합니다.</font></p>
+<aside name="closure" style="top: 21670.5px;">
+<p><font papago-translate="translated">"폐쇄"는 피터 J. 랜딘이 만든 또 다른 용어입니다.</font><font papago-translate="translated"> 그가 등장하기 전에는 컴퓨터 과학자들이 원시적인 투덜거림과 손짓만으로 서로 소통했다고 생각합니다.</font></p>
 </aside>
 <div class="codehilite"><pre class="insert-before" translate="no">  private final Stmt.Function declaration;
-</pre><div class="source-file"><em>lox/LoxFunction.java</em><br/>
-in class <em>LoxFunction</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/LoxFunction.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> L<em>oxFunction</em> 클래스에서</font></font></div>
 <pre class="insert" translate="no">  <span class="k">private</span> <span class="k">final</span> <span class="t">Environment</span> <span class="i">closure</span>;
 
 </pre><pre class="insert-after" translate="no">  LoxFunction(Stmt.Function declaration) {
 </pre></div>
 <div class="source-file-narrow"><em>lox/LoxFunction.java</em>, in class <em>LoxFunction</em></div>
-<p>We initialize that in the constructor.</p>
-<div class="codehilite"><div class="source-file"><em>lox/LoxFunction.java</em><br/>
-constructor <em>LoxFunction</em>()<br/>
-replace 1 line</div>
+<p><font papago-translate="translated">우리는 그것을 생성자에서 초기화합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/LoxFunction.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 생성자 L<em>oxFunction</em>()</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  <span class="t">LoxFunction</span>(<span class="t">Stmt</span>.<span class="t">Function</span> <span class="i">declaration</span>, <span class="t">Environment</span> <span class="i">closure</span>) {
     <span class="k">this</span>.<span class="i">closure</span> = <span class="i">closure</span>;
 </pre><pre class="insert-after" translate="no">    this.declaration = declaration;
 </pre></div>
 <div class="source-file-narrow"><em>lox/LoxFunction.java</em>, constructor <em>LoxFunction</em>(), replace 1 line</div>
-<p>When we create a LoxFunction, we capture the current environment.</p>
+<p><font papago-translate="translated">LoxFunction을 생성할 때 현재 환경을 캡처합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  public Void visitFunctionStmt(Stmt.Function stmt) {
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitFunctionStmt</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 중에</font><font papago-translate="translated"><em>FunctionStmt</em>()</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">    <span class="t">LoxFunction</span> <span class="i">function</span> = <span class="k">new</span> <span class="t">LoxFunction</span>(<span class="i">stmt</span>, <span class="i">environment</span>);
 </pre><pre class="insert-after" translate="no">    environment.define(stmt.name.lexeme, function);
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitFunctionStmt</em>(), replace 1 line</div>
-<p>This is the environment that is active when the function is <em>declared</em> not when
-it’s <em>called</em>, which is what we want. It represents the lexical scope
-surrounding the function declaration. Finally, when we call the function, we use
-that environment as the call’s parent instead of going straight to <code translate="no">globals</code>.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 함수<em>가 호출</em>될 때가 아니라<em> 선언</em>될 때 활성화되는 환경이며, 우리가 원하는 것입니다.</font><font papago-translate="translated"> 함수 선언을 둘러싼 어휘 범위를 나타냅니다.</font><font papago-translate="translated"> 마지막으로 함수를 호출할 때는 바로 다음으로 이동하는 대신 해당 환경을 호출의 부모로 사용합니다 </font></font><code translate="no">globals</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">                     List&lt;Object&gt; arguments) {
-</pre><div class="source-file"><em>lox/LoxFunction.java</em><br/>
-in <em>call</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/LoxFunction.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>콜</em> ()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">    <span class="t">Environment</span> <span class="i">environment</span> = <span class="k">new</span> <span class="t">Environment</span>(<span class="i">closure</span>);
 </pre><pre class="insert-after" translate="no">    for (int i = 0; i &lt; declaration.params.size(); i++) {
 </pre></div>
 <div class="source-file-narrow"><em>lox/LoxFunction.java</em>, in <em>call</em>(), replace 1 line</div>
-<p>This creates an environment chain that goes from the function’s body out through
-the environments where the function is declared, all the way out to the global
-scope. The runtime environment chain matches the textual nesting of the source
-code like we want. The end result when we call that function looks like this:</p><img alt="The environment chain with the closure." src="image/functions/closure.png"/>
-<p>Now, as you can see, the interpreter can still find <code translate="no">i</code> when it needs to because
-it’s in the middle of the environment chain. Try running that <code translate="no">makeCounter()</code>
-example now. It works!</p>
-<p>Functions let us abstract over, reuse, and compose code. Lox is much more
-powerful than the rudimentary arithmetic calculator it used to be. Alas, in our
-rush to cram closures in, we have let a tiny bit of dynamic scoping leak into
-the interpreter. In the <a href="resolving-and-binding.html">next chapter</a>, we will explore deeper into lexical
-scope and close that hole.</p>
+<p><font papago-translate="translated">이는 기능의 본체에서 기능이 선언된 환경을 거쳐 글로벌 범위까지 이어지는 환경 사슬을 형성합니다.</font><font papago-translate="translated"> 런타임 환경 체인은 우리가 원하는 대로 소스 코드의 텍스트 중첩과 일치합니다.</font><font papago-translate="translated"> 그 함수를 호출하면 최종 결과는 다음과 같습니다:</font></p><img alt="The environment chain with the closure." src="https://youhogeon-meritz.github.io/image/functions/closure.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">보시다시피, 통역사는 여전히 </font></font><code translate="no">i</code><font papago-translate="splitted"><font papago-translate="translated"> 환경 사슬의 한가운데에 있기 때문에 필요할 때.</font><font papago-translate="translated"> 실행해 보세요 </font></font><code translate="no">makeCounter()</code><font papago-translate="splitted"><font papago-translate="translated"> 지금 예시입니다.</font><font papago-translate="translated"> 작동합니다!</font></font></p>
+<p><font papago-translate="translated">함수를 사용하면 코드를 추상화하고 재사용하며 구성할 수 있습니다.</font><font papago-translate="translated"> Lox는 예전의 기본 산술 계산기보다 훨씬 더 강력합니다.</font><font papago-translate="translated"> 안타깝게도, 우리가 서둘러 클로저를 삽입하는 과정에서 통역사에게 약간의 동적 범위가 새어나갔습니다.</font><font papago-translate="translated"> <a href="https://youhogeon-meritz.github.io/resolving-and-binding.html">다음 장</a>에서는 어휘 범위를 더 깊이 탐구하고 그 구멍을 마무리하겠습니다.</font></p>
 <div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+<h2><a href="https://youhogeon-meritz.github.io/functions.html#challenges" id="challenges"><font papago-translate="translated">과제들</font></a></h2>
 <ol>
 <li>
-<p>Our interpreter carefully checks that the number of arguments passed to a
-function matches the number of parameters it expects. Since this check is
-done at runtime on every call, it has a performance cost. Smalltalk
-implementations don’t have that problem. Why not?</p>
+<p><font papago-translate="translated">우리 통역사는 함수에 전달된 인수의 수가 예상되는 매개변수의 수와 일치하는지 신중하게 확인합니다.</font><font papago-translate="translated"> 이 검사는 모든 통화에서 런타임에 수행되므로 성능 비용이 듭니다.</font><font papago-translate="translated"> 스몰토크 구현에는 그런 문제가 없습니다.</font><font papago-translate="translated"> 왜 안 되나요?</font></p>
 </li>
 <li>
-<p>Lox’s function declaration syntax performs two independent operations. It
-creates a function and also binds it to a name. This improves usability for
-the common case where you do want to associate a name with the function.
-But in functional-styled code, you often want to create a function to
-immediately pass it to some other function or return it. In that case, it
-doesn’t need a name.</p>
-<p>Languages that encourage a functional style usually support <strong>anonymous
-functions</strong> or <strong>lambdas</strong><span class="em">—</span>an expression syntax that creates a function
-without binding it to a name. Add anonymous function syntax to Lox so that
-this works:</p>
+<p><font papago-translate="translated">Lox의 함수 선언 구문은 두 가지 독립적인 연산을 수행합니다.</font><font papago-translate="translated"> 함수를 생성하고 이름에 바인딩하기도 합니다.</font><font papago-translate="translated"> 이렇게 하면 이름을 함수와 연결하고자 하는 일반적인 경우의 사용성이 향상됩니다.</font><font papago-translate="translated"> 하지만 함수형 코드에서는 함수를 생성하여 즉시 다른 함수로 전달하거나 반환하는 경우가 많습니다.</font><font papago-translate="translated"> 그렇다면 이름이 필요하지 않습니다.</font></p>
+<p><font papago-translate="translated">기능 스타일을 장려하는 언어는 일반적으로<strong> 익명 함수</strong> 또는<strong> 람다스</strong>(<span class="em"></span>이름에 바인딩하지 않고 함수를 생성하는 표현 구문)를 지원합니다.</font><font papago-translate="translated"> Lox에 익명 함수 구문을 추가하여 이 기능이 작동하도록 합니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> <span class="i">thrice</span>(<span class="i">fn</span>) {
   <span class="k">for</span> (<span class="k">var</span> <span class="i">i</span> = <span class="n">1</span>; <span class="i">i</span> &lt;= <span class="n">3</span>; <span class="i">i</span> = <span class="i">i</span> + <span class="n">1</span>) {
     <span class="i">fn</span>(<span class="i">i</span>);
@@ -1151,30 +738,29 @@ this works:</p>
 <span class="c">// "2".</span>
 <span class="c">// "3".</span>
 </pre></div>
-<p>How do you handle the tricky case of an anonymous function expression
-occurring in an expression statement:</p>
+<p><font papago-translate="translated">표현식 문에서 발생하는 익명 함수 표현의 까다로운 경우를 어떻게 처리합니까:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> () {};
 </pre></div>
 </li>
 <li>
-<p>Is this program valid?</p>
+<p><font papago-translate="translated">이 프로그램이 유효합니까?</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> <span class="i">scope</span>(<span class="i">a</span>) {
   <span class="k">var</span> <span class="i">a</span> = <span class="s">"local"</span>;
 }
 </pre></div>
-<p>In other words, are a function’s parameters in the <em>same</em> scope as its local
-variables, or in an outer scope? What does Lox do? What about other
-languages you are familiar with? What do you think a language <em>should</em> do?</p>
+<p><font papago-translate="translated">다시 말해, 함수의 매개변수는 로컬 변수와<em> 동일</em>한 범위에 있습니까, 아니면 외부 범위에 있습니까?</font><font papago-translate="translated"> Lox의 직업은 무엇인가요?</font><font papago-translate="translated"> 당신이 익숙한 다른 언어들은 어떻습니까?</font><font papago-translate="translated"> 언어가 무엇을<em> 해야 한다고</em> 생각하십니까?</font></p>
 </li>
 </ol>
 </div>
 <footer>
-<a class="next" href="resolving-and-binding.html">
-  Next Chapter: “Resolving and Binding” →
-</a>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+<a class="next" href="https://youhogeon-meritz.github.io/resolving-and-binding.html"><font papago-translate="translated"> 다음 장: "해결 및 바인딩" → </font></a><font papago-translate="splitted"><font papago-translate="translated"> 로버트 니스트롬이 수작업으로 제작한 -<a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE"> © 2015 ~ 2021</a></font></font>
 </footer>
-</img></article>
+</article>
 </div>
-</body>
-</html>
+
+
+<div id="papagoTooltip" margin="5" style="display: block; z-index: 2147483647; left: 384px; top: 8983px !important;">
+        <h1 id="tooltipTitle">원문</h1>
+        <p id="tooltipText">Let’s get ourselves out of the function-defining business and let our users take over  . . .&nbsp;</p>
+      </div>
+      </body></html>

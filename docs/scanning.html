@@ -1,117 +1,89 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-104d150f-8a77-430c-b7d1-4013c91b60bc@mhtml.blink" />
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>Scanning · Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/style.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
-<script src="jquery-3.4.1.min.js"></script>
-<script src="script.js"></script>
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+
+<!-- Google analytics -->
+
+</head>
 <body id="top">
 <!-- <div class="scrim"></div> -->
 <nav class="wide">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="contents">
-<h3><a href="#top">Scanning<small>4</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/scanning.html#top"><font papago-translate="splitted"><font papago-translate="translated">스캔</font></font><small>4</small></a></h3>
 <ul>
-<li><a href="#the-interpreter-framework"><small>4.1</small> The Interpreter Framework</a></li>
-<li><a href="#lexemes-and-tokens"><small>4.2</small> Lexemes and Tokens</a></li>
-<li><a href="#regular-languages-and-expressions"><small>4.3</small> Regular Languages and Expressions</a></li>
-<li><a href="#the-scanner-class"><small>4.4</small> The Scanner Class</a></li>
-<li><a href="#recognizing-lexemes"><small>4.5</small> Recognizing Lexemes</a></li>
-<li><a href="#longer-lexemes"><small>4.6</small> Longer Lexemes</a></li>
-<li><a href="#reserved-words-and-identifiers"><small>4.7</small> Reserved Words and Identifiers</a></li>
+<li><a href="https://youhogeon-meritz.github.io/scanning.html#the-interpreter-framework"><small>4.1</small><font papago-translate="splitted"><font papago-translate="translated"> 인터프리터 프레임워크</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/scanning.html#lexemes-and-tokens"><small>4.2</small><font papago-translate="splitted"><font papago-translate="translated"> 렉섬과 토큰</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/scanning.html#regular-languages-and-expressions"><small>4.3</small><font papago-translate="splitted"><font papago-translate="translated"> 일반 언어 및 표현</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/scanning.html#the-scanner-class"><small>4.4</small><font papago-translate="splitted"><font papago-translate="translated"> 스캐너 클래스</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/scanning.html#recognizing-lexemes"><small>4.5</small><font papago-translate="splitted"><font papago-translate="translated"> Lexemes 인식하기</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/scanning.html#longer-lexemes"><small>4.6</small><font papago-translate="splitted"><font papago-translate="translated"> 긴 어휘</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/scanning.html#reserved-words-and-identifiers"><small>4.7</small><font papago-translate="splitted"><font papago-translate="translated"> 예약된 단어 및 식별자</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
-<li class="end-part"><a href="#design-note"><small>note</small>Implicit Semicolons</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/scanning.html#challenges"><font papago-translate="translated">과제들</font></a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/scanning.html#design-note"><small><font papago-translate="translated">메모</font></small><font papago-translate="splitted"><font papago-translate="translated">암시적 세미콜론</font></font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">← Previous</a>
-<a href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑ Up</a>
-<a class="right" href="representing-code.html" title="Representing Code">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="나무 산책 통역사" papago-attr-id="1"><font papago-translate="translated">← 이전</font></a>
+<a href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="나무 산책 통역사" papago-attr-id="2"><font papago-translate="translated">↑ 위로</font></a>
+<a class="right" href="https://youhogeon-meritz.github.io/representing-code.html" title="대표 코드" papago-attr-id="3"><font papago-translate="translated">다음 →</font></a>
 </div> </div>
 </nav>
 <nav class="narrow">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
-<a class="prev" href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">←</a>
-<a class="next" href="representing-code.html" title="Representing Code">→</a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
+<a class="prev" href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">←</a>
+<a class="next" href="https://youhogeon-meritz.github.io/representing-code.html" title="Representing Code">→</a>
 </nav>
 <div class="page">
 <div class="nav-wrapper">
-<nav class="floating">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<nav class="floating pinned">
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="expandable">
-<h3><a href="#top">Scanning<small>4</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/scanning.html#top"><font papago-translate="splitted"><font papago-translate="translated">스캔</font></font><small>4</small></a></h3>
 <ul>
-<li><a href="#the-interpreter-framework"><small>4.1</small> The Interpreter Framework</a></li>
-<li><a href="#lexemes-and-tokens"><small>4.2</small> Lexemes and Tokens</a></li>
-<li><a href="#regular-languages-and-expressions"><small>4.3</small> Regular Languages and Expressions</a></li>
-<li><a href="#the-scanner-class"><small>4.4</small> The Scanner Class</a></li>
-<li><a href="#recognizing-lexemes"><small>4.5</small> Recognizing Lexemes</a></li>
-<li><a href="#longer-lexemes"><small>4.6</small> Longer Lexemes</a></li>
-<li><a href="#reserved-words-and-identifiers"><small>4.7</small> Reserved Words and Identifiers</a></li>
+<li><a href="https://youhogeon-meritz.github.io/scanning.html#the-interpreter-framework"><small>4.1</small><font papago-translate="splitted"><font papago-translate="translated"> 인터프리터 프레임워크</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/scanning.html#lexemes-and-tokens"><small>4.2</small><font papago-translate="splitted"><font papago-translate="translated"> 렉섬과 토큰</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/scanning.html#regular-languages-and-expressions"><small>4.3</small><font papago-translate="splitted"><font papago-translate="translated"> 일반 언어 및 표현</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/scanning.html#the-scanner-class"><small>4.4</small><font papago-translate="splitted"><font papago-translate="translated"> 스캐너 클래스</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/scanning.html#recognizing-lexemes"><small>4.5</small><font papago-translate="splitted"><font papago-translate="translated"> Lexemes 인식하기</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/scanning.html#longer-lexemes"><small>4.6</small><font papago-translate="splitted"><font papago-translate="translated"> 긴 어휘</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/scanning.html#reserved-words-and-identifiers"><small>4.7</small><font papago-translate="splitted"><font papago-translate="translated"> 예약된 단어 및 식별자</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
-<li class="end-part"><a href="#design-note"><small>note</small>Implicit Semicolons</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/scanning.html#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/scanning.html#design-note"><small>note</small><font papago-translate="splitted"><font papago-translate="translated">암시적 세미콜론</font></font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">← Previous</a>
-<a href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑ Up</a>
-<a class="right" href="representing-code.html" title="Representing Code">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">←&nbsp;Previous</a>
+<a href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑&nbsp;Up</a>
+<a class="right" href="https://youhogeon-meritz.github.io/representing-code.html" title="Representing Code">Next&nbsp;→</a>
 </div> </div>
 <a id="expand-nav">≡</a>
 </nav>
 </div>
 <article class="chapter">
 <div class="number">4</div>
-<h1>Scanning</h1>
+<h1><font papago-translate="translated">스캔</font></h1>
 <blockquote>
-<p>Take big bites. Anything worth doing is worth overdoing.</p>
+<p><font papago-translate="translated">크게 한 입 베어 물어보세요.</font><font papago-translate="translated"> 무엇이든 할 가치가 있는 것은 지나칠 가치가 있습니다.</font></p>
 <p><cite>Robert A. Heinlein, <em>Time Enough for Love</em></cite></p>
 </blockquote>
-<p>The first step in any compiler or interpreter is <span name="lexing">scanning</span>. The scanner takes in raw source code as a series
-of characters and groups it into a series of chunks we call <strong>tokens</strong>. These
-are the meaningful “words” and “punctuation” that make up the language’s
-grammar.</p>
-<aside name="lexing">
-<p>This task has been variously called “scanning” and “lexing” (short for “lexical
-analysis”) over the years. Way back when computers were as big as Winnebagos but
-had less memory than your watch, some people used “scanner” only to refer to the
-piece of code that dealt with reading raw source code characters from disk and
-buffering them in memory. Then “lexing” was the subsequent phase that did useful
-stuff with the characters.</p>
-<p>These days, reading a source file into memory is trivial, so it’s rarely a
-distinct phase in the compiler. Because of that, the two terms are basically
-interchangeable.</p>
+<p><font papago-translate="translated">컴파일러나 인터프리터의 첫 번째 단계는<span name="lexing"> 스캔</span>입니다.</font><font papago-translate="translated"> 스캐너는 원시 소스 코드를 일련의 문자로 받아<strong> 토큰</strong>이라고 부르는 일련의 청크로 그룹화합니다.</font><font papago-translate="translated"> 이것들은 언어의 문법을 구성하는 의미 있는 "단어"와 "문장"입니다.</font></p>
+<aside name="lexing" style="top: 340px;">
+<p><font papago-translate="translated">이 작업은 수년 동안 "스캐닝"과 "렉싱"("렉서 분석"의 줄임말)이라고 다양하게 불려 왔습니다.</font><font papago-translate="translated"> 컴퓨터가 위네바고스만큼 크지만 시계보다 메모리가 적었던 시절, 일부 사람들은 디스크에서 원시 소스 코드 문자를 읽고 메모리에 버퍼링하는 코드 조각을 지칭할 때만 "스캐너"를 사용했습니다.</font><font papago-translate="translated"> 그 후 "렉싱"은 등장인물들에게 유용한 역할을 한 후속 단계였습니다.</font></p>
+<p><font papago-translate="translated">요즘 소스 파일을 메모리로 읽는 것은 사소한 일이기 때문에 컴파일러에서 뚜렷한 단계는 거의 없습니다.</font><font papago-translate="translated"> 그 때문에 두 용어는 기본적으로 서로 교환할 수 있습니다.</font></p>
 </aside>
-<p>Scanning is a good starting point for us too because the code isn’t very hard<span class="em">—</span>pretty much a <code translate="no">switch</code> statement with delusions of grandeur. It will help us
-warm up before we tackle some of the more interesting material later. By the end
-of this chapter, we’ll have a full-featured, fast scanner that can take any
-string of Lox source code and produce the tokens that we’ll feed into the parser
-in the next chapter.</p>
-<h2><a href="#the-interpreter-framework" id="the-interpreter-framework"><small>4 . 1</small>The Interpreter Framework</a></h2>
-<p>Since this is our first real chapter, before we get to actually scanning some
-code we need to sketch out the basic shape of our interpreter, jlox. Everything
-starts with a class in Java.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Lox.java</em><br/>
-create new file</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">스캔은 코드가 그리 어렵지 않기 때문에 우리에게도 좋은 출발점입니다—<span class="em"></span>거의 </font></font><code translate="no">switch</code><font papago-translate="splitted"><font papago-translate="translated"> 과장된 망상이 담긴 진술.</font><font papago-translate="translated"> 나중에 더 흥미로운 자료를 다루기 전에 워밍업하는 데 도움이 될 것입니다.</font><font papago-translate="translated"> 이 장이 끝날 때쯤이면, 우리는 모든 Lox 소스 코드 문자열을 가져와서 다음 장에서 파서에 입력할 토큰을 생성할 수 있는 완전한 기능을 갖춘 빠른 스캐너를 갖게 될 것입니다.</font></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/scanning.html#the-interpreter-framework" id="the-interpreter-framework"><small><font papago-translate="translated">4 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">인터프리터 프레임워크</font></font></a></h2>
+<p><font papago-translate="translated">이것이 우리의 첫 번째 실제 챕터이기 때문에, 실제로 코드를 스캔하기 전에 우리의 통역사인 jlox의 기본 형태를 스케치해야 합니다.</font><font papago-translate="translated"> 모든 것은 자바 수업으로 시작됩니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Lox.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 새 파일 만들기</font></font></div>
 <pre translate="no"><span class="k">package</span> <span class="i">com.craftinginterpreters.lox</span>;
 
 <span class="k">import</span> <span class="i">java.io.BufferedReader</span>;
@@ -136,38 +108,26 @@ create new file</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Lox.java</em>, create new file</div>
-<aside name="64">
-<p>For exit codes, I’m using the conventions defined in the UNIX
-<a href="https://www.freebsd.org/cgi/man.cgi?query=sysexits&amp;apropos=0&amp;sektion=0&amp;manpath=FreeBSD+4.3-RELEASE&amp;format=html">“sysexits.h”</a> header. It’s the closest thing to a standard I could
-find.</p>
+<aside name="64" style="top: 1075px;">
+<p><font papago-translate="translated">종료 코드의 경우 UNIX<a href="https://www.freebsd.org/cgi/man.cgi?query=sysexits&amp;apropos=0&amp;sektion=0&amp;manpath=FreeBSD+4.3-RELEASE&amp;format=html"> "sysexites"</a>에 정의된 규칙을 사용하고 있습니다.</font><font papago-translate="translated">h" 헤더<a href="https://www.freebsd.org/cgi/man.cgi?query=sysexits&amp;apropos=0&amp;sektion=0&amp;manpath=FreeBSD+4.3-RELEASE&amp;format=html">.</a></font><font papago-translate="translated"> 제가 찾을 수 있는 표준에 가장 가까운 것입니다.</font></p>
 </aside>
-<p>Stick that in a text file, and go get your IDE or Makefile or whatever set up.
-I’ll be right here when you’re ready. Good? OK!</p>
-<p>Lox is a scripting language, which means it executes directly from source. Our
-interpreter supports two ways of running code. If you start jlox from the
-command line and give it a path to a file, it reads the file and executes it.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Lox.java</em><br/>
-add after <em>main</em>()</div>
+<p><font papago-translate="translated">그것을 텍스트 파일에 넣고 IDE나 Makefile 같은 설정을 받으러 가세요.</font><font papago-translate="translated"> 준비되면 바로 여기 있을게요.</font><font papago-translate="translated"> 좋은?</font><font papago-translate="translated"> 네!</font></p>
+<p><font papago-translate="translated">Lox는 스크립트 언어로, 소스에서 직접 실행된다는 의미입니다.</font><font papago-translate="translated"> 저희 인터프리터는 코드를 실행하는 두 가지 방법을 지원합니다.</font><font papago-translate="translated"> 명령줄에서 jlox를 시작하여 파일 경로를 지정하면 파일을 읽고 실행합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Lox.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>메인</em> () 뒤에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="k">static</span> <span class="t">void</span> <span class="i">runFile</span>(<span class="t">String</span> <span class="i">path</span>) <span class="k">throws</span> <span class="t">IOException</span> {
     <span class="t">byte</span>[] <span class="i">bytes</span> = <span class="t">Files</span>.<span class="i">readAllBytes</span>(<span class="t">Paths</span>.<span class="i">get</span>(<span class="i">path</span>));
     <span class="i">run</span>(<span class="k">new</span> <span class="t">String</span>(<span class="i">bytes</span>, <span class="t">Charset</span>.<span class="i">defaultCharset</span>()));
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Lox.java</em>, add after <em>main</em>()</div>
-<p>If you want a more intimate conversation with your interpreter, you can also run
-it interactively. Fire up jlox without any arguments, and it drops you into a
-prompt where you can enter and execute code one line at a time.</p>
-<aside name="repl">
-<p>An interactive prompt is also called a “REPL” (pronounced like “rebel” but with
-a “p”). The name comes from Lisp where implementing one is as simple as
-wrapping a loop around a few built-in functions:</p>
+<p><font papago-translate="translated">통역사와 더 친밀한 대화를 나누고 싶다면, 대화형으로 실행할 수도 있습니다.</font><font papago-translate="translated"> 인수 없이 jlox를 실행하면 한 줄씩 코드를 입력하고 실행할 수 있는 프롬프트로 이동합니다.</font></p>
+<aside name="repl" style="top: 1707px;">
+<p><font papago-translate="translated">대화형 프롬프트는 "REPL"이라고도 불립니다("반란"처럼 발음되지만 "p"로 발음됩니다).</font><font papago-translate="translated"> 이 이름은 Lisp에서 유래했으며, 하나를 구현하는 것은 몇 가지 내장 함수를 둘러싸는 루프처럼 간단합니다:</font></p>
 <div class="codehilite"><pre translate="no">(<span class="i">print</span> (<span class="i">eval</span> (<span class="i">read</span>)))
 </pre></div>
-<p>Working outwards from the most nested call, you <strong>R</strong>ead a line of input,
-<strong>E</strong>valuate it, <strong>P</strong>rint the result, then <strong>L</strong>oop and do it all over again.</p>
+<p><font papago-translate="translated">가장 중첩된 호출에서 바깥쪽으로 이동하면 입력한 줄<strong>을 읽고</strong><strong> 평가</strong><strong>한 다음</strong> 결과<strong>를 인쇄</strong>한 다음<strong> 반복</strong>하고 처음부터 다시 수행합니다.</font></p>
 </aside>
-<div class="codehilite"><div class="source-file"><em>lox/Lox.java</em><br/>
-add after <em>runFile</em>()</div>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Lox.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated" class=""> <em>runFile</em>() 후에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="k">static</span> <span class="t">void</span> <span class="i">runPrompt</span>() <span class="k">throws</span> <span class="t">IOException</span> {
     <span class="t">InputStreamReader</span> <span class="i">input</span> = <span class="k">new</span> <span class="t">InputStreamReader</span>(<span class="t">System</span>.<span class="i">in</span>);
     <span class="t">BufferedReader</span> <span class="i">reader</span> = <span class="k">new</span> <span class="t">BufferedReader</span>(<span class="i">input</span>);
@@ -181,14 +141,9 @@ add after <em>runFile</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Lox.java</em>, add after <em>runFile</em>()</div>
-<p>The <code translate="no">readLine()</code> function, as the name so helpfully implies, reads a line of
-input from the user on the command line and returns the result. To kill an
-interactive command-line app, you usually type Control-D. Doing so signals an
-“end-of-file” condition to the program. When that happens <code translate="no">readLine()</code> returns
-<code translate="no">null</code>, so we check for that to exit the loop.</p>
-<p>Both the prompt and the file runner are thin wrappers around this core function:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Lox.java</em><br/>
-add after <em>runPrompt</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">그 </font></font><code translate="no">readLine()</code><font papago-translate="splitted"><font papago-translate="translated"> 함수는 이름에서 매우 유용하게 암시하듯이, 명령 줄에 있는 사용자의 입력을 읽고 결과를 반환합니다.</font><font papago-translate="translated"> 대화형 명령줄 앱을 종료하려면 일반적으로 Control-D를 입력합니다.</font><font papago-translate="translated"> 그렇게 하면 프로그램에 "파일 종료" 상태가 표시됩니다.</font><font papago-translate="translated"> 그럴 때 </font></font><code translate="no">readLine()</code><font papago-translate="splitted"><font papago-translate="translated"> 돌아온다 </font></font><code translate="no">null</code><font papago-translate="splitted"><font papago-translate="translated">, 그래서 우리는 그것이 루프에서 나오는지 확인합니다.</font></font></p>
+<p><font papago-translate="translated">프롬프트와 파일 러너는 모두 이 핵심 함수를 둘러싼 얇은 포장지입니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Lox.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>run</em>P<em>rompt</em>() 후에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="k">static</span> <span class="t">void</span> <span class="i">run</span>(<span class="t">String</span> <span class="i">source</span>) {
     <span class="t">Scanner</span> <span class="i">scanner</span> = <span class="k">new</span> <span class="t">Scanner</span>(<span class="i">source</span>);
     <span class="t">List</span>&lt;<span class="t">Token</span>&gt; <span class="i">tokens</span> = <span class="i">scanner</span>.<span class="i">scanTokens</span>();
@@ -200,29 +155,15 @@ add after <em>runPrompt</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Lox.java</em>, add after <em>runPrompt</em>()</div>
-<p>It’s not super useful yet since we haven’t written the interpreter, but baby
-steps, you know? Right now, it prints out the tokens our forthcoming scanner
-will emit so that we can see if we’re making progress.</p>
-<h3><a href="#error-handling" id="error-handling"><small>4 . 1 . 1</small>Error handling</a></h3>
-<p>While we’re setting things up, another key piece of infrastructure is <em>error
-handling</em>. Textbooks sometimes gloss over this because it’s more a practical
-matter than a formal computer science-y problem. But if you care about making a
-language that’s actually <em>usable</em>, then handling errors gracefully is vital.</p>
-<p>The tools our language provides for dealing with errors make up a large portion
-of its user interface. When the user’s code is working, they aren’t thinking
-about our language at all<span class="em">—</span>their headspace is all about <em>their program</em>. It’s
-usually only when things go wrong that they notice our implementation.</p>
-<p><span name="errors">When</span> that happens, it’s up to us to give the user all
-the information they need to understand what went wrong and guide them gently
-back to where they are trying to go. Doing that well means thinking about error
-handling all through the implementation of our interpreter, starting now.</p>
-<aside name="errors">
-<p>Having said all that, for <em>this</em> interpreter, what we’ll build is pretty bare
-bones. I’d love to talk about interactive debuggers, static analyzers, and other
-fun stuff, but there’s only so much ink in the pen.</p>
+<p><font papago-translate="translated">아직 통역사를 작성하지 않았기 때문에 그다지 유용하지는 않지만, 간단한 단계들이 있습니다?</font><font papago-translate="translated"> 현재 우리가 곧 출시할 스캐너가 방출할 토큰을 출력하여 진전을 이루고 있는지 확인할 수 있습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/scanning.html#error-handling" id="error-handling"><small><font papago-translate="translated">4 . 1 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">오류 처리</font></font></a></h3>
+<p><font papago-translate="translated">설정하는 동안 인프라의 또 다른 핵심 요소는<em> 오류 처리</em>입니다.</font><font papago-translate="translated"> 교과서들은 때때로 이것이 형식적인 컴퓨터 과학 문제라기보다는 실용적인 문제이기 때문에 이를 간과하기도 합니다.</font><font papago-translate="translated"> 하지만 실제로<em> 사용할</em> 수 있는 언어를 만들고 싶다면 오류를 우아하게 처리하는 것이 중요합니다.</font></p>
+<p><font papago-translate="translated">우리 언어가 오류를 처리하기 위해 제공하는 도구는 사용자 인터페이스의 큰 부분을 차지합니다.</font><font papago-translate="translated"> 사용자의 코드가 작동할 때, 그들은 우리의 언어에 대해 전혀 생각하지 않습니다. 그들의 머리 공간은 모두<em> 그들</em><span class="em"></span><em>의 프로그램</em>에 관한 것입니다.</font><font papago-translate="translated"> 보통 일이 잘못될 때만 우리의 실행을 알아차릴 수 있습니다.</font></p>
+<p><font papago-translate="translated">그런 일이 발생<span name="errors">하면</span> 사용자가 무엇이 잘못되었는지 이해하는 데 필요한 모든 정보를 제공하고 사용자가 가고자 하는 곳으로 부드럽게 안내하는 것이 우리의 몫<span name="errors">입니다.</span></font><font papago-translate="translated"> 이를 잘 수행한다는 것은 지금부터 인터프리터를 구현하는 동안 오류 처리에 대해 생각해야 한다는 것을 의미합니다.</font></p>
+<aside name="errors" style="top: 2724px;">
+<p><font papago-translate="translated">이 모든 것을 말씀드렸듯이,<em> 이</em> 통역사에게 우리가 구축할 것은 거의 아무것도 없는 것입니다.</font><font papago-translate="translated"> 인터랙티브 디버거, 정전기 분석기, 그리고 다른 재미있는 것들에 대해 이야기하고 싶지만, 펜 안에는 잉크가 너무 많습니다.</font></p>
 </aside>
-<div class="codehilite"><div class="source-file"><em>lox/Lox.java</em><br/>
-add after <em>run</em>()</div>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Lox.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>실행</em> 후 () 추가</font></font></div>
 <pre translate="no">  <span class="k">static</span> <span class="t">void</span> <span class="i">error</span>(<span class="t">int</span> <span class="i">line</span>, <span class="t">String</span> <span class="i">message</span>) {
     <span class="i">report</span>(<span class="i">line</span>, <span class="s">""</span>, <span class="i">message</span>);
   }
@@ -235,106 +176,59 @@ add after <em>run</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Lox.java</em>, add after <em>run</em>()</div>
-<p>This <code translate="no">error()</code> function and its <code translate="no">report()</code> helper tells the user some syntax
-error occurred on a given line. That is really the bare minimum to be able to
-claim you even <em>have</em> error reporting. Imagine if you accidentally left a
-dangling comma in some function call and the interpreter printed out:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것. </font></font><code translate="no">error()</code><font papago-translate="splitted"><font papago-translate="translated"> 함수 및 그 함수 </font></font><code translate="no">report()</code><font papago-translate="splitted"><font papago-translate="translated"> 헬퍼는 사용자에게 주어진 줄에서 구문 오류가 발생했음을 알려줍니다.</font><font papago-translate="translated"> 그것은 정말로 오류 보고가<em> 있다고</em> 주장할 수 있는 최소한의 것입니다.</font><font papago-translate="translated"> 실수로 함수 호출에 매달린 쉼표를 남겼고 통역사가 출력되었다고 상상해 보세요:</font></font></p>
 <div class="codehilite"><pre translate="no">Error: Unexpected "," somewhere in your code. Good luck finding it!
 </pre></div>
-<p>That’s not very helpful. We need to at least point them to the right line. Even
-better would be the beginning and end column so they know <em>where</em> in the line.
-Even better than <em>that</em> is to <em>show</em> the user the offending line, like:</p>
+<p><font papago-translate="translated">별로 도움이 되지 않습니다.</font><font papago-translate="translated"> 우리는 최소한 그들을 올바른 방향으로 가리켜야 합니다.</font><font papago-translate="translated"> 줄<em>의 위치</em>를 알 수 있도록 시작과 끝 열이 더 좋을 것입니다.</font><font papago-translate="translated"> <em>그</em>보다 더 좋은 것은 사용자에게 불쾌감을<em> 주는</em> 선<em>을 보여</em>주는 것입니다:</font></p>
 <div class="codehilite"><pre translate="no">Error: Unexpected "," in argument list.
 
     15 | function(first, second,);
                                ^-- Here.
 </pre></div>
-<p>I’d love to implement something like that in this book but the honest truth is
-that it’s a lot of grungy string manipulation code. Very useful for users, but
-not super fun to read in a book and not very technically interesting. So we’ll
-stick with just a line number. In your own interpreters, please do as I say and
-not as I do.</p>
-<p>The primary reason we’re sticking this error reporting function in the main Lox
-class is because of that <code translate="no">hadError</code> field. It’s defined here:</p>
+<p><font papago-translate="translated">이 책에서 그런 것을 구현하고 싶지만, 솔직히 말해서 그것은 많은 거친 문자열 조작 코드입니다.</font><font papago-translate="translated"> 사용자에게는 매우 유용하지만 책을 읽는 것이 그다지 재미있지 않고 기술적으로도 흥미롭지 않습니다.</font><font papago-translate="translated"> 그래서 우리는 단지 줄 번호만 사용할 것입니다.</font><font papago-translate="translated"> 당신의 통역사들은 제가 시키는 대로 해주시고, 제가 하는 대로 해주세요.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리가 메인 Lox 클래스에 이 오류 보고 기능을 유지하는 주된 이유는 그것 때문입니다 </font></font><code translate="no">hadError</code><font papago-translate="splitted"><font papago-translate="translated"> 들판.</font><font papago-translate="translated"> 여기에 정의되어 있습니다:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">public class Lox {
-</pre><div class="source-file"><em>lox/Lox.java</em><br/>
-in class <em>Lox</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Lox.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em></em>Lox 클래스에서</font></font></div>
 <pre class="insert" translate="no">  <span class="k">static</span> <span class="t">boolean</span> <span class="i">hadError</span> = <span class="k">false</span>;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Lox.java</em>, in class <em>Lox</em></div>
-<p>We’ll use this to ensure we don’t try to execute code that has a known error.
-Also, it lets us exit with a non-zero exit code like a good command line citizen
-should.</p>
+<p><font papago-translate="translated">우리는 이것을 사용하여 알려진 오류가 있는 코드를 실행하려고 하지 않도록 할 것입니다.</font><font papago-translate="translated"> 또한, 좋은 명령줄 시민이 해야 할 것처럼 0이 아닌 종료 코드로 종료할 수 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    run(new String(bytes, Charset.defaultCharset()));
-</pre><div class="source-file"><em>lox/Lox.java</em><br/>
-in <em>runFile</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Lox.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>runFile</em>()에서</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="c">// Indicate an error in the exit code.</span>
     <span class="k">if</span> (<span class="i">hadError</span>) <span class="t">System</span>.<span class="i">exit</span>(<span class="n">65</span>);
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Lox.java</em>, in <em>runFile</em>()</div>
-<p>We need to reset this flag in the interactive loop. If the user makes a mistake,
-it shouldn’t kill their entire session.</p>
+<p><font papago-translate="translated">이 플래그를 인터랙티브 루프에서 재설정해야 합니다.</font><font papago-translate="translated"> 사용자가 실수를 해도 전체 세션이 중단되어서는 안 됩니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      run(line);
-</pre><div class="source-file"><em>lox/Lox.java</em><br/>
-in <em>runPrompt</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Lox.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>run</em>P<em>rompt</em>()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="i">hadError</span> = <span class="k">false</span>;
 </pre><pre class="insert-after" translate="no">    }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Lox.java</em>, in <em>runPrompt</em>()</div>
-<p>The other reason I pulled the error reporting out here instead of stuffing it
-into the scanner and other phases where the error might occur is to remind you
-that it’s good engineering practice to separate the code that <em>generates</em> the
-errors from the code that <em>reports</em> them.</p>
-<p>Various phases of the front end will detect errors, but it’s not really their
-job to know how to present that to a user. In a full-featured language
-implementation, you will likely have multiple ways errors get displayed: on
-stderr, in an IDE’s error window, logged to a file, etc. You don’t want that
-code smeared all over your scanner and parser.</p>
-<p>Ideally, we would have an actual abstraction, some kind of <span name="reporter">“ErrorReporter”</span> interface that gets passed to the scanner
-and parser so that we can swap out different reporting strategies. For our
-simple interpreter here, I didn’t do that, but I did at least move the code for
-error reporting into a different class.</p>
-<aside name="reporter">
-<p>I had exactly that when I first implemented jlox. I ended up tearing it out
-because it felt over-engineered for the minimal interpreter in this book.</p>
+<p><font papago-translate="translated">제가 오류 보고를 스캐너나 오류가 발생할 수 있는 다른 단계에 넣는 대신 여기서 꺼낸 또 다른 이유는 오류를<em> 생성하는</em> 코드와 오류<em>를 보고하는</em> 코드를 분리하는 것이 좋은 엔지니어링 관행임을 상기시키기 위해서입니다.</font></p>
+<p><font papago-translate="translated">프론트엔드의 다양한 단계에서 오류를 감지할 수 있지만, 이를 사용자에게 어떻게 표시할지 아는 것은 그들의 일이 아닙니다.</font><font papago-translate="translated"> 완전한 기능을 갖춘 언어 구현에서는 stderr, IDE의 오류 창, 파일에 기록되는 등 여러 가지 방식으로 오류가 표시될 가능성이 높습니다.</font><font papago-translate="translated"> 그 코드가 스캐너와 파서 전체에 퍼지는 것을 원하지 않을 것입니다.</font></p>
+<p><font papago-translate="translated">이상적으로는 실제 추상화, 스캐너와 파서로 전달되는<span name="reporter"> 일종의 "오류 리포터</span>" 인터페이스를 통해 다양한 보고 전략을 전환할 수 있습니다.</font><font papago-translate="translated"> 여기 있는 간단한 통역사의 경우, 저는 그렇게 하지 않았지만, 적어도 오류 보고를 위한 코드를 다른 클래스로 옮겼습니다.</font></p>
+<aside name="reporter" style="top: 4352px;">
+<p><font papago-translate="translated">제가 처음 Jlox를 구현했을 때 바로 그런 것이었습니다.</font><font papago-translate="translated"> 이 책에서 최소한의 통역사를 위해 지나치게 설계된 것 같아서 결국 찢어버렸습니다.</font></p>
 </aside>
-<p>With some rudimentary error handling in place, our application shell is ready.
-Once we have a Scanner class with a <code translate="no">scanTokens()</code> method, we can start running
-it. Before we get to that, let’s get more precise about what tokens are.</p>
-<h2><a href="#lexemes-and-tokens" id="lexemes-and-tokens"><small>4 . 2</small>Lexemes and Tokens</a></h2>
-<p>Here’s a line of Lox code:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">기본적인 오류 처리가 완료되면 애플리케이션 셸이 준비됩니다.</font><font papago-translate="translated"> 스캐너 수업이 시작되면 </font></font><code translate="no">scanTokens()</code><font papago-translate="splitted"><font papago-translate="translated"> 방법, 실행을 시작할 수 있습니다.</font><font papago-translate="translated"> 그 전에 토큰이 무엇인지 더 자세히 알아보겠습니다.</font></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/scanning.html#lexemes-and-tokens" id="lexemes-and-tokens"><small><font papago-translate="translated">4 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">렉섬과 토큰</font></font></a></h2>
+<p><font papago-translate="translated">다음은 Lox 코드의 한 줄입니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">language</span> = <span class="s">"lox"</span>;
 </pre></div>
-<p>Here, <code translate="no">var</code> is the keyword for declaring a variable. That three-character
-sequence “v-a-r” means something. But if we yank three letters out of the
-middle of <code translate="no">language</code>, like “g-u-a”, those don’t mean anything on their own.</p>
-<p>That’s what lexical analysis is about. Our job is to scan through the list of
-characters and group them together into the smallest sequences that still
-represent something. Each of these blobs of characters is called a <strong>lexeme</strong>.
-In that example line of code, the lexemes are:</p><img alt="'var', 'language', '=', 'lox', ';'" src="image/scanning/lexemes.png">
-<p>The lexemes are only the raw substrings of the source code. However, in the
-process of grouping character sequences into lexemes, we also stumble upon some
-other useful information. When we take the lexeme and bundle it together with
-that other data, the result is a token. It includes useful stuff like:</p>
-<h3><a href="#token-type" id="token-type"><small>4 . 2 . 1</small>Token type</a></h3>
-<p>Keywords are part of the shape of the language’s grammar, so the parser often
-has code like, “If the next token is <code translate="no">while</code> then do<span class="ellipse"> . . . </span>” That means the parser
-wants to know not just that it has a lexeme for some identifier, but that it has
-a <em>reserved</em> word, and <em>which</em> keyword it is.</p>
-<p>The <span name="ugly">parser</span> could categorize tokens from the raw lexeme
-by comparing the strings, but that’s slow and kind of ugly. Instead, at the
-point that we recognize a lexeme, we also remember which <em>kind</em> of lexeme it
-represents. We have a different type for each keyword, operator, bit of
-punctuation, and literal type.</p>
-<aside name="ugly">
-<p>After all, string comparison ends up looking at individual characters, and isn’t
-that the scanner’s job?</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">여기서, </font></font><code translate="no">var</code><font papago-translate="splitted"><font papago-translate="translated"> 변수를 선언하는 키워드입니다.</font><font papago-translate="translated"> 그 세 글자 시퀀스 "v-a-r"은 무언가를 의미합니다.</font><font papago-translate="translated"> 하지만 중간에 세 글자를 빼내면 </font></font><code translate="no">language</code><font papago-translate="splitted"><font papago-translate="translated">, "g-u-a"처럼, 그것들은 그 자체로 아무런 의미가 없습니다.</font></font></p>
+<p><font papago-translate="translated">그것이 바로 어휘 분석의 본질입니다.</font><font papago-translate="translated"> 우리의 임무는 문자 목록을 스캔하여 여전히 무언가를 나타내는 가장 작은 시퀀스로 그룹화하는 것입니다.</font><font papago-translate="translated"> 이러한 문자 덩어리들 각각은<strong> 어휘소</strong>라고 불립니다.</font><font papago-translate="translated"> 예제 코드 라인에서 어휘는 다음과 같습니다:</font></p><img alt="'var', 'language', '=', 'lox', ';'" src="https://youhogeon-meritz.github.io/image/scanning/lexemes.png">
+<p><font papago-translate="translated">어휘소는 소스 코드의 원시 하위 문자열일 뿐입니다.</font><font papago-translate="translated"> 그러나 문자 시퀀스를 어휘로 그룹화하는 과정에서 다른 유용한 정보도 발견하게 됩니다.</font><font papago-translate="translated"> 우리가 어휘소를 가져와서 다른 데이터와 함께 묶으면, 결과는 토큰이 됩니다.</font><font papago-translate="translated"> 유용한 것들이 포함되어 있습니다:</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/scanning.html#token-type" id="token-type"><small><font papago-translate="translated">4 . 2 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">토큰 유형</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">키워드는 언어 문법의 일부이기 때문에 파서는 종종 "다음 토큰이 다음 토큰이라면"과 같은 코드를 가지고 있습니다 </font></font><code translate="no">while</code><font papago-translate="splitted"><font papago-translate="translated"> 그런 다음 .<span class="ellipse"> . .</span> . " 즉, 파서는 어떤 식별자에 대한 어휘가 있을 뿐만 아니라<em> 예약</em>된 단어가 있고 어떤 키워드<em></em>인지 알고 싶어합니다.</font></font></p>
+<p><font papago-translate="translated"><span name="ugly">파서</span>는 문자열을 비교하여 원시 어휘에서 토큰을 분류할 수 있지만, 이는 느리고 다소 추악합니다.</font><font papago-translate="translated"> 대신에, 우리가 어휘를 인식하는 시점에서는 그것이 어떤 종류의 어휘를<em></em> 나타내는지도 기억합니다.</font><font papago-translate="translated"> 각 키워드, 연산자, 구두점, 문자 유형에 따라 다른 유형이 있습니다.</font></p>
+<aside name="ugly" style="top: 5372.5px;">
+<p><font papago-translate="translated">결국 문자열 비교는 개별 문자를 보는 것으로 끝나고 스캐너의 역할이 아닌가요?</font></p>
 </aside>
-<div class="codehilite"><div class="source-file"><em>lox/TokenType.java</em><br/>
-create new file</div>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/TokenType.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 새 파일 만들기</font></font></div>
 <pre translate="no"><span class="k">package</span> <span class="i">com.craftinginterpreters.lox</span>;
 
 <span class="k">enum</span> <span class="t">TokenType</span> {
@@ -359,31 +253,16 @@ create new file</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>lox/TokenType.java</em>, create new file</div>
-<h3><a href="#literal-value" id="literal-value"><small>4 . 2 . 2</small>Literal value</a></h3>
-<p>There are lexemes for literal values<span class="em">—</span>numbers and strings and the like. Since
-the scanner has to walk each character in the literal to correctly identify it,
-it can also convert that textual representation of a value to the living runtime
-object that will be used by the interpreter later.</p>
-<h3><a href="#location-information" id="location-information"><small>4 . 2 . 3</small>Location information</a></h3>
-<p>Back when I was preaching the gospel about error handling, we saw that we need
-to tell users <em>where</em> errors occurred. Tracking that starts here. In our simple
-interpreter, we note only which line the token appears on, but more
-sophisticated implementations include the column and length too.</p>
-<aside name="location">
-<p>Some token implementations store the location as two numbers: the offset from
-the beginning of the source file to the beginning of the lexeme, and the length
-of the lexeme. The scanner needs to know these anyway, so there’s no overhead to
-calculate them.</p>
-<p>An offset can be converted to line and column positions later by looking back at
-the source file and counting the preceding newlines. That sounds slow, and it
-is. However, you need to do it <em>only when you need to actually display a line
-and column to the user</em>. Most tokens never appear in an error message. For
-those, the less time you spend calculating position information ahead of time,
-the better.</p>
+<h3><a href="https://youhogeon-meritz.github.io/scanning.html#literal-value" id="literal-value"><small><font papago-translate="translated">4 . 2 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">문자 그대로의 값</font></font></a></h3>
+<p><font papago-translate="translated">문자 그대로의 값에는 숫자와 문자열<span class="em"></span> 등의 어휘가 있습니다.</font><font papago-translate="translated"> 스캐너는 각 문자를 올바르게 식별하기 위해 문자 그대로 이동해야 하므로, 값의 텍스트 표현을 나중에 인터프리터가 사용할 살아있는 런타임 객체로 변환할 수도 있습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/scanning.html#location-information" id="location-information"><small><font papago-translate="translated">4 . 2 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">위치 정보</font></font></a></h3>
+<p><font papago-translate="translated">제가 오류 처리에 대해 복음을 전할 때, 우리는 사용자들에게 오류<em>가</em> 발생<em>한 위치</em>를 알려야 한다는 것을 알게 되었습니다.</font><font papago-translate="translated"> 여기서부터 시작되는 추적.</font><font papago-translate="translated"> 간단한 인터프리터에서는 토큰이 어느 선에 나타나는지만 기록하지만, 더 정교한 구현에는 열과 길이도 포함됩니다.</font></p>
+<aside name="location" style="top: 6555.5px;">
+<p><font papago-translate="translated">일부 토큰 구현은 위치를 두 개의 숫자로 저장합니다: 소스 파일의 시작부터 어휘소의 시작까지의 오프셋과 어휘소의 길이입니다.</font><font papago-translate="translated"> 스캐너는 어쨌든 이것들을 알아야 하므로 계산에 오버헤드가 없습니다.</font></p>
+<p><font papago-translate="translated">오프셋은 소스 파일을 되돌아보고 앞의 새 줄을 세어 나중에 선과 열 위치로 변환할 수 있습니다.</font><font papago-translate="translated"> 천천히 들리네요, 맞습니다.</font><font papago-translate="translated"> 그러나<em> 실제로 사용자에게 줄과 열을 표시해야 할 때만</em> 해야 합니다.</font><font papago-translate="translated"> 대부분의 토큰은 오류 메시지에 나타나지 않습니다.</font><font papago-translate="translated"> 그런 경우에는 미리 위치 정보를 계산하는 데 드는 시간이 적을수록 좋습니다.</font></p>
 </aside>
-<p>We take all of this data and wrap it in a class.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Token.java</em><br/>
-create new file</div>
+<p><font papago-translate="translated">우리는 이 모든 데이터를 가져와서 수업에 포장합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Token.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 새 파일 만들기</font></font></div>
 <pre translate="no"><span class="k">package</span> <span class="i">com.craftinginterpreters.lox</span>;
 
 <span class="k">class</span> <span class="t">Token</span> {
@@ -405,58 +284,29 @@ create new file</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Token.java</em>, create new file</div>
-<p>Now we have an object with enough structure to be useful for all of the later
-phases of the interpreter.</p>
-<h2><a href="#regular-languages-and-expressions" id="regular-languages-and-expressions"><small>4 . 3</small>Regular Languages and Expressions</a></h2>
-<p>Now that we know what we’re trying to produce, let’s, well, produce it. The core
-of the scanner is a loop. Starting at the first character of the source code,
-the scanner figures out what lexeme the character belongs to, and consumes it
-and any following characters that are part of that lexeme. When it reaches the
-end of that lexeme, it emits a token.</p>
-<p>Then it loops back and does it again, starting from the very next character in
-the source code. It keeps doing that, eating characters and occasionally, uh,
-excreting tokens, until it reaches the end of the input.</p>
-<p><span name="alligator"></span></p><img alt="An alligator eating characters and, well, you don't want to know." src="image/scanning/lexigator.png">
-<aside name="alligator">
-<p>Lexical analygator.</p>
+<p><font papago-translate="translated">이제 우리는 통역사의 모든 후기 단계에 유용할 만큼 충분한 구조를 가진 객체를 갖게 되었습니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/scanning.html#regular-languages-and-expressions" id="regular-languages-and-expressions"><small><font papago-translate="translated">4 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">일반 언어 및 표현</font></font></a></h2>
+<p><font papago-translate="translated">이제 우리가 무엇을 생산하려고 하는지 알았으니, 이제 생산해 보겠습니다.</font><font papago-translate="translated"> 스캐너의 핵심은 루프입니다.</font><font papago-translate="translated"> 소스 코드의 첫 번째 문자부터 시작하여, 스캐너는 그 문자가 속한 어휘소를 파악하고, 그 어휘소의 일부인 다음 문자들을 소비합니다.</font><font papago-translate="translated"> 그 어휘소의 끝에 도달하면 토큰을 방출합니다.</font></p>
+<p><font papago-translate="translated">그런 다음 소스 코드의 바로 다음 문자부터 다시 루프백하고 다시 수행합니다.</font><font papago-translate="translated"> 입력이 끝날 때까지 캐릭터를 잡아먹고 때때로 토큰을 배출하는 등 계속 그렇게 합니다.</font></p>
+<p><span name="alligator"></span></p><img alt="An alligator eating characters and, well, you don't want to know." src="https://youhogeon-meritz.github.io/image/scanning/lexigator.png">
+<aside name="alligator" style="top: 7246.5px;">
+<p><font papago-translate="translated">어휘 분석가.</font></p>
 </aside>
-<p>The part of the loop where we look at a handful of characters to figure out
-which kind of lexeme it “matches” may sound familiar. If you know regular
-expressions, you might consider defining a regex for each kind of lexeme and
-using those to match characters. For example, Lox has the same rules as C for
-identifiers (variable names and the like). This regex matches one:</p>
+<p><font papago-translate="translated">어떤 종류의 어휘가 "일치"하는지 알아보기 위해 소수의 문자를 살펴보는 루프 부분이 익숙하게 들릴 수 있습니다.</font><font papago-translate="translated"> 정규 표현식을 알고 있다면 각 종류의 어휘에 대해 정규 표현식을 정의하고 이를 사용하여 문자를 맞추는 것을 고려해 볼 수 있습니다.</font><font papago-translate="translated"> 예를 들어, Lox는 식별자(변수 이름 등)에 대해 C와 동일한 규칙을 가지고 있습니다.</font><font papago-translate="translated"> 이 정규 표현은 하나와 일치합니다:</font></p>
 <div class="codehilite"><pre translate="no">[a-zA-Z_][a-zA-Z_0-9]*
 </pre></div>
-<p>If you did think of regular expressions, your intuition is a deep one. The rules
-that determine how a particular language groups characters into lexemes are
-called its <span name="theory"><strong>lexical grammar</strong></span>. In Lox, as in most
-programming languages, the rules of that grammar are simple enough for the
-language to be classified a <strong><a href="https://en.wikipedia.org/wiki/Regular_language">regular language</a></strong>. That’s the same “regular”
-as in regular expressions.</p>
-<aside name="theory">
-<p>It pains me to gloss over the theory so much, especially when it’s as
-interesting as I think the <a href="https://en.wikipedia.org/wiki/Chomsky_hierarchy">Chomsky hierarchy</a> and <a href="https://en.wikipedia.org/wiki/Finite-state_machine">finite-state machines</a>
-are. But the honest truth is other books cover this better than I could.
-<a href="https://en.wikipedia.org/wiki/Compilers:_Principles,_Techniques,_and_Tools"><em>Compilers: Principles, Techniques, and Tools</em></a> (universally known as
-“the dragon book”) is the canonical reference.</p>
+<p><font papago-translate="translated">정규 표현식을 생각했다면 직관은 깊은 것입니다.</font><font papago-translate="translated"> 특정 언어가 문자를 어휘로 그룹화하는 방식을 결정하는 규칙을<span name="theory"><strong> 어휘 문법</strong></span>이라고 합니다.</font><font papago-translate="translated"> Lox에서는 대부분의 프로그래밍 언어와 마찬가지로 해당 문법의 규칙이<strong><a href="https://en.wikipedia.org/wiki/Regular_language"> 일반 언어</a></strong>로 분류될 만큼 간단합니다.</font><font papago-translate="translated"> 그것은 정규 표현식에서와 같은 "정규"입니다.</font></p>
+<aside name="theory" style="top: 7719.5px;">
+<p><font papago-translate="translated">특히 촘<a href="https://en.wikipedia.org/wiki/Chomsky_hierarchy">스키 계층 구조</a>와<a href="https://en.wikipedia.org/wiki/Finite-state_machine"> 유한 상태 기계가</a> 생각만큼 흥미로울 때 이 이론을 너무 많이 간과하는 것이 마음이 아픕니다.</font><font papago-translate="translated"> 하지만 솔직히 말해서 다른 책들은 제가 할 수 있는 것보다 이 문제를 더 잘 다루고 있습니다.</font><font papago-translate="translated"> <a href="https://en.wikipedia.org/wiki/Compilers:_Principles,_Techniques,_and_Tools"><em>컴파일러: 원리, 기법, 도구</em></a>(일반적으로 "용서"로 알려져 있음)가 표준 참조입니다<a href="https://en.wikipedia.org/wiki/Compilers:_Principles,_Techniques,_and_Tools"><em>.</em></a></font></p>
 </aside>
-<p>You very precisely <em>can</em> recognize all of the different lexemes for Lox using
-regexes if you want to, and there’s a pile of interesting theory underlying why
-that is and what it means. Tools like <a href="http://dinosaur.compilertools.net/lex/">Lex</a> or
-<a href="https://github.com/westes/flex">Flex</a> are designed expressly to let you do this<span class="em">—</span>throw a handful of regexes
-at them, and they give you a complete scanner <span name="lex">back</span>.</p>
-<aside name="lex">
-<p>Lex was created by Mike Lesk and Eric Schmidt. Yes, the same Eric Schmidt who
-was executive chairman of Google. I’m not saying programming languages are a
-surefire path to wealth and fame, but we <em>can</em> count at least one
-mega billionaire among us.</p>
+<p><font papago-translate="translated">만약 당신이 원한다면, 회귀 분석을 사용하여 Lox의 모든 다양한 어휘를 매우 정확하게 인식<em>할 수</em> 있습니다. 그리고 그것이 왜 그런지와 그것이 무엇을 의미하는지에 대한 흥미로운 이론들이 쌓여 있습니다.</font><font papago-translate="translated"> L<a href="http://dinosaur.compilertools.net/lex/">ex</a>나<a href="https://github.com/westes/flex"> Flex</a>와 같은 도구는 이 작업을 수행할 수 있도록 특별히 설계되었습니다. 몇 가지 정규 표현을 사용하면 완벽한 스캐너<span class="em"></span><span name="lex">를 돌려받을</span> 수 있습니다.</font></p>
+<aside name="lex" style="top: 7911.5px;">
+<p><font papago-translate="translated">렉스는 마이크 레스크와 에릭 슈미트에 의해 만들어졌습니다.</font><font papago-translate="translated"> 네, 구글의 회장이었던 바로 그 에릭 슈미트입니다.</font><font papago-translate="translated"> 프로그래밍 언어가 부와 명성으로 가는 확실한 길이라고 말하는 것은 아니지만, 우리 중 적어도 한 명의 메가 억만장자를 셀<em> 수 있습니다</em>.</font></p>
 </aside>
-<p>Since our goal is to understand how a scanner does what it does, we won’t be
-delegating that task. We’re about handcrafted goods.</p>
-<h2><a href="#the-scanner-class" id="the-scanner-class"><small>4 . 4</small>The Scanner Class</a></h2>
-<p>Without further ado, let’s make ourselves a scanner.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Scanner.java</em><br/>
-create new file</div>
+<p><font papago-translate="translated">우리의 목표는 스캐너가 하는 일을 이해하는 것이므로, 그 작업을 위임하지 않을 것입니다.</font><font papago-translate="translated"> 우리는 수공예품에 관한 것입니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/scanning.html#the-scanner-class" id="the-scanner-class"><small><font papago-translate="translated">4 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">스캐너 클래스</font></font></a></h2>
+<p><font papago-translate="translated">더 이상 신경 쓰지 말고, 우리 자신을 스캐너로 만들어 보겠습니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 새 파일 만들기</font></font></div>
 <pre translate="no"><span class="k">package</span> <span class="i">com.craftinginterpreters.lox</span>;
 
 <span class="k">import</span> <span class="i">java.util.ArrayList</span>;
@@ -476,16 +326,11 @@ create new file</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, create new file</div>
-<aside name="static-import">
-<p>I know static imports are considered bad style by some, but they save me from
-having to sprinkle <code translate="no">TokenType.</code> all over the scanner and parser. Forgive me, but
-every character counts in a book.</p>
+<aside name="static-import" style="top: 8314.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">정적 수입이 일부 사람들에게는 나쁜 스타일로 간주된다는 것을 알고 있지만, 뿌릴 필요가 없습니다 </font></font><code translate="no">TokenType.</code><font papago-translate="splitted"><font papago-translate="translated"> 스캐너와 파서 전반에 걸쳐.</font><font papago-translate="translated"> 죄송하지만 모든 캐릭터는 책에서 중요한 역할을 합니다.</font></font></p>
 </aside>
-<p>We store the raw source code as a simple string, and we have a list ready to
-fill with tokens we’re going to generate. The aforementioned loop that does that
-looks like this:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Scanner.java</em><br/>
-add after <em>Scanner</em>()</div>
+<p><font papago-translate="translated">원시 소스 코드를 간단한 문자열로 저장하고, 생성할 토큰으로 채울 목록을 준비했습니다.</font><font papago-translate="translated"> 앞서 언급한 루프는 다음과 같이 보입니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>스캐너</em> 뒤에 추가()</font></font></div>
 <pre translate="no">  <span class="t">List</span>&lt;<span class="t">Token</span>&gt; <span class="i">scanTokens</span>() {
     <span class="k">while</span> (!<span class="i">isAtEnd</span>()) {
       <span class="c">// We are at the beginning of the next lexeme.</span>
@@ -498,44 +343,28 @@ add after <em>Scanner</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, add after <em>Scanner</em>()</div>
-<p>The scanner works its way through the source code, adding tokens until it runs
-out of characters. Then it appends one final “end of file” token. That isn’t
-strictly needed, but it makes our parser a little cleaner.</p>
-<p>This loop depends on a couple of fields to keep track of where the scanner is in
-the source code.</p>
+<p><font papago-translate="translated">스캐너는 소스 코드를 통해 작동하며, 문자가 다 떨어질 때까지 토큰을 추가합니다.</font><font papago-translate="translated"> 그런 다음 마지막 "파일 종료" 토큰을 하나 추가합니다.</font><font papago-translate="translated"> 꼭 필요한 것은 아니지만 파서가 조금 더 깨끗해집니다.</font></p>
+<p><font papago-translate="translated">이 루프는 소스 코드에서 스캐너가 어디에 있는지 추적하기 위해 몇 가지 필드에 의존합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  private final List&lt;Token&gt; tokens = new ArrayList&lt;&gt;();
-</pre><div class="source-file"><em>lox/Scanner.java</em><br/>
-in class <em>Scanner</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em></em>클래스 스캐너에서</font></font></div>
 <pre class="insert" translate="no">  <span class="k">private</span> <span class="t">int</span> <span class="i">start</span> = <span class="n">0</span>;
   <span class="k">private</span> <span class="t">int</span> <span class="i">current</span> = <span class="n">0</span>;
   <span class="k">private</span> <span class="t">int</span> <span class="i">line</span> = <span class="n">1</span>;
 </pre><pre class="insert-after" translate="no">
-
   Scanner(String source) {
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, in class <em>Scanner</em></div>
-<p>The <code translate="no">start</code> and <code translate="no">current</code> fields are offsets that index into the string. The
-<code translate="no">start</code> field points to the first character in the lexeme being scanned, and
-<code translate="no">current</code> points at the character currently being considered. The <code translate="no">line</code> field
-tracks what source line <code translate="no">current</code> is on so we can produce tokens that know their
-location.</p>
-<p>Then we have one little helper function that tells us if we’ve consumed all the
-characters.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Scanner.java</em><br/>
-add after <em>scanTokens</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">그 </font></font><code translate="no">start</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">current</code><font papago-translate="splitted"><font papago-translate="translated"> 필드는 해당 인덱스를 문자열에 오프셋합니다.</font><font papago-translate="translated"> 그 </font></font><code translate="no">start</code><font papago-translate="splitted"><font papago-translate="translated"> 필드는 스캔 중인 어휘의 첫 번째 문자를 가리킵니다 </font></font><code translate="no">current</code><font papago-translate="splitted"><font papago-translate="translated"> 현재 고려 중인 캐릭터의 포인트.</font><font papago-translate="translated"> 그 </font></font><code translate="no">line</code><font papago-translate="splitted"><font papago-translate="translated"> 필드는 어떤 소스 라인을 추적합니까 </font></font><code translate="no">current</code><font papago-translate="splitted"><font papago-translate="translated"> 위치를 알 수 있는 토큰을 생성할 수 있도록 합니다.</font></font></p>
+<p><font papago-translate="translated">그런 다음 모든 캐릭터를 소비했는지 알려주는 작은 도우미 기능이 하나 있습니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>스캔</em> 후 추가</font><font papago-translate="translated"><em>토큰</em>()</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">boolean</span> <span class="i">isAtEnd</span>() {
     <span class="k">return</span> <span class="i">current</span> &gt;= <span class="i">source</span>.<span class="i">length</span>();
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, add after <em>scanTokens</em>()</div>
-<h2><a href="#recognizing-lexemes" id="recognizing-lexemes"><small>4 . 5</small>Recognizing Lexemes</a></h2>
-<p>In each turn of the loop, we scan a single token. This is the real heart of the
-scanner. We’ll start simple. Imagine if every lexeme were only a single character
-long. All you would need to do is consume the next character and pick a token type for
-it. Several lexemes <em>are</em> only a single character in Lox, so let’s start with
-those.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Scanner.java</em><br/>
-add after <em>scanTokens</em>()</div>
+<h2><a href="https://youhogeon-meritz.github.io/scanning.html#recognizing-lexemes" id="recognizing-lexemes"><small><font papago-translate="translated">4 . 5</font></small><font papago-translate="splitted"><font papago-translate="translated">Lexemes 인식하기</font></font></a></h2>
+<p><font papago-translate="translated">루프의 각 턴마다 하나의 토큰을 스캔합니다.</font><font papago-translate="translated"> 이것이 스캐너의 진정한 핵심입니다.</font><font papago-translate="translated"> 간단하게 시작하겠습니다.</font><font papago-translate="translated"> 모든 어휘가 한 글자로만 이루어진다고 상상해 보세요.</font><font papago-translate="translated"> 다음 캐릭터를 소비하고 토큰 유형을 선택하기만 하면 됩니다.</font><font papago-translate="translated"> Lox에서는 여러 어휘가 하나의 문자일 뿐이므로<em></em>, 그것부터 시작하겠습니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>스캔</em> 후 추가</font><font papago-translate="translated"><em>토큰</em>()</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">void</span> <span class="i">scanToken</span>() {
     <span class="t">char</span> <span class="i">c</span> = <span class="i">advance</span>();
     <span class="k">switch</span> (<span class="i">c</span>) {
@@ -553,12 +382,11 @@ add after <em>scanTokens</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, add after <em>scanTokens</em>()</div>
-<aside name="slash">
-<p>Wondering why <code translate="no">/</code> isn’t in here? Don’t worry, we’ll get to it.</p>
+<aside name="slash" style="top: 9926.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">왜 그런지 궁금합니다 </font></font><code translate="no">/</code><font papago-translate="splitted"><font papago-translate="translated"> 여기 없나요?</font><font papago-translate="translated"> 걱정하지 마세요, 저희가 해결해 드리겠습니다.</font></font></p>
 </aside>
-<p>Again, we need a couple of helper methods.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Scanner.java</em><br/>
-add after <em>isAtEnd</em>()</div>
+<p><font papago-translate="translated">다시 말하지만, 몇 가지 도우미 방법이 필요합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>isAtEnd</em>() 뒤에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">char</span> <span class="i">advance</span>() {
     <span class="k">return</span> <span class="i">source</span>.<span class="i">charAt</span>(<span class="i">current</span>++);
   }
@@ -573,56 +401,29 @@ add after <em>isAtEnd</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, add after <em>isAtEnd</em>()</div>
-<p>The <code translate="no">advance()</code> method consumes the next character in the source file and
-returns it. Where <code translate="no">advance()</code> is for input, <code translate="no">addToken()</code> is for output. It grabs
-the text of the current lexeme and creates a new token for it. We’ll use the
-other overload to handle tokens with literal values soon.</p>
-<h3><a href="#lexical-errors" id="lexical-errors"><small>4 . 5 . 1</small>Lexical errors</a></h3>
-<p>Before we get too far in, let’s take a moment to think about errors at the
-lexical level. What happens if a user throws a source file containing some
-characters Lox doesn’t use, like <code translate="no">@#^</code>, at our interpreter? Right now, those
-characters get silently discarded. They aren’t used by the Lox language, but
-that doesn’t mean the interpreter can pretend they aren’t there. Instead, we
-report an error.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그 </font></font><code translate="no">advance()</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드는 소스 파일의 다음 문자를 사용하여 반환합니다.</font><font papago-translate="translated"> 어디에 </font></font><code translate="no">advance()</code><font papago-translate="splitted"><font papago-translate="translated"> 입력을 위한 것입니다, </font></font><code translate="no">addToken()</code><font papago-translate="splitted"><font papago-translate="translated"> 출력용입니다.</font><font papago-translate="translated"> 현재 어휘의 텍스트를 가져와 새로운 토큰을 생성합니다.</font><font papago-translate="translated"> 곧 다른 과부하를 사용하여 문자 그대로의 값을 가진 토큰을 처리할 예정입니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/scanning.html#lexical-errors" id="lexical-errors"><small><font papago-translate="translated">4 . 5 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">어휘 오류</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">너무 깊이 들어가기 전에 어휘 수준의 오류에 대해 잠시 생각해 보겠습니다.</font><font papago-translate="translated"> 사용자가 Lox가 사용하지 않는 문자가 포함된 소스 파일을 던지면 어떻게 되나요 </font></font><code translate="no">@#^</code><font papago-translate="splitted"><font papago-translate="translated">, 통역사에게?</font><font papago-translate="translated"> 지금 그 캐릭터들은 조용히 버려지고 있습니다.</font><font papago-translate="translated"> 그것들은 Lox 언어에서 사용되지 않지만, 그렇다고 해서 통역사가 없는 척할 수 있는 것은 아닙니다.</font><font papago-translate="translated"> 대신 오류를 보고합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      case '*': addToken(STAR); break;<span name="slash"> </span>
-</pre><div class="source-file"><em>lox/Scanner.java</em><br/>
-in <em>scanToken</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>스캔</em> 중에</font><font papago-translate="translated"><em>토큰</em>()</font></font></div>
 <pre class="insert" translate="no">
-
       <span class="k">default</span>:
         <span class="t">Lox</span>.<span class="i">error</span>(<span class="i">line</span>, <span class="s">"Unexpected character."</span>);
         <span class="k">break</span>;
 </pre><pre class="insert-after" translate="no">    }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, in <em>scanToken</em>()</div>
-<p>Note that the erroneous character is still <em>consumed</em> by the earlier call to
-<code translate="no">advance()</code>. That’s important so that we don’t get stuck in an infinite loop.</p>
-<p>Note also that we <span name="shotgun"><em>keep scanning</em></span>. There may be
-other errors later in the program. It gives our users a better experience if we
-detect as many of those as possible in one go. Otherwise, they see one tiny
-error and fix it, only to have the next error appear, and so on. Syntax error
-Whac-A-Mole is no fun.</p>
-<p>(Don’t worry. Since <code translate="no">hadError</code> gets set, we’ll never try to <em>execute</em> any of the
-code, even though we keep going and scan the rest of it.)</p>
-<aside name="shotgun">
-<p>The code reports each invalid character separately, so this shotguns the user
-with a blast of errors if they accidentally paste a big blob of weird text.
-Coalescing a run of invalid characters into a single error would give a nicer
-user experience.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">잘못된 문자는 이전 호출에서 여전히<em> 사용됩니다</em> </font></font><code translate="no">advance()</code><font papago-translate="splitted"><font papago-translate="translated">. 무한 루프에 갇히지 않도록 하는 것이 중요합니다.</font></font></p>
+<p><font papago-translate="translated"><span name="shotgun"><em>또한 계속 스캔</em></span>하고 있다는 점에 유의하세요.</font><font papago-translate="translated"> 프로그램 후반부에 다른 오류가 있을 수 있습니다.</font><font papago-translate="translated"> 한 번에 가능한 한 많은 것을 감지하면 사용자에게 더 나은 경험을 제공할 수 있습니다.</font><font papago-translate="translated"> 그렇지 않으면 작은 오류 하나를 보고 수정하지만 다음 오류가 나타나는 등의 문제가 발생합니다.</font><font papago-translate="translated"> 구문 오류 Whac-A-Mole은 재미없습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">걱정하지 마세요.</font><font papago-translate="translated"> 부터 </font></font><code translate="no">hadError</code><font papago-translate="splitted"><font papago-translate="translated" class=""> 설정이 되면, 우리는 코드<em>를 실행</em>하려고 하지 않을 것입니다. 비록 계속 진행해서 나머지 코드를 스캔하더라도 말이죠.)</font></font></p>
+<aside name="shotgun" style="top: 10899.5px;">
+<p><font papago-translate="translated">코드는 각 유효하지 않은 문자를 개별적으로 보고하므로 실수로 이상한 텍스트를 붙여넣으면 사용자에게 엄청난 오류가 발생합니다.</font><font papago-translate="translated"> 유효하지 않은 문자를 하나의 오류로 통합하면 더 나은 사용자 경험을 제공할 수 있습니다.</font></p>
 </aside>
-<h3><a href="#operators" id="operators"><small>4 . 5 . 2</small>Operators</a></h3>
-<p>We have single-character lexemes working, but that doesn’t cover all of Lox’s
-operators. What about <code translate="no">!</code>? It’s a single character, right? Sometimes, yes, but
-if the very next character is an equals sign, then we should instead create a
-<code translate="no">!=</code> lexeme. Note that the <code translate="no">!</code> and <code translate="no">=</code> are <em>not</em> two independent operators. You
-can’t write <code translate="no">!   =</code> in Lox and have it behave like an inequality operator.
-That’s why we need to scan <code translate="no">!=</code> as a single lexeme. Likewise, <code translate="no">&lt;</code>, <code translate="no">&gt;</code>, and <code translate="no">=</code>
-can all be followed by <code translate="no">=</code> to create the other equality and comparison
-operators.</p>
-<p>For all of these, we need to look at the second character.</p>
+<h3><a href="https://youhogeon-meritz.github.io/scanning.html#operators" id="operators"><small><font papago-translate="translated">4 . 5 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">운영자</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">단일 문자 어휘가 작동하고 있지만, 그것이 Lox의 모든 연산자를 포함하지는 않습니다.</font><font papago-translate="translated"> 어때 </font></font><code translate="no">!</code><font papago-translate="splitted"><font papago-translate="translated">? 단일 문자 맞죠?</font><font papago-translate="translated"> 때때로 그렇습니다. 하지만 바로 다음 문자가 등호라면, 대신 다음 문자를 만들어야 합니다 </font></font><code translate="no">!=</code><font papago-translate="splitted"><font papago-translate="translated"> 어휘.</font><font papago-translate="translated"> 참고로 </font></font><code translate="no">!</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">=</code><font papago-translate="splitted"><font papago-translate="translated"> 는 두 개의 독립적인 연산자<em>가 아닙니다</em>.</font><font papago-translate="translated"> 쓸 수 없습니다 </font></font><code translate="no">!   =</code><font papago-translate="splitted"><font papago-translate="translated"> Lox에서 부등식 연산자처럼 작동하도록 합니다.</font><font papago-translate="translated"> 그래서 우리는 스캔해야 합니다 </font></font><code translate="no">!=</code><font papago-translate="splitted"><font papago-translate="translated"> 단일 어휘로서.</font><font papago-translate="translated"> 저도 마찬가지예요. </font></font><code translate="no">&lt;</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">&gt;</code><font papago-translate="splitted"><font papago-translate="translated">,그리고. </font></font><code translate="no">=</code><font papago-translate="splitted"><font papago-translate="translated"> 모두 다음과 같이 할 수 있습니다 </font></font><code translate="no">=</code><font papago-translate="splitted"><font papago-translate="translated"> 다른 평등 및 비교 연산자를 만들기 위해.</font></font></p>
+<p><font papago-translate="translated">이 모든 것을 위해 두 번째 캐릭터를 살펴봐야 합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      case '*': addToken(STAR); break;<span name="slash"> </span>
-</pre><div class="source-file"><em>lox/Scanner.java</em><br/>
-in <em>scanToken</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>스캔</em> 중에</font><font papago-translate="translated"><em>토큰</em>()</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="s">'!'</span>:
         <span class="i">addToken</span>(<span class="i">match</span>(<span class="s">'='</span>) ? <span class="i">BANG_EQUAL</span> : <span class="i">BANG</span>);
         <span class="k">break</span>;
@@ -636,13 +437,11 @@ in <em>scanToken</em>()</div>
         <span class="i">addToken</span>(<span class="i">match</span>(<span class="s">'='</span>) ? <span class="i">GREATER_EQUAL</span> : <span class="i">GREATER</span>);
         <span class="k">break</span>;
 </pre><pre class="insert-after" translate="no">
-
       default:
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, in <em>scanToken</em>()</div>
-<p>Those cases use this new method:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Scanner.java</em><br/>
-add after <em>scanToken</em>()</div>
+<p><font papago-translate="translated">이러한 경우에는 이 새로운 방법을 사용합니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>스캔</em> 후 추가</font><font papago-translate="translated"><em>토큰</em>()</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">boolean</span> <span class="i">match</span>(<span class="t">char</span> <span class="i">expected</span>) {
     <span class="k">if</span> (<span class="i">isAtEnd</span>()) <span class="k">return</span> <span class="k">false</span>;
     <span class="k">if</span> (<span class="i">source</span>.<span class="i">charAt</span>(<span class="i">current</span>) != <span class="i">expected</span>) <span class="k">return</span> <span class="k">false</span>;
@@ -652,18 +451,12 @@ add after <em>scanToken</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, add after <em>scanToken</em>()</div>
-<p>It’s like a conditional <code translate="no">advance()</code>. We only consume the current character if
-it’s what we’re looking for.</p>
-<p>Using <code translate="no">match()</code>, we recognize these lexemes in two stages. When we reach, for
-example, <code translate="no">!</code>, we jump to its switch case. That means we know the lexeme <em>starts</em>
-with <code translate="no">!</code>. Then we look at the next character to determine if we’re on a <code translate="no">!=</code> or
-merely a <code translate="no">!</code>.</p>
-<h2><a href="#longer-lexemes" id="longer-lexemes"><small>4 . 6</small>Longer Lexemes</a></h2>
-<p>We’re still missing one operator: <code translate="no">/</code> for division. That character needs a
-little special handling because comments begin with a slash too.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">조건부와 같습니다 </font></font><code translate="no">advance()</code><font papago-translate="splitted"><font papago-translate="translated">. 현재 캐릭터가 우리가 찾고 있는 것일 때만 소비합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">사용. </font></font><code translate="no">match()</code><font papago-translate="splitted"><font papago-translate="translated">, 우리는 이 어휘들을 두 단계로 인식합니다.</font><font papago-translate="translated"> 예를 들어, 우리가 도달할 때, </font></font><code translate="no">!</code><font papago-translate="splitted"><font papago-translate="translated">, 스위치 케이스로 넘어갑니다.</font><font papago-translate="translated"> 즉, 어휘는 다음과 같이<em> 시작</em>한다는 뜻입니다 </font></font><code translate="no">!</code><font papago-translate="splitted"><font papago-translate="translated">. 그런 다음 다음 문자를 살펴봄으로써 우리가 다음 문자에 있는지 확인합니다 </font></font><code translate="no">!=</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 단순히 </font></font><code translate="no">!</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/scanning.html#longer-lexemes" id="longer-lexemes"><small><font papago-translate="translated">4 . 6</font></small><font papago-translate="splitted"><font papago-translate="translated">긴 어휘</font></font></a></h2>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 여전히 한 명의 운영자를 놓치고 있습니다: </font></font><code translate="no">/</code><font papago-translate="splitted"><font papago-translate="translated"> 나눗셈을 위해.</font><font papago-translate="translated"> 그 캐릭터는 댓글도 슬래시로 시작하기 때문에 약간의 특별한 처리가 필요합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">        break;
-</pre><div class="source-file"><em>lox/Scanner.java</em><br/>
-in <em>scanToken</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>스캔</em> 중에</font><font papago-translate="translated"><em>토큰</em>()</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="s">'/'</span>:
         <span class="k">if</span> (<span class="i">match</span>(<span class="s">'/'</span>)) {
           <span class="c">// A comment goes until the end of the line.</span>
@@ -673,46 +466,28 @@ in <em>scanToken</em>()</div>
         }
         <span class="k">break</span>;
 </pre><pre class="insert-after" translate="no">
-
       default:
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, in <em>scanToken</em>()</div>
-<p>This is similar to the other two-character operators, except that when we find a
-second <code translate="no">/</code>, we don’t end the token yet. Instead, we keep consuming characters
-until we reach the end of the line.</p>
-<p>This is our general strategy for handling longer lexemes. After we detect the
-beginning of one, we shunt over to some lexeme-specific code that keeps eating
-characters until it sees the end.</p>
-<p>We’ve got another helper:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Scanner.java</em><br/>
-add after <em>match</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 다른 두 문자 연산자와 유사하지만, 초를 찾을 때는 예외입니다 </font></font><code translate="no">/</code><font papago-translate="splitted"><font papago-translate="translated">, 우리는 아직 토큰을 끝내지 않았습니다.</font><font papago-translate="translated"> 대신, 우리는 줄의 끝에 도달할 때까지 캐릭터를 계속 소비합니다.</font></font></p>
+<p><font papago-translate="translated">이것이 긴 어휘를 처리하기 위한 우리의 일반적인 전략입니다.</font><font papago-translate="translated"> 하나의 시작을 감지한 후, 끝을 볼 때까지 문자를 계속 사용하는 어휘소별 코드로 전환합니다.</font></p>
+<p><font papago-translate="translated">다른 도우미가 있습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>경기</em> 후 () 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">char</span> <span class="i">peek</span>() {
     <span class="k">if</span> (<span class="i">isAtEnd</span>()) <span class="k">return</span> <span class="s">'\0'</span>;
     <span class="k">return</span> <span class="i">source</span>.<span class="i">charAt</span>(<span class="i">current</span>);
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, add after <em>match</em>()</div>
-<p>It’s sort of like <code translate="no">advance()</code>, but doesn’t consume the character. This is called
-<span name="match"><strong>lookahead</strong></span>. Since it only looks at the current
-unconsumed character, we have <em>one character of lookahead</em>. The smaller this
-number is, generally, the faster the scanner runs. The rules of the lexical
-grammar dictate how much lookahead we need. Fortunately, most languages in wide
-use peek only one or two characters ahead.</p>
-<aside name="match">
-<p>Technically, <code translate="no">match()</code> is doing lookahead too. <code translate="no">advance()</code> and <code translate="no">peek()</code> are the
-fundamental operators and <code translate="no">match()</code> combines them.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">약간 그런 것 같아요 </font></font><code translate="no">advance()</code><font papago-translate="splitted"><font papago-translate="translated">, 하지만 캐릭터를 소비하지는 않습니다.</font><font papago-translate="translated"> <span name="match"><strong>이것</strong></span>을<span name="match"><strong> 앞을 내다보는 것</strong></span>이라고 합니다.</font><font papago-translate="translated"> 현재 소비되지 않은 캐릭터만 보기 때문에<em>, 우리는 앞을 내다보는 캐릭터가 하나</em> 있습니다.</font><font papago-translate="translated"> 이 숫자가 작을수록 일반적으로 스캐너가 더 빨리 실행됩니다.</font><font papago-translate="translated"> 어휘 문법의 규칙은 우리가 얼마나 앞을 내다봐야 하는지를 결정합니다.</font><font papago-translate="translated"> 다행히도, 널리 사용되는 대부분의 언어는 한두 글자만 앞을 내다봅니다.</font></font></p>
+<aside name="match" style="top: 12911.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">기술적으로, </font></font><code translate="no">match()</code><font papago-translate="splitted"><font papago-translate="translated"> 미리 보기도 하고 있습니다. </font></font><code translate="no">advance()</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">peek()</code><font papago-translate="splitted"><font papago-translate="translated"> 기본 연산자는 다음과 같습니다 </font></font><code translate="no">match()</code><font papago-translate="splitted"><font papago-translate="translated"> 그것들을 결합합니다.</font></font></p>
 </aside>
-<p>Comments are lexemes, but they aren’t meaningful, and the parser doesn’t want
-to deal with them. So when we reach the end of the comment, we <em>don’t</em> call
-<code translate="no">addToken()</code>. When we loop back around to start the next lexeme, <code translate="no">start</code> gets
-reset and the comment’s lexeme disappears in a puff of smoke.</p>
-<p>While we’re at it, now’s a good time to skip over those other meaningless
-characters: newlines and whitespace.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">댓글은 어휘이지만 의미가 없으며 파서는 이를 다루고 싶어하지 않습니다.</font><font papago-translate="translated"> 그래서 우리가 댓글 끝에 도달했을 때<em></em>, 우리는 전화하지 않습니다 </font></font><code translate="no">addToken()</code><font papago-translate="splitted"><font papago-translate="translated">. 다음 어휘를 시작하기 위해 다시 돌아볼 때, </font></font><code translate="no">start</code><font papago-translate="splitted"><font papago-translate="translated"> 초기화되고 댓글의 어휘가 연기에 휩싸여 사라집니다.</font></font></p>
+<p><font papago-translate="translated">우리가 그 일을 하는 동안, 지금이야말로 그 의미 없는 다른 캐릭터들, 즉 새로운 선과 공백을 건너뛸 좋은 시기입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">        break;
-</pre><div class="source-file"><em>lox/Scanner.java</em><br/>
-in <em>scanToken</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>스캔</em> 중에</font><font papago-translate="translated"><em>토큰</em>()</font></font></div>
 <pre class="insert" translate="no">
-
       <span class="k">case</span> <span class="s">' '</span>:
       <span class="k">case</span> <span class="s">'\r'</span>:
       <span class="k">case</span> <span class="s">'\t'</span>:
@@ -723,38 +498,28 @@ in <em>scanToken</em>()</div>
         <span class="i">line</span>++;
         <span class="k">break</span>;
 </pre><pre class="insert-after" translate="no">
-
       default:
         Lox.error(line, "Unexpected character.");
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, in <em>scanToken</em>()</div>
-<p>When encountering whitespace, we simply go back to the beginning of the scan
-loop. That starts a new lexeme <em>after</em> the whitespace character. For newlines,
-we do the same thing, but we also increment the line counter. (This is why we
-used <code translate="no">peek()</code> to find the newline ending a comment instead of <code translate="no">match()</code>. We want
-that newline to get us here so we can update <code translate="no">line</code>.)</p>
-<p>Our scanner is getting smarter. It can handle fairly free-form code like:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">공백을 만나면 스캔 루프의 시작 부분으로 돌아가기만 하면 됩니다.</font><font papago-translate="translated"> 그것은 공백 문자<em> 뒤에</em> 새로운 어휘를 시작합니다.</font><font papago-translate="translated"> 새로운 라인의 경우 동일한 작업을 수행하지만 라인 카운터도 증가시킵니다.</font><font papago-translate="translated"> (이것이 우리가 사용한 이유입니다) </font></font><code translate="no">peek()</code><font papago-translate="splitted"><font papago-translate="translated"> 댓글 대신 새 줄을 찾아서 댓글을 남깁니다 </font></font><code translate="no">match()</code><font papago-translate="splitted"><font papago-translate="translated">. 새로운 라인을 통해 업데이트할 수 있기를 바랍니다 </font></font><code translate="no">line</code><font papago-translate="splitted"><font papago-translate="translated">.)</font></font></p>
+<p><font papago-translate="translated">스캐너가 점점 더 똑똑해지고 있습니다.</font><font papago-translate="translated"> 다음과 같이 상당히 자유로운 형태의 코드를 처리할 수 있습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="c">// this is a comment</span>
 (( )){} <span class="c">// grouping stuff</span>
 !*+-/=&lt;&gt; &lt;= == <span class="c">// operators</span>
 </pre></div>
-<h3><a href="#string-literals" id="string-literals"><small>4 . 6 . 1</small>String literals</a></h3>
-<p>Now that we’re comfortable with longer lexemes, we’re ready to tackle literals.
-We’ll do strings first, since they always begin with a specific character, <code translate="no">"</code>.</p>
+<h3><a href="https://youhogeon-meritz.github.io/scanning.html#string-literals" id="string-literals"><small><font papago-translate="translated">4 . 6 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">문자열 리터럴</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">이제 더 긴 어휘에 익숙해졌으니 리터럴을 다룰 준비가 되었습니다.</font><font papago-translate="translated"> 문자열은 항상 특정 문자로 시작하기 때문에 먼저 문자열을 만들겠습니다, </font></font><code translate="no">"</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">        break;
-</pre><div class="source-file"><em>lox/Scanner.java</em><br/>
-in <em>scanToken</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>스캔</em> 중에</font><font papago-translate="translated"><em>토큰</em>()</font></font></div>
 <pre class="insert" translate="no">
-
       <span class="k">case</span> <span class="s">'"'</span>: <span class="i">string</span>(); <span class="k">break</span>;
 </pre><pre class="insert-after" translate="no">
-
       default:
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, in <em>scanToken</em>()</div>
-<p>That calls:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Scanner.java</em><br/>
-add after <em>scanToken</em>()</div>
+<p><font papago-translate="translated">그것은 호출입니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>스캔</em> 후 추가</font><font papago-translate="translated"><em>토큰</em>()</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">void</span> <span class="i">string</span>() {
     <span class="k">while</span> (<span class="i">peek</span>() != <span class="s">'"'</span> &amp;&amp; !<span class="i">isAtEnd</span>()) {
       <span class="k">if</span> (<span class="i">peek</span>() == <span class="s">'\n'</span>) <span class="i">line</span>++;
@@ -775,52 +540,32 @@ add after <em>scanToken</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, add after <em>scanToken</em>()</div>
-<p>Like with comments, we consume characters until we hit the <code translate="no">"</code> that ends the
-string. We also gracefully handle running out of input before the string is
-closed and report an error for that.</p>
-<p>For no particular reason, Lox supports multi-line strings. There are pros and
-cons to that, but prohibiting them was a little more complex than allowing them,
-so I left them in. That does mean we also need to update <code translate="no">line</code> when we hit a
-newline inside a string.</p>
-<p>Finally, the last interesting bit is that when we create the token, we also
-produce the actual string <em>value</em> that will be used later by the interpreter.
-Here, that conversion only requires a <code translate="no">substring()</code> to strip off the surrounding
-quotes. If Lox supported escape sequences like <code translate="no">\n</code>, we’d unescape those here.</p>
-<h3><a href="#number-literals" id="number-literals"><small>4 . 6 . 2</small>Number literals</a></h3>
-<p>All numbers in Lox are floating point at runtime, but both integer and decimal
-literals are supported. A number literal is a series of <span name="minus">digits</span> optionally followed by a <code translate="no">.</code> and one or more trailing
-digits.</p>
-<aside name="minus">
-<p>Since we look only for a digit to start a number, that means <code translate="no">-123</code> is not a
-number <em>literal</em>. Instead, <code translate="no">-123</code>, is an <em>expression</em> that applies <code translate="no">-</code> to the
-number literal <code translate="no">123</code>. In practice, the result is the same, though it has one
-interesting edge case if we were to add method calls on numbers. Consider:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">댓글과 마찬가지로, 우리는 다음을 달성할 때까지 캐릭터를 소비합니다 </font></font><code translate="no">"</code><font papago-translate="splitted"><font papago-translate="translated"> 문자열이 끝납니다.</font><font papago-translate="translated"> 또한 문자열이 닫히기 전에 입력이 부족해지는 것을 우아하게 처리하고 오류를 보고합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">특별한 이유 없이 Lox는 멀티 라인 문자열을 지원합니다.</font><font papago-translate="translated"> 장단점이 있지만, 금지하는 것이 허용하는 것보다 조금 더 복잡해서 그냥 두었습니다.</font><font papago-translate="translated"> 즉, 업데이트도 필요합니다 </font></font><code translate="no">line</code><font papago-translate="splitted"><font papago-translate="translated"> 우리가 줄 안에서 새로운 줄을 맞출 때.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">마지막으로, 마지막으로 흥미로운 점은 토큰을 만들 때 나중에 인터프리터가 사용할 실제 문자열<em> 값</em>도 생성한다는 것입니다.</font><font papago-translate="translated" class="papago-selected"> 여기서 그 변환은 다음과 같은 것만 필요합니다 </font></font><code translate="no">substring()</code><font papago-translate="splitted"><font papago-translate="translated" class=""> 주변 인용문을 제거하기 위해.</font><font papago-translate="translated"> Lox가 이스케이프 시퀀스를 지원하는 경우 다음과 같이 </font></font><code translate="no">\n</code><font papago-translate="splitted"><font papago-translate="translated" class="">, 우리는 여기서 그것들을 피할 것입니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/scanning.html#number-literals" id="number-literals"><small><font papago-translate="translated">4 . 6 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">숫자 리터럴</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">Lox의 모든 숫자는 런타임 시 부동 소수점이지만 정수와 소수 리터럴 모두 지원됩니다.</font><font papago-translate="translated"> 숫자 리터럴은 선택적으로 다음<span name="minus">에</span> 오는<span name="minus"> 일련의 숫자</span>입니다 </font></font><code translate="no">.</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 하나 이상의 뒷자리 숫자.</font></font></p>
+<aside name="minus" style="top: 15007.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">숫자를 시작하기 위해 숫자만 찾기 때문에 다음과 같은 의미입니다 </font></font><code translate="no">-123</code><font papago-translate="splitted"><font papago-translate="translated"> <em>는 숫자 그대로가</em> 아닙니다<em>.</em></font><font papago-translate="translated"> 대신, </font></font><code translate="no">-123</code><font papago-translate="splitted"><font papago-translate="translated">, 다음을 적용하는<em> 표현</em>입니다 </font></font><code translate="no">-</code><font papago-translate="splitted"><font papago-translate="translated"> 문자 그대로 </font></font><code translate="no">123</code><font papago-translate="splitted"><font papago-translate="translated">. 실제로 결과는 동일하지만, 숫자에 메서드 호출을 추가하면 흥미로운 엣지 케이스가 하나 있습니다.</font><font papago-translate="translated"> 고려:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">print</span> -<span class="n">123</span>.<span class="i">abs</span>();
 </pre></div>
-<p>This prints <code translate="no">-123</code> because negation has lower precedence than method calls. We
-could fix that by making <code translate="no">-</code> part of the number literal. But then consider:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 인쇄물입니다 </font></font><code translate="no">-123</code><font papago-translate="splitted"><font papago-translate="translated"> 부정이 메서드 호출보다 우선순위가 낮기 때문입니다.</font><font papago-translate="translated"> 다음을 통해 이 문제를 해결할 수 있습니다 </font></font><code translate="no">-</code><font papago-translate="splitted"><font papago-translate="translated"> 숫자 리터럴의 일부.</font><font papago-translate="translated"> 하지만 생각해 보세요:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">n</span> = <span class="n">123</span>;
 <span class="k">print</span> -<span class="i">n</span>.<span class="i">abs</span>();
 </pre></div>
-<p>This still produces <code translate="no">-123</code>, so now the language seems inconsistent. No matter
-what you do, some case ends up weird.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 여전히 다음을 생성합니다 </font></font><code translate="no">-123</code><font papago-translate="splitted"><font papago-translate="translated">, 그래서 이제 언어가 일관성이 없어 보입니다.</font><font papago-translate="translated"> 어떤 일을 해도 어떤 경우는 이상하게 됩니다.</font></font></p>
 </aside>
 <div class="codehilite"><pre translate="no"><span class="n">1234</span>
 <span class="n">12.34</span>
 </pre></div>
-<p>We don’t allow a leading or trailing decimal point, so these are both invalid:</p>
+<p><font papago-translate="translated">소수점 앞이나 뒤를 잇는 소수점을 허용하지 않으므로 둘 다 유효하지 않습니다:</font></p>
 <div class="codehilite"><pre translate="no">.<span class="n">1234</span>
 <span class="n">1234</span>.
 </pre></div>
-<p>We could easily support the former, but I left it out to keep things simple. The
-latter gets weird if we ever want to allow methods on numbers like <code translate="no">123.sqrt()</code>.</p>
-<p>To recognize the beginning of a number lexeme, we look for any digit. It’s kind
-of tedious to add cases for every decimal digit, so we’ll stuff it in the
-default case instead.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 전자를 쉽게 지지할 수 있었지만, 단순하게 하기 위해 생략했습니다.</font><font papago-translate="translated"> 숫자에 대해 다음과 같은 방법을 허용하려면 후자가 이상해집니다 </font></font><code translate="no">123.sqrt()</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="translated">숫자 어휘의 시작을 인식하기 위해, 우리는 임의의 숫자를 찾습니다.</font><font papago-translate="translated"> 소수점 이하 자릿수마다 대문자를 추가하는 것은 다소 번거롭기 때문에 기본 소문자로 채워 넣겠습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      default:
-</pre><div class="source-file"><em>lox/Scanner.java</em><br/>
-in <em>scanToken</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>스캔</em> 중에</font><font papago-translate="translated"><em>토큰</em>()</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">        <span class="k">if</span> (<span class="i">isDigit</span>(<span class="i">c</span>)) {
           <span class="i">number</span>();
         } <span class="k">else</span> {
@@ -829,23 +574,18 @@ replace 1 line</div>
 </pre><pre class="insert-after" translate="no">        break;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, in <em>scanToken</em>(), replace 1 line</div>
-<p>This relies on this little utility:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Scanner.java</em><br/>
-add after <em>peek</em>()</div>
+<p><font papago-translate="translated">이것은 이 작은 유용성에 의존합니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>엿보기</em> () 후 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">boolean</span> <span class="i">isDigit</span>(<span class="t">char</span> <span class="i">c</span>) {
     <span class="k">return</span> <span class="i">c</span> &gt;= <span class="s">'0'</span> &amp;&amp; <span class="i">c</span> &lt;= <span class="s">'9'</span>;
   }<span name="is-digit"> </span>
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, add after <em>peek</em>()</div>
-<aside name="is-digit">
-<p>The Java standard library provides <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Character.html#isDigit(char)"><code translate="no">Character.isDigit()</code></a>, which seems
-like a good fit. Alas, that method allows things like Devanagari digits,
-full-width numbers, and other funny stuff we don’t want.</p>
+<aside name="is-digit" style="top: 15674.5px;">
+<p><font papago-translate="translated">Java 표준 라이브러리는 을 제공하는데, 이는 적합해 보입니다<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Character.html#isDigit(char)"></a>.</font><font papago-translate="translated"> 아, 그 방법은 데바나가리 숫자, 전체 너비 숫자, 그리고 우리가 원하지 않는 다른 재미있는 것들을 가능하게 합니다.</font></p>
 </aside>
-<p>Once we know we are in a number, we branch to a separate method to consume the
-rest of the literal, like we do with strings.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Scanner.java</em><br/>
-add after <em>scanToken</em>()</div>
+<p><font papago-translate="translated">우리가 숫자에 있다는 것을 알게 되면, 문자열과 마찬가지로 문자 그대로의 나머지 부분을 소비하기 위해 별도의 방법으로 분기합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>스캔</em> 후 추가</font><font papago-translate="translated"><em>토큰</em>()</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">void</span> <span class="i">number</span>() {
     <span class="k">while</span> (<span class="i">isDigit</span>(<span class="i">peek</span>())) <span class="i">advance</span>();
 
@@ -862,80 +602,48 @@ add after <em>scanToken</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, add after <em>scanToken</em>()</div>
-<p>We consume as many digits as we find for the integer part of the literal. Then
-we look for a fractional part, which is a decimal point (<code translate="no">.</code>) followed by at
-least one digit. If we do have a fractional part, again, we consume as many
-digits as we can find.</p>
-<p>Looking past the decimal point requires a second character of lookahead since we
-don’t want to consume the <code translate="no">.</code> until we’re sure there is a digit <em>after</em> it. So
-we add:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Scanner.java</em><br/>
-add after <em>peek</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 리터럴의 정수 부분에 대해 찾을 수 있는 만큼의 숫자를 소비합니다.</font><font papago-translate="translated"> 그런 다음 소수점인 분수 부분을 찾습니다 (</font></font><code translate="no">.</code><font papago-translate="splitted"><font papago-translate="translated">) 다음에 최소한 한 자리 숫자가 이어집니다.</font><font papago-translate="translated"> 분수 부분이 있다면, 다시 찾을 수 있는 만큼의 숫자를 소비하게 됩니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">소수점을 넘기기 위해서는 앞을 내다보는 두 번째 문자가 필요합니다. 왜냐하면 우리는 다음을 소비하고 싶지 않기 때문입니다 </font></font><code translate="no">.</code><font papago-translate="splitted"><font papago-translate="translated"> 그<em> 뒤</em>에 숫자가 있다는 것을 확신할 때까지.</font><font papago-translate="translated"> 그래서 우리는 추가합니다:</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>엿보기</em> () 후 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">char</span> <span class="i">peekNext</span>() {
     <span class="k">if</span> (<span class="i">current</span> + <span class="n">1</span> &gt;= <span class="i">source</span>.<span class="i">length</span>()) <span class="k">return</span> <span class="s">'\0'</span>;
     <span class="k">return</span> <span class="i">source</span>.<span class="i">charAt</span>(<span class="i">current</span> + <span class="n">1</span>);
   }<span name="peek-next"> </span>
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, add after <em>peek</em>()</div>
-<aside name="peek-next">
-<p>I could have made <code translate="no">peek()</code> take a parameter for the number of characters ahead
-to look instead of defining two functions, but that would allow <em>arbitrarily</em>
-far lookahead. Providing these two functions makes it clearer to a reader of the
-code that our scanner looks ahead at most two characters.</p>
+<aside name="peek-next" style="top: 16346.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">만들 수 있었습니다 </font></font><code translate="no">peek()</code><font papago-translate="splitted"><font papago-translate="translated"> 두 함수를 정의하는 대신 앞에 있는 문자 수에 대한 매개변수를 사용하여 살펴보세요. 하지만 그렇게 하면<em> 임의</em>로 멀리 내다볼 수 있습니다.</font><font papago-translate="translated"> 이 두 가지 기능을 제공하면 코드를 읽는 독자에게 스캐너가 최대 두 글자 앞을 내다볼 수 있다는 것을 더 명확하게 알 수 있습니다.</font></font></p>
 </aside>
-<p>Finally, we convert the lexeme to its numeric value. Our interpreter uses Java’s
-<code translate="no">Double</code> type to represent numbers, so we produce a value of that type. We’re
-using Java’s own parsing method to convert the lexeme to a real Java double. We
-could implement that ourselves, but, honestly, unless you’re trying to cram for
-an upcoming programming interview, it’s not worth your time.</p>
-<p>The remaining literals are Booleans and <code translate="no">nil</code>, but we handle those as keywords,
-which gets us to<span class="ellipse"> . . . </span></p>
-<h2><a href="#reserved-words-and-identifiers" id="reserved-words-and-identifiers"><small>4 . 7</small>Reserved Words and Identifiers</a></h2>
-<p>Our scanner is almost done. The only remaining pieces of the lexical grammar to
-implement are identifiers and their close cousins, the reserved words. You might
-think we could match keywords like <code translate="no">or</code> in the same way we handle
-multiple-character operators like <code translate="no">&lt;=</code>.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">마지막으로, 우리는 어휘를 숫자 값으로 변환합니다.</font><font papago-translate="translated"> 우리 통역사는 Java를 사용합니다 </font></font><code translate="no">Double</code><font papago-translate="splitted"><font papago-translate="translated"> 숫자를 나타내기 위해 입력하므로 해당 유형의 값을 생성합니다.</font><font papago-translate="translated"> 우리는 Java의 자체 구문 분석 방법을 사용하여 어휘소를 실제 Java 이중으로 변환하고 있습니다.</font><font papago-translate="translated"> 우리가 직접 구현할 수도 있지만, 솔직히 다가오는 프로그램 인터뷰를 위해 벼락치기를 하려는 것이 아니라면 시간을 들일 가치가 없습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">나머지 리터럴은 부울리안입니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">, 하지만 우리는 그것들을 키워드로 처리합니다. 이를 통해 .<span class="ellipse"> . .</span></font></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/scanning.html#reserved-words-and-identifiers" id="reserved-words-and-identifiers"><small><font papago-translate="translated">4 . 7</font></small><font papago-translate="splitted"><font papago-translate="translated">예약된 단어 및 식별자</font></font></a></h2>
+<p><font papago-translate="splitted"><font papago-translate="translated">스캐너가 거의 다 끝났습니다.</font><font papago-translate="translated"> 어휘 문법의 남은 부분은 식별자와 그 가까운 사촌, 즉 예약된 단어들뿐입니다.</font><font papago-translate="translated"> 다음과 같은 키워드를 매칭할 수 있다고 생각할 수 있습니다 </font></font><code translate="no">or</code><font papago-translate="splitted"><font papago-translate="translated"> 다음과 같은 여러 문자 연산자를 처리하는 것과 같은 방식으로 </font></font><code translate="no">&lt;=</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">case</span> <span class="s">'o'</span>:
   <span class="k">if</span> (<span class="i">match</span>(<span class="s">'r'</span>)) {
     <span class="i">addToken</span>(<span class="i">OR</span>);
   }
   <span class="k">break</span>;
 </pre></div>
-<p>Consider what would happen if a user named a variable <code translate="no">orchid</code>. The scanner
-would see the first two letters, <code translate="no">or</code>, and immediately emit an <code translate="no">or</code> keyword
-token. This gets us to an important principle called <span name="maximal"><strong>maximal munch</strong></span>. When two lexical grammar rules can both
-match a chunk of code that the scanner is looking at, <em>whichever one matches the
-most characters wins</em>.</p>
-<p>That rule states that if we can match <code translate="no">orchid</code> as an identifier and <code translate="no">or</code> as a
-keyword, then the former wins. This is also why we tacitly assumed, previously,
-that <code translate="no">&lt;=</code> should be scanned as a single <code translate="no">&lt;=</code> token and not <code translate="no">&lt;</code> followed by <code translate="no">=</code>.</p>
-<aside name="maximal">
-<p>Consider this nasty bit of C code:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">사용자가 변수를 지정하면 어떤 일이 일어날지 고려합니다 </font></font><code translate="no">orchid</code><font papago-translate="splitted"><font papago-translate="translated">. 스캐너는 처음 두 글자를 볼 것입니다, </font></font><code translate="no">or</code><font papago-translate="splitted"><font papago-translate="translated">, 그리고 즉시 다음을 방출합니다 </font></font><code translate="no">or</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드 토큰.</font><font papago-translate="translated"> 이를 통해<span name="maximal"><strong> 우리</strong></span>는<span name="maximal"><strong> 최대 뭉크</strong></span>라는 중요한 원칙에 도달하게 됩니다.</font><font papago-translate="translated"> 두 개의 어휘 문법 규칙이 모두 스캐너가 보고 있는 코드 덩어리와 일치할 때<em>, 가장 많은 문자와 일치하는 것이 승리합니다</em>.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그 규칙은 우리가 일치할 수 있다면 </font></font><code translate="no">orchid</code><font papago-translate="splitted"><font papago-translate="translated"> 식별자로서 그리고 </font></font><code translate="no">or</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드로 전자가 승리합니다.</font><font papago-translate="translated"> 이것이 바로 우리가 이전에 암묵적으로 가정한 이유이기도 합니다 </font></font><code translate="no">&lt;=</code><font papago-translate="splitted"><font papago-translate="translated"> 단일 스캔으로 스캔해야 합니다 </font></font><code translate="no">&lt;=</code><font papago-translate="splitted"><font papago-translate="translated"> 토큰과 그렇지 않음 </font></font><code translate="no">&lt;</code><font papago-translate="splitted"><font papago-translate="translated"> 그 후에 </font></font><code translate="no">=</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<aside name="maximal" style="top: 16971.5px;">
+<p><font papago-translate="translated">이 끔찍한 C 코드 조각을 생각해 보세요:</font></p>
 <div class="codehilite"><pre translate="no">---<span class="i">a</span>;
 </pre></div>
-<p>Is it valid? That depends on how the scanner splits the lexemes. What if the scanner
-sees it like this:</p>
+<p><font papago-translate="translated">유효한가요?</font><font papago-translate="translated"> 이는 스캐너가 어휘를 어떻게 분할하는지에 따라 달라집니다.</font><font papago-translate="translated"> 스캐너가 이렇게 본다면 어떻게 될까요:</font></p>
 <div class="codehilite"><pre translate="no">- --<span class="i">a</span>;
 </pre></div>
-<p>Then it could be parsed. But that would require the scanner to know about the
-grammatical structure of the surrounding code, which entangles things more than
-we want. Instead, the maximal munch rule says that it is <em>always</em> scanned like:</p>
+<p><font papago-translate="translated">그러면 구문 분석할 수 있습니다.</font><font papago-translate="translated"> 하지만 이를 위해서는 스캐너가 주변 코드의 문법 구조에 대해 알아야 하며, 이는 우리가 원하는 것보다 더 많은 것을 얽히게 합니다.</font><font papago-translate="translated"> 대신, 최대 뭉크 규칙에 따르면<em> 항상</em> 다음과 같이 스캔됩니다:</font></p>
 <div class="codehilite"><pre translate="no">-- -<span class="i">a</span>;
 </pre></div>
-<p>It scans it that way even though doing so leads to a syntax error later in the
-parser.</p>
+<p><font papago-translate="translated">파서 후반부에 구문 오류가 발생하더라도 그렇게 스캔합니다.</font></p>
 </aside>
-<p>Maximal munch means we can’t easily detect a reserved word until we’ve reached
-the end of what might instead be an identifier. After all, a reserved word <em>is</em>
-an identifier, it’s just one that has been claimed by the language for its own
-use. That’s where the term <strong>reserved word</strong> comes from.</p>
-<p>So we begin by assuming any lexeme starting with a letter or underscore is an
-identifier.</p>
+<p><font papago-translate="translated">최대 뭉크는 예약된 단어를 쉽게 감지할 수 없다는 것을 의미합니다. 대신 식별자가 될 수 있는 단어의 끝에 도달할 때까지 말이죠.</font><font papago-translate="translated"> 결국 예약된 단어<em>는</em> 식별자<em>일</em> 뿐이며, 언어가 자체적으로 사용하기 위해 주장한 단어일 뿐입니다.</font><font papago-translate="translated"> <strong>예약된 단어</strong>라는 용어는 바로 여기서 유래했습니다.</font></p>
+<p><font papago-translate="translated">그래서 우리는 문자나 밑줄로 시작하는 모든 어휘가 식별자라고 가정하는 것으로 시작합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      default:
         if (isDigit(c)) {
           number();
-</pre><div class="source-file"><em>lox/Scanner.java</em><br/>
-in <em>scanToken</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>스캔</em> 중에</font><font papago-translate="translated"><em>토큰</em>()</font></font></div>
 <pre class="insert" translate="no">        } <span class="k">else</span> <span class="k">if</span> (<span class="i">isAlpha</span>(<span class="i">c</span>)) {
           <span class="i">identifier</span>();
 </pre><pre class="insert-after" translate="no">        } else {
@@ -943,9 +651,8 @@ in <em>scanToken</em>()</div>
         }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, in <em>scanToken</em>()</div>
-<p>The rest of the code lives over here:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Scanner.java</em><br/>
-add after <em>scanToken</em>()</div>
+<p><font papago-translate="translated">나머지 코드는 여기에 있습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>스캔</em> 후 추가</font><font papago-translate="translated"><em>토큰</em>()</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">void</span> <span class="i">identifier</span>() {
     <span class="k">while</span> (<span class="i">isAlphaNumeric</span>(<span class="i">peek</span>())) <span class="i">advance</span>();
 
@@ -953,9 +660,8 @@ add after <em>scanToken</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, add after <em>scanToken</em>()</div>
-<p>We define that in terms of these helpers:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Scanner.java</em><br/>
-add after <em>peekNext</em>()</div>
+<p><font papago-translate="translated">우리는 그것을 이 도우미들의 관점에서 정의합니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>peekNext</em>() 다음에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">boolean</span> <span class="i">isAlpha</span>(<span class="t">char</span> <span class="i">c</span>) {
     <span class="k">return</span> (<span class="i">c</span> &gt;= <span class="s">'a'</span> &amp;&amp; <span class="i">c</span> &lt;= <span class="s">'z'</span>) ||
            (<span class="i">c</span> &gt;= <span class="s">'A'</span> &amp;&amp; <span class="i">c</span> &lt;= <span class="s">'Z'</span>) ||
@@ -967,11 +673,8 @@ add after <em>peekNext</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, add after <em>peekNext</em>()</div>
-<p>That gets identifiers working. To handle keywords, we see if the identifier’s
-lexeme is one of the reserved words. If so, we use a token type specific to that
-keyword. We define the set of reserved words in a map.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Scanner.java</em><br/>
-in class <em>Scanner</em></div>
+<p><font papago-translate="translated">이를 통해 식별자가 작동합니다.</font><font papago-translate="translated"> 키워드를 처리하기 위해 식별자의 어휘가 예약된 단어 중 하나인지 확인합니다.</font><font papago-translate="translated"> 그렇다면 해당 키워드에 특화된 토큰 유형을 사용합니다.</font><font papago-translate="translated"> 지도에서 예약된 단어 집합을 정의합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em></em>클래스 스캐너에서</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="k">static</span> <span class="k">final</span> <span class="t">Map</span>&lt;<span class="t">String</span>, <span class="t">TokenType</span>&gt; <span class="i">keywords</span>;
 
   <span class="k">static</span> {
@@ -995,13 +698,10 @@ in class <em>Scanner</em></div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, in class <em>Scanner</em></div>
-<p>Then, after we scan an identifier, we check to see if it matches anything in the
-map.</p>
+<p><font papago-translate="translated">그런 다음 식별자를 스캔한 후 지도에 표시된 것과 일치하는지 확인합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    while (isAlphaNumeric(peek())) advance();
 
-</pre><div class="source-file"><em>lox/Scanner.java</em><br/>
-in <em>identifier</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Scanner.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>식별자</em> ()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">    <span class="t">String</span> <span class="i">text</span> = <span class="i">source</span>.<span class="i">substring</span>(<span class="i">start</span>, <span class="i">current</span>);
     <span class="t">TokenType</span> <span class="i">type</span> = <span class="i">keywords</span>.<span class="i">get</span>(<span class="i">text</span>);
     <span class="k">if</span> (<span class="i">type</span> == <span class="k">null</span>) <span class="i">type</span> = <span class="i">IDENTIFIER</span>;
@@ -1009,154 +709,96 @@ replace 1 line</div>
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Scanner.java</em>, in <em>identifier</em>(), replace 1 line</div>
-<p>If so, we use that keyword’s token type. Otherwise, it’s a regular user-defined
-identifier.</p>
-<p>And with that, we now have a complete scanner for the entire Lox lexical
-grammar. Fire up the REPL and type in some valid and invalid code. Does it
-produce the tokens you expect? Try to come up with some interesting edge cases
-and see if it handles them as it should.</p>
+<p><font papago-translate="translated">그렇다면 해당 키워드의 토큰 유형을 사용합니다.</font><font papago-translate="translated"> 그렇지 않으면 일반 사용자 정의 식별자입니다.</font></p>
+<p><font papago-translate="translated">그리고 이제 전체 Lox 어휘 문법에 대한 완전한 스캐너를 갖추게 되었습니다.</font><font papago-translate="translated"> REPL을 실행하고 유효한 코드와 유효하지 않은 코드를 입력합니다.</font><font papago-translate="translated"> 기대하는 토큰을 생성하나요?</font><font papago-translate="translated"> 흥미로운 엣지 케이스를 생각해내고 제대로 처리되는지 확인해 보세요.</font></p>
 <div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+<h2><a href="https://youhogeon-meritz.github.io/scanning.html#challenges" id="challenges"><font papago-translate="translated">과제들</font></a></h2>
 <ol>
 <li>
-<p>The lexical grammars of Python and Haskell are not <em>regular</em>. What does that
-mean, and why aren’t they?</p>
+<p><font papago-translate="translated">파이썬과 해스켈의 어휘 문법은<em> 정규</em>적이지 않습니다.</font><font papago-translate="translated"> 그게 무슨 뜻이고, 왜 그렇지 않나요?</font></p>
 </li>
 <li>
-<p>Aside from separating tokens<span class="em">—</span>distinguishing <code translate="no">print foo</code> from <code translate="no">printfoo</code><span class="em">—</span>spaces aren’t used for much in most languages. However, in a couple of
-dark corners, a space <em>does</em> affect how code is parsed in CoffeeScript,
-Ruby, and the C preprocessor. Where and what effect does it have in each of
-those languages?</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">토큰을 분리하는 것 외에도 구별<span class="em"></span>하기 </font></font><code translate="no">print foo</code><font papago-translate="splitted"><font papago-translate="translated"> 부터 </font></font><code translate="no">printfoo</code><font papago-translate="splitted"><font papago-translate="translated">-대부분의 언어에서 공간은 많이 사용되지<span class="em"> 않습니다.</span></font><font papago-translate="translated"> 그러나 몇몇 어두운 구석에서는 공백이 CoffeeScript, Ruby, 그리고 C 전처리기에서 코드가 구문 분석되는 방식에 영향을<em> 미칩니다</em>.</font><font papago-translate="translated"> 각 언어에서 그것은 어디에서 어떤 영향을 미치나요?</font></font></p>
 </li>
 <li>
-<p>Our scanner here, like most, discards comments and whitespace since those
-aren’t needed by the parser. Why might you want to write a scanner that does
-<em>not</em> discard those? What would it be useful for?</p>
+<p><font papago-translate="translated">여기 있는 스캐너는 대부분의 스캐너와 마찬가지로 파서가 필요하지 않기 때문에 댓글과 공백을 버립니다.</font><font papago-translate="translated"> 왜 그것들을 버리지<em> 않는</em> 스캐너를 쓰고 싶으신가요?</font><font papago-translate="translated"> 무엇에 유용할까요?</font></p>
 </li>
 <li>
-<p>Add support to Lox’s scanner for C-style <code translate="no">/* ... */</code> block comments. Make
-sure to handle newlines in them. Consider allowing them to nest. Is adding
-support for nesting more work than you expected? Why?</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">Lox 스캐너에 C 스타일 지원 추가 </font></font><code translate="no">/* ... */</code><font papago-translate="splitted"><font papago-translate="translated"> 댓글 차단.</font><font papago-translate="translated"> 그 안에서 새로운 줄을 처리해야 합니다.</font><font papago-translate="translated"> 그들이 둥지를 틀 수 있도록 허용하는 것을 고려해 보세요.</font><font papago-translate="translated"> 둥지 지원을 추가하는 것이 예상보다 더 많은 일을 하고 있습니까?</font><font papago-translate="translated"> 왜요?</font></font></p>
 </li>
 </ol>
 </div>
 <div class="design-note">
-<h2><a href="#design-note" id="design-note">Design Note: Implicit Semicolons</a></h2>
-<p>Programmers today are spoiled for choice in languages and have gotten picky
-about syntax. They want their language to look clean and modern. One bit of
-syntactic lichen that almost every new language scrapes off (and some ancient
-ones like BASIC never had) is <code translate="no">;</code> as an explicit statement terminator.</p>
-<p>Instead, they treat a newline as a statement terminator where it makes sense to
-do so. The “where it makes sense” part is the challenging bit. While <em>most</em>
-statements are on their own line, sometimes you need to spread a single
-statement across a couple of lines. Those intermingled newlines should not be
-treated as terminators.</p>
-<p>Most of the obvious cases where the newline should be ignored are easy to
-detect, but there are a handful of nasty ones:</p>
+<h2><a href="https://youhogeon-meritz.github.io/scanning.html#design-note" id="design-note"><font papago-translate="translated">디자인 노트:</font><font papago-translate="translated"> 암시적 세미콜론</font></a></h2>
+<p><font papago-translate="splitted"><font papago-translate="translated">오늘날 프로그래머들은 언어 선택에 버릇이 없고 구문에 까다로워졌습니다.</font><font papago-translate="translated"> 그들은 자신들의 언어가 깨끗하고 현대적으로 보이기를 원합니다.</font><font papago-translate="translated"> 거의 모든 새로운 언어(그리고 BASIC과 같은 고대 언어들은 한 번도 사용해본 적이 없는)의 구문적 이끼 중 하나는 다음과 같습니다 </font></font><code translate="no">;</code><font papago-translate="splitted"><font papago-translate="translated"> 명시적인 진술 종결자로서.</font></font></p>
+<p><font papago-translate="translated">대신, 그들은 새로운 줄을 문장 종결자로 취급하여 그렇게 하는 것이 합리적입니다.</font><font papago-translate="translated"> "말이 되는 부분"은 어려운 부분입니다.</font><font papago-translate="translated"> <em>대부분</em>의 문장은 자체적으로 작성되지만, 때로는 몇 줄에 걸쳐 하나의 문장을 펼쳐야 할 때도 있습니다.</font><font papago-translate="translated"> 새로운 선들이 섞여 있는 것들은 종료자로 취급되어서는 안 됩니다.</font></p>
+<p><font papago-translate="translated">새 줄을 무시해야 하는 대부분의 명백한 경우는 쉽게 감지할 수 있지만, 몇 가지 불쾌한 경우도 있습니다:</font></p>
 <ul>
 <li>
-<p>A return value on the next line:</p>
+<p><font papago-translate="translated">다음 줄의 수익률:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">if</span> (<span class="i">condition</span>) <span class="k">return</span>
 <span class="s">"value"</span>
 </pre></div>
-<p>Is “value” the value being returned, or do we have a <code translate="no">return</code> statement with
-  no value followed by an expression statement containing a string literal?</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">"값"이 반환되는 값인가요, 아니면 우리가 가지고 있는 값인가요 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 값이 없는 문장 다음에 문자열 리터럴을 포함하는 표현 문장이 있습니까?</font></font></p>
 </li>
 <li>
-<p>A parenthesized expression on the next line:</p>
+<p><font papago-translate="translated">다음 줄에 괄호로 묶은 표현:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">func</span>
 (<span class="i">parenthesized</span>)
 </pre></div>
-<p>Is this a call to <code translate="no">func(parenthesized)</code>, or two expression statements, one
-  for <code translate="no">func</code> and one for a parenthesized expression?</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 ~에 대한 전화입니까 </font></font><code translate="no">func(parenthesized)</code><font papago-translate="splitted"><font papago-translate="translated">, 또는 두 개의 표현식 문장, 하나는 </font></font><code translate="no">func</code><font papago-translate="splitted"><font papago-translate="translated"> 괄호로 묶은 표현을 위한 것은?</font></font></p>
 </li>
 <li>
-<p>A <code translate="no">-</code> on the next line:</p>
+<p><font papago-translate="splitted">A </font><code translate="no">-</code><font papago-translate="splitted"><font papago-translate="translated"> 다음 줄에:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="i">first</span>
 -<span class="i">second</span>
 </pre></div>
-<p>Is this <code translate="no">first - second</code><span class="em">—</span>an infix subtraction<span class="em">—</span>or two expression
-  statements, one for <code translate="no">first</code> and one to negate <code translate="no">second</code>?</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 </font></font><code translate="no">first - second</code><font papago-translate="splitted"><font papago-translate="translated">-인픽스 뺄셈 또는 두 개의 표현식 문, 하나<span class="em"></span>는 다음을 위한 것<span class="em">입니다</span> </font></font><code translate="no">first</code><font papago-translate="splitted"><font papago-translate="translated"> 부정해야 할 것은 </font></font><code translate="no">second</code><font papago-translate="splitted"><font papago-translate="translated">?</font></font></p>
 </li>
 </ul>
-<p>In all of these, either treating the newline as a separator or not would both
-produce valid code, but possibly not the code the user wants. Across languages,
-there is an unsettling variety of rules used to decide which newlines are
-separators. Here are a couple:</p>
+<p><font papago-translate="translated">이 모든 것에서 새 줄을 구분자로 취급하든 그렇지 않든 둘 다 유효한 코드를 생성할 수 있지만, 사용자가 원하는 코드는 아닐 수도 있습니다.</font><font papago-translate="translated"> 언어 전반에 걸쳐 어떤 새로운 줄이 구분자인지 결정하는 데 사용되는 다양한 규칙이 있습니다.</font><font papago-translate="translated"> 여기 몇 가지가 있습니다:</font></p>
 <ul>
 <li>
-<p><a href="https://www.lua.org/pil/1.1.html">Lua</a> completely ignores newlines, but carefully controls its grammar such
-that no separator between statements is needed at all in most cases. This is
-perfectly legit:</p>
+<p><font papago-translate="translated"><a href="https://www.lua.org/pil/1.1.html">Lu</a>a<a href="https://www.lua.org/pil/1.1.html">는</a> 새로운 문장을 완전히 무시하지만, 대부분의 경우 문장 간의 구분이 전혀 필요하지 않도록 문법을 신중하게 제어<a href="https://www.lua.org/pil/1.1.html">합니다.</a></font><font papago-translate="translated"> 이것은 완전히 정당합니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">a</span> = <span class="n">1</span> <span class="i">b</span> = <span class="n">2</span>
 </pre></div>
-<p>Lua avoids the <code translate="no">return</code> problem by requiring a <code translate="no">return</code> statement to be the
-very last statement in a block. If there is a value after <code translate="no">return</code> before
-the keyword <code translate="no">end</code>, it <em>must</em> be for the <code translate="no">return</code>. For the other two cases,
-they allow an explicit <code translate="no">;</code> and expect users to use that. In practice, that
-almost never happens because there’s no point in a parenthesized or unary
-negation expression statement.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">루아는 다음을 피합니다 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 다음을 요구하는 문제 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 블록의 마지막 문장이 될 문장.</font><font papago-translate="translated"> 다음 값이 있는 경우 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드 앞에 </font></font><code translate="no">end</code><font papago-translate="splitted"><font papago-translate="translated">, 다음을 위한<em> 것이어야 합니다</em> </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated">. 다른 두 경우에는 다음을 허용합니다 </font></font><code translate="no">;</code><font papago-translate="splitted"><font papago-translate="translated"> 사용자들이 그것을 사용하기를 기대합니다.</font><font papago-translate="translated"> 실제로는 괄호로 묶거나 단항 부정 표현 문에 의미가 없기 때문에 거의 그런 일이 일어나지 않습니다.</font></font></p>
 </li>
 <li>
-<p><a href="https://golang.org/ref/spec#Semicolons">Go</a> handles newlines in the scanner. If a newline appears following one
-of a handful of token types that are known to potentially end a statement,
-the newline is treated like a semicolon. Otherwise it is ignored. The Go
-team provides a canonical code formatter, <a href="https://golang.org/cmd/gofmt/">gofmt</a>, and the ecosystem is
-fervent about its use, which ensures that idiomatic styled code works well
-with this simple rule.</p>
+<p><font papago-translate="translated"><a href="https://golang.org/ref/spec#Semicolons">Go</a>는 스캐너에서 새로운 라인을 처리합니다<a href="https://golang.org/ref/spec#Semicolons">.</a></font><font papago-translate="translated"> 문장을 종료할 가능성이 있는 몇 안 되는 토큰 유형 중 하나 뒤에 새 줄이 나타나면 새 줄은 세미콜론으로 처리됩니다.</font><font papago-translate="translated"> 그렇지 않으면 무시됩니다.</font><font papago-translate="translated"> 바둑 팀은 표준 코드 형식인<a href="https://golang.org/cmd/gofmt/"> gofmt</a>를 제공하며, 생태계는 이 간단한 규칙과 잘 맞는 관용적인 스타일의 코드를 사용하는 데 열정적입니다.</font></p>
 </li>
 <li>
-<p><a href="https://docs.python.org/3.5/reference/lexical_analysis.html#implicit-line-joining">Python</a> treats all newlines as significant unless an explicit backslash
-is used at the end of a line to continue it to the next line. However,
-newlines anywhere inside a pair of brackets (<code translate="no">()</code>, <code translate="no">[]</code>, or <code translate="no">{}</code>) are
-ignored. Idiomatic style strongly prefers the latter.</p>
-<p>This rule works well for Python because it is a highly statement-oriented
-language. In particular, Python’s grammar ensures a statement never appears
-inside an expression. C does the same, but many other languages which have a
-“lambda” or function literal syntax do not.</p>
-<p>An example in JavaScript:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><a href="https://docs.python.org/3.5/reference/lexical_analysis.html#implicit-line-joining">Python은</a> 다음 줄로 계속 이어가기 위해 줄 끝에 명시적인 백슬래시를 사용하지 않는 한 모든 새 줄을 중요한 것으로 간주합니다<a href="https://docs.python.org/3.5/reference/lexical_analysis.html#implicit-line-joining">.</a></font><font papago-translate="translated"> 그러나 괄호 안의 어느 곳에나 새로운 선이 있습니다 (</font></font><code translate="no">()</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">[]</code><font papago-translate="splitted"><font papago-translate="translated">, 또는 </font></font><code translate="no">{}</code><font papago-translate="splitted"><font papago-translate="translated">)는 무시됩니다.</font><font papago-translate="translated"> 관용적인 스타일은 후자를 강하게 선호합니다.</font></font></p>
+<p><font papago-translate="translated">이 규칙은 문장 지향성이 높은 언어이기 때문에 Python에서 잘 작동합니다.</font><font papago-translate="translated"> 특히 파이썬의 문법은 표현식 안에 문장이 절대 나타나지 않도록 보장합니다.</font><font papago-translate="translated"> C는 동일한 작업을 수행하지만, "lambda" 또는 함수 리터럴 구문을 가진 많은 다른 언어들은 그렇지 않습니다.</font></p>
+<p><font papago-translate="translated">JavaScript의 예:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">console</span>.<span class="i">log</span>(<span class="k">function</span>() {
   <span class="i">statement</span>();
 });
 </pre></div>
-<p>Here, the <code translate="no">console.log()</code> <em>expression</em> contains a function literal which
-in turn contains the <em>statement</em> <code translate="no">statement();</code>.</p>
-<p>Python would need a different set of rules for implicitly joining lines if
-you could get back <em>into</em> a <span name="lambda">statement</span> where
-newlines should become meaningful while still nested inside brackets.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">여기 </font></font><code translate="no">console.log()</code> <font papago-translate="splitted"><font papago-translate="translated"><em>식</em>에는 문<em></em>을 포함하는 함수 리터럴이 포함되어<em> 있습니다</em></font></font> <code translate="no">statement();</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="translated">Python은 괄호 안에 중첩된 상태에서 새로운 줄이 의미 있게 되어야<span name="lambda"> 하는 문장</span><em>으로</em> 돌아갈 수 있다면 암시적으로 줄을 연결하는 다른 규칙 세트가 필요할 것입니다.</font></p>
 </li>
 </ul>
-<aside name="lambda">
-<p>And now you know why Python’s <code translate="no">lambda</code> allows only a single expression body.</p>
+<aside name="lambda" style="top: 21277.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">이제 파이썬이 왜 </font></font><code translate="no">lambda</code><font papago-translate="splitted"><font papago-translate="translated"> 단일 표현체만 허용합니다.</font></font></p>
 </aside>
 <ul>
 <li>
-<p>JavaScript’s “<a href="https://www.ecma-international.org/ecma-262/5.1/#sec-7.9">automatic semicolon insertion</a>” rule is the real odd
-one. Where other languages assume most newlines <em>are</em> meaningful and only a
-few should be ignored in multi-line statements, JS assumes the opposite. It
-treats all of your newlines as meaningless whitespace <em>unless</em> it encounters
-a parse error. If it does, it goes back and tries turning the previous
-newline into a semicolon to get something grammatically valid.</p>
-<p>This design note would turn into a design diatribe if I went into complete
-detail about how that even <em>works</em>, much less all the various ways that
-JavaScript’s “solution” is a bad idea. It’s a mess. JavaScript is the only
-language I know where many style guides demand explicit semicolons after
-every statement even though the language theoretically lets you elide them.</p>
+<p><font papago-translate="translated" class="">JavaScript의 "<a href="https://www.ecma-international.org/ecma-262/5.1/#sec-7.9">자동 세미콜론 삽입</a>" 규칙은 정말 이상한 규칙입니다.</font><font papago-translate="translated"> 다른 언어들이 대부분의 새로운 줄<em>이</em> 의미 있다고 가정하고, 다중 줄 문장에서 무시해야 하는 경우, JS는 그 반대를 가정합니다.</font><font papago-translate="translated"> 구문 분석 오류<em>가 발생하지 않는 한</em> 모든 새 줄을 무의미한 공백으로 취급합니다.</font><font papago-translate="translated"> 만약 그렇게 한다면, 그것은 돌아가서 이전의 새 줄을 세미콜론으로 바꾸어 문법적으로 유효한 것을 얻으려고 합니다.</font></p>
+<p><font papago-translate="translated">이 디자인 노트는 JavaScript의 "해결책"이 나쁜 아이디어가 되는 다양한 방식은커녕<em> 어떻게 작동</em>하는지에 대해 자세히 설명하면 디자인 다이어그램으로 바뀔 것입니다.</font><font papago-translate="translated"> 엉망진창입니다.</font><font papago-translate="translated"> 자바스크립트는 제가 아는 유일한 언어로, 많은 스타일 가이드가 모든 문장 뒤에 명시적인 세미콜론을 요구하지만 이론적으로는 이를 피할 수 있는 언어입니다.</font></p>
 </li>
 </ul>
-<p>If you’re designing a new language, you almost surely <em>should</em> avoid an explicit
-statement terminator. Programmers are creatures of fashion like other humans, and
-semicolons are as passé as ALL CAPS KEYWORDS. Just make sure you pick a set of
-rules that make sense for your language’s particular grammar and idioms. And
-don’t do what JavaScript did.</p>
+<p><font papago-translate="translated">새로운 언어를 설계할 때는 명시적인 문장 종결<em></em>자를 피해야 할 것이 거의 확실합니다.</font><font papago-translate="translated"> 프로그래머는 다른 인간과 마찬가지로 패션의 생명체이며, 세미콜론은 모든 캡스 키워드만큼이나 진부합니다. 언어의 특정 문법과 관용구에 맞는 규칙을 선택하세요.</font><font papago-translate="translated"> 그리고 JavaScript가 한 일을 하지 마세요.</font></p>
 </div>
 <footer>
-<a class="next" href="representing-code.html">
-  Next Chapter: “Representing Code” →
-</a>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+<a class="next" href="https://youhogeon-meritz.github.io/representing-code.html"><font papago-translate="translated"> 다음 장: "코드 표현" → </font></a><font papago-translate="splitted"><font papago-translate="translated"> 로버트 니스트롬이 수작업으로 제작한 -<a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE"> © 2015 ~ 2021</a></font></font>
 </footer>
-</img></img></article>
+</article>
 </div>
-</body>
-</html>
+
+
+<div id="papagoTooltip" margin="5" style="display: none;">
+        <h1 id="tooltipTitle">원문</h1>
+        <p id="tooltipText"></p>
+      </div>
+      </body></html>

@@ -1,515 +1,337 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-0368607e-435a-4464-8ece-4ccc87698bc3@mhtml.blink" />
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>The Lox Language · Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/style.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
-<script src="jquery-3.4.1.min.js"></script>
-<script src="script.js"></script>
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+
+<!-- Google analytics -->
+
+</head>
 <body id="top">
 <!-- <div class="scrim"></div> -->
 <nav class="wide">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="contents">
-<h3><a href="#top">The Lox Language<small>3</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/the-lox-language.html#top"><font papago-translate="splitted"><font papago-translate="translated">록스 언어</font></font><small>3</small></a></h3>
 <ul>
-<li><a href="#hello-lox"><small>3.1</small> Hello, Lox</a></li>
-<li><a href="#a-high-level-language"><small>3.2</small> A High-Level Language</a></li>
-<li><a href="#data-types"><small>3.3</small> Data Types</a></li>
-<li><a href="#expressions"><small>3.4</small> Expressions</a></li>
-<li><a href="#statements"><small>3.5</small> Statements</a></li>
-<li><a href="#variables"><small>3.6</small> Variables</a></li>
-<li><a href="#control-flow"><small>3.7</small> Control Flow</a></li>
-<li><a href="#functions"><small>3.8</small> Functions</a></li>
-<li><a href="#classes"><small>3.9</small> Classes</a></li>
-<li><a href="#the-standard-library"><small>3.10</small> The Standard Library</a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#hello-lox"><small>3.1</small><font papago-translate="splitted"><font papago-translate="translated"> 안녕, 록스</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#a-high-level-language"><small>3.2</small><font papago-translate="splitted"><font papago-translate="translated"> 고급 언어</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#data-types"><small>3.3</small><font papago-translate="splitted"><font papago-translate="translated"> 데이터 유형</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#expressions"><small>3.4</small><font papago-translate="splitted"><font papago-translate="translated"> 표현.</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#statements"><small>3.5</small><font papago-translate="splitted"><font papago-translate="translated"> 진술들</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#variables"><small>3.6</small><font papago-translate="splitted"><font papago-translate="translated"> 변수</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#control-flow"><small>3.7</small><font papago-translate="splitted"><font papago-translate="translated"> 제어 흐름</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#functions"><small>3.8</small><font papago-translate="splitted"><font papago-translate="translated"> 기능들</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#classes"><small>3.9</small><font papago-translate="splitted"><font papago-translate="translated"> 반</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#the-standard-library"><small>3.10</small><font papago-translate="splitted"><font papago-translate="translated"> 표준 도서관</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
-<li class="end-part"><a href="#design-note"><small>note</small>Expressions and Statements</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/the-lox-language.html#challenges"><font papago-translate="translated">과제들</font></a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/the-lox-language.html#design-note"><small><font papago-translate="translated">메모</font></small><font papago-translate="splitted"><font papago-translate="translated">표현 및 진술</font></font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="a-map-of-the-territory.html" title="A Map of the Territory">← Previous</a>
-<a href="welcome.html" title="Welcome">↑ Up</a>
-<a class="right" href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/a-map-of-the-territory.html" title="영토 지도" papago-attr-id="1"><font papago-translate="translated">← 이전</font></a>
+<a href="https://youhogeon-meritz.github.io/welcome.html" title="환영해" papago-attr-id="2"><font papago-translate="translated">↑ 위로</font></a>
+<a class="right" href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="나무 산책 통역사" papago-attr-id="3"><font papago-translate="translated">다음 →</font></a>
 </div> </div>
 </nav>
 <nav class="narrow">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
-<a class="prev" href="a-map-of-the-territory.html" title="A Map of the Territory">←</a>
-<a class="next" href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">→</a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
+<a class="prev" href="https://youhogeon-meritz.github.io/a-map-of-the-territory.html" title="A Map of the Territory">←</a>
+<a class="next" href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">→</a>
 </nav>
 <div class="page">
 <div class="nav-wrapper">
 <nav class="floating">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="expandable">
-<h3><a href="#top">The Lox Language<small>3</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/the-lox-language.html#top"><font papago-translate="splitted"><font papago-translate="translated">록스 언어</font></font><small>3</small></a></h3>
 <ul>
-<li><a href="#hello-lox"><small>3.1</small> Hello, Lox</a></li>
-<li><a href="#a-high-level-language"><small>3.2</small> A High-Level Language</a></li>
-<li><a href="#data-types"><small>3.3</small> Data Types</a></li>
-<li><a href="#expressions"><small>3.4</small> Expressions</a></li>
-<li><a href="#statements"><small>3.5</small> Statements</a></li>
-<li><a href="#variables"><small>3.6</small> Variables</a></li>
-<li><a href="#control-flow"><small>3.7</small> Control Flow</a></li>
-<li><a href="#functions"><small>3.8</small> Functions</a></li>
-<li><a href="#classes"><small>3.9</small> Classes</a></li>
-<li><a href="#the-standard-library"><small>3.10</small> The Standard Library</a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#hello-lox"><small>3.1</small><font papago-translate="splitted"><font papago-translate="translated"> 안녕, 록스</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#a-high-level-language"><small>3.2</small><font papago-translate="splitted"><font papago-translate="translated"> 고급 언어</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#data-types"><small>3.3</small><font papago-translate="splitted"><font papago-translate="translated"> 데이터 유형</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#expressions"><small>3.4</small><font papago-translate="splitted"><font papago-translate="translated"> 표현.</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#statements"><small>3.5</small><font papago-translate="splitted"><font papago-translate="translated"> 진술들</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#variables"><small>3.6</small><font papago-translate="splitted"><font papago-translate="translated"> 변수</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#control-flow"><small>3.7</small><font papago-translate="splitted"><font papago-translate="translated"> 제어 흐름</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#functions"><small>3.8</small><font papago-translate="splitted"><font papago-translate="translated"> 기능들</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#classes"><small>3.9</small><font papago-translate="splitted"><font papago-translate="translated"> 반</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/the-lox-language.html#the-standard-library"><small>3.10</small><font papago-translate="splitted"><font papago-translate="translated"> 표준 도서관</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
-<li class="end-part"><a href="#design-note"><small>note</small>Expressions and Statements</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/the-lox-language.html#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/the-lox-language.html#design-note"><small>note</small><font papago-translate="splitted"><font papago-translate="translated">표현 및 진술</font></font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="a-map-of-the-territory.html" title="A Map of the Territory">← Previous</a>
-<a href="welcome.html" title="Welcome">↑ Up</a>
-<a class="right" href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/a-map-of-the-territory.html" title="A Map of the Territory">←&nbsp;Previous</a>
+<a href="https://youhogeon-meritz.github.io/welcome.html" title="Welcome">↑&nbsp;Up</a>
+<a class="right" href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">Next&nbsp;→</a>
 </div> </div>
 <a id="expand-nav">≡</a>
 </nav>
 </div>
 <article class="chapter">
 <div class="number">3</div>
-<h1>The Lox Language</h1>
+<h1><font papago-translate="translated" class="">록스 언어</font></h1>
 <blockquote>
-<p>What nicer thing can you do for somebody than make them breakfast?</p>
+<p><font papago-translate="translated">누군가에게 아침 식사를 해주는 것보다 더 좋은 일을 해줄 수 있나요?</font></p>
 <p><cite>Anthony Bourdain</cite></p>
 </blockquote>
-<p>We’ll spend the rest of this book illuminating every dark and sundry corner of
-the Lox language, but it seems cruel to have you immediately start grinding out
-code for the interpreter without at least a glimpse of what we’re going to end
-up with.</p>
-<p>At the same time, I don’t want to drag you through reams of language lawyering
-and specification-ese before you get to touch your text <span name="home">editor</span>. So this will be a gentle, friendly introduction to
-Lox. It will leave out a lot of details and edge cases. We’ve got plenty of time
-for those later.</p>
-<aside name="home">
-<p>A tutorial isn’t very fun if you can’t try the code out yourself. Alas, you
-don’t have a Lox interpreter yet, since you haven’t built one!</p>
-<p>Fear not. You can use <a href="https://github.com/munificent/craftinginterpreters">mine</a>.</p>
+<p><font papago-translate="translated" class="">이 책의 나머지 부분은 Lox 언어의 어둡고 복잡한 구석구석을 조명하는 데 사용하겠지만, 우리가 어떤 결과를 얻게 될지 전혀 보지 못한 채 통역사를 위해 코드를 즉시 삭제하는 것은 잔인해 보입니다.</font></p>
+<p><font papago-translate="translated">동시에 텍스트<span name="home"> 편집기</span>를 만지기 전에 수많은 언어 변호사와 사양서를 훑어보고 싶지 않습니다.</font><font papago-translate="translated" class=""> 그래서 이것은 Lox에 대한 부드럽고 친근한 소개가 될 것입니다.</font><font papago-translate="translated"> 많은 세부 사항과 엣지 케이스가 생략될 것입니다.</font><font papago-translate="translated" class=""> 나중에 그것들을 할 시간이 충분히 있습니다.</font></p>
+<aside name="home" style="top: 436px;">
+<p><font papago-translate="translated">직접 코드를 사용해 볼 수 없다면 튜토리얼은 그다지 재미있지 않습니다.</font><font papago-translate="translated"> 아, 아직 Lox 인터프리터를 만들지 않았으니 아직 Lox 인터프리터가 없으시군요!</font></p>
+<p><font papago-translate="translated">두려워하지 마세요.</font><font papago-translate="translated"> <a href="https://github.com/munificent/craftinginterpreters">제 것</a>을 사용하셔도 됩니다.</font></p>
 </aside>
-<h2><a href="#hello-lox" id="hello-lox"><small>3 . 1</small>Hello, Lox</a></h2>
-<p>Here’s your very first taste of <span name="salmon">Lox</span>:</p>
-<aside name="salmon">
-<p>Your first taste of Lox, the language, that is. I don’t know if you’ve ever had
-the cured, cold-smoked salmon before. If not, give it a try too.</p>
+<h2><a href="https://youhogeon-meritz.github.io/the-lox-language.html#hello-lox" id="hello-lox"><small><font papago-translate="translated">3 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">안녕, 록스</font></font></a></h2>
+<p><font papago-translate="translated"><span name="salmon">록</span>스의 첫 맛은 다음과 같습니다:</font></p>
+<aside name="salmon" style="top: 652px;">
+<p><font papago-translate="translated">당신의 첫 번째 Lox, 즉 언어의 맛입니다.</font><font papago-translate="translated"> 전에 차가운 훈제 연어를 먹어본 적이 있는지 모르겠습니다.</font><font papago-translate="translated"> 그렇지 않다면, 당신도 한번 시도해 보세요.</font></p>
 </aside>
 <div class="codehilite"><pre translate="no"><span class="c">// Your first Lox program!</span>
 <span class="k">print</span> <span class="s">"Hello, world!"</span>;
 </pre></div>
-<p>As that <code translate="no">//</code> line comment and the trailing semicolon imply, Lox’s syntax is a
-member of the C family. (There are no parentheses around the string because
-<code translate="no">print</code> is a built-in statement, and not a library function.)</p>
-<p>Now, I won’t claim that <span name="c">C</span> has a <em>great</em> syntax. If we
-wanted something elegant, we’d probably mimic Pascal or Smalltalk. If we wanted
-to go full Scandinavian-furniture-minimalism, we’d do a Scheme. Those all have
-their virtues.</p>
-<aside name="c">
-<p>I’m surely biased, but I think Lox’s syntax is pretty clean. C’s most egregious
-grammar problems are around types. Dennis Ritchie had this idea called
-“<a href="http://softwareengineering.stackexchange.com/questions/117024/why-was-the-c-syntax-for-arrays-pointers-and-functions-designed-this-way">declaration reflects use</a>”, where variable declarations mirror the
-operations you would have to perform on the variable to get to a value of the
-base type. Clever idea, but I don’t think it worked out great in practice.</p>
-<p>Lox doesn’t have static types, so we avoid that.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">따라서 </font></font><code translate="no">//</code><font papago-translate="splitted"><font papago-translate="translated"> 줄 주석과 뒤에 있는 세미콜론은 Lox의 구문이 C족의 일원임을 암시합니다. (끈 주위에 괄호가 없는 이유는 다음과 같습니다.) </font></font><code translate="no">print</code><font papago-translate="splitted"><font papago-translate="translated"> 는 라이브러리 함수가 아닌 내장된 문입니다.)</font></font></p>
+<p><font papago-translate="translated">이제 C<em></em><span name="c"></span>가 훌륭한 구문을 가지고 있다고 주장하지 않겠습니다.</font><font papago-translate="translated"> 우리가 우아한 것을 원한다면, 아마도 파스칼이나 스몰토크를 모방할 것입니다.</font><font papago-translate="translated"> 스칸디나비아 가구 미니멀리즘을 본격적으로 다루고 싶다면, 우리는 계획을 세울 것입니다.</font><font papago-translate="translated"> 그것들은 모두 그들만의 미덕을 가지고 있습니다.</font></p>
+<aside name="c" style="top: 860px;">
+<p><font papago-translate="translated">저는 분명히 편견이 있지만, Lox의 구문은 꽤 깨끗하다고 생각합니다.</font><font papago-translate="translated"> C의 가장 심각한 문법 문제는 유형에 관한 것입니다.</font><font papago-translate="translated"> 데니스 리치는 "<a href="http://softwareengineering.stackexchange.com/questions/117024/why-was-the-c-syntax-for-arrays-pointers-and-functions-designed-this-way">선언은 사용을 반영한다"</a>라는 아이디어를 가지고 있었습니다. 변수 선언은 기본 유형의 값에 도달하기 위해 변수에 대해 수행해야 하는 연산을 반영합니다.</font><font papago-translate="translated" class=""> 기발한 아이디어지만 실제로는 잘 되지 않았다고 생각합니다.</font></p>
+<p><font papago-translate="translated">Lox에는 정적 유형이 없으므로 이를 피합니다.</font></p>
 </aside>
-<p>What C-like syntax has instead is something you’ll often find more valuable
-in a language: <em>familiarity</em>. I know you are already comfortable with that style
-because the two languages we’ll be using to <em>implement</em> Lox<span class="em">—</span>Java and C<span class="em">—</span>also inherit it. Using a similar syntax for Lox gives you one less thing to
-learn.</p>
-<h2><a href="#a-high-level-language" id="a-high-level-language"><small>3 . 2</small>A High-Level Language</a></h2>
-<p>While this book ended up bigger than I was hoping, it’s still not big enough to
-fit a huge language like Java in it. In order to fit two complete
-implementations of Lox in these pages, Lox itself has to be pretty compact.</p>
-<p>When I think of languages that are small but useful, what comes to mind are
-high-level “scripting” languages like <span name="js">JavaScript</span>, Scheme,
-and Lua. Of those three, Lox looks most like JavaScript, mainly because most
-C-syntax languages do. As we’ll learn later, Lox’s approach to scoping hews
-closely to Scheme. The C flavor of Lox we’ll build in <a href="a-bytecode-virtual-machine.html">Part III</a> is heavily
-indebted to Lua’s clean, efficient implementation.</p>
-<aside name="js">
-<p>Now that JavaScript has taken over the world and is used to build ginormous
-applications, it’s hard to think of it as a “little scripting language”. But
-Brendan Eich hacked the first JS interpreter into Netscape Navigator in <em>ten
-days</em> to make buttons animate on web pages. JavaScript has grown up since then,
-but it was once a cute little language.</p>
-<p>Because Eich slapped JS together with roughly the same raw materials and time as
-an episode of MacGyver, it has some weird semantic corners where the duct tape
-and paper clips show through. Things like variable hoisting, dynamically bound
-<code translate="no">this</code>, holes in arrays, and implicit conversions.</p>
-<p>I had the luxury of taking my time on Lox, so it should be a little cleaner.</p>
+<p><font papago-translate="translated">대신 C와 유사한 구문이 있는 것은 언어에서 더 가치 있는 것<em>, 즉 친숙함</em>입니다.</font><font papago-translate="translated"> L<span class="em">ox</span><em>를 구현</em>하는 데 사용할 두 언어인 Java와 C도<span class="em"></span> 이를 상속하기 때문에 이미 이 스타일에 익숙하실 거라고 알고 있습니다.</font><font papago-translate="translated"> Lox에 대해 유사한 구문을 사용하면 배울 점이 하나 줄어듭니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/the-lox-language.html#a-high-level-language" id="a-high-level-language"><small><font papago-translate="translated">3 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">고급 언어</font></font></a></h2>
+<p><font papago-translate="translated">이 책은 결국 제가 기대했던 것보다 더 커졌지만, 자바와 같은 거대한 언어를 담을 만큼 크지는 않습니다.</font><font papago-translate="translated"> 이 페이지들에 Lox의 두 가지 완전한 구현을 맞추기 위해서는 Lox 자체가 꽤 컴팩트해야 합니다.</font></p>
+<p><font papago-translate="translated">작지만 유용한 언어를 생각하면<span name="js"> 자바스크립트</span>, 스킴, 루아와 같은 고급 "스크립트" 언어가 떠오릅니다.</font><font papago-translate="translated"> 이 세 가지 언어 중 Lox는 대부분의 C-구문 언어가 자바스크립트와 가장 비슷하게 생겼기 때문입니다.</font><font papago-translate="translated"> 나중에 알게 되겠지만, Lox의 범위 지정 접근 방식은 Scheme에 가깝습니다.</font><font papago-translate="translated"> <a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html">파트 III</a>에서 우리가 만들 Lox의 C 맛은 Lua의 깨끗하고 효율적인 구현 덕분입니다.</font></p>
+<aside name="js" style="top: 1292px;">
+<p><font papago-translate="translated">이제 JavaScript가 전 세계를 장악하고 방대한 애플리케이션을 구축하는 데 사용되기 때문에 이를 "작은 스크립팅 언어"라고 생각하기는 어렵습니다.</font><font papago-translate="translated"> 하지만 브렌든 아이히는 열흘 만에 최초의 JS 인터프리터를 넷스케이프 내비게이터에 해킹하여 웹<em></em> 페이지에서 버튼을 애니메이션으로 만들었습니다.</font><font papago-translate="translated"> 자바스크립트는 그 이후로 성장했지만, 한때는 귀여운 작은 언어였습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">아이히는 맥가이버 에피소드와 거의 동일한 원자재와 시간으로 JS를 때렸기 때문에 덕트 테이프와 종이 클립이 드러나는 이상한 의미의 모서리가 있습니다.</font><font papago-translate="translated"> 가변 리프팅, 동적 바인딩과 같은 것들 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated">, 배열의 구멍과 암시적 변환.</font></font></p>
+<p><font papago-translate="translated">저는 Lox에서 여유롭게 시간을 보낼 수 있어서 조금 더 깨끗할 것 같습니다.</font></p>
 </aside>
-<p>Lox shares two other aspects with those three languages:</p>
-<h3><a href="#dynamic-typing" id="dynamic-typing"><small>3 . 2 . 1</small>Dynamic typing</a></h3>
-<p>Lox is dynamically typed. Variables can store values of any type, and a single
-variable can even store values of different types at different times. If you try
-to perform an operation on values of the wrong type<span class="em">—</span>say, dividing a number by
-a string<span class="em">—</span>then the error is detected and reported at runtime.</p>
-<p>There are plenty of reasons to like <span name="static">static</span> types, but
-they don’t outweigh the pragmatic reasons to pick dynamic types for Lox. A
-static type system is a ton of work to learn and implement. Skipping it gives
-you a simpler language and a shorter book. We’ll get our interpreter up and
-executing bits of code sooner if we defer our type checking to runtime.</p>
-<aside name="static">
-<p>After all, the two languages we’ll be using to <em>implement</em> Lox are both
-statically typed.</p>
+<p><font papago-translate="translated">Lox는 이 세 가지 언어와 두 가지 다른 측면을 공유합니다:</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/the-lox-language.html#dynamic-typing" id="dynamic-typing"><small><font papago-translate="translated">3 . 2 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">동적 타이핑</font></font></a></h3>
+<p><font papago-translate="translated">Lox는 동적으로 입력됩니다.</font><font papago-translate="translated"> 변수는 모든 유형의 값을 저장할 수 있으며, 단일 변수는 서로 다른 시간대에 다른 유형의 값을 저장할 수도 있습니다.</font><font papago-translate="translated"> 잘못된 유형의 값(예: 숫자를 문자열로 나누는 것)에 대한 작업을 수행하려고 하면<span class="em"></span><span class="em"></span> 실행 시 오류가 감지되어 보고됩니다.</font></p>
+<p><font papago-translate="translated"><span name="static">정적</span> 타입을 좋아하는 이유는 많지만, Lox를 위해 동적 타입을 선택해야 하는 실용적인 이유보다 많지는 않습니다.</font><font papago-translate="translated"> 정적 타입 시스템은 배우고 구현하는 데 많은 노력이 필요합니다.</font><font papago-translate="translated"> 건너뛰면 더 간단한 언어와 더 짧은 책을 얻을 수 있습니다.</font><font papago-translate="translated"> 타입 검사를 런타임으로 연기하면 인터프리터가 더 빨리 실행되고 코드 비트가 실행될 것입니다.</font></p>
+<aside name="static" style="top: 1700px;">
+<p><font papago-translate="translated">결국, 우리가 Lox<em>를 구현</em>하는 데 사용할 두 언어는 모두 정적으로 입력됩니다.</font></p>
 </aside>
-<h3><a href="#automatic-memory-management" id="automatic-memory-management"><small>3 . 2 . 2</small>Automatic memory management</a></h3>
-<p>High-level languages exist to eliminate error-prone, low-level drudgery, and what
-could be more tedious than manually managing the allocation and freeing of
-storage? No one rises and greets the morning sun with, “I can’t wait to figure
-out the correct place to call <code translate="no">free()</code> for every byte of memory I allocate
-today!”</p>
-<p>There are two main <span name="gc">techniques</span> for managing memory:
-<strong>reference counting</strong> and <strong>tracing garbage collection</strong> (usually just called
-<strong>garbage collection</strong> or <strong>GC</strong>). Ref counters are much simpler to implement<span class="em">—</span>I think that’s why Perl, PHP, and Python all started out using them. But, over
-time, the limitations of ref counting become too troublesome. All of those
-languages eventually ended up adding a full tracing GC, or at least enough of
-one to clean up object cycles.</p>
-<aside name="gc">
-<p>In practice, ref counting and tracing are more ends of a continuum than
-opposing sides. Most ref counting systems end up doing some tracing to handle
-cycles, and the write barriers of a generational collector look a bit like
-retain calls if you squint.</p>
-<p>For lots more on this, see “<a href="https://researcher.watson.ibm.com/researcher/files/us-bacon/Bacon04Unified.pdf">A Unified Theory of Garbage Collection</a>” (PDF).</p>
+<h3><a href="https://youhogeon-meritz.github.io/the-lox-language.html#automatic-memory-management" id="automatic-memory-management"><small><font papago-translate="translated">3 . 2 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">자동 메모리 관리</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">오류가 발생하기 쉽고 낮은 수준의 고된 작업을 제거하기 위해 고급 언어가 존재하며, 할당을 수동으로 관리하고 저장 공간을 확보하는 것보다 더 번거로울 수 있는 것은 무엇일까요?</font><font papago-translate="translated"> 아무도 일어나서 아침 해를 맞이하지 않습니다. "정확한 전화할 곳을 빨리 찾고 싶어요." </font></font><code translate="no">free()</code><font papago-translate="splitted"><font papago-translate="translated"> 오늘 내가 할당하는 모든 메모리 바이트마다</font></font></p>
+<p><font papago-translate="translated">메모리를 관리하는 두 가지 주요<span name="gc"> 기술</span>이 있습니다:<strong> 참조 카운팅</strong> 및<strong> 가비지 컬렉션 추적</strong>(일반적으로<strong> 가비지 컬렉션</strong> 또는<strong> G</strong>C라고 함)입니다.</font><font papago-translate="translated"> 참조 카운터는 구현하기 훨씬 간단합니다—그래서 Perl, PHP, 그리고 Python이 모두<span class="em"></span> 그것들을 사용하기 시작한 것 같습니다.</font><font papago-translate="translated"> 하지만 시간이 지남에 따라 재계산의 한계가 너무 복잡해집니다.</font><font papago-translate="translated"> 그 모든 언어들은 결국 전체 추적 GC를 추가하게 되었고, 최소한 객체 주기를 정리할 수 있는 하나의 언어를 추가하게 되었습니다.</font></p>
+<aside name="gc" style="top: 2060px;">
+<p><font papago-translate="translated">실제로 참조 카운팅과 추적은 반대쪽보다 연속체의 끝에 더 가깝습니다.</font><font papago-translate="translated"> 대부분의 참조 카운팅 시스템은 사이클을 처리하기 위해 추적을 수행하게 되며, 세대 수집기의 쓰기 장벽은 눈을 가늘게 뜨면 통화를 유지하는 것처럼 보입니다.</font></p>
+<p><font papago-translate="translated">이에 대한 자세한 내용은 "<a href="https://researcher.watson.ibm.com/researcher/files/us-bacon/Bacon04Unified.pdf">쓰레기</a> 수거<a href="https://researcher.watson.ibm.com/researcher/files/us-bacon/Bacon04Unified.pdf"> 통합 이론</a>" (PDF)을 참조하세요.</font></p>
 </aside>
-<p>Tracing garbage collection has a fearsome reputation. It <em>is</em> a little harrowing
-working at the level of raw memory. Debugging a GC can sometimes leave you
-seeing hex dumps in your dreams. But, remember, this book is about dispelling
-magic and slaying those monsters, so we <em>are</em> going to write our own garbage
-collector. I think you’ll find the algorithm is quite simple and a lot of fun to
-implement.</p>
-<h2><a href="#data-types" id="data-types"><small>3 . 3</small>Data Types</a></h2>
-<p>In Lox’s little universe, the atoms that make up all matter are the built-in
-data types. There are only a few:</p>
+<p><font papago-translate="translated">쓰레기 수거 추적은 끔찍한 평판을 가지고 있습니다.</font><font papago-translate="translated"> 원시<em></em> 기억 수준에서 일하는 것은 조금 끔찍합니다.</font><font papago-translate="translated"> GC를 디버깅하면 때때로 꿈에서 헥스 덤프를 볼 수 있습니다.</font><font papago-translate="translated"> 하지만 기억하세요, 이 책은 마법을 없애고 괴물들을 죽이는 내용을 담고 있어서 우리만의 쓰레기 수집가를 집필<em>할 예정</em>입니다.</font><font papago-translate="translated"> 그 알고리즘은 꽤 간단하고 구현하기에 매우 재미있다고 생각할 것입니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/the-lox-language.html#data-types" id="data-types"><small><font papago-translate="translated">3 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">데이터 유형</font></font></a></h2>
+<p><font papago-translate="translated">록스의 작은 우주에서는 모든 물질을 구성하는 원자가 내장된 데이터 유형입니다.</font><font papago-translate="translated"> 몇 가지뿐입니다:</font></p>
 <ul>
 <li>
-<p><strong><span name="bool">Booleans</span>.</strong> You can’t code without logic and you
-can’t logic without Boolean values. “True” and “false”, the yin and yang of
-software. Unlike some ancient languages that repurpose an existing type to
-represent truth and falsehood, Lox has a dedicated Boolean type. We may
-be roughing it on this expedition, but we aren’t <em>savages</em>.</p>
-<aside name="bool">
-<p>Boolean variables are the only data type in Lox named after a person, George
-Boole, which is why “Boolean” is capitalized. He died in 1864, nearly a
-century before digital computers turned his algebra into electricity. I
-wonder what he’d think to see his name all over billions of lines of Java
-code.</p>
+<p><font papago-translate="translated"><strong><span name="bool">불리언.</span></strong></font><font papago-translate="translated"> 논리 없이는 코딩할 수 없고, 불리언 값 없이는 논리할 수 없습니다.</font><font papago-translate="translated"> 소프트웨어의 음양인 "참"과 "거짓".</font><font papago-translate="translated"> 일부 고대 언어들이 진리와 거짓을 나타내기 위해 기존의 유형을 재사용하는 것과 달리, Lox는 전용 불리언 유형을 가지고 있습니다.</font><font papago-translate="translated"> 우리는 이번 탐험에서 어려움을 겪고 있을지 모르지만<em>, 우리</em>는<em> 야만인이</em> 아닙니다.</font></p>
+<aside name="bool" style="top: 2564px;">
+<p><font papago-translate="translated">불리언 변수는 사람 조지 불의 이름을 딴 Lox의 유일한 데이터 유형이기 때문에 "불리언"은 대문자로 표기됩니다.</font><font papago-translate="translated"> 그는 디지털 컴퓨터가 그의 대수학을 전기로 바꾸기 거의 한 세기 전인 1864년에 사망했습니다.</font><font papago-translate="translated"> 수십억 줄에 달하는 자바 코드에서 자신의 이름을 본다면 어떻게 생각할지 궁금합니다.</font></p>
 </aside>
-<p>There are two Boolean values, obviously, and a literal for each one.</p>
+<p><font papago-translate="translated">분명히 두 개의 불리언 값이 있으며, 각각의 불리언 값에는 리터럴이 있습니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">true</span>;  <span class="c">// Not false.</span>
 <span class="k">false</span>; <span class="c">// Not *not* false.</span>
 </pre></div>
 </li>
 <li>
-<p><strong>Numbers.</strong> Lox has only one kind of number: double-precision floating
-point. Since floating-point numbers can also represent a wide range of
-integers, that covers a lot of territory, while keeping things simple.</p>
-<p>Full-featured languages have lots of syntax for numbers<span class="em">—</span>hexadecimal,
-scientific notation, octal, all sorts of fun stuff. We’ll settle for basic
-integer and decimal literals.</p>
+<p><font papago-translate="translated"><strong>숫자.</strong></font><font papago-translate="translated"> Lox는 오직 하나의 숫자만을 가지고 있습니다: 이중 정밀 부동 소수점.</font><font papago-translate="translated"> 부동 소수점 숫자는 넓은 범위의 정수를 나타낼 수도 있기 때문에 많은 영역을 포괄하면서도 단순성을 유지할 수 있습니다.</font></p>
+<p><font papago-translate="translated">완전한 기능을 갖춘 언어들은 숫자에 대한 많은 구문을 가지고 있습니다. 예를 들어, 16진수, 과학적 표기법, 팔진수 등 다양한 재미<span class="em"></span>있는 요소들이 있습니다.</font><font papago-translate="translated"> 기본 정수와 소수 리터럴로 합의하겠습니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="n">1234</span>;  <span class="c">// An integer.</span>
 <span class="n">12.34</span>; <span class="c">// A decimal number.</span>
 </pre></div>
 </li>
 <li>
-<p><strong>Strings.</strong> We’ve already seen one string literal in the first example.
-Like most languages, they are enclosed in double quotes.</p>
+<p><font papago-translate="translated"><strong>끈.</strong></font><font papago-translate="translated"> 첫 번째 예제에서 이미 하나의 문자열 리터럴을 보았습니다.</font><font papago-translate="translated"> 대부분의 언어와 마찬가지로 두 개의 따옴표로 둘러싸여 있습니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="s">"I am a string"</span>;
 <span class="s">""</span>;    <span class="c">// The empty string.</span>
 <span class="s">"123"</span>; <span class="c">// This is a string, not a number.</span>
 </pre></div>
-<p>As we’ll see when we get to implementing them, there is quite a lot of
-complexity hiding in that innocuous sequence of <span name="char">characters</span>.</p>
-<aside name="char">
-<p>Even that word “character” is a trickster. Is it ASCII? Unicode? A
-code point or a “grapheme cluster”? How are characters encoded? Is each
-character a fixed size, or can they vary?</p>
+<p><font papago-translate="translated">우리가 그것들을 구현하게 되면 알게 되겠지만, 그 무해한 일련<span name="char">의 문자</span>들 속에는 꽤 많은 복잡성이 숨어 있습니다.</font></p>
+<aside name="char" style="top: 3256px;">
+<p><font papago-translate="translated">"캐릭터"라는 단어조차도 속임수입니다.</font><font papago-translate="translated"> ASCII인가요?</font><font papago-translate="translated"> 유니코드?</font><font papago-translate="translated"> 코드 포인트 또는 "그라프헴 클러스터"?</font><font papago-translate="translated"> 문자는 어떻게 인코딩되나요?</font><font papago-translate="translated" class=""> 각 문자는 고정된 크기인가요, 아니면 다양할 수 있나요?</font></p>
 </aside></li>
 <li>
-<p><strong>Nil.</strong> There’s one last built-in value who’s never invited to the party
-but always seems to show up. It represents “no value”. It’s called “null” in
-many other languages. In Lox we spell it <code translate="no">nil</code>. (When we get to implementing
-it, that will help distinguish when we’re talking about Lox’s <code translate="no">nil</code> versus
-Java or C’s <code translate="no">null</code>.)</p>
-<p>There are good arguments for not having a null value in a language since
-null pointer errors are the scourge of our industry. If we were doing a
-statically typed language, it would be worth trying to ban it. In a
-dynamically typed one, though, eliminating it is often more annoying
-than having it.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><strong>닐</strong>. 파티에 초대된 적은 없지만 항상 나타나는 것처럼 보이는 마지막 내장 가치가 하나 있습니다<strong>.</strong></font><font papago-translate="translated"> 그것은 "가치 없음"을 나타냅니다.</font><font papago-translate="translated"> 다른 많은 언어에서는 "null"이라고 불립니다.</font><font papago-translate="translated"> Lox에서는 철자를 씁니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">. (이를 구현하면 Lox에 대해 이야기할 때 구별하는 데 도움이 될 것입니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> Java 또는 C's와 비교 </font></font><code translate="no">null</code><font papago-translate="splitted"><font papago-translate="translated">.)</font></font></p>
+<p><font papago-translate="translated">우리 업계의 골칫거리인 널 포인터 오류 때문에 언어에서 널 값을 가지지 않는 것에 대한 좋은 주장들이 있습니다.</font><font papago-translate="translated"> 우리가 정적으로 입력된 언어를 사용하고 있다면, 그것을 금지해 볼 가치가 있을 것입니다.</font><font papago-translate="translated"> 하지만 동적으로 타이핑된 것에서는 그것을 없애는 것이 그것을 없애는 것보다 더 귀찮을 때가 많습니다.</font></p>
 </li>
 </ul>
-<h2><a href="#expressions" id="expressions"><small>3 . 4</small>Expressions</a></h2>
-<p>If built-in data types and their literals are atoms, then <strong>expressions</strong> must
-be the molecules. Most of these will be familiar.</p>
-<h3><a href="#arithmetic" id="arithmetic"><small>3 . 4 . 1</small>Arithmetic</a></h3>
-<p>Lox features the basic arithmetic operators you know and love from C and other
-languages:</p>
+<h2><a href="https://youhogeon-meritz.github.io/the-lox-language.html#expressions" id="expressions"><small><font papago-translate="translated">3 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">표현.</font></font></a></h2>
+<p><font papago-translate="translated">내장된 데이터 유형과 그 리터럴이 원자라면<strong>, 표현식</strong>은 분자여야 합니다.</font><font papago-translate="translated"> 이들 대부분은 익숙할 것입니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/the-lox-language.html#arithmetic" id="arithmetic"><small><font papago-translate="translated">3 . 4 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">산술</font></font></a></h3>
+<p><font papago-translate="translated">Lox는 C 및 기타 언어에서 알고 사랑하는 기본 산술 연산자를 제공합니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">add</span> + <span class="i">me</span>;
 <span class="i">subtract</span> - <span class="i">me</span>;
 <span class="i">multiply</span> * <span class="i">me</span>;
 <span class="i">divide</span> / <span class="i">me</span>;
 </pre></div>
-<p>The subexpressions on either side of the operator are <strong>operands</strong>. Because
-there are <em>two</em> of them, these are called <strong>binary</strong> operators. (It has nothing
-to do with the ones-and-zeroes use of “binary”.) Because the operator is <span name="fixity">fixed</span> <em>in</em> the middle of the operands, these are also
-called <strong>infix</strong> operators (as opposed to <strong>prefix</strong> operators where the
-operator comes before the operands, and <strong>postfix</strong> where it comes after).</p>
-<aside name="fixity">
-<p>There are some operators that have more than two operands and the operators are
-interleaved between them. The only one in wide usage is the “conditional” or
-“ternary” operator of C and friends:</p>
+<p><font papago-translate="translated">연산자의 양쪽 부분 표현식은<strong> 피연산자</strong>입니다.</font><font papago-translate="translated"> 그 중<em> 두 개</em>가 있기 때문에<strong> 이진</strong> 연산자라고 합니다. (이진 연산자는 "이진 연산자"를 1과 0으로 사용하는 것과는 아무런 관련이 없습니다.)</font><font papago-translate="translated"> 연산<em></em>자가 피연산자의 중간<span name="fixity">에 고정</span>되어 있기 때문에<strong>,</strong> 이 연산자들은<strong> 인픽스</strong> 연산자라고도 불립니다 (연산자가 피연산자보다 먼저 오는<strong> 접두사</strong> 연산자와 그 후에 오는<strong> 후수정</strong> 연산자와는 대조적입니다).</font></p>
+<aside name="fixity" style="top: 4056px;">
+<p><font papago-translate="translated">두 개 이상의 피연산자가 있고 그들 사이에 연산자가 섞여 있는 연산자가 있습니다.</font><font papago-translate="translated"> 널리 사용되는 유일한 것은 C와 친구들의 "조건부" 또는 "삼차" 연산자입니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">condition</span> ? <span class="i">thenArm</span> : <span class="i">elseArm</span>;
 </pre></div>
-<p>Some call these <strong>mixfix</strong> operators. A few languages let you define your own
-operators and control how they are positioned<span class="em">—</span>their “fixity”.</p>
+<p><font papago-translate="translated">일부 사람들은<strong> 이러한 믹스픽스</strong> 연산자라고 부릅니다.</font><font papago-translate="translated"> 몇 가지 언어<span class="em"></span>를 사용하면 자신만의 연산자를 정의하고 그들의 위치, 즉 "고정성"을 제어할 수 있습니다.</font></p>
 </aside>
-<p>One arithmetic operator is actually <em>both</em> an infix and a prefix one. The <code translate="no">-</code>
-operator can also be used to negate a number.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">하나의 산술 연산자는 사실 접두사와 접두사가<em> 모두</em> 하나입니다.</font><font papago-translate="translated"> 그 </font></font><code translate="no">-</code><font papago-translate="splitted"><font papago-translate="translated"> 연산자는 숫자를 부정하는 데에도 사용할 수 있습니다.</font></font></p>
 <div class="codehilite"><pre translate="no">-<span class="i">negateMe</span>;
 </pre></div>
-<p>All of these operators work on numbers, and it’s an error to pass any other
-types to them. The exception is the <code translate="no">+</code> operator<span class="em">—</span>you can also pass it two
-strings to concatenate them.</p>
-<h3><a href="#comparison-and-equality" id="comparison-and-equality"><small>3 . 4 . 2</small>Comparison and equality</a></h3>
-<p>Moving along, we have a few more operators that always return a Boolean result.
-We can compare numbers (and only numbers), using Ye Olde Comparison Operators.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 모든 연산자는 숫자에 대해 작업하며, 다른 유형의 연산자를 전달하는 것은 오류입니다.</font><font papago-translate="translated"> 예외는 </font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated"> 연산자—두 개의 문자열을 전달하여<span class="em"></span> 연결할 수도 있습니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/the-lox-language.html#comparison-and-equality" id="comparison-and-equality"><small><font papago-translate="translated">3 . 4 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">비교와 평등</font></font></a></h3>
+<p><font papago-translate="translated">앞으로는 항상 불리언 결과를 반환하는 연산자가 몇 개 더 있습니다.</font><font papago-translate="translated"> Ye Olde 비교 연산자를 사용하여 숫자(그리고 오직 숫자만)를 비교할 수 있습니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">less</span> &lt; <span class="i">than</span>;
 <span class="i">lessThan</span> &lt;= <span class="i">orEqual</span>;
 <span class="i">greater</span> &gt; <span class="i">than</span>;
 <span class="i">greaterThan</span> &gt;= <span class="i">orEqual</span>;
 </pre></div>
-<p>We can test two values of any kind for equality or inequality.</p>
+<p><font papago-translate="translated">어떤 종류의 값이든 평등 또는 불평등을 테스트할 수 있습니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="n">1</span> == <span class="n">2</span>;         <span class="c">// false.</span>
 <span class="s">"cat"</span> != <span class="s">"dog"</span>; <span class="c">// true.</span>
 </pre></div>
-<p>Even different types.</p>
+<p><font papago-translate="translated">심지어 다양한 유형들.</font></p>
 <div class="codehilite"><pre translate="no"><span class="n">314</span> == <span class="s">"pi"</span>; <span class="c">// false.</span>
 </pre></div>
-<p>Values of different types are <em>never</em> equivalent.</p>
+<p><font papago-translate="translated">다양한 유형의 값은<em> 결코</em> 동일<em>하지</em> 않습니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="n">123</span> == <span class="s">"123"</span>; <span class="c">// false.</span>
 </pre></div>
-<p>I’m generally against implicit conversions.</p>
-<h3><a href="#logical-operators" id="logical-operators"><small>3 . 4 . 3</small>Logical operators</a></h3>
-<p>The not operator, a prefix <code translate="no">!</code>, returns <code translate="no">false</code> if its operand is true, and vice
-versa.</p>
+<p><font papago-translate="translated">저는 일반적으로 암묵적인 전환에 반대합니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/the-lox-language.html#logical-operators" id="logical-operators"><small><font papago-translate="translated">3 . 4 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">논리 연산자</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">not 연산자, 접두사 </font></font><code translate="no">!</code><font papago-translate="splitted"><font papago-translate="translated">,돌아온다 </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated"> 피연산자가 참이라면, 그 반대의 경우도 마찬가지입니다.</font></font></p>
 <div class="codehilite"><pre translate="no">!<span class="k">true</span>;  <span class="c">// false.</span>
 !<span class="k">false</span>; <span class="c">// true.</span>
 </pre></div>
-<p>The other two logical operators really are control flow constructs in the guise
-of expressions. An <span name="and"><code translate="no">and</code></span> expression determines if two
-values are <em>both</em> true. It returns the left operand if it’s false, or the
-right operand otherwise.</p>
+<p><font papago-translate="translated">다른 두 논리 연산자는 실제로 표현식을 가장한 제어 흐름 구성 요소입니다.</font><font papago-translate="translated"> <span name="and">표현</span>식은 두 값이 모두<em> 참</em>인지 여부를 결정합니다.</font><font papago-translate="translated"> 거짓이면 왼쪽 피연산자를 반환하고, 그렇지 않으면 오른쪽 피연산자를 반환합니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">true</span> <span class="k">and</span> <span class="k">false</span>; <span class="c">// false.</span>
 <span class="k">true</span> <span class="k">and</span> <span class="k">true</span>;  <span class="c">// true.</span>
 </pre></div>
-<p>And an <code translate="no">or</code> expression determines if <em>either</em> of two values (or both) are true.
-It returns the left operand if it is true and the right operand otherwise.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그리고 </font></font><code translate="no">or</code><font papago-translate="splitted"><font papago-translate="translated"> 표현식은 두 값 중<em> 하나</em>(또는 둘 다)가 참인지 여부를 결정합니다.</font><font papago-translate="translated"> 그것은 참이면 왼쪽 피연산자를 반환하고, 그렇지 않으면 오른쪽 피연산자를 반환합니다.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">false</span> <span class="k">or</span> <span class="k">false</span>; <span class="c">// false.</span>
 <span class="k">true</span> <span class="k">or</span> <span class="k">false</span>;  <span class="c">// true.</span>
 </pre></div>
-<aside name="and">
-<p>I used <code translate="no">and</code> and <code translate="no">or</code> for these instead of <code translate="no">&amp;&amp;</code> and <code translate="no">||</code> because Lox doesn’t use
-<code translate="no">&amp;</code> and <code translate="no">|</code> for bitwise operators. It felt weird to introduce the
-double-character forms without the single-character ones.</p>
-<p>I also kind of like using words for these since they are really control flow
-structures and not simple operators.</p>
+<aside name="and" style="top: 5260px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">사용했습니다 </font></font><code translate="no">and</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">or</code><font papago-translate="splitted"><font papago-translate="translated"> 대신 이들을 위해 </font></font><code translate="no">&amp;&amp;</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">||</code><font papago-translate="splitted"><font papago-translate="translated"> Lox는 다음을 사용하지 않기 때문에 </font></font><code translate="no">&amp;</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">|</code><font papago-translate="splitted"><font papago-translate="translated"> 비트 단위 연산자의 경우.</font><font papago-translate="translated" class=""> 단일 문자가 없는 이중 문자 형식을 도입하는 것이 이상하게 느껴졌습니다.</font></font></p>
+<p><font papago-translate="translated">이것들은 단순한 연산자가 아니라 제어 흐름 구조이기 때문에 단어를 사용하는 것도 좋아합니다.</font></p>
 </aside>
-<p>The reason <code translate="no">and</code> and <code translate="no">or</code> are like control flow structures is that they
-<strong>short-circuit</strong>. Not only does <code translate="no">and</code> return the left operand if it is false,
-it doesn’t even <em>evaluate</em> the right one in that case. Conversely
-(contrapositively?), if the left operand of an <code translate="no">or</code> is true, the right is
-skipped.</p>
-<h3><a href="#precedence-and-grouping" id="precedence-and-grouping"><small>3 . 4 . 4</small>Precedence and grouping</a></h3>
-<p>All of these operators have the same precedence and associativity that you’d
-expect coming from C. (When we get to parsing, we’ll get <em>way</em> more precise
-about that.) In cases where the precedence isn’t what you want, you can use <code translate="no">()</code>
-to group stuff.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이유 </font></font><code translate="no">and</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">or</code><font papago-translate="splitted"><font papago-translate="translated"> 제어 흐름 구조와 같은 것은<strong> 단락</strong>된다는 것입니다.</font><font papago-translate="translated"> 뿐만 아니라 </font></font><code translate="no">and</code><font papago-translate="splitted"><font papago-translate="translated"> 왼쪽 피연산자가 거짓이라면, 그 경우에는 올바른 피연산자<em>를 평가</em>하지도 않습니다.</font><font papago-translate="translated"> 반대로 (반대로?), 만약 왼쪽 피연산자가 </font></font><code translate="no">or</code><font papago-translate="splitted"><font papago-translate="translated"> 맞아요, 오른쪽을 건너뛰었습니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/the-lox-language.html#precedence-and-grouping" id="precedence-and-grouping"><small><font papago-translate="translated">3 . 4 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">우선순위 및 그룹화</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 모든 연산자는 C.에서 나올 것으로 예상되는 것과 동일한 우선순위와 연관성을 가지고 있습니다. (파싱에 도달하면 이에 대해<em> 훨씬</em> 더 정확해질 것입니다.)</font><font papago-translate="translated"> 우선순위가 원하는 것이 아닌 경우 다음을 사용할 수 있습니다 </font></font><code translate="no">()</code><font papago-translate="splitted"><font papago-translate="translated"> 물건을 그룹화합니다.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">average</span> = (<span class="i">min</span> + <span class="i">max</span>) / <span class="n">2</span>;
 </pre></div>
-<p>Since they aren’t very technically interesting, I’ve cut the remainder of the
-typical operator menagerie out of our little language. No bitwise, shift,
-modulo, or conditional operators. I’m not grading you, but you will get bonus
-points in my heart if you augment your own implementation of Lox with them.</p>
-<p>Those are the expression forms (except for a couple related to specific features
-that we’ll get to later), so let’s move up a level.</p>
-<h2><a href="#statements" id="statements"><small>3 . 5</small>Statements</a></h2>
-<p>Now we’re at statements. Where an expression’s main job is to produce a <em>value</em>,
-a statement’s job is to produce an <em>effect</em>. Since, by definition, statements
-don’t evaluate to a value, to be useful they have to otherwise change the world
-in some way<span class="em">—</span>usually modifying some state, reading input, or producing output.</p>
-<p>You’ve seen a couple of kinds of statements already. The first one was:</p>
+<p><font papago-translate="translated">기술적으로 그다지 흥미롭지 않기 때문에, 저는 일반적인 연산자 메네저리의 나머지 부분을 우리의 작은 언어에서 잘라냈습니다.</font><font papago-translate="translated"> 비트 단위, 시프트, 모듈로 또는 조건부 연산자는 없습니다.</font><font papago-translate="translated"> 제가 당신을 평가하는 것은 아니지만, 그들과 함께 Lox의 구현을 강화하면 보너스 점수를 받을 수 있을 것입니다.</font></p>
+<p><font papago-translate="translated">이 표현식들은 (나중에 다룰 특정 기능과 관련된 몇 가지를 제외하고) 한 단계 더 발전시켜 보겠습니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/the-lox-language.html#statements" id="statements"><small><font papago-translate="translated">3 . 5</font></small><font papago-translate="splitted"><font papago-translate="translated">진술들</font></font></a></h2>
+<p><font papago-translate="translated">이제 성명서에 도착했습니다.</font><font papago-translate="translated"> 표현의 주된 역할이<em> 가치</em>를 창출하는 것이라면, 진술의 역할은<em> 효과</em>를 창출하는 것입니다.</font><font papago-translate="translated"> 정의에 따르면, 진술은 가치 있게 평가되지 않기 때문에 유용하게 사용되기 위해서는 어떤 식으로든 세상을 변화시켜야 합니다. 주로 어떤 상태를 수정하거나, 입력을 읽거나<span class="em"></span>, 출력을 생성하는 것입니다.</font></p>
+<p><font papago-translate="translated">이미 몇 가지 종류의 진술을 보셨을 겁니다.</font><font papago-translate="translated"> 첫 번째는:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">print</span> <span class="s">"Hello, world!"</span>;
 </pre></div>
-<p>A <span name="print"><code translate="no">print</code> statement</span> evaluates a single expression
-and displays the result to the user. You’ve also seen some statements like:</p>
-<aside name="print">
-<p>Baking <code translate="no">print</code> into the language instead of just making it a core library
-function is a hack. But it’s a <em>useful</em> hack for us: it means our in-progress
-interpreter can start producing output before we’ve implemented all of the
-machinery required to define functions, look them up by name, and call them.</p>
+<p><font papago-translate="translated"><span name="print">문장</span>은 하나의 표현식<span name="print">을 평가</span>하고 그 결과를 사용자에게 표시합니다.</font><font papago-translate="translated"> 다음과 같은 문구도 보셨을 겁니다:</font></p>
+<aside name="print" style="top: 6412px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">베이킹 </font></font><code translate="no">print</code><font papago-translate="splitted"><font papago-translate="translated"> 핵심 라이브러리 기능으로 만드는 대신 언어로 번역하는 것은 해킹입니다.</font><font papago-translate="translated"> 하지만 이는<em> 우리</em>에게<em> 유용</em>한 해킹입니다. 즉, 진행 중인 통역사가 함수를 정의하고, 이름을 찾아 호출하는 데 필요한 모든 기계를 구현하기 전에 출력을 생성할 수 있다는 뜻입니다.</font></font></p>
 </aside>
 <div class="codehilite"><pre translate="no"><span class="s">"some expression"</span>;
 </pre></div>
-<p>An expression followed by a semicolon (<code translate="no">;</code>) promotes the expression to
-statement-hood. This is called (imaginatively enough), an <strong>expression
-statement</strong>.</p>
-<p>If you want to pack a series of statements where a single one is expected, you
-can wrap them up in a <strong>block</strong>.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">세미콜론 뒤에 오는 표현 (</font></font><code translate="no">;</code><font papago-translate="splitted"><font papago-translate="translated">)는 문-후드 표현을 촉진합니다.</font><font papago-translate="translated"> 이것은 (상상 속으로 충분히)<strong> 표현문</strong>이라고 불립니다.</font></font></p>
+<p><font papago-translate="translated">하나의 문장이 예상되는 일련의 문장을 포장하려면<strong> 블록</strong>으로 포장할 수 있습니다.</font></p>
 <div class="codehilite"><pre translate="no">{
   <span class="k">print</span> <span class="s">"One statement."</span>;
   <span class="k">print</span> <span class="s">"Two statements."</span>;
 }
 </pre></div>
-<p>Blocks also affect scoping, which leads us to the next section<span class="ellipse"> . . . </span></p>
-<h2><a href="#variables" id="variables"><small>3 . 6</small>Variables</a></h2>
-<p>You declare variables using <code translate="no">var</code> statements. If you <span name="omit">omit</span> the initializer, the variable’s value defaults to <code translate="no">nil</code>.</p>
-<aside name="omit">
-<p>This is one of those cases where not having <code translate="no">nil</code> and forcing every variable to
-be initialized to some value would be more annoying than dealing with <code translate="no">nil</code>
-itself.</p>
+<p><font papago-translate="translated">블록은 또한 범위 설정에 영향을 미치며, 이는 다음 섹션<span class="ellipse">으로</span> 이어집니다<span class="ellipse">.</span></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/the-lox-language.html#variables" id="variables"><small><font papago-translate="translated">3 . 6</font></small><font papago-translate="splitted"><font papago-translate="translated">변수</font></font></a></h2>
+<p><font papago-translate="splitted"><font papago-translate="translated">변수를 선언하려면 다음을 사용합니다 </font></font><code translate="no">var</code><font papago-translate="splitted"><font papago-translate="translated"> 진술들.</font><font papago-translate="translated"> 이니셜라이저<span name="omit">를 생략</span>하면 변수의 값은 기본적으로 다음과 같습니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<aside name="omit" style="top: 6920px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 다음과 같은 경우 중 하나입니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 모든 변수를 어떤 값으로 초기화하도록 강요하는 것은 다음을 처리하는 것보다 더 성가실 것입니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 그 자체.</font></font></p>
 </aside>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">imAVariable</span> = <span class="s">"here is my value"</span>;
 <span class="k">var</span> <span class="i">iAmNil</span>;
 </pre></div>
-<p>Once declared, you can, naturally, access and assign a variable using its name.</p>
+<p><font papago-translate="translated">선언되면, 자연스럽게 변수의 이름을 사용하여 변수에 접근하고 할당할 수 있습니다.</font></p>
 <p><span name="breakfast"></span></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">breakfast</span> = <span class="s">"bagels"</span>;
 <span class="k">print</span> <span class="i">breakfast</span>; <span class="c">// "bagels".</span>
 <span class="i">breakfast</span> = <span class="s">"beignets"</span>;
 <span class="k">print</span> <span class="i">breakfast</span>; <span class="c">// "beignets".</span>
 </pre></div>
-<aside name="breakfast">
-<p>Can you tell that I tend to work on this book in the morning before I’ve had
-anything to eat?</p>
+<aside name="breakfast" style="top: 7102px;">
+<p><font papago-translate="translated">제가 음식을 먹기 전에 아침에 이 책을 작업하는 경향이 있다는 것을 알 수 있나요?</font></p>
 </aside>
-<p>I won’t get into the rules for variable scope here, because we’re going to spend
-a surprising amount of time in later chapters mapping every square inch of the
-rules. In most cases, it works like you would expect coming from C or Java.</p>
-<h2><a href="#control-flow" id="control-flow"><small>3 . 7</small>Control Flow</a></h2>
-<p>It’s hard to write <span name="flow">useful</span> programs if you can’t skip
-some code or execute some more than once. That means control flow. In addition
-to the logical operators we already covered, Lox lifts three statements straight
-from C.</p>
-<aside name="flow">
-<p>We already have <code translate="no">and</code> and <code translate="no">or</code> for branching, and we <em>could</em> use recursion to
-repeat code, so that’s theoretically sufficient. It would be pretty awkward to
-program that way in an imperative-styled language, though.</p>
-<p>Scheme, on the other hand, has no built-in looping constructs. It <em>does</em> rely on
-recursion for repetition. Smalltalk has no built-in branching constructs, and
-relies on dynamic dispatch for selectively executing code.</p>
+<p><font papago-translate="translated">여기서는 가변 범위에 대한 규칙에 대해 다루지 않겠습니다. 왜냐하면 나중 장에서는 규칙의 모든 제곱 인치를 매핑하는 데 놀라운 시간을 할애할 것이기 때문입니다.</font><font papago-translate="translated"> 대부분의 경우, C나 Java에서 올 것으로 예상되는 대로 작동합니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/the-lox-language.html#control-flow" id="control-flow"><small><font papago-translate="translated">3 . 7</font></small><font papago-translate="splitted"><font papago-translate="translated">제어 흐름</font></font></a></h2>
+<p><font papago-translate="translated">코드를 건너뛰거나 실행할 수 없다면<span name="flow"> 유용</span>한 프로그램을 작성하기가 어렵습니다.</font><font papago-translate="translated"> 그것은 제어 흐름을 의미합니다.</font><font papago-translate="translated"> 우리가 이미 다룬 논리 연산자 외에도, Lox는 C에서 바로 세 가지 문장을 들어 올립니다.</font></p>
+<aside name="flow" style="top: 7400px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 이미 </font></font><code translate="no">and</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">or</code><font papago-translate="splitted"><font papago-translate="translated"> 분기를 위해, 그리고 재귀를 사용하여 코드를 반복<em>할 수 있으므로</em> 이론적으로 충분합니다.</font><font papago-translate="translated"> 하지만 명령형 언어로 그렇게 프로그래밍하는 것은 꽤 어색할 것입니다.</font></font></p>
+<p><font papago-translate="translated">반면에, 스킴에는 루프 구조가 내장되어 있지 않습니다.</font><font papago-translate="translated"> 반복을 위해 재귀에 의존<em>합니다.</em></font><font papago-translate="translated"> Smalltalk는 내장된 분기 구조가 없으며, 코드를 선택적으로 실행하기 위해 동적 디스패치를 사용합니다.</font></p>
 </aside>
-<p>An <code translate="no">if</code> statement executes one of two statements based on some condition.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">안 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 문은 특정 조건에 따라 두 개의 문 중 하나를 실행합니다.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">if</span> (<span class="i">condition</span>) {
   <span class="k">print</span> <span class="s">"yes"</span>;
 } <span class="k">else</span> {
   <span class="k">print</span> <span class="s">"no"</span>;
 }
 </pre></div>
-<p>A <code translate="no">while</code> <span name="do">loop</span> executes the body repeatedly as long as
-the condition expression evaluates to true.</p>
+<p><font papago-translate="splitted">A </font><code translate="no">while</code> <font papago-translate="splitted"><font papago-translate="translated"><span name="do">루프는</span> 조건 표현이 참으로 평가되는 한 신체를 반복적으로 실행합니다<span name="do">.</span></font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">a</span> = <span class="n">1</span>;
 <span class="k">while</span> (<span class="i">a</span> &lt; <span class="n">10</span>) {
   <span class="k">print</span> <span class="i">a</span>;
   <span class="i">a</span> = <span class="i">a</span> + <span class="n">1</span>;
 }
 </pre></div>
-<aside name="do">
-<p>I left <code translate="no">do while</code> loops out of Lox because they aren’t that common and wouldn’t
-teach you anything that you won’t already learn from <code translate="no">while</code>. Go ahead and add
-it to your implementation if it makes you happy. It’s your party.</p>
+<aside name="do" style="top: 7668px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">떠났습니다 </font></font><code translate="no">do while</code><font papago-translate="splitted"><font papago-translate="translated"> Lox에서 루프 아웃되는 이유는 그렇게 흔하지 않기 때문이며 아직 배우지 못한 것을 가르쳐주지 않기 때문입니다 </font></font><code translate="no">while</code><font papago-translate="splitted"><font papago-translate="translated">. 만족스러우시면 구현에 추가하세요.</font><font papago-translate="translated"> 당신의 파티입니다.</font></font></p>
 </aside>
-<p>Finally, we have <code translate="no">for</code> loops.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">마침내, 우리는 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 루프.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">for</span> (<span class="k">var</span> <span class="i">a</span> = <span class="n">1</span>; <span class="i">a</span> &lt; <span class="n">10</span>; <span class="i">a</span> = <span class="i">a</span> + <span class="n">1</span>) {
   <span class="k">print</span> <span class="i">a</span>;
 }
 </pre></div>
-<p>This loop does the same thing as the previous <code translate="no">while</code> loop. Most modern
-languages also have some sort of <span name="foreach"><code translate="no">for-in</code></span> or
-<code translate="no">foreach</code> loop for explicitly iterating over various sequence types. In a real
-language, that’s nicer than the crude C-style <code translate="no">for</code> loop we got here. Lox keeps
-it basic.</p>
-<aside name="foreach">
-<p>This is a concession I made because of how the implementation is split across
-chapters. A <code translate="no">for-in</code> loop needs some sort of dynamic dispatch in the iterator
-protocol to handle different kinds of sequences, but we don’t get that until
-after we’re done with control flow. We could circle back and add <code translate="no">for-in</code> loops
-later, but I didn’t think doing so would teach you anything super interesting.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 루프는 이전과 동일한 작업을 수행합니다 </font></font><code translate="no">while</code><font papago-translate="splitted"><font papago-translate="translated"> 루프. 대부분의 현대 언어에는<span name="foreach"> 다음과</span> 같은 기능도 있습니다 </font></font><code translate="no">foreach</code><font papago-translate="splitted"><font papago-translate="translated"> 다양한 시퀀스 유형에 대해 명시적으로 반복하는 루프.</font><font papago-translate="translated"> 실제 언어로는 조잡한 C 스타일보다 더 좋습니다 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 루프가 도착했습니다.</font><font papago-translate="translated"> Lox는 그것을 기본적으로 유지합니다.</font></font></p>
+<aside name="foreach" style="top: 7996px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 구현이 여러 장으로 나뉘어져 있기 때문에 제가 한 양보입니다. A </font></font><code translate="no">for-in</code><font papago-translate="splitted"><font papago-translate="translated"> 루프는 다양한 종류의 시퀀스를 처리하기 위해 반복 프로토콜에서 일종의 동적 디스패치가 필요하지만, 제어 흐름이 끝난 후에야 이를 확인할 수 있습니다.</font><font papago-translate="translated"> 다시 원을 그리며 추가할 수 있습니다 </font></font><code translate="no">for-in</code><font papago-translate="splitted"><font papago-translate="translated"> 나중에 루프를 돌렸지만 그렇게 하면 정말 흥미로운 것을 배울 수 있을 거라고 생각하지 못했습니다.</font></font></p>
 </aside>
-<h2><a href="#functions" id="functions"><small>3 . 8</small>Functions</a></h2>
-<p>A function call expression looks the same as it does in C.</p>
+<h2><a href="https://youhogeon-meritz.github.io/the-lox-language.html#functions" id="functions"><small><font papago-translate="translated">3 . 8</font></small><font papago-translate="splitted"><font papago-translate="translated">기능들</font></font></a></h2>
+<p><font papago-translate="translated">함수 호출 표현식은 C에서와 동일하게 보입니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">makeBreakfast</span>(<span class="i">bacon</span>, <span class="i">eggs</span>, <span class="i">toast</span>);
 </pre></div>
-<p>You can also call a function without passing anything to it.</p>
+<p><font papago-translate="translated">함수에 아무 것도 전달하지 않고 호출할 수도 있습니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">makeBreakfast</span>();
 </pre></div>
-<p>Unlike in, say, Ruby, the parentheses are mandatory in this case. If you leave them
-off, the name doesn’t <em>call</em> the function, it just refers to it.</p>
-<p>A language isn’t very fun if you can’t define your own functions. In Lox, you do
-that with <span name="fun"><code translate="no">fun</code></span>.</p>
-<aside name="fun">
-<p>I’ve seen languages that use <code translate="no">fn</code>, <code translate="no">fun</code>, <code translate="no">func</code>, and <code translate="no">function</code>. I’m still
-hoping to discover a <code translate="no">funct</code>, <code translate="no">functi</code>, or <code translate="no">functio</code> somewhere.</p>
+<p><font papago-translate="translated">루비와 달리 이 경우 괄호는 필수입니다.</font><font papago-translate="translated"> 그들을 제외하면, 이름이 함수<em>를 부르는</em> 것이 아니라 단지 함수를 가리킬 뿐입니다.</font></p>
+<p><font papago-translate="translated">자신의 기능을 정의할 수 없다면 언어는 그다지 재미있지 않습니다.</font><font papago-translate="translated"> Lox에서는<span name="fun"> ~</span>로 그렇게 합니다<span name="fun">.</span></font></p>
+<aside name="fun" style="top: 8468px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">다음과 같은 언어를 사용하는 것을 보았습니다 </font></font><code translate="no">fn</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">fun</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">func</code><font papago-translate="splitted"><font papago-translate="translated">,그리고. </font></font><code translate="no">function</code><font papago-translate="splitted"><font papago-translate="translated">. 저는 여전히 다음을 발견하고 싶습니다 </font></font><code translate="no">funct</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">functi</code><font papago-translate="splitted"><font papago-translate="translated">, 또는 </font></font><code translate="no">functio</code><font papago-translate="splitted"><font papago-translate="translated"> 어딘가에.</font></font></p>
 </aside>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> <span class="i">printSum</span>(<span class="i">a</span>, <span class="i">b</span>) {
   <span class="k">print</span> <span class="i">a</span> + <span class="i">b</span>;
 }
 </pre></div>
-<p>Now’s a good time to clarify some <span name="define">terminology</span>. Some
-people throw around “parameter” and “argument” like they are interchangeable
-and, to many, they are. We’re going to spend a lot of time splitting the finest
-of downy hairs around semantics, so let’s sharpen our words. From here on out:</p>
+<p><font papago-translate="translated"><span name="define">지금</span>이 용어를 명확히 하기에 좋은 시기입니다.</font><font papago-translate="translated"> 어떤 사람들은 "매개변수"와 "논쟁"을 서로 교환할 수 있다고 생각하며, 많은 사람들에게 그렇게 생각합니다.</font><font papago-translate="translated"> 우리는 의미론을 중심으로 가장 멋진 솜털을 나누는 데 많은 시간을 할애할 것이므로, 말을 더 날카롭게 해보겠습니다.</font><font papago-translate="translated"> 이제부터:</font></p>
 <ul>
 <li>
-<p>An <strong>argument</strong> is an actual value you pass to a function when you call it.
-So a function <em>call</em> has an <em>argument</em> list. Sometimes you hear <strong>actual
-parameter</strong> used for these.</p>
+<p><font papago-translate="translated"><strong>인수는</strong> 함수를 호출할 때 전달하는 실제 값입니다.</font><font papago-translate="translated"> 함수<em> 호출에는</em><em> 인수</em> 목록이 있습니다.</font><font papago-translate="translated"> 때때로 이것들에 사용되는<strong> 실제 매개변수</strong>를 들을 수 있습니다.</font></p>
 </li>
 <li>
-<p>A <strong>parameter</strong> is a variable that holds the value of the argument inside
-the body of the function. Thus, a function <em>declaration</em> has a <em>parameter</em>
-list. Others call these <strong>formal parameters</strong> or simply <strong>formals</strong>.</p>
+<p><font papago-translate="translated"><strong>매개변수</strong>는 함수 내부의 인수 값을 유지하는 변수입니다.</font><font papago-translate="translated"> 따라서 함수<em> 선언</em>에는<em> 매개변수</em> 목록이 있습니다.</font><font papago-translate="translated"> 다른 사람들은 이러한<strong> 공식 매개변수</strong>를 단순히<strong> 공식</strong>이라고 부릅니다.</font></p>
 </li>
 </ul>
-<aside name="define">
-<p>Speaking of terminology, some statically typed languages like C make a
-distinction between <em>declaring</em> a function and <em>defining</em> it. A declaration
-binds the function’s type to its name so that calls can be type-checked but does
-not provide a body. A definition declares the function and also fills in the
-body so that the function can be compiled.</p>
-<p>Since Lox is dynamically typed, this distinction isn’t meaningful. A function
-declaration fully specifies the function including its body.</p>
+<aside name="define" style="top: 8600px;">
+<p><font papago-translate="translated">용어에 대해 말하자면, C와 같은 일부 정적으로 입력된 언어들은 함수<em>를 선언</em>하는 것과<em> 정의하는 것</em>을 구분합니다.</font><font papago-translate="translated"> 선언문은 함수의 유형을 이름에 바인딩하여 호출을 유형 확인할 수 있도록 하지만 본문을 제공하지는 않습니다.</font><font papago-translate="translated"> 정의는 함수를 선언하고 함수를 컴파일할 수 있도록 본문을 채웁니다.</font></p>
+<p><font papago-translate="translated">Lox는 동적으로 입력되기 때문에 이 구분은 의미가 없습니다.</font><font papago-translate="translated"> 함수 선언은 자신의 본문을 포함한 함수를 완전히 명시합니다.</font></p>
 </aside>
-<p>The body of a function is always a block. Inside it, you can return a value
-using a <code translate="no">return</code> statement.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">함수의 본체는 항상 블록입니다.</font><font papago-translate="translated"> 그 안에서 다음을 사용하여 값을 반환할 수 있습니다 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 진술.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> <span class="i">returnSum</span>(<span class="i">a</span>, <span class="i">b</span>) {
   <span class="k">return</span> <span class="i">a</span> + <span class="i">b</span>;
 }
 </pre></div>
-<p>If execution reaches the end of the block without hitting a <code translate="no">return</code>, it
-<span name="sneaky">implicitly</span> returns <code translate="no">nil</code>.</p>
-<aside name="sneaky">
-<p>See, I told you <code translate="no">nil</code> would sneak in when we weren’t looking.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">실행이 블록의 끝에 도달하지 않고 실행되는 경우 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated">, <span name="sneaky">암묵</span>적으로 반환됩니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<aside name="sneaky" style="top: 9068px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">거 봐요.내가 뭐라고 했어요. </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 우리가 보지 않을 때 몰래 들어오곤 했어요.</font></font></p>
 </aside>
-<h3><a href="#closures" id="closures"><small>3 . 8 . 1</small>Closures</a></h3>
-<p>Functions are <em>first class</em> in Lox, which just means they are real values that
-you can get a reference to, store in variables, pass around, etc. This works:</p>
+<h3><a href="https://youhogeon-meritz.github.io/the-lox-language.html#closures" id="closures"><small><font papago-translate="translated">3 . 8 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">폐쇄</font></font></a></h3>
+<p><font papago-translate="translated">함수는<em> L</em>ox에서<em> 첫 번째 클래스이므로</em> 참조, 변수에 저장, 통과 등을 할 수 있는 실제 값입니다.</font><font papago-translate="translated"> 작동합니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> <span class="i">addPair</span>(<span class="i">a</span>, <span class="i">b</span>) {
   <span class="k">return</span> <span class="i">a</span> + <span class="i">b</span>;
 }
@@ -520,8 +342,7 @@ you can get a reference to, store in variables, pass around, etc. This works:</p
 
 <span class="k">print</span> <span class="i">identity</span>(<span class="i">addPair</span>)(<span class="n">1</span>, <span class="n">2</span>); <span class="c">// Prints "3".</span>
 </pre></div>
-<p>Since function declarations are statements, you can declare local functions
-inside another function.</p>
+<p><font papago-translate="translated">함수 선언은 명제이므로 다른 함수 내부의 로컬 함수를 선언할 수 있습니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> <span class="i">outerFunction</span>() {
   <span class="k">fun</span> <span class="i">localFunction</span>() {
     <span class="k">print</span> <span class="s">"I'm local!"</span>;
@@ -530,8 +351,7 @@ inside another function.</p>
   <span class="i">localFunction</span>();
 }
 </pre></div>
-<p>If you combine local functions, first-class functions, and block scope, you run
-into this interesting situation:</p>
+<p><font papago-translate="translated">로컬 함수, 일류 함수, 블록 범위를 결합하면 다음과 같은 흥미로운 상황에 직면하게 됩니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> <span class="i">returnFunction</span>() {
   <span class="k">var</span> <span class="i">outside</span> = <span class="s">"outside"</span>;
 
@@ -545,113 +365,43 @@ into this interesting situation:</p>
 <span class="k">var</span> <span class="i">fn</span> = <span class="i">returnFunction</span>();
 <span class="i">fn</span>();
 </pre></div>
-<p>Here, <code translate="no">inner()</code> accesses a local variable declared outside of its body in the
-surrounding function. Is this kosher? Now that lots of languages have borrowed
-this feature from Lisp, you probably know the answer is yes.</p>
-<p>For that to work, <code translate="no">inner()</code> has to “hold on” to references to any surrounding
-variables that it uses so that they stay around even after the outer function
-has returned. We call functions that do this <span name="closure"><strong>closures</strong></span>. These days, the term is often used for <em>any</em>
-first-class function, though it’s sort of a misnomer if the function doesn’t
-happen to close over any variables.</p>
-<aside name="closure">
-<p>Peter J. Landin coined the term “closure”. Yes, he invented damn near half the
-terms in programming languages. Most of them came out of one incredible paper,
-“<a href="https://homepages.inf.ed.ac.uk/wadler/papers/papers-we-love/landin-next-700.pdf">The Next 700 Programming Languages</a>”.</p>
-<p>In order to implement these kind of functions, you need to create a data
-structure that bundles together the function’s code and the surrounding
-variables it needs. He called this a “closure” because it <em>closes over</em> and
-holds on to the variables it needs.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">여기서, </font></font><code translate="no">inner()</code><font papago-translate="splitted"><font papago-translate="translated"> 주변 함수에서 본체 외부에 선언된 로컬 변수에 접근합니다.</font><font papago-translate="translated"> 이것이 코셔인가요?</font><font papago-translate="translated"> 이제 많은 언어가 리스프에서 이 기능을 차용했으니, 답은 '예'라는 것을 알고 계실 겁니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그것이 효과가 있기 위해서는, </font></font><code translate="no">inner()</code><font papago-translate="splitted"><font papago-translate="translated"> 외부 함수가 반환된 후에도 주변 변수를 계속 유지하기 위해 사용하는 모든 변수에 대한 참조를 "보류"해야 합니다.</font><font papago-translate="translated"> <span name="closure"><strong>우리</strong></span>는 이러한<span name="closure"><strong> 폐쇄</strong></span>를 수행하는 함수를 호출합니다.</font><font papago-translate="translated"> 요즘에는 어떤 일급 함수에 대해서<em>도</em> 이 용어가 자주 사용되지만, 함수가 어떤 변수에 대해서도 닫히지 않는다면 다소 잘못된 이름이 될 수 있습니다.</font></font></p>
+<aside name="closure" style="top: 10204px;">
+<p><font papago-translate="translated">피터 J. 랜딘은 "폐쇄"라는 용어를 만들었습니다.</font><font papago-translate="translated" class=""> 네, 그는 프로그래밍 언어 용어의 거의 절반을 발명했습니다.</font><font papago-translate="translated"> 그들 대부분은 "<a href="https://homepages.inf.ed.ac.uk/wadler/papers/papers-we-love/landin-next-700.pdf">다음 700</a>개의 프로그래밍<a href="https://homepages.inf.ed.ac.uk/wadler/papers/papers-we-love/landin-next-700.pdf"> 언어</a>"라는 놀라운 논문에서 나왔습니다.</font></p>
+<p><font papago-translate="translated">이러한 기능을 구현하려면 기능의 코드와 필요한 주변 변수를 결합하는 데이터 구조를 만들어야 합니다.</font><font papago-translate="translated"> 그는 이것을 "폐쇄"라고 불렀는데, 이는<em> 폐쇄가 필요</em>한 변수들을<em> 붙잡고 있기</em> 때문입니다.</font></p>
 </aside>
-<p>As you can imagine, implementing these adds some complexity because we can no
-longer assume variable scope works strictly like a stack where local variables
-evaporate the moment the function returns. We’re going to have a fun time
-learning how to make these work correctly and efficiently.</p>
-<h2><a href="#classes" id="classes"><small>3 . 9</small>Classes</a></h2>
-<p>Since Lox has dynamic typing, lexical (roughly, “block”) scope, and closures,
-it’s about halfway to being a functional language. But as you’ll see, it’s
-<em>also</em> about halfway to being an object-oriented language. Both paradigms have a
-lot going for them, so I thought it was worth covering some of each.</p>
-<p>Since classes have come under fire for not living up to their hype, let me first
-explain why I put them into Lox and this book. There are really two questions:</p>
-<h3><a href="#why-might-any-language-want-to-be-object-oriented" id="why-might-any-language-want-to-be-object-oriented"><small>3 . 9 . 1</small>Why might any language want to be object oriented?</a></h3>
-<p>Now that object-oriented languages like Java have sold out and only play arena
-shows, it’s not cool to like them anymore. Why would anyone make a <em>new</em>
-language with objects? Isn’t that like releasing music on 8-track?</p>
-<p>It is true that the “all inheritance all the time” binge of the ’90s produced
-some monstrous class hierarchies, but <strong>object-oriented programming</strong> (<strong>OOP</strong>)
-is still pretty rad. Billions of lines of successful code have been written in
-OOP languages, shipping millions of apps to happy users. Likely a majority of
-working programmers today are using an object-oriented language. They can’t all
-be <em>that</em> wrong.</p>
-<p>In particular, for a dynamically typed language, objects are pretty handy. We
-need <em>some</em> way of defining compound data types to bundle blobs of stuff
-together.</p>
-<p>If we can also hang methods off of those, then we avoid the need to prefix all
-of our functions with the name of the data type they operate on to avoid
-colliding with similar functions for different types. In, say, Racket, you end
-up having to name your functions like <code translate="no">hash-copy</code> (to copy a hash table) and
-<code translate="no">vector-copy</code> (to copy a vector) so that they don’t step on each other. Methods
-are scoped to the object, so that problem goes away.</p>
-<h3><a href="#why-is-lox-object-oriented" id="why-is-lox-object-oriented"><small>3 . 9 . 2</small>Why is Lox object oriented?</a></h3>
-<p>I could claim objects are groovy but still out of scope for the book. Most
-programming language books, especially ones that try to implement a whole
-language, leave objects out. To me, that means the topic isn’t well covered.
-With such a widespread paradigm, that omission makes me sad.</p>
-<p>Given how many of us spend all day <em>using</em> OOP languages, it seems like the
-world could use a little documentation on how to <em>make</em> one. As you’ll see, it
-turns out to be pretty interesting. Not as hard as you might fear, but not as
-simple as you might presume, either.</p>
-<h3><a href="#classes-or-prototypes" id="classes-or-prototypes"><small>3 . 9 . 3</small>Classes or prototypes</a></h3>
-<p>When it comes to objects, there are actually two approaches to them, <a href="https://en.wikipedia.org/wiki/Class-based_programming">classes</a>
-and <a href="https://en.wikipedia.org/wiki/Prototype-based_programming">prototypes</a>. Classes came first, and are more common thanks to C++, Java,
-C#, and friends. Prototypes were a virtually forgotten offshoot until JavaScript
-accidentally took over the world.</p>
-<p>In class-based languages, there are two core concepts: instances and classes.
-Instances store the state for each object and have a reference to the instance’s
-class. Classes contain the methods and inheritance chain. To call a method on an
-instance, there is always a level of indirection. You <span name="dispatch">look</span> up the instance’s class and then you find the method
-<em>there</em>:</p>
-<aside name="dispatch">
-<p>In a statically typed language like C++, method lookup typically happens at
-compile time based on the <em>static</em> type of the instance, giving you <strong>static
-dispatch</strong>. In contrast, <strong>dynamic dispatch</strong> looks up the class of the actual
-instance object at runtime. This is how virtual methods in statically typed
-languages and all methods in a dynamically typed language like Lox work.</p>
-</aside><img alt="How fields and methods are looked up on classes and instances" src="image/the-lox-language/class-lookup.png">
-<p>Prototype-based languages <span name="blurry">merge</span> these two concepts.
-There are only objects<span class="em">—</span>no classes<span class="em">—</span>and each individual object may contain
-state and methods. Objects can directly inherit from each other (or “delegate
-to” in prototypal lingo):</p>
-<aside name="blurry">
-<p>In practice the line between class-based and prototype-based languages blurs.
-JavaScript’s “constructor function” notion <a href="http://gameprogrammingpatterns.com/prototype.html#what-about-javascript">pushes you pretty hard</a>
-towards defining class-like objects. Meanwhile, class-based Ruby is perfectly
-happy to let you attach methods to individual instances.</p>
-</aside><img alt="How fields and methods are looked up in a prototypal system" src="image/the-lox-language/prototype-lookup.png">
-<p>This means that in some ways prototypal languages are more fundamental than
-classes. They are really neat to implement because they’re <em>so</em> simple. Also,
-they can express lots of unusual patterns that classes steer you away from.</p>
-<p>But I’ve looked at a <em>lot</em> of code written in prototypal languages<span class="em">—</span>including
-<a href="http://finch.stuffwithstuff.com/">some of my own devising</a>. Do you know what people generally do with all
-of the power and flexibility of prototypes? <span class="ellipse"> . . . </span>They use them to reinvent
-classes.</p>
-<p>I don’t know <em>why</em> that is, but people naturally seem to prefer a class-based
-(Classic? Classy?) style. Prototypes <em>are</em> simpler in the language, but they
-seem to accomplish that only by <span name="waterbed">pushing</span> the
-complexity onto the user. So, for Lox, we’ll save our users the trouble and bake
-classes right in.</p>
-<aside name="waterbed">
-<p>Larry Wall, Perl’s inventor/prophet calls this the “<a href="http://wiki.c2.com/?WaterbedTheory">waterbed theory</a>”. Some
-complexity is essential and cannot be eliminated. If you push it down in one
-place, it swells up in another.</p>
-<p>Prototypal languages don’t so much <em>eliminate</em> the complexity of classes as they
-do make the <em>user</em> take that complexity by building their own class-like
-metaprogramming libraries.</p>
+<p><font papago-translate="translated">상상할 수 있듯이, 이러한 기능을 구현하는 것은 더 이상 변수 범위가 함수가 돌아오는 순간 로컬 변수가 증발하는 스택처럼 엄격하게 작동한다고 가정할 수 없기 때문에 복잡성을 더합니다.</font><font papago-translate="translated"> 우리는 이것들을 정확하고 효율적으로 작동시키는 방법을 배우는 재미있는 시간을 가질 것입니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/the-lox-language.html#classes" id="classes"><small><font papago-translate="translated">3 . 9</font></small><font papago-translate="splitted"><font papago-translate="translated">반</font></font></a></h2>
+<p><font papago-translate="translated">Lox는 동적 타이핑, 어휘적(대략적으로 "차단") 범위, 그리고 폐쇄성을 가지고 있기 때문에 기능적 언어의 절반 정도에 불과합니다.</font><font papago-translate="translated"> 하지만 보시다시피, 그것은 또한 객체 지향<em></em> 언어의 절반 정도에 불과합니다.</font><font papago-translate="translated"> 두 패러다임 모두 많은 것을 가지고 있어서 각각을 다룰 가치가 있다고 생각했습니다.</font></p>
+<p><font papago-translate="translated">수업이 과대광고에 부응하지 못해 비난을 받고 있는 상황에서, 먼저 제가 왜 그것들을 Lox와 이 책에 넣었는지 설명해드리겠습니다.</font><font papago-translate="translated"> 정말로 두 가지 질문이 있습니다:</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/the-lox-language.html#why-might-any-language-want-to-be-object-oriented" id="why-might-any-language-want-to-be-object-oriented"><small><font papago-translate="translated">3 . 9 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">왜 어떤 언어든 객체 지향적이어야 할까요?</font></font></a></h3>
+<p><font papago-translate="translated">이제 자바와 같은 객체 지향 언어들이 매진되고 아레나 쇼만 플레이하게 되었으니, 더 이상 그것들을 좋아하는 것은 멋진 일이 아닙니다.</font><font papago-translate="translated"> 왜 누군가가 물건으로<em> 새로운</em> 언어를 만들까요?</font><font papago-translate="translated"> 8트랙으로 음악을 발표하는 것과 같지 않나요?</font></p>
+<p><font papago-translate="translated">90년대의 "항상 상속" 열풍이 일부 괴물 같은 계층 구조를 만들어낸 것은 사실이지만<strong>, 객체 지향 프로그래밍</strong>(O<strong>OP</strong>)은 여전히 꽤 급진적입니다.</font><font papago-translate="translated"> 수십억 줄의 성공적인 코드가 OOP 언어로 작성되어 행복한 사용자에게 수백만 개의 앱을 전송하고 있습니다.</font><font papago-translate="translated"> 오늘날 대부분의 작업 프로그래머들이 객체 지향 언어를 사용하고 있을 가능성이 높습니다.</font><font papago-translate="translated"> 모두<em></em> 그렇게 틀릴 수는 없습니다.</font></p>
+<p><font papago-translate="translated">특히 동적으로 입력된 언어의 경우 객체가 매우 편리합니다.</font><font papago-translate="translated"> 우리는<em></em> 물질 덩어리를 함께 묶기 위해 복합 데이터 유형을 정의하는 방법이 필요합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">메서드를 이러한 메서드에서 제외할 수 있다면, 서로 다른 유형의 유사한 함수와 충돌하지 않도록 모든 함수에 데이터 유형의 이름을 접두사로 붙이지 않아도 됩니다.</font><font papago-translate="translated"> 예를 들어, 라켓에서는 함수의 이름을 다음과 같이 지정해야 합니다 </font></font><code translate="no">hash-copy</code><font papago-translate="splitted"><font papago-translate="translated"> (해시 테이블을 복사하려면) 그리고 </font></font><code translate="no">vector-copy</code><font papago-translate="splitted"><font papago-translate="translated"> (벡터를 복사하여) 서로 밟히지 않도록 합니다.</font><font papago-translate="translated"> 방법들이 객체에 적용되므로, 그 문제는 사라집니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/the-lox-language.html#why-is-lox-object-oriented" id="why-is-lox-object-oriented"><small><font papago-translate="translated">3 . 9 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">Lox 객체가 지향되는 이유는 무엇입니까?</font></font></a></h3>
+<p><font papago-translate="translated">물건들이 그루비하지만 여전히 책의 범위를 벗어났다고 주장할 수 있습니다.</font><font papago-translate="translated"> 대부분의 프로그래밍 언어 책, 특히 전체 언어를 구현하려는 책은 객체를 생략합니다.</font><font papago-translate="translated"> 저에게는 그 주제가 잘 다루어지지 않았다는 뜻입니다.</font><font papago-translate="translated"> 이렇게 널리 퍼진 패러다임 때문에, 그 누락은 저를 슬프게 합니다.</font></p>
+<p><font papago-translate="translated">우리 중 많은 사람들이 하루 종일 OOP 언어<em>를 사용한다는</em> 점을 고려할 때, 세상은 OOP 언어<em>를 만드는</em> 방법에 대한 작은 문서를 사용할 수 있을 것 같습니다.</font><font papago-translate="translated"> 보시다시피 꽤 흥미롭네요.</font><font papago-translate="translated"> 두려움만큼 어렵지는 않지만, 생각만큼 간단하지도 않습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/the-lox-language.html#classes-or-prototypes" id="classes-or-prototypes"><small><font papago-translate="translated">3 . 9 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">클래스 또는 프로토타입</font></font></a></h3>
+<p><font papago-translate="translated">객체에 관해서는<a href="https://en.wikipedia.org/wiki/Class-based_programming"> 실제로 클래스</a>와<a href="https://en.wikipedia.org/wiki/Prototype-based_programming"> 프로토타입</a>이라는 두 가지 접근 방식이 있습니다.</font><font papago-translate="translated"> 수업이 먼저 시작되었고, C++, Java, C#, 그리고 친구들 덕분에 더 흔해졌습니다.</font><font papago-translate="translated"> 프로토타입은 자바스크립트가 실수로 세상을 장악하기 전까지는 사실상 잊혀진 존재였습니다.</font></p>
+<p><font papago-translate="translated">클래스 기반 언어에는 인스턴스와 클래스라는 두 가지 핵심 개념이 있습니다.</font><font papago-translate="translated"> 인스턴스는 각 객체의 상태를 저장하고 인스턴스의 클래스에 대한 참조를 가집니다.</font><font papago-translate="translated"> 클래스에는 메서드와 상속 체인이 포함되어 있습니다.</font><font papago-translate="translated"> 인스턴스에서 메서드를 호출하려면 항상 간접적인 수준이 있어야 합니다.</font><font papago-translate="translated"> 인스턴스의 클래스를 조회한 다음 메서드<span name="dispatch"></span><em>를</em> 찾습니다:</font></p>
+<aside name="dispatch" style="top: 11956px;">
+<p><font papago-translate="translated" class="">정적으로 입력된 C++와 같은 언어에서는 메서드 조회가 일반적으로 인스턴스<em>의 정적</em> 유형에 따라 컴파일 시에 수행되므로<strong> 정적 디스패치</strong>가 가능합니다.</font><font papago-translate="translated"> 반면<strong>, 동적 디스패치는</strong> 런타임 시 실제 인스턴스 객체의 클래스를 조회합니다.</font><font papago-translate="translated"> 이것이 정적으로 입력된 언어의 가상 메서드와 Lox와 같은 동적으로 입력된 언어의 모든 메서드가 작동하는 방식입니다.</font></p>
+</aside><img alt="How fields and methods are looked up on classes and instances" src="https://youhogeon-meritz.github.io/image/the-lox-language/class-lookup.png">
+<p><font papago-translate="translated">프로토타입 기반 언어는 이 두 가지 개념<span name="blurry">을 결합합니다</span>.</font><font papago-translate="translated"> 객체만 존재하며 클래스는 없습니다. 각 개별 객체는 상태와<span class="em"></span><span class="em"></span> 메서드를 포함할 수 있습니다.</font><font papago-translate="translated"> 객체들은 서로 직접 상속받을 수 있습니다 (또는 프로토타입 링고에서 "위임"할 수 있습니다):</font></p>
+<aside name="blurry" style="top: 12258px;">
+<p><font papago-translate="translated">실제로 수업 기반 언어와 프로토타입 기반 언어 사이의 경계가 모호해집니다.</font><font papago-translate="translated" class=""> JavaScript의 "생성자 함수" 개념은 클래스와 유사한 객체를 정의하는 데<a href="http://gameprogrammingpatterns.com/prototype.html#what-about-javascript"> 상당히 어려움을 줍니다</a>.</font><font papago-translate="translated"> 한편, 클래스 기반 Ruby는 개별 인스턴스에 메서드를 첨부할 수 있게 되어 매우 기쁩니다.</font></p>
+</aside><img alt="How fields and methods are looked up in a prototypal system" src="https://youhogeon-meritz.github.io/image/the-lox-language/prototype-lookup.png">
+<p><font papago-translate="translated">이는 어떤 면에서는 프로토타입 언어가 수업보다 더 기본적이라는 것을 의미합니다.</font><font papago-translate="translated"> 그것들은<em> 매우</em> 간단해서 구현하기에 정말 깔끔합니다.</font><font papago-translate="translated"> 또한, 그들은 수업들이 당신을 멀어지게 하는 많은 특이한 패턴들을 표현할 수 있습니다.</font></p>
+<p><font papago-translate="translated">하지만 저<a href="http://finch.stuffwithstuff.com/">는</a> 프로토타입 언어로 작성된 많은 코드를 살펴보았습니다. 여기에는<a href="http://finch.stuffwithstuff.com/"> 제가</a><span class="em"></span><em></em><a href="http://finch.stuffwithstuff.com/"> 고안한 몇 가지</a> 코드도 포함됩니다.</font><font papago-translate="translated"> 사람들이 일반적으로 프로토타입의 모든 성능과 유연성에 대해 무엇을 하는지 알고 있나요?<span class="ellipse"> . . 그들은</span> 이를 사용하여 수업을 재창조합니다.</font></p>
+<p><font papago-translate="translated"><em>왜</em> 그런지 모르겠지만, 사람들은 자연스럽게 클래스 기반(클래식?)을 선호하는 것 같습니다?</font><font papago-translate="translated"> 고급스러운?) 스타일.</font><font papago-translate="translated"> 프로토타입은 언어적으로 더 간단하지만, 사용<em></em>자에게 복잡성<span name="waterbed">을 강요</span>해야만 이를 달성할 수 있는 것 같습니다.</font><font papago-translate="translated"> 따라서 Lox의 경우 사용자의 수고를 덜어주고 수업을 바로 진행할 수 있습니다.</font></p>
+<aside name="waterbed" style="top: 12934px;">
+<p><font papago-translate="translated">펄의 발명가이자 예언자인 래리 월은 이를 "<a href="http://wiki.c2.com/?WaterbedTheory">물바닥 이론</a>"이라고 부릅니다.</font><font papago-translate="translated"> 어느 정도의 복잡성은 필수적이며 제거할 수 없습니다.</font><font papago-translate="translated"> 한 곳에서 밀어내면 다른 곳으로 부풀어 오릅니다.</font></p>
+<p><font papago-translate="translated" class="">프로토타입 언어는 클래스와 유사한 메타프로그래밍 라이브러리를 구축하여<em> 사용자</em>가 그 복잡성을 감수하도록 만드는 것만큼 클래스의 복잡<em>성을 제거하지</em>는 않습니다.</font></p>
 </aside>
-<h3><a href="#classes-in-lox" id="classes-in-lox"><small>3 . 9 . 4</small>Classes in Lox</a></h3>
-<p>Enough rationale, let’s see what we actually have. Classes encompass a
-constellation of features in most languages. For Lox, I’ve selected what I think
-are the brightest stars. You declare a class and its methods like so:</p>
+<h3><a href="https://youhogeon-meritz.github.io/the-lox-language.html#classes-in-lox" id="classes-in-lox"><small><font papago-translate="translated">3 . 9 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">록스의 수업</font></font></a></h3>
+<p><font papago-translate="translated">충분한 근거가 있다면 실제로 무엇을 가지고 있는지 살펴보겠습니다.</font><font papago-translate="translated"> 클래스는 대부분의 언어에서 다양한 기능을 포함합니다.</font><font papago-translate="translated"> Lox의 경우, 제가 생각하기에 가장 밝은 별들을 선택했습니다.</font><font papago-translate="translated"> 클래스와 그 메서드를 다음과 같이 선언합니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Breakfast</span> {
   <span class="i">cook</span>() {
     <span class="k">print</span> <span class="s">"Eggs a-fryin'!"</span>;
@@ -662,13 +412,9 @@ are the brightest stars. You declare a class and its methods like so:</p>
   }
 }
 </pre></div>
-<p>The body of a class contains its methods. They look like function declarations
-but without the <code translate="no">fun</code> <span name="method">keyword</span>. When the class
-declaration is executed, Lox creates a class object and stores that in a
-variable named after the class. Just like functions, classes are first class in
-Lox.</p>
-<aside name="method">
-<p>They are still just as fun, though.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">클래스의 본문에는 메서드가 포함되어 있습니다.</font><font papago-translate="translated"> 함수 선언처럼 보이지만 다음이 없습니다 </font></font><code translate="no">fun</code> <font papago-translate="splitted"><font papago-translate="translated"><span name="method">키워드.</span></font><font papago-translate="translated"> 클래스 선언이 실행되면 Lox는 클래스 객체를 생성하여 클래스 이름을 딴 변수에 저장합니다.</font><font papago-translate="translated"> 함수와 마찬가지로, Lox에서도 클래스는 일등석입니다.</font></font></p>
+<aside name="method" style="top: 13426px;">
+<p><font papago-translate="translated">그래도 여전히 재미있습니다.</font></p>
 </aside>
 <div class="codehilite"><pre translate="no"><span class="c">// Store it in variables.</span>
 <span class="k">var</span> <span class="i">someVariable</span> = <span class="t">Breakfast</span>;
@@ -676,24 +422,17 @@ Lox.</p>
 <span class="c">// Pass it to functions.</span>
 <span class="i">someFunction</span>(<span class="t">Breakfast</span>);
 </pre></div>
-<p>Next, we need a way to create instances. We could add some sort of <code translate="no">new</code>
-keyword, but to keep things simple, in Lox the class itself is a factory
-function for instances. Call a class like a function, and it produces a new
-instance of itself.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다음으로, 인스턴스를 생성할 방법이 필요합니다.</font><font papago-translate="translated"> 어떤 종류의 것을 추가할 수 있습니다 </font></font><code translate="no">new</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드를 간단히 말하자면, Lox에서는 클래스 자체가 인스턴스의 팩토리 함수입니다.</font><font papago-translate="translated"> 함수처럼 클래스를 호출하면 새로운 인스턴스가 생성됩니다.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">breakfast</span> = <span class="t">Breakfast</span>();
 <span class="k">print</span> <span class="i">breakfast</span>; <span class="c">// "Breakfast instance".</span>
 </pre></div>
-<h3><a href="#instantiation-and-initialization" id="instantiation-and-initialization"><small>3 . 9 . 5</small>Instantiation and initialization</a></h3>
-<p>Classes that only have behavior aren’t super useful. The idea behind
-object-oriented programming is encapsulating behavior <em>and state</em> together. To
-do that, you need fields. Lox, like other dynamically typed languages, lets you
-freely add properties onto objects.</p>
+<h3><a href="https://youhogeon-meritz.github.io/the-lox-language.html#instantiation-and-initialization" id="instantiation-and-initialization"><small><font papago-translate="translated">3 . 9 . 5</font></small><font papago-translate="splitted"><font papago-translate="translated">인스턴스화 및 초기화</font></font></a></h3>
+<p><font papago-translate="translated">행동만 있는 수업은 그다지 유용하지 않습니다.</font><font papago-translate="translated"> 객체 지향 프로그래밍의 아이디어는 행동<em>과 상태</em>를 함께 캡슐화하는 것입니다.</font><font papago-translate="translated"> 그러기 위해서는 들판이 필요합니다.</font><font papago-translate="translated"> Lox는 다른 동적으로 입력된 언어들처럼 객체에 속성을 자유롭게 추가할 수 있게 해줍니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">breakfast</span>.<span class="i">meat</span> = <span class="s">"sausage"</span>;
 <span class="i">breakfast</span>.<span class="i">bread</span> = <span class="s">"sourdough"</span>;
 </pre></div>
-<p>Assigning to a field creates it if it doesn’t already exist.</p>
-<p>If you want to access a field or method on the current object from within a
-method, you use good old <code translate="no">this</code>.</p>
+<p><font papago-translate="translated">필드가 아직 존재하지 않는 경우 필드에 할당하면 필드가 생성됩니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">메서드 내에서 현재 객체의 필드 또는 메서드에 액세스하려면 이전 메서드를 사용합니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Breakfast</span> {
   <span class="i">serve</span>(<span class="i">who</span>) {
     <span class="k">print</span> <span class="s">"Enjoy your "</span> + <span class="k">this</span>.<span class="i">meat</span> + <span class="s">" and "</span> +
@@ -703,11 +442,7 @@ method, you use good old <code translate="no">this</code>.</p>
   <span class="c">// ...</span>
 }
 </pre></div>
-<p>Part of encapsulating data within an object is ensuring the object is in a valid
-state when it’s created. To do that, you can define an initializer. If your
-class has a method named <code translate="no">init()</code>, it is called automatically when the object is
-constructed. Any parameters passed to the class are forwarded to its
-initializer.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">객체 내에서 데이터를 캡슐화하는 것의 일부는 객체가 생성될 때 유효한 상태에 있는지 확인하는 것입니다.</font><font papago-translate="translated"> 이를 위해 초기화기를 정의할 수 있습니다.</font><font papago-translate="translated"> 클래스에 다음과 같은 메서드가 있는 경우 </font></font><code translate="no">init()</code><font papago-translate="splitted"><font papago-translate="translated">, 객체가 생성되면 자동으로 호출됩니다.</font><font papago-translate="translated"> 클래스에 전달된 모든 매개변수는 초기화기로 전달됩니다.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Breakfast</span> {
   <span class="i">init</span>(<span class="i">meat</span>, <span class="i">bread</span>) {
     <span class="k">this</span>.<span class="i">meat</span> = <span class="i">meat</span>;
@@ -721,43 +456,28 @@ initializer.</p>
 <span class="i">baconAndToast</span>.<span class="i">serve</span>(<span class="s">"Dear Reader"</span>);
 <span class="c">// "Enjoy your bacon and toast, Dear Reader."</span>
 </pre></div>
-<h3><a href="#inheritance" id="inheritance"><small>3 . 9 . 6</small>Inheritance</a></h3>
-<p>Every object-oriented language lets you not only define methods, but reuse them
-across multiple classes or objects. For that, Lox supports single inheritance.
-When you declare a class, you can specify a class that it inherits from using a less-than
-<span name="less">(<code translate="no">&lt;</code>)</span> operator.</p>
+<h3><a href="https://youhogeon-meritz.github.io/the-lox-language.html#inheritance" id="inheritance"><small><font papago-translate="translated">3 . 9 . 6</font></small><font papago-translate="splitted"><font papago-translate="translated">상속</font></font></a></h3>
+<p><font papago-translate="translated">모든 객체 지향 언어는 메서드를 정의할 뿐만 아니라 여러 클래스나 객체에 걸쳐 재사용할 수 있게 해줍니다.</font><font papago-translate="translated"> 이를 위해 Lox는 단일 상속을 지원합니다.</font><font papago-translate="translated"> 클래스를 선언할 때, 그 클래스가 (<span name="less">)</span>보다 작은 연산자를 사용하여 상속받는 클래스를 지정할 수 있습니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Brunch</span> &lt; <span class="t">Breakfast</span> {
   <span class="i">drink</span>() {
     <span class="k">print</span> <span class="s">"How about a Bloody Mary?"</span>;
   }
 }
 </pre></div>
-<aside name="less">
-<p>Why the <code translate="no">&lt;</code> operator? I didn’t feel like introducing a new keyword like
-<code translate="no">extends</code>. Lox doesn’t use <code translate="no">:</code> for anything else so I didn’t want to reserve
-that either. Instead, I took a page from Ruby and used <code translate="no">&lt;</code>.</p>
-<p>If you know any type theory, you’ll notice it’s not a <em>totally</em> arbitrary
-choice. Every instance of a subclass is an instance of its superclass too, but
-there may be instances of the superclass that are not instances of the subclass.
-That means, in the universe of objects, the set of subclass objects is smaller
-than the superclass’s set, though type nerds usually use <code translate="no">&lt;:</code> for that relation.</p>
+<aside name="less" style="top: 14942px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">왜 </font></font><code translate="no">&lt;</code><font papago-translate="splitted"><font papago-translate="translated"> 운영자?</font><font papago-translate="translated"> 다음과 같은 새로운 키워드를 소개하고 싶지 않았습니다 </font></font><code translate="no">extends</code><font papago-translate="splitted"><font papago-translate="translated">. Lox는 다음을 사용하지 않습니다 </font></font><code translate="no">:</code><font papago-translate="splitted"><font papago-translate="translated"> 다른 용도로 예약하고 싶지 않았습니다.</font><font papago-translate="translated" class=""> 대신 루비의 페이지를 가져와서 사용했습니다 </font></font><code translate="no">&lt;</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">어떤 유형의 이론이라도 알고 있다면<em>, 그것</em>이<em> 완전히</em> 임의적인 선택이 아니라는 것을 알게 될 것입니다.</font><font papago-translate="translated"> 서브클래스의 모든 인스턴스는 슈퍼클래스의 인스턴스이기도 하지만, 서브클래스의 인스턴스가 아닌 슈퍼클래스의 인스턴스도 있을 수 있습니다.</font><font papago-translate="translated"> 즉, 객체의 우주에서 하위 클래스 객체의 집합은 슈퍼 클래스의 집합보다 작지만 유형 괴짜는 일반적으로 다음을 사용합니다 </font></font><code translate="no">&lt;:</code><font papago-translate="splitted"><font papago-translate="translated"> 그 관계에 대해.</font></font></p>
 </aside>
-<p>Here, Brunch is the <strong>derived class</strong> or <strong>subclass</strong>, and Breakfast is the
-<strong>base class</strong> or <strong>superclass</strong>.</p>
-<p>Every method defined in the superclass is also available to its subclasses.</p>
+<p><font papago-translate="translated">여기서 브런치는<strong> 파생 클래스</strong> 또는<strong> 하위 클래스</strong>이고, 조식은<strong> 기본 클래스</strong> 또는<strong> 슈퍼 클래스</strong>입니다.</font></p>
+<p><font papago-translate="translated">슈퍼클래스에서 정의된 모든 메서드는 하위 클래스에서도 사용할 수 있습니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">benedict</span> = <span class="t">Brunch</span>(<span class="s">"ham"</span>, <span class="s">"English muffin"</span>);
 <span class="i">benedict</span>.<span class="i">serve</span>(<span class="s">"Noble Reader"</span>);
 </pre></div>
-<p>Even the <code translate="no">init()</code> method gets <span name="init">inherited</span>. In practice,
-the subclass usually wants to define its own <code translate="no">init()</code> method too. But the
-original one also needs to be called so that the superclass can maintain its
-state. We need some way to call a method on our own <em>instance</em> without hitting
-our own <em>methods</em>.</p>
-<aside name="init">
-<p>Lox is different from C++, Java, and C#, which do not inherit constructors, but
-similar to Smalltalk and Ruby, which do.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">심지어 </font></font><code translate="no">init()</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드<span name="init">가 상속</span>됩니다.</font><font papago-translate="translated"> 실제로 하위 클래스는 일반적으로 자체를 정의하려고 합니다 </font></font><code translate="no">init()</code><font papago-translate="splitted"><font papago-translate="translated"> 방법도.</font><font papago-translate="translated"> 하지만 원래 것도 슈퍼클래스가 상태를 유지할 수 있도록 호출해야 합니다.</font><font papago-translate="translated"> 우리<em>는</em> 우리<em>만의 방법</em>을 사용하지 않고<em> 스스로 방법</em>을 호출할 수 있는 방법이 필요합니다.</font></font></p>
+<aside name="init" style="top: 15298px;">
+<p><font papago-translate="translated" class="">Lox는 생성자를 상속하지 않는 C++, Java, C#와는 다르지만 Smalltalk, Ruby와 유사합니다.</font></p>
 </aside>
-<p>As in Java, you use <code translate="no">super</code> for that.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">Java에서와 같이 다음을 사용합니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 그것을 위해.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Brunch</span> &lt; <span class="t">Breakfast</span> {
   <span class="i">init</span>(<span class="i">meat</span>, <span class="i">bread</span>, <span class="i">drink</span>) {
     <span class="k">super</span>.<span class="i">init</span>(<span class="i">meat</span>, <span class="i">bread</span>);
@@ -765,114 +485,63 @@ similar to Smalltalk and Ruby, which do.</p>
   }
 }
 </pre></div>
-<p>That’s about it for object orientation. I tried to keep the feature set minimal.
-The structure of the book did force one compromise. Lox is not a <em>pure</em>
-object-oriented language. In a true OOP language every object is an instance of
-a class, even primitive values like numbers and Booleans.</p>
-<p>Because we don’t implement classes until well after we start working with the
-built-in types, that would have been hard. So values of primitive types aren’t
-real objects in the sense of being instances of classes. They don’t have methods
-or properties. If I were trying to make Lox a real language for real users, I
-would fix that.</p>
-<h2><a href="#the-standard-library" id="the-standard-library"><small>3 . 10</small>The Standard Library</a></h2>
-<p>We’re almost done. That’s the whole language, so all that’s left is the “core”
-or “standard” library<span class="em">—</span>the set of functionality that is implemented directly
-in the interpreter and that all user-defined behavior is built on top of.</p>
-<p>This is the saddest part of Lox. Its standard library goes beyond minimalism and
-veers close to outright nihilism. For the sample code in the book, we only need
-to demonstrate that code is running and doing what it’s supposed to do. For
-that, we already have the built-in <code translate="no">print</code> statement.</p>
-<p>Later, when we start optimizing, we’ll write some benchmarks and see how long it
-takes to execute code. That means we need to track time, so we’ll define one
-built-in function, <code translate="no">clock()</code>, that returns the number of seconds since the
-program started.</p>
-<p>And<span class="ellipse"> . . . </span>that’s it. I know, right? It’s embarrassing.</p>
-<p>If you wanted to turn Lox into an actual useful language, the very first thing
-you should do is flesh this out. String manipulation, trigonometric functions,
-file I/O, networking, heck, even <em>reading input from the user</em> would help. But we
-don’t need any of that for this book, and adding it wouldn’t teach you anything
-interesting, so I’ve left it out.</p>
-<p>Don’t worry, we’ll have plenty of exciting stuff in the language itself to keep
-us busy.</p>
+<p><font papago-translate="translated">물체 방향은 여기까지입니다.</font><font papago-translate="translated"> 기능 세트를 최소한으로 유지하려고 노력했습니다.</font><font papago-translate="translated"> 책의 구조는 타협을 강요했습니다.</font><font papago-translate="translated"> Lox는<em> 순수</em>한 객체 지향 언어가 아닙니다.</font><font papago-translate="translated"> 진정한 OOP 언어에서는 모든 객체가 클래스의 인스턴스이며, 숫자나 불리언과 같은 원시 값도 포함됩니다.</font></p>
+<p><font papago-translate="translated">내장형 타입으로 작업을 시작한 지 한참 지나서야 수업을 시행하기 때문에 힘들었을 것입니다.</font><font papago-translate="translated"> 따라서 원시 유형의 값은 클래스의 인스턴스라는 의미에서 실제 객체가 아닙니다.</font><font papago-translate="translated"> 그들은 방법이나 특성이 없습니다.</font><font papago-translate="translated"> 만약 제가 Lox를 실제 사용자들을 위한 실제 언어로 만들려고 한다면, 그것을 고칠 것입니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/the-lox-language.html#the-standard-library" id="the-standard-library"><small><font papago-translate="translated">3 . 10</font></small><font papago-translate="splitted"><font papago-translate="translated">표준 도서관</font></font></a></h2>
+<p><font papago-translate="translated">거의 다 됐어요.</font><font papago-translate="translated"> 이것이 전체 언어이므로 남은 것은 인터프리터에서 직접 구현되고 모든 사용자 정의 동작<span class="em"></span>이 그 위에 구축되는 기능 집합인 "핵심" 또는 "표준" 라이브러리뿐입니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것이 록스에서 가장 슬픈 부분입니다.</font><font papago-translate="translated"> 그 표준 라이브러리는 미니멀리즘을 넘어 노골적인 허무주의에 가깝습니다.</font><font papago-translate="translated"> 책에 있는 샘플 코드의 경우, 코드가 실행 중이며 원래 해야 할 일을 하고 있음을 증명하기만 하면 됩니다.</font><font papago-translate="translated"> 이를 위해 이미 내장된 기능이 있습니다 </font></font><code translate="no">print</code><font papago-translate="splitted"><font papago-translate="translated"> 진술.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">나중에 최적화를 시작하면 몇 가지 벤치마크를 작성하고 코드를 실행하는 데 걸리는 시간을 확인할 것입니다.</font><font papago-translate="translated"> 즉, 시간을 추적해야 하므로 하나의 내장 함수를 정의합니다, </font></font><code translate="no">clock()</code><font papago-translate="splitted"><font papago-translate="translated">, 프로그램이 시작된 후의 초 수를 반환합니다.</font></font></p>
+<p><font papago-translate="translated"><span class="ellipse">그리고 . . . 그게</span> 다입니다.</font><font papago-translate="translated"> 나는 알지?</font><font papago-translate="translated"> 창피해요.</font></p>
+<p><font papago-translate="translated">Lox를 실제로 유용한 언어로 바꾸고 싶다면, 가장 먼저 이를 구체화하는 것이 좋습니다.</font><font papago-translate="translated"> 문자열 조작, 삼각 함수, 파일 입출력, 네트워킹, 심지어<em> 사용자의 입력을 읽는 것</em>도 도움이 될 것입니다.</font><font papago-translate="translated"> 하지만 이 책에는 그런 것이 전혀 필요하지 않으며, 추가해도 흥미로운 것을 배울 수 없기 때문에 생략했습니다.</font></p>
+<p><font papago-translate="translated">걱정하지 마세요, 우리는 바쁘게 지낼 수 있도록 언어 자체에 흥미로운 것들이 많이 있을 거예요.</font></p>
 <div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+<h2><a href="https://youhogeon-meritz.github.io/the-lox-language.html#challenges" id="challenges"><font papago-translate="translated">과제들</font></a></h2>
 <ol>
 <li>
-<p>Write some sample Lox programs and run them (you can use the implementations
-of Lox in <a href="https://github.com/munificent/craftinginterpreters">my repository</a>). Try to come up with edge case behavior I
-didn’t specify here. Does it do what you expect? Why or why not?</p>
+<p><font papago-translate="translated">샘플 Lox 프로그램을 작성하여 실행하세요 (<a href="https://github.com/munificent/craftinginterpreters">제 저장소</a>에서 Lox의 구현을 사용할 수 있습니다).</font><font papago-translate="translated"> 여기에 명시하지 않은 엣지 케이스 동작을 생각해 보세요.</font><font papago-translate="translated"> 기대하는 대로 작동하나요?</font><font papago-translate="translated"> 왜 그런가요? 혹은 왜 그렇지 않은가요?</font></p>
 </li>
 <li>
-<p>This informal introduction leaves a <em>lot</em> unspecified. List several open
-questions you have about the language’s syntax and semantics. What do you
-think the answers should be?</p>
+<p><font papago-translate="translated">이 비공식적인 소개는<em></em> 많은 부분을 명확하지 않게 만듭니다.</font><font papago-translate="translated"> 언어의 구문과 의미에 대해 궁금한 점이 몇 가지 남아 있습니다.</font><font papago-translate="translated"> 답이 무엇이어야 한다고 생각하십니까?</font></p>
 </li>
 <li>
-<p>Lox is a pretty tiny language. What features do you think it is missing that
-would make it annoying to use for real programs? (Aside from the standard
-library, of course.)</p>
+<p><font papago-translate="translated">Lox는 꽤 작은 언어입니다.</font><font papago-translate="translated"> 실제 프로그램에 사용하기 귀찮을 만한 기능이 없다고 생각하십니까?</font><font papago-translate="translated"> (물론 표준 라이브러리와는 별개로.)</font></p>
 </li>
 </ol>
 </div>
 <div class="design-note">
-<h2><a href="#design-note" id="design-note">Design Note: Expressions and Statements</a></h2>
-<p>Lox has both expressions and statements. Some languages omit the latter.
-Instead, they treat declarations and control flow constructs as expressions too.
-These “everything is an expression” languages tend to have functional pedigrees
-and include most Lisps, SML, Haskell, Ruby, and CoffeeScript.</p>
-<p>To do that, for each “statement-like” construct in the language, you need to
-decide what value it evaluates to. Some of those are easy:</p>
+<h2><a href="https://youhogeon-meritz.github.io/the-lox-language.html#design-note" id="design-note"><font papago-translate="translated">디자인 노트: 표현 및 진술</font></a></h2>
+<p><font papago-translate="translated">Lox에는 표현과 문장이 모두 있습니다.</font><font papago-translate="translated"> 일부 언어는 후자를 생략합니다.</font><font papago-translate="translated"> 대신 선언문과 제어 흐름 구조도 표현식으로 취급합니다.</font><font papago-translate="translated"> 이러한 "모든 것이 표현이다" 언어는 기능적인 혈통을 가진 경향이 있으며 대부분의 Lisps, SML, Haskell, Ruby, CoffeeScript를 포함합니다.</font></p>
+<p><font papago-translate="translated">그렇게 하려면 언어의 각 "문구와 유사한" 구성 요소에 대해 평가할 가치를 결정해야 합니다.</font><font papago-translate="translated"> 그 중 일부는 쉽습니다:</font></p>
 <ul>
 <li>
-<p>An <code translate="no">if</code> expression evaluates to the result of whichever branch is chosen.
-Likewise, a <code translate="no">switch</code> or other multi-way branch evaluates to whichever case
-is picked.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">안 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 표현식은 선택된 분기의 결과에 따라 평가됩니다.</font><font papago-translate="translated"> 마찬가지로, a </font></font><code translate="no">switch</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 다른 다중 방향 분기는 선택된 경우에 따라 평가합니다.</font></font></p>
 </li>
 <li>
-<p>A variable declaration evaluates to the value of the variable.</p>
+<p><font papago-translate="translated">변수 선언은 변수의 값을 평가합니다.</font></p>
 </li>
 <li>
-<p>A block evaluates to the result of the last expression in the sequence.</p>
+<p><font papago-translate="translated">블록은 시퀀스의 마지막 표현의 결과를 평가합니다.</font></p>
 </li>
 </ul>
-<p>Some get a little stranger. What should a loop evaluate to? A <code translate="no">while</code> loop in
-CoffeeScript evaluates to an array containing each element that the body
-evaluated to. That can be handy, or a waste of memory if you don’t need the
-array.</p>
-<p>You also have to decide how these statement-like expressions compose with other
-expressions<span class="em">—</span>you have to fit them into the grammar’s precedence table. For
-example, Ruby allows:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">어떤 사람들은 조금 더 낯설어집니다.</font><font papago-translate="translated"> 루프는 무엇을 평가해야합니까? A </font></font><code translate="no">while</code><font papago-translate="splitted"><font papago-translate="translated"> CoffeeScript의 루프는 신체가 평가한 각 요소를 포함하는 배열로 평가됩니다.</font><font papago-translate="translated"> 그것은 편리할 수도 있고, 배열이 필요하지 않다면 메모리 낭비일 수도 있습니다.</font></font></p>
+<p><font papago-translate="translated">또한 이러한 문장과 유사한 표현이 다른 표현과 어떻게 구성되는지 결정해야 하며, 문법의 우선<span class="em"></span>순위 표에 맞춰야 합니다.</font><font papago-translate="translated"> 예를 들어, 루비는 허용합니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">puts</span> <span class="n">1</span> + <span class="k">if</span> <span class="k">true</span> <span class="k">then</span> <span class="n">2</span> <span class="k">else</span> <span class="n">3</span> <span class="k">end</span> + <span class="n">4</span>
 </pre></div>
-<p>Is this what you’d expect? Is it what your <em>users</em> expect? How does this affect
-how you design the syntax for your “statements”? Note that Ruby has an explicit
-<code translate="no">end</code> to tell when the <code translate="no">if</code> expression is complete. Without it, the <code translate="no">+ 4</code> would
-likely be parsed as part of the <code translate="no">else</code> clause.</p>
-<p>Turning every statement into an expression forces you to answer a few hairy
-questions like that. In return, you eliminate some redundancy. C has both blocks
-for sequencing statements, and the comma operator for sequencing expressions. It
-has both the <code translate="no">if</code> statement and the <code translate="no">?:</code> conditional operator. If everything was
-an expression in C, you could unify each of those.</p>
-<p>Languages that do away with statements usually also feature <strong>implicit returns</strong><span class="em">—</span>a function automatically returns whatever value its body evaluates to without
-need for some explicit <code translate="no">return</code> syntax. For small functions and methods, this is
-really handy. In fact, many languages that do have statements have added syntax
-like <code translate="no">=&gt;</code> to be able to define functions whose body is the result of evaluating
-a single expression.</p>
-<p>But making <em>all</em> functions work that way can be a little strange. If you aren’t
-careful, your function will leak a return value even if you only intend it to
-produce a side effect. In practice, though, users of these languages don’t find
-it to be a problem.</p>
-<p>For Lox, I gave it statements for prosaic reasons. I picked a C-like syntax for
-familiarity’s sake, and trying to take the existing C statement syntax and
-interpret it like expressions gets weird pretty fast.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것이 당신이 기대할 수 있는 것인가요?</font><font papago-translate="translated"> <em>사용자</em>들이 기대하는 것인가요?</font><font papago-translate="translated"> 이것이 "문구"의 구문을 설계하는 방식에 어떤 영향을 미치나요?</font><font papago-translate="translated"> 루비는 다음과 같은 명시적 요소를 가지고 있습니다 </font></font><code translate="no">end</code><font papago-translate="splitted"><font papago-translate="translated"> 언제인지 알기 위해 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 표현이 완료되었습니다.</font><font papago-translate="translated"> 그것이 없으면 </font></font><code translate="no">+ 4</code><font papago-translate="splitted"><font papago-translate="translated"> 의 일부로 해석될 가능성이 높습니다 </font></font><code translate="no">else</code><font papago-translate="splitted"><font papago-translate="translated"> 조항.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">모든 진술을 표현으로 바꾸면 몇 가지 복잡한 질문에 답해야 합니다.</font><font papago-translate="translated"> 그 대가로 일부 중복을 제거합니다.</font><font papago-translate="translated"> C는 문장 순서 지정을 위한 블록과 표현 순서 지정을 위한 쉼표 연산자를 모두 가지고 있습니다.</font><font papago-translate="translated"> 그것은 두 가지를 모두 가지고 있습니다 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 진술 및 </font></font><code translate="no">?:</code><font papago-translate="splitted"><font papago-translate="translated"> 조건부 연산자.</font><font papago-translate="translated"> 모든 것이 C의 표현이라면, 각각을 통일할 수 있습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">문장을 없애는 언어는 일반적으로<strong> 암묵적인 반환 기능</strong>을 갖추고 있습니다. 함수는<span class="em"></span> 명시적인 내용 없이도 신체가 평가하는 모든 값을 자동으로 반환합니다 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 구문.</font><font papago-translate="translated"> 작은 기능과 방법의 경우, 이것은 정말 유용합니다.</font><font papago-translate="translated"> 사실, 문장이 있는 많은 언어들은 다음과 같은 구문을 추가했습니다 </font></font><code translate="no">=&gt;</code><font papago-translate="splitted"><font papago-translate="translated"> 단일 표현식을 평가한 결과로 신체를 가진 함수를 정의할 수 있습니다.</font></font></p>
+<p><font papago-translate="translated">하지만<em> 모든</em> 기능을 그런 식으로 작동시키는 것은 조금 이상할 수 있습니다.</font><font papago-translate="translated"> 주의하지 않으면 부작용만 일으키려고 해도 기능에 반환 값이 새어 나올 수 있습니다.</font><font papago-translate="translated"> 하지만 실제로 이러한 언어를 사용하는 사용자들은 문제가 되지 않는다고 생각합니다.</font></p>
+<p><font papago-translate="translated">Lox의 경우, 저는 프로사이저적인 이유로 진술했습니다.</font><font papago-translate="translated"> 익숙함을 위해 C와 유사한 구문을 선택했는데, 기존의 C문 구문을 사용하여 표현이 꽤 빨리 이상해지는 것처럼 해석하려고 노력했습니다.</font></p>
 </div>
 <footer>
-<a class="next" href="a-tree-walk-interpreter.html">
-  Next Part: “A Tree-Walk Interpreter” →
-</a>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+<a class="next" href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html"><font papago-translate="translated"> 다음 부분: "나무 산책 통역사" → </font></a><font papago-translate="splitted"><font papago-translate="translated"> 로버트 니스트롬이 수작업으로 제작한 -<a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE"> © 2015 ~ 2021</a></font></font>
 </footer>
-</img></img></article>
+</article>
 </div>
-</body>
-</html>
+
+
+<div id="papagoTooltip" margin="5" style="display: none;">
+        <h1 id="tooltipTitle">원문</h1>
+        <p id="tooltipText"></p>
+      </div>
+      </body></html>

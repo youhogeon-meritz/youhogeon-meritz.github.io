@@ -1,381 +1,177 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>Hash Tables · Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/style.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
-<script src="jquery-3.4.1.min.js"></script>
-<script src="script.js"></script>
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+
+<!-- Google analytics -->
+
+</head>
 <body id="top">
 <!-- <div class="scrim"></div> -->
 <nav class="wide">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="contents">
-<h3><a href="#top">Hash Tables<small>20</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/hash-tables.html#top"><font papago-translate="splitted"><font papago-translate="translated">해시 테이블</font></font><small>20</small></a></h3>
 <ul>
-<li><a href="#an-array-of-buckets"><small>20.1</small> An Array of Buckets</a></li>
-<li><a href="#collision-resolution"><small>20.2</small> Collision Resolution</a></li>
-<li><a href="#hash-functions"><small>20.3</small> Hash Functions</a></li>
-<li><a href="#building-a-hash-table"><small>20.4</small> Building a Hash Table</a></li>
-<li><a href="#string-interning"><small>20.5</small> String Interning</a></li>
+<li><a href="https://youhogeon-meritz.github.io/hash-tables.html#an-array-of-buckets"><small>20.1</small><font papago-translate="splitted"><font papago-translate="translated"> 버킷 배열</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/hash-tables.html#collision-resolution"><small>20.2</small><font papago-translate="splitted"><font papago-translate="translated"> 충돌 해결</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/hash-tables.html#hash-functions"><small>20.3</small><font papago-translate="splitted"><font papago-translate="translated"> 해시 함수</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/hash-tables.html#building-a-hash-table"><small>20.4</small><font papago-translate="splitted"><font papago-translate="translated"> 해시 테이블 만들기</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/hash-tables.html#string-interning"><small>20.5</small><font papago-translate="splitted"><font papago-translate="translated"> 스트링 인터닝</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/hash-tables.html#challenges"><font papago-translate="translated">과제들</font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="strings.html" title="Strings">← Previous</a>
-<a href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑ Up</a>
-<a class="right" href="global-variables.html" title="Global Variables">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/strings.html" title="줄들" papago-attr-id="1"><font papago-translate="translated">← 이전</font></a>
+<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="바이트코드 가상 머신" papago-attr-id="2"><font papago-translate="translated">↑ 위로</font></a>
+<a class="right" href="https://youhogeon-meritz.github.io/global-variables.html" title="글로벌 변수" papago-attr-id="3"><font papago-translate="translated">다음 →</font></a>
 </div> </div>
 </nav>
 <nav class="narrow">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
-<a class="prev" href="strings.html" title="Strings">←</a>
-<a class="next" href="global-variables.html" title="Global Variables">→</a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
+<a class="prev" href="https://youhogeon-meritz.github.io/strings.html" title="Strings">←</a>
+<a class="next" href="https://youhogeon-meritz.github.io/global-variables.html" title="Global Variables">→</a>
 </nav>
 <div class="page">
 <div class="nav-wrapper">
-<nav class="floating">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<nav class="floating pinned">
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="expandable">
-<h3><a href="#top">Hash Tables<small>20</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/hash-tables.html#top"><font papago-translate="splitted"><font papago-translate="translated">해시 테이블</font></font><small>20</small></a></h3>
 <ul>
-<li><a href="#an-array-of-buckets"><small>20.1</small> An Array of Buckets</a></li>
-<li><a href="#collision-resolution"><small>20.2</small> Collision Resolution</a></li>
-<li><a href="#hash-functions"><small>20.3</small> Hash Functions</a></li>
-<li><a href="#building-a-hash-table"><small>20.4</small> Building a Hash Table</a></li>
-<li><a href="#string-interning"><small>20.5</small> String Interning</a></li>
+<li><a href="https://youhogeon-meritz.github.io/hash-tables.html#an-array-of-buckets"><small>20.1</small><font papago-translate="splitted"><font papago-translate="translated"> 버킷 배열</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/hash-tables.html#collision-resolution"><small>20.2</small><font papago-translate="splitted"><font papago-translate="translated"> 충돌 해결</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/hash-tables.html#hash-functions"><small>20.3</small><font papago-translate="splitted"><font papago-translate="translated"> 해시 함수</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/hash-tables.html#building-a-hash-table"><small>20.4</small><font papago-translate="splitted"><font papago-translate="translated"> 해시 테이블 만들기</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/hash-tables.html#string-interning"><small>20.5</small><font papago-translate="splitted"><font papago-translate="translated"> 스트링 인터닝</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/hash-tables.html#challenges">Challenges</a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="strings.html" title="Strings">← Previous</a>
-<a href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑ Up</a>
-<a class="right" href="global-variables.html" title="Global Variables">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/strings.html" title="Strings">←&nbsp;Previous</a>
+<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑&nbsp;Up</a>
+<a class="right" href="https://youhogeon-meritz.github.io/global-variables.html" title="Global Variables">Next&nbsp;→</a>
 </div> </div>
 <a id="expand-nav">≡</a>
 </nav>
 </div>
 <article class="chapter">
 <div class="number">20</div>
-<h1>Hash Tables</h1>
+<h1><font papago-translate="translated">해시 테이블</font></h1>
 <blockquote>
-<p>Hash, x. There is no definition for this word<span class="em">—</span>nobody knows what hash is.</p>
+<p><font papago-translate="translated">해시, x. 이 단어에 대한 정의는 없습니다.<span class="em"></span> 아무도 해시가 무엇인지 모릅니다.</font></p>
 <p><cite>Ambrose Bierce, <em>The Unabridged Devil’s Dictionary</em></cite></p>
 </blockquote>
-<p>Before we can add variables to our burgeoning virtual machine, we need some way
-to look up a value given a variable’s name. Later, when we add classes, we’ll
-also need a way to store fields on instances. The perfect data structure for
-these problems and others is a hash table.</p>
-<p>You probably already know what a hash table is, even if you don’t know it by
-that name. If you’re a Java programmer, you call them “HashMaps”. C# and Python
-users call them “dictionaries”. In C++, it’s an “unordered map”. “Objects” in
-JavaScript and “tables” in Lua are hash tables under the hood, which is what
-gives them their flexibility.</p>
-<p>A hash table, whatever your language calls it, associates a set of <strong>keys</strong> with
-a set of <strong>values</strong>. Each key/value pair is an <strong>entry</strong> in the table. Given a
-key, you can look up its corresponding value. You can add new key/value pairs
-and remove entries by key. If you add a new value for an existing key, it
-replaces the previous entry.</p>
-<p>Hash tables appear in so many languages because they are incredibly powerful.
-Much of this power comes from one metric: given a key, a hash table returns the
-corresponding value in <span name="constant">constant time</span>, <em>regardless
-of how many keys are in the hash table</em>.</p>
-<aside name="constant">
-<p>More specifically, the <em>average-case</em> lookup time is constant. Worst-case
-performance can be, well, worse. In practice, it’s easy to avoid degenerate
-behavior and stay on the happy path.</p>
+<p><font papago-translate="translated">급성장하는 가상 머신에 변수를 추가하기 전에 변수의 이름이 주어진 값을 찾을 수 있는 방법이 필요합니다.</font><font papago-translate="translated"> 나중에 클래스를 추가할 때 인스턴스에 필드를 저장할 수 있는 방법도 필요합니다.</font><font papago-translate="translated"> 이러한 문제들과 다른 문제들에 대한 완벽한 데이터 구조는 해시 테이블입니다.</font></p>
+<p><font papago-translate="translated">해시 테이블이 무엇인지 이미 알고 계실 겁니다. 비록 그 이름으로 알지 못하더라도요.</font><font papago-translate="translated"> 자바 프로그래머라면 "해시맵"이라고 부릅니다.</font><font papago-translate="translated"> C#와 Python 사용자들은 이들을 "사전"이라고 부릅니다.</font><font papago-translate="translated"> C++에서는 "질서 없는 지도"입니다.</font><font papago-translate="translated"> JavaScript의 "Objects"와 Lua의 "tables"는 해시 테이블로, 이를 통해 유연성을 확보할 수 있습니다.</font></p>
+<p><font papago-translate="translated">해시 테이블은 어떤 언어로 부르든<strong> 키</strong> 집합을<strong> 값 집합</strong>과 연결합니다.</font><font papago-translate="translated"> 각 키/값 쌍은 테이블의<strong> 항목</strong>입니다.</font><font papago-translate="translated"> 키가 주어지면 해당 값을 찾을 수 있습니다.</font><font papago-translate="translated"> 새 키/값 쌍을 추가하고 키별로 항목을 제거할 수 있습니다.</font><font papago-translate="translated"> 기존 키에 새 값을 추가하면 이전 항목이 대체됩니다.</font></p>
+<p><font papago-translate="translated">해시 테이블은 매우 강력하기 때문에 여러 언어로 나타납니다.</font><font papago-translate="translated"> 이 전력의 대부분은 하나의 메트릭에서 비롯됩니다: 주어진 키가<em> 주어</em>지면<em> 해시</em> 테이블<em>에 있는 키의 수에 관계없이</em><span name="constant"> 해시</span> 테이블은<span name="constant"> 해당</span> 값을<span name="constant"> 일정한 시간</span> 내에 반환합니다.</font></p>
+<aside name="constant" style="top: 796px;">
+<p><font papago-translate="translated">좀 더 구체적으로<em> 말하자면, 평균 사례</em> 조회 시간은 일정합니다.</font><font papago-translate="translated"> 최악의 경우 성능이 더 나빠질 수 있습니다.</font><font papago-translate="translated"> 실제로 퇴보하는 행동을 피하고 행복한 길을 유지하는 것은 쉽습니다.</font></p>
 </aside>
-<p>That’s pretty remarkable when you think about it. Imagine you’ve got a big stack
-of business cards and I ask you to find a certain person. The bigger the pile
-is, the longer it will take. Even if the pile is nicely sorted and you’ve got
-the manual dexterity to do a binary search by hand, you’re still talking
-<em>O(log n)</em>. But with a <span name="rolodex">hash table</span>, it takes the
-same time to find that business card when the stack has ten cards as when it has
-a million.</p>
-<aside name="rolodex">
-<p>Stuff all those cards in a Rolodex<span class="em">—</span>does anyone even remember those things
-anymore?<span class="em">—</span>with dividers for each letter, and you improve your speed
-dramatically. As we’ll see, that’s not too far from the trick a hash table uses.</p>
+<p><font papago-translate="translated">생각해보면 정말 놀랍습니다.</font><font papago-translate="translated"> 명함이 많이 쌓여 있다고 상상해 보세요. 특정 사람을 찾아주세요.</font><font papago-translate="translated"> 더미가 클수록 더 오래 걸릴 것입니다.</font><font papago-translate="translated"> 파일이 깔끔하게 정리되어 있고 수작업으로 이진 검색을 할 수 있는 손재주가 있어도 여전히 O<em>(log n</em>)을 말하고 있는 것입니다.</font><font papago-translate="translated"> <span name="rolodex">하지만 해시 테이블</span>을 사용하면 스택에 10장의 카드가 있을 때와 백만 장이 있을 때의 명함을 찾는 데 동일한 시간이 걸립니다.</font></p>
+<aside name="rolodex" style="top: 964px;">
+<p><font papago-translate="translated">롤로<span class="em">덱스</span>에 카드를 가득 채우세요—더 이상 그런 것들을 기억하는 사람이 있나요?</font><font papago-translate="translated"><span class="em">-</span>각 글자마다 구분기를 사용하면 속도가 크게 향상<span class="em">됩니다.</span></font><font papago-translate="translated"> 보시다시피 해시 테이블이 사용하는 트릭에서 그리 멀지 않습니다.</font></p>
 </aside>
-<h2><a href="#an-array-of-buckets" id="an-array-of-buckets"><small>20 . 1</small>An Array of Buckets</a></h2>
-<p>A complete, fast hash table has a couple of moving parts. I’ll introduce them
-one at a time by working through a couple of toy problems and their solutions.
-Eventually, we’ll build up to a data structure that can associate any set of
-names with their values.</p>
-<p>For now, imagine if Lox was a <em>lot</em> more restricted in variable names. What if a
-variable’s name could only be a <span name="basic">single</span> lowercase
-letter. How could we very efficiently represent a set of variable names and
-their values?</p>
-<aside name="basic">
-<p>This limitation isn’t <em>too</em> far-fetched. The initial versions of BASIC out of
-Dartmouth allowed variable names to be only a single letter followed by one
-optional digit.</p>
+<h2><a href="https://youhogeon-meritz.github.io/hash-tables.html#an-array-of-buckets" id="an-array-of-buckets"><small><font papago-translate="translated">20 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">버킷 배열</font></font></a></h2>
+<p><font papago-translate="translated">완전하고 빠른 해시 테이블에는 몇 가지 움직이는 부분이 있습니다.</font><font papago-translate="translated"> 몇 가지 장난감 문제와 해결책을 검토하여 하나씩 소개해 드리겠습니다.</font><font papago-translate="translated"> 결국, 우리는 모든 이름 집합을 그 값과 연관시킬 수 있는 데이터 구조를 구축할 것입니다.</font></p>
+<p><font papago-translate="translated">지금으로서는 Lox가 변수<em></em> 이름에 훨씬 더 제한되어 있다고 상상해 보세요.</font><font papago-translate="translated"> 변수의 이름이 소문자<span name="basic"> 하나</span>만 사용할 수 있다면 어떨까요.</font><font papago-translate="translated"> 변수 이름 집합과 그 값을 어떻게 매우 효율적으로 표현할 수 있을까요?</font></p>
+<aside name="basic" style="top: 1276px;">
+<p><font papago-translate="translated">이 제한은<em> 너무</em> 무리한 것<em>이</em> 아닙니다.</font><font papago-translate="translated"> 다트머스의 초기 버전인 베이직은 변수 이름을 한 글자만 사용하고 그 뒤에 하나의 선택적 숫자만 사용할 수 있도록 허용했습니다.</font></p>
 </aside>
-<p>With only 26 possible variables (27 if you consider underscore a “letter”, I
-guess), the answer is easy. Declare a fixed-size array with 26 elements. We’ll
-follow tradition and call each element a <strong>bucket</strong>. Each represents a variable
-with <code translate="no">a</code> starting at index zero. If there’s a value in the array at some
-letter’s index, then that key is present with that value. Otherwise, the bucket
-is empty and that key/value pair isn’t in the data structure.</p>
-<aside name="bucket">
+<p><font papago-translate="splitted"><font papago-translate="translated">가능한 변수가 26개(27개는 '편지' 밑줄을 긋는 것으로 생각하면)라면 답은 간단합니다.</font><font papago-translate="translated"> 26개의 요소가 있는 고정 크기 배열을 선언합니다.</font><font papago-translate="translated"> 우리는 전통을 따르고 각 요소를<strong> 버킷</strong>이라고 부를 것입니다.</font><font papago-translate="translated"> 각각은 다음과 같은 변수를 나타냅니다 </font></font><code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated"> 인덱스 0부터 시작합니다.</font><font papago-translate="translated"> 배열에 어떤 문자의 인덱스에 값이 있으면, 그 키는 그 값으로 존재합니다.</font><font papago-translate="translated"> 그렇지 않으면 버킷이 비어 있고 해당 키/값 쌍이 데이터 구조에 없습니다.</font></font></p>
+<aside name="bucket" style="top: 1516px;">
 <p><img alt="A row of buckets, each
-labeled with a letter of the alphabet." src="image/hash-tables/bucket-array.png"/></p>
+labeled with a letter of the alphabet." src="https://youhogeon-meritz.github.io/image/hash-tables/bucket-array.png"></p>
 </aside>
-<p>Memory usage is great<span class="em">—</span>just a single, reasonably sized <span name="bucket">array</span>. There’s some waste from the empty buckets, but it’s
-not huge. There’s no overhead for node pointers, padding, or other stuff you’d
-get with something like a linked list or tree.</p>
-<p>Performance is even better. Given a variable name<span class="em">—</span>its character<span class="em">—</span>you can
-subtract the ASCII value of <code translate="no">a</code> and use the result to index directly into the
-array. Then you can either look up the existing value or store a new value
-directly into that slot. It doesn’t get much faster than that.</p>
-<p>This is sort of our Platonic ideal data structure. Lightning fast, dead simple,
-and compact in memory. As we add support for more complex keys, we’ll have to
-make some concessions, but this is what we’re aiming for. Even once you add in
-hash functions, dynamic resizing, and collision resolution, this is still the
-core of every hash table out there<span class="em">—</span>a contiguous array of buckets that you
-index directly into.</p>
-<h3><a href="#load-factor-and-wrapped-keys" id="load-factor-and-wrapped-keys"><small>20 . 1 . 1</small>Load factor and wrapped keys</a></h3>
-<p>Confining Lox to single-letter variables would make our job as implementers
-easier, but it’s probably no fun programming in a language that gives you only
-26 storage locations. What if we loosened it a little and allowed variables up
-to <span name="six">eight</span> characters long?</p>
-<aside name="six">
-<p>Again, this restriction isn’t so crazy. Early linkers for C treated only the
-first six characters of external identifiers as meaningful. Everything after
-that was ignored. If you’ve ever wondered why the C standard library is so
-enamored of abbreviation<span class="em">—</span>looking at you, <code translate="no">strncmp()</code><span class="em">—</span>it turns out it
-wasn’t entirely because of the small screens (or teletypes!) of the day.</p>
+<p><font papago-translate="translated">메모리 사용량은 훌륭합니다—하나의 합리적인 크기<span class="em"></span><span name="bucket">의 배열</span>일 뿐입니다.</font><font papago-translate="translated"> 빈 양동이에서 약간의 쓰레기가 나오긴 하지만, 크지는 않습니다.</font><font papago-translate="translated"> 노드 포인터, 패딩 또는 링크된 목록이나 트리와 같은 다른 것들에 대한 오버헤드가 없습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">성능이 더욱 좋습니다.</font><font papago-translate="translated"> 변수 이름—그 문자—가 주어지면<span class="em"></span><span class="em"></span>—의 ASCII 값을 뺄 수 있습니다 </font></font><code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated"> 결과를 사용하여 배열에 직접 인덱싱합니다.</font><font papago-translate="translated"> 그런 다음 기존 값을 찾거나 새 값을 해당 슬롯에 직접 저장할 수 있습니다.</font><font papago-translate="translated"> 그보다 훨씬 빠르지는 않습니다.</font></font></p>
+<p><font papago-translate="translated">이것은 일종의 플라톤 이상적인 데이터 구조입니다.</font><font papago-translate="translated"> 번개처럼 빠르고, 매우 간단하며, 메모리가 컴팩트합니다.</font><font papago-translate="translated"> 더 복잡한 키에 대한 지원을 추가함에 따라 몇 가지 양보를 해야 하지만, 이것이 우리가 목표로 하는 것입니다.</font><font papago-translate="translated"> 해시 함수, 동적 크기 조정 및 충돌 해결 기능을 추가하더라도, 이것은 여전히 모든 해시 테이블의 핵심이며<span class="em"></span>, 직접 인덱싱하는 연속적인 버킷 배열입니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/hash-tables.html#load-factor-and-wrapped-keys" id="load-factor-and-wrapped-keys"><small><font papago-translate="translated">20 . 1 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">로드 팩터 및 랩드 키</font></font></a></h3>
+<p><font papago-translate="translated">Lox를 단일 문자 변수로 제한하면 구현자로서의 업무가 더 쉬워지지만, 26개의 저장 위치만 제공하는 언어로 프로그래밍하는 것은 아마도 재미없을 것입니다.</font><font papago-translate="translated"> 변수<span name="six"></span>를 8자까지 허용하면 어떻게 될까요?</font></p>
+<aside name="six" style="top: 2068px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">다시 말하지만, 이 제한은 그렇게 미친 것이 아닙니다.</font><font papago-translate="translated"> C의 초기 링커는 외부 식별자의 처음 여섯 글자만 의미 있는 것으로 취급했습니다.</font><font papago-translate="translated"> 그 이후의 모든 것은 무시되었습니다.</font><font papago-translate="translated"> <span class="em"></span>C 표준 라이브러리가 왜 그렇게 약어에 빠져 있는지 궁금해 본 적이 있다면, </font></font><code translate="no">strncmp()</code><font papago-translate="splitted"><font papago-translate="translated"><span class="em">-</span>당시의 작은 화면(또는 텔레타이프!) 때문만은 아닌 것으로 밝혀<span class="em">졌습니다.</span></font></font></p>
 </aside>
-<p>That’s small enough that we can pack all eight characters into a 64-bit integer
-and easily turn the string into a number. We can then use it as an array index.
-Or, at least, we could if we could somehow allocate a 295,148 <em>petabyte</em> array.
-Memory’s gotten cheaper over time, but not quite <em>that</em> cheap. Even if we could
-make an array that big, it would be heinously wasteful. Almost every bucket
-would be empty unless users started writing way bigger Lox programs than we’ve
-anticipated.</p>
-<p>Even though our variable keys cover the full 64-bit numeric range, we clearly
-don’t need an array that large. Instead, we allocate an array with more than
-enough capacity for the entries we need, but not unreasonably large. We map the
-full 64-bit keys down to that smaller range by taking the value modulo the size
-of the array. Doing that essentially folds the larger numeric range onto itself
-until it fits the smaller range of array elements.</p>
-<p>For example, say we want to store “bagel”. We allocate an array with eight
-elements, plenty enough to store it and more later. We treat the key string as a
-64-bit integer. On a little-endian machine like Intel, packing those characters
-into a 64-bit word puts the first letter, “b” (ASCII value 98), in the
-least-significant byte. We take that integer modulo the array size (<span name="power-of-two">8</span>) to fit it in the bounds and get a bucket index, 2.
-Then we store the value there as usual.</p>
-<aside name="power-of-two">
-<p>I’m using powers of two for the array sizes here, but they don’t need to be.
-Some styles of hash tables work best with powers of two, including the one we’ll
-build in this book. Others prefer prime number array sizes or have other rules.</p>
+<p><font papago-translate="translated">이는 충분히 작아서 8개의 문자를 모두 64비트 정수로 묶어 문자열을 쉽게 숫자로 변환할 수 있습니다.</font><font papago-translate="translated"> 그런 다음 배열 인덱스로 사용할 수 있습니다.</font><font papago-translate="translated"> 적어도 295,148<em> 페타바이트</em> 배열을 할당할 수 있다면 가능할 것입니다.</font><font papago-translate="translated"> 메모리는 시간이 지남에 따라 저렴해졌지만<em> 그다지</em> 저렴하지는 않습니다.</font><font papago-translate="translated"> 우리가 그렇게 큰 배열을 만들 수 있다고 해도, 그것은 매우 낭비적일 것입니다.</font><font papago-translate="translated"> 사용자들이 우리가 예상했던 것보다 훨씬 더 큰 Lox 프로그램을 작성하기 시작하지 않으면 거의 모든 버킷이 비어 있을 것입니다.</font></p>
+<p><font papago-translate="translated">가변 키가 64비트 숫자 범위 전체를 커버하더라도, 그렇게 큰 배열은 필요하지 않습니다.</font><font papago-translate="translated"> 대신 필요한 항목에 충분한 용량을 가지면서도 지나치게 크지 않은 배열을 할당합니다.</font><font papago-translate="translated"> 우리는 배열 크기의 값 모듈을 사용하여 전체 64비트 키를 그 작은 범위로 매핑합니다.</font><font papago-translate="translated"> 그렇게 하면 기본적으로 더 큰 숫자 범위를 더 작은 배열 요소 범위에 맞출 때까지 스스로 접습니다.</font></p>
+<p><font papago-translate="translated">예를 들어, "베이글"을 저장하고 싶다고 가정해 보겠습니다.</font><font papago-translate="translated"> 우리는 여덟 개의 요소로 배열을 할당합니다. 이는 저장할 수 있을 만큼 충분히 많고 나중에 더 많이 저장할 수 있습니다.</font><font papago-translate="translated"> 우리는 키 문자열을 64비트 정수로 취급합니다.</font><font papago-translate="translated"> 인텔과 같은 리틀 엔디언 머신에서는 이러한 문자를 64비트 단어로 패키징하면 첫 글자인 "b"(ASCII 값 98)가 가장 작은 바이트에 들어갑니다.</font><font papago-translate="translated"> 우리는 그 정수 모듈로 배열 크기 (8)를 경계에 맞추기 위해 버킷 인덱스 (<span name="power-of-two"></span>2)를 얻습니다.</font><font papago-translate="translated"> 그런 다음 평소처럼 값을 저장합니다.</font></p>
+<aside name="power-of-two" style="top: 2572px;">
+<p><font papago-translate="translated">여기 배열 크기에는 2의 거듭제곱을 사용하고 있지만, 꼭 그럴 필요는 없습니다.</font><font papago-translate="translated"> 일부 스타일의 해시 테이블은 이 책에서 구축할 해시 테이블을 포함하여 2의 거듭제곱과 가장 잘 작동합니다.</font><font papago-translate="translated"> 다른 사람들은 소수 배열 크기를 선호하거나 다른 규칙을 가지고 있습니다.</font></p>
 </aside>
-<p>Using the array size as a modulus lets us map the key’s numeric range down to
-fit an array of any size. We can thus control the number of buckets
-independently of the key range. That solves our waste problem, but introduces a
-new one. Any two variables whose key number has the same remainder when divided
-by the array size will end up in the same bucket. Keys can <strong>collide</strong>. For
-example, if we try to add “jam”, it also ends up in bucket 2.</p><img alt="'Bagel' and 'jam' both end up in bucket index 2." src="image/hash-tables/collision.png">
-<p>We have some control over this by tuning the array size. The bigger the array,
-the fewer the indexes that get mapped to the same bucket and the fewer the
-collisions that are likely to occur. Hash table implementers track this
-collision likelihood by measuring the table’s <strong>load factor</strong>. It’s defined as
-the number of entries divided by the number of buckets. So a hash table with
-five entries and an array of 16 elements has a load factor of 0.3125. The higher
-the load factor, the greater the chance of collisions.</p>
-<p>One way we mitigate collisions is by resizing the array. Just like the dynamic
-arrays we implemented earlier, we reallocate and grow the hash table’s array as
-it fills up. Unlike a regular dynamic array, though, we won’t wait until the
-array is <em>full</em>. Instead, we pick a desired load factor and grow the array when
-it goes over that.</p>
-<h2><a href="#collision-resolution" id="collision-resolution"><small>20 . 2</small>Collision Resolution</a></h2>
-<p>Even with a very low load factor, collisions can still occur. The <a href="https://en.wikipedia.org/wiki/Birthday_problem"><em>birthday
-paradox</em></a> tells us that as the number of entries in the hash table
-increases, the chance of collision increases very quickly. We can pick a large
-array size to reduce that, but it’s a losing game. Say we wanted to store a
-hundred items in a hash table. To keep the chance of collision below a
-still-pretty-high 10%, we need an array with at least 47,015 elements. To get
-the chance below 1% requires an array with 492,555 elements, over 4,000 empty
-buckets for each one in use.</p>
-<p>A low load factor can make collisions <span name="pigeon">rarer</span>, but the
-<a href="https://en.wikipedia.org/wiki/Pigeonhole_principle"><em>pigeonhole principle</em></a> tells us we can never eliminate them entirely.
-If you’ve got five pet pigeons and four holes to put them in, at least one hole
-is going to end up with more than one pigeon. With 18,446,744,073,709,551,616
-different variable names, any reasonably sized array can potentially end up with
-multiple keys in the same bucket.</p>
-<p>Thus we still have to handle collisions gracefully when they occur. Users don’t
-like it when their programming language can look up variables correctly only
-<em>most</em> of the time.</p>
-<aside name="pigeon">
-<p>Put these two funny-named mathematical rules together and you get this
-observation: Take a birdhouse containing 365 pigeonholes, and use each pigeon’s
-birthday to assign it to a pigeonhole. You’ll need only about 26 randomly chosen
-pigeons before you get a greater than 50% chance of two pigeons in the same box.</p><img alt="Two pigeons in the same hole." src="image/hash-tables/pigeons.png">
-</img></aside>
-<h3><a href="#separate-chaining" id="separate-chaining"><small>20 . 2 . 1</small>Separate chaining</a></h3>
-<p>Techniques for resolving collisions fall into two broad categories. The first is
-<strong>separate chaining</strong>. Instead of each bucket containing a single entry, we let
-it contain a collection of them. In the classic implementation, each bucket
-points to a linked list of entries. To look up an entry, you find its bucket and
-then walk the list until you find an entry with the matching key.</p><img alt="An array with eight buckets. Bucket 2 links to a chain of two nodes. Bucket 5 links to a single node." src="image/hash-tables/chaining.png"/>
-<p>In catastrophically bad cases where every entry collides in the same bucket, the
-data structure degrades into a single unsorted linked list with <em>O(n)</em> lookup.
-In practice, it’s easy to avoid that by controlling the load factor and how
-entries get scattered across buckets. In typical separate-chained hash tables,
-it’s rare for a bucket to have more than one or two entries.</p>
-<p>Separate chaining is conceptually simple<span class="em">—</span>it’s literally an array of linked
-lists. Most operations are straightforward to implement, even deletion which, as
-we’ll see, can be a pain. But it’s not a great fit for modern CPUs. It has a lot
-of overhead from pointers and tends to scatter little linked list <span name="node">nodes</span> around in memory which isn’t great for cache usage.</p>
-<aside name="node">
-<p>There are a few tricks to optimize this. Many implementations store the first
-entry right in the bucket so that in the common case where there’s only one, no
-extra pointer indirection is needed. You can also make each linked list node
-store a few entries to reduce the pointer overhead.</p>
+<p><font papago-translate="translated">배열 크기를 모듈러스로 사용하면 키의 숫자 범위를 어떤 크기의 배열에도 맞도록 매핑할 수 있습니다.</font><font papago-translate="translated"> 따라서 키 범위와 무관하게 버킷의 수를 제어할 수 있습니다.</font><font papago-translate="translated"> 그것은 우리의 낭비 문제를 해결하지만, 새로운 문제를 도입합니다.</font><font papago-translate="translated"> 키 번호가 배열 크기로 나눌 때 나머지가 같은 두 변수는 결국 같은 버킷에 들어가게 됩니다.</font><font papago-translate="translated"> 열쇠<strong>가 충돌</strong>할 수 있습니다.</font><font papago-translate="translated"> 예를 들어, "잼"을 추가하려고 하면 버킷 2에도 들어갑니다.</font></p><img alt="'Bagel' and 'jam' both end up in bucket index 2." src="https://youhogeon-meritz.github.io/image/hash-tables/collision.png">
+<p><font papago-translate="translated">배열 크기를 조정하여 이를 어느 정도 제어할 수 있습니다.</font><font papago-translate="translated"> 배열이 클수록 동일한 버킷에 매핑되는 인덱스가 줄어들고 충돌이 발생할 가능성이 줄어듭니다.</font><font papago-translate="translated"> 해시 테이블 구현자는 테이블<strong>의 부하 계수</strong>를 측정하여 이 충돌 가능성을 추적합니다.</font><font papago-translate="translated"> 항목 수를 버킷 수로 나눈 값으로 정의됩니다.</font><font papago-translate="translated"> 따라서 5개의 항목과 16개의 요소 배열이 있는 해시 테이블의 로드 팩터는 0.3125입니다.</font><font papago-translate="translated"> 하중 계수가 높을수록 충돌 가능성이 높아집니다.</font></p>
+<p><font papago-translate="translated">충돌을 완화하는 한 가지 방법은 배열 크기를 조정하는 것입니다.</font><font papago-translate="translated"> 앞서 구현한 동적 배열과 마찬가지로 해시 테이블의 배열이 채워지면 재할당하고 확장합니다.</font><font papago-translate="translated"> 하지만 일반 동적 배열과 달리 배열<em>이 가득 찰</em> 때까지 기다리지 않습니다.</font><font papago-translate="translated"> 대신 원하는 로드 팩터를 선택하고 이를 초과할 때 어레이를 확장합니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/hash-tables.html#collision-resolution" id="collision-resolution"><small><font papago-translate="translated">20 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">충돌 해결</font></font></a></h2>
+<p><font papago-translate="translated">하중 계수가 매우 낮더라도 충돌이 발생할 수 있습니다.</font><font papago-translate="translated"> <a href="https://en.wikipedia.org/wiki/Birthday_problem"><em>생일 역설은</em></a> 해시 테이블의 항목 수가 증가함에 따라 충돌 가능성이 매우 빠르게 증가한다는 것을 알려줍니다.</font><font papago-translate="translated"> 이를 줄이기 위해 큰 배열 크기를 선택할 수 있지만, 지는 게임입니다.</font><font papago-translate="translated"> 해시 테이블에 백 개의 항목을 저장하고 싶다고 가정해 보겠습니다.</font><font papago-translate="translated"> 충돌 가능성을 여전히 높은 10% 이하로 유지하려면 최소 47,015개의 요소가 포함된 배열이 필요합니다.</font><font papago-translate="translated"> 1% 미만의 확률을 얻으려면 492,555개의 요소가 있는 배열이 필요하며, 사용 중인 각 버킷당 4,000개 이상의 빈 버킷이 필요합니다.</font></p>
+<p><font papago-translate="translated">낮은 하중 계수는 충돌<span name="pigeon">을 더 드물게</span> 만들 수 있지만<a href="https://en.wikipedia.org/wiki/Pigeonhole_principle"><em>, 비둘기집 원리</em></a>는 충돌을 완전히 제거할 수 없다는 것을 알려줍니다.</font><font papago-translate="translated"> 애완 비둘기 다섯 마리와 그들을 넣을 구멍 네 개가 있다면, 적어도 하나의 구멍은 비둘기 한 마리 이상이 될 것입니다.</font><font papago-translate="translated"> 18,446,744,073,709,551,616개의 변수 이름을 가진 합리적인 크기의 배열은 동일한 버킷에 여러 개의 키를 가질 수 있습니다.</font></p>
+<p><font papago-translate="translated">따라서 충돌이 발생했을 때에도 우아하게 대처해야 합니다.</font><font papago-translate="translated"> 사용자들은 프로그래밍 언어가 대부분의<em></em> 경우 변수를 올바르게 찾을 수 있는 것을 좋아하지 않습니다.</font></p>
+<aside name="pigeon" style="top: 3934.5px;">
+<p><font papago-translate="translated">이 두 가지 재미있는 이름의 수학적 규칙을 합치면 다음과 같은 관찰을 얻을 수 있습니다:</font><font papago-translate="translated"> 365개의 비둘기 구멍이 있는 새집을 가져와서 각 비둘기의 생일을 사용하여 비둘기 구멍에 할당합니다.</font><font papago-translate="translated"> 같은 상자에 두 마리의 비둘기가 있을 확률이 50% 이상이 되려면 무작위로 선택된 비둘기 약 26마리만 있으면 됩니다.</font></p><img alt="Two pigeons in the same hole." src="https://youhogeon-meritz.github.io/image/hash-tables/pigeons.png">
 </aside>
-<h3><a href="#open-addressing" id="open-addressing"><small>20 . 2 . 2</small>Open addressing</a></h3>
-<p>The other technique is <span name="open">called</span> <strong>open addressing</strong> or
-(confusingly) <strong>closed hashing</strong>. With this technique, all entries live directly
-in the bucket array, with one entry per bucket. If two entries collide in the
-same bucket, we find a different empty bucket to use instead.</p>
-<aside name="open">
-<p>It’s called “open” addressing because the entry may end up at an address
-(bucket) outside of its preferred one. It’s called “closed” hashing because all
-of the entries stay inside the array of buckets.</p>
+<h3><a href="https://youhogeon-meritz.github.io/hash-tables.html#separate-chaining" id="separate-chaining"><small><font papago-translate="translated">20 . 2 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">별도의 연쇄</font></font></a></h3>
+<p><font papago-translate="translated">충돌을 해결하는 기술은 크게 두 가지 범주로 나뉩니다.</font><font papago-translate="translated"> 첫 번째는<strong> 별도의 연쇄</strong>입니다.</font><font papago-translate="translated"> 각 버킷에 하나의 항목이 포함된 대신, 우리는 그것들의 모음을 포함하도록 했습니다.</font><font papago-translate="translated"> 고전적인 구현에서는 각 버킷이 연결된 항목 목록을 가리킵니다.</font><font papago-translate="translated"> 항목을 찾으려면 버킷을 찾은 다음 일치하는 키가 있는 항목을 찾을 때까지 목록을 걸어갑니다.</font></p><img alt="An array with eight buckets. Bucket 2 links to a chain of two nodes. Bucket 5 links to a single node." src="https://youhogeon-meritz.github.io/image/hash-tables/chaining.png">
+<p><font papago-translate="translated">모든 항목이 동일한 버킷에서 충돌하는 치명적으로 나쁜 경우, 데이터 구조는 O<em>(n</em>) 조회를 통해 정렬되지 않은 단일 링크 목록으로 저하됩니다.</font><font papago-translate="translated"> 실제로 로드 팩터와 항목이 버킷에 분산되는 방식을 제어하면 이를 쉽게 피할 수 있습니다.</font><font papago-translate="translated"> 일반적인 개별 체인 해시 테이블에서는 버킷에 하나 또는 두 개 이상의 항목이 있는 경우가 드뭅니다.</font></p>
+<p><font papago-translate="translated">별도의 연쇄는 개념적으로 간단합니다. 이는 말 그대로 연결<span class="em"></span>된 목록의 배열입니다.</font><font papago-translate="translated"> 대부분의 작업은 구현이 간단하며, 심지어 삭제하는 것도 번거로울 수 있습니다.</font><font papago-translate="translated"> 하지만 최신 CPU에는 적합하지 않습니다.</font><font papago-translate="translated"> 포인터로 인한 오버헤드가 많고 메모리에 연결된 리스트<span name="node"> 노드</span>가 거의 흩어져 캐시 사용에 적합하지 않은 경향이 있습니다.</font></p>
+<aside name="node" style="top: 4913px;">
+<p><font papago-translate="translated">이를 최적화하기 위한 몇 가지 요령이 있습니다.</font><font papago-translate="translated"> 많은 구현에서는 첫 번째 항목을 버킷에 바로 저장하므로, 일반적으로 하나만 있는 경우 추가 포인터의 방향 전환이 필요하지 않습니다.</font><font papago-translate="translated"> 각 링크된 목록 노드가 포인터 오버헤드를 줄이기 위해 몇 개의 항목을 저장하도록 할 수도 있습니다.</font></p>
 </aside>
-<p>Storing all entries in a single, big, contiguous array is great for keeping the
-memory representation simple and fast. But it makes all of the operations on the
-hash table more complex. When inserting an entry, its bucket may be full,
-sending us to look at another bucket. That bucket itself may be occupied and so
-on. This process of finding an available bucket is called <strong>probing</strong>, and the
-order that you examine buckets is a <strong>probe sequence</strong>.</p>
-<p>There are a <span name="probe">number</span> of algorithms for determining
-which buckets to probe and how to decide which entry goes in which bucket.
-There’s been a ton of research here because even slight tweaks can have a large
-performance impact. And, on a data structure as heavily used as hash tables,
-that performance impact touches a very large number of real-world programs
-across a range of hardware capabilities.</p>
-<aside name="probe">
-<p>If you’d like to learn more (and you should, because some of these are really
-cool), look into “double hashing”, “cuckoo hashing”, “Robin Hood hashing”, and
-anything those lead you to.</p>
+<h3><a href="https://youhogeon-meritz.github.io/hash-tables.html#open-addressing" id="open-addressing"><small><font papago-translate="translated">20 . 2 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">주소 열기</font></font></a></h3>
+<p><font papago-translate="translated">다른 기법은<strong> 오픈 어드레싱</strong> 또는 (혼란스럽게<strong>도) 클로즈 해싱</strong><span name="open">이라고 합니다</span>.</font><font papago-translate="translated"> 이 기술을 사용하면 모든 항목이 버킷 배열에 직접 저장되며, 각 버킷마다 하나의 항목이 있습니다.</font><font papago-translate="translated"> 두 항목이 같은 버킷에서 충돌하면 대신 사용할 다른 빈 버킷을 찾습니다.</font></p>
+<aside name="open" style="top: 5081px;">
+<p><font papago-translate="translated">항목이 선호하는 주소가 아닌 주소(버킷)에 도달할 수 있기 때문에 이를 "열린" 주소 지정이라고 합니다.</font><font papago-translate="translated"> 모든 항목이 버킷 배열 안에 있기 때문에 이를 "닫힌" 해싱이라고 합니다.</font></p>
 </aside>
-<p>As usual in this book, we’ll pick the simplest one that gets the job done
-efficiently. That’s good old <strong>linear probing</strong>. When looking for an entry, we
-look in the first bucket its key maps to. If it’s not in there, we look in the
-very next element in the array, and so on. If we reach the end, we wrap back
-around to the beginning.</p>
-<p>The good thing about linear probing is that it’s cache friendly. Since you walk
-the array directly in memory order, it keeps the CPU’s cache lines full and
-happy. The bad thing is that it’s prone to <strong>clustering</strong>. If you have a lot of
-entries with numerically similar key values, you can end up with a lot of
-colliding, overflowing buckets right next to each other.</p>
-<p>Compared to separate chaining, open addressing can be harder to wrap your head
-around. I think of open addressing as similar to separate chaining except that
-the “list” of nodes is threaded through the bucket array itself. Instead of
-storing the links between them in pointers, the connections are calculated
-implicitly by the order that you look through the buckets.</p>
-<p>The tricky part is that more than one of these implicit lists may be interleaved
-together. Let’s walk through an example that covers all the interesting cases.
-We’ll ignore values for now and just worry about a set of keys. We start with an
-empty array of 8 buckets.</p><img alt="An array with eight empty buckets." class="wide" src="image/hash-tables/insert-1.png"/>
-<p>We decide to insert “bagel”. The first letter, “b” (ASCII value 98), modulo the
-array size (8) puts it in bucket 2.</p><img alt="Bagel goes into bucket 2." class="wide" src="image/hash-tables/insert-2.png"/>
-<p>Next, we insert “jam”. That also wants to go in bucket 2 (106 mod 8 = 2), but
-that bucket’s taken. We keep probing to the next bucket. It’s empty, so we put
-it there.</p><img alt="Jam goes into bucket 3, since 2 is full." class="wide" src="image/hash-tables/insert-3.png"/>
-<p>We insert “fruit”, which happily lands in bucket 6.</p><img alt="Fruit goes into bucket 6." class="wide" src="image/hash-tables/insert-4.png"/>
-<p>Likewise, “migas” can go in its preferred bucket 5.</p><img alt="Migas goes into bucket 5." class="wide" src="image/hash-tables/insert-5.png"/>
-<p>When we try to insert “eggs”, it also wants to be in bucket 5. That’s full, so we
-skip to 6. Bucket 6 is also full. Note that the entry in there is <em>not</em> part of
-the same probe sequence. “Fruit” is in its preferred bucket, 6. So the 5 and 6
-sequences have collided and are interleaved. We skip over that and finally put
-“eggs” in bucket 7.</p><img alt="Eggs goes into bucket 7 because 5 and 6 are full." class="wide" src="image/hash-tables/insert-6.png"/>
-<p>We run into a similar problem with “nuts”. It can’t land in 6 like it wants to.
-Nor can it go into 7. So we keep going. But we’ve reached the end of the array,
-so we wrap back around to 0 and put it there.</p><img alt="Nuts wraps around to bucket 0 because 6 and 7 are full." class="wide" src="image/hash-tables/insert-7.png"/>
-<p>In practice, the interleaving turns out to not be much of a problem. Even in
-separate chaining, we need to walk the list to check each entry’s key because
-multiple keys can reduce to the same bucket. With open addressing, we need to do
-that same check, and that also covers the case where you are stepping over
-entries that “belong” to a different original bucket.</p>
-<h2><a href="#hash-functions" id="hash-functions"><small>20 . 3</small>Hash Functions</a></h2>
-<p>We can now build ourselves a reasonably efficient table for storing variable
-names up to eight characters long, but that limitation is still annoying. In
-order to relax the last constraint, we need a way to take a string of any length
-and convert it to a fixed-size integer.</p>
-<p>Finally, we get to the “hash” part of “hash table”. A <strong>hash function</strong> takes
-some larger blob of data and “hashes” it to produce a fixed-size integer <strong>hash
-code</strong> whose value depends on all of the bits of the original data. A <span name="crypto">good</span> hash function has three main goals:</p>
-<aside name="crypto">
-<p>Hash functions are also used for cryptography. In that domain, “good” has a
-<em>much</em> more stringent definition to avoid exposing details about the data being
-hashed. We, thankfully, don’t need to worry about those concerns for this book.</p>
+<p><font papago-translate="translated">모든 항목을 하나의 크고 연속적인 배열로 저장하는 것은 메모리 표현을 간단하고 빠르게 유지하는 데 매우 좋습니다.</font><font papago-translate="translated"> 하지만 해시 테이블의 모든 연산을 더 복잡하게 만듭니다.</font><font papago-translate="translated"> 항목을 삽입할 때 버킷이 가득 차서 다른 버킷을 살펴보도록 할 수 있습니다.</font><font papago-translate="translated"> 그 양동이 자체가 비어 있을 수도 있습니다.</font><font papago-translate="translated"> 사용 가능한 버킷을 찾는 이 프로세스를<strong> 프로빙이라고</strong> 하며, 버킷을 검사하는 순서는<strong> 프로빙 시퀀스</strong>입니다.</font></p>
+<p><font papago-translate="translated">어떤 버킷을 탐색할지와 어떤 항목이<span name="probe"></span> 어떤 버킷에 들어갈지 결정하는 방법을 결정하는 여러 가지 알고리즘이 있습니다.</font><font papago-translate="translated"> 여기에는 약간의 조정만으로도 큰 성능 영향을 미칠 수 있기 때문에 많은 연구가 있었습니다.</font><font papago-translate="translated"> 그리고 해시 테이블만큼 많이 사용되는 데이터 구조에서는 이러한 성능 영향이 다양한 하드웨어 기능에 걸쳐 매우 많은 실제 프로그램에 영향을 미칩니다.</font></p>
+<aside name="probe" style="top: 5369px;">
+<p><font papago-translate="translated">더 배우고 싶다면 (그리고 이 중 일부는 정말 멋지기 때문에) "더블 해싱", "뻐꾸기 해싱", "로빈 후드 해싱" 등을 살펴보세요.</font></p>
+</aside>
+<p><font papago-translate="translated">이 책에서 평소처럼, 우리는 일을 효율적으로 처리할 수 있는 가장 간단한 것을 선택할 것입니다.</font><font papago-translate="translated"> 그것은 좋은 오래<strong>된 선형 탐색입니다</strong>.</font><font papago-translate="translated"> 항목을 찾을 때는 키 맵이 있는 첫 번째 버킷을 살펴봅니다.</font><font papago-translate="translated"> 그 안에 없으면 배열의 바로 다음 요소를 살펴보는 등의 작업을 수행합니다.</font><font papago-translate="translated"> 끝에 도달하면 처음부터 다시 시작합니다.</font></p>
+<p><font papago-translate="translated">선형 프로빙의 좋은 점은 캐시 친화적이라는 점입니다.</font><font papago-translate="translated"> 배열을 메모리 순서대로 직접 걷기 때문에 CPU의 캐시 라인을 가득 채우고 행복하게 유지할 수 있습니다.</font><font papago-translate="translated"> 나쁜 점은<strong> 군집화</strong>되기 쉽다는 것입니다.</font><font papago-translate="translated"> 숫자적으로 비슷한 키 값을 가진 항목이 많으면 바로 옆에 충돌하고 넘쳐나는 버킷이 많이 생길 수 있습니다.</font></p>
+<p><font papago-translate="translated">별도의 체인에 비해 오픈 어드레싱은 머리를 감쌀 때 더 어려울 수 있습니다.</font><font papago-translate="translated"> 오픈 어드레싱은 노드의 "리스트"가 버킷 배열 자체를 통해 스레딩된다는 점을 제외하고는 별도의 체인과 유사하다고 생각합니다.</font><font papago-translate="translated"> 포인터에 링크를 저장하는 대신 버킷을 살펴보는 순서에 따라 연결이 암묵적으로 계산됩니다.</font></p>
+<p><font papago-translate="translated">까다로운 부분은 이러한 암시적 목록 중 하나 이상이 서로 얽혀 있을 수 있다는 점입니다.</font><font papago-translate="translated"> 모든 흥미로운 사례를 다루는 예시를 살펴보겠습니다.</font><font papago-translate="translated"> 지금은 값을 무시하고 키 세트에 대해 걱정하겠습니다.</font><font papago-translate="translated"> 우리는 8개의 버킷으로 이루어진 빈 배열로 시작합니다.</font></p><img alt="An array with eight empty buckets." class="wide" src="https://youhogeon-meritz.github.io/image/hash-tables/insert-1.png">
+<p><font papago-translate="translated">우리는 "베이글"을 삽입하기로 결정했습니다.</font><font papago-translate="translated"> 첫 번째 글자인 "b" (ASCII 값 98)은 배열 크기 (8)의 모듈로를 버킷 2에 넣습니다.</font></p><img alt="Bagel goes into bucket 2." class="wide" src="https://youhogeon-meritz.github.io/image/hash-tables/insert-2.png">
+<p><font papago-translate="translated">다음으로, "잼"을 삽입합니다.</font><font papago-translate="translated"> 그것도 버킷 2(106 모드 8 = 2)에 들어가고 싶지만, 그 버킷은 가져갔습니다.</font><font papago-translate="translated"> 우리는 계속해서 다음 양동이를 탐색하고 있습니다.</font><font papago-translate="translated"> 비어 있어서 거기에 두었습니다.</font></p><img alt="Jam goes into bucket 3, since 2 is full." class="wide" src="https://youhogeon-meritz.github.io/image/hash-tables/insert-3.png">
+<p><font papago-translate="translated">우리는 버킷 6에 행복하게 착지하는 "과일"을 삽입합니다.</font></p><img alt="Fruit goes into bucket 6." class="wide" src="https://youhogeon-meritz.github.io/image/hash-tables/insert-4.png">
+<p><font papago-translate="translated">마찬가지로, "미가스"는 선호하는 버킷 5에 들어갈 수 있습니다.</font></p><img alt="Migas goes into bucket 5." class="wide" src="https://youhogeon-meritz.github.io/image/hash-tables/insert-5.png">
+<p><font papago-translate="translated">"달걀"을 삽입하려고 할 때, 그것도 버킷 5에 넣고 싶어 합니다.</font><font papago-translate="translated"> 꽉 찼으니 6으로 넘어가겠습니다.</font><font papago-translate="translated"> 버킷 6도 가득 찼습니다.</font><font papago-translate="translated"> 거기에 있는 항목은 동일한 프로브 서열의 일부<em>가 아니라는</em> 점에 유의하세요.</font><font papago-translate="translated"> "과일"은 선호하는 버킷 6에 있습니다. 따라서 5와 6 시퀀스가 충돌하여 서로 얽혀 있습니다.</font><font papago-translate="translated"> 우리는 그것을 건너뛰고 마침내 버킷 7에 "달걀"을 넣습니다.</font></p><img alt="Eggs goes into bucket 7 because 5 and 6 are full." class="wide" src="https://youhogeon-meritz.github.io/image/hash-tables/insert-6.png">
+<p><font papago-translate="translated">우리는 "넛"에서도 비슷한 문제에 직면합니다.</font><font papago-translate="translated"> 원하는 대로 6에 착륙할 수 없습니다.</font><font papago-translate="translated"> 7에도 들어갈 수 없습니다.</font><font papago-translate="translated"> 그래서 우리는 계속 나아갑니다.</font><font papago-translate="translated"> 하지만 배열의 끝에 도달했기 때문에 0으로 다시 감싸고 거기에 놓습니다.</font></p><img alt="Nuts wraps around to bucket 0 because 6 and 7 are full." class="wide" src="https://youhogeon-meritz.github.io/image/hash-tables/insert-7.png">
+<p><font papago-translate="translated">실제로는 인터리빙이 큰 문제가 되지 않는 것으로 나타났습니다.</font><font papago-translate="translated"> 별도의 체인에서도 여러 개의 키가 같은 버킷으로 줄어들 수 있기 때문에 각 항목의 키를 확인하려면 목록을 걸어야 합니다.</font><font papago-translate="translated"> 오픈 어드레싱에서는 동일한 검사를 수행해야 하며, 이는 다른 원본 버킷에 "속"된 항목을 넘겨받는 경우도 포함됩니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/hash-tables.html#hash-functions" id="hash-functions"><small><font papago-translate="translated">20 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">해시 함수</font></font></a></h2>
+<p><font papago-translate="translated">이제 변수 이름을 최대 8자까지 저장할 수 있는 비교적 효율적인 테이블을 만들 수 있지만, 그 제한은 여전히 성가십니다.</font><font papago-translate="translated"> 마지막 제약을 완화하기 위해서는 임의의 길이의 문자열을 고정 크기 정수로 변환하는 방법이 필요합니다.</font></p>
+<p><font papago-translate="translated">마침내 "해시 테이블"의 "해시" 부분에 도달합니다.</font><font papago-translate="translated"> <strong>해시 함수는</strong> 더 큰 데이터 덩어리를 가져와서 원래 데이터의 모든 비트에 따라 값이 달라지는 고정 크기 정수<strong> 해시 코드</strong>를 생성하기 위해 "해시"합니다.</font><font papago-translate="translated"> <span name="crypto">좋은</span> 해시 함수는 세 가지 주요 목표가 있습니다:</font></p>
+<aside name="crypto" style="top: 7754.5px;">
+<p><font papago-translate="translated">해시 함수는 암호화에도 사용됩니다.</font><font papago-translate="translated"> 해당 도메인에서 "좋은"은 해시되는 데이터에 대한 세부 정보를 노출하지 않도록<em> 훨씬</em> 더 엄격한 정의를 가지고 있습니다.</font><font papago-translate="translated"> 다행히도 우리는 이 책에 대해 그런 걱정을 할 필요가 없습니다.</font></p>
 </aside>
 <ul>
 <li>
-<p><strong>It must be <em>deterministic</em>.</strong> The same input must always hash to the same
-number. If the same variable ends up in different buckets at different
-points in time, it’s gonna get really hard to find it.</p>
+<p><font papago-translate="translated"><strong><em>결정론적</em>이어야 합니다.</strong></font><font papago-translate="translated"> 동일한 입력은 항상 동일한 숫자로 해시되어야 합니다.</font><font papago-translate="translated"> 같은 변수가 서로 다른 시점에 다른 버킷에 들어간다면, 찾기가 정말 어려워질 것입니다.</font></p>
 </li>
 <li>
-<p><strong>It must be <em>uniform</em>.</strong> Given a typical set of inputs, it should produce a
-wide and evenly distributed range of output numbers, with as few clumps or
-patterns as possible. We want it to <span name="scatter">scatter</span>
-values across the whole numeric range to minimize collisions and clustering.</p>
+<p><font papago-translate="translated"><strong><em>균일</em>해야 합니다.</strong></font><font papago-translate="translated"> 일반적인 입력 집합이 주어지면 가능한 한 적은 덩어리나 패턴으로 넓고 고르게 분포된 출력 수를 생성해야 합니다.</font><font papago-translate="translated"> 충돌과 클러스터링을 최소화하기 위해 전체 숫자 범위에 걸쳐 값<span name="scatter">을 분산</span>시키기를 원합니다.</font></p>
 </li>
 <li>
-<p><strong>It must be <em>fast</em>.</strong> Every operation on the hash table requires us to hash
-the key first. If hashing is slow, it can potentially cancel out the speed
-of the underlying array storage.</p>
+<p><font papago-translate="translated"><strong><em>빠</em>르지 않으면 안 됩니다.</strong></font><font papago-translate="translated"> 해시 테이블의 모든 작업은 먼저 키를 해시해야 합니다.</font><font papago-translate="translated"> 해싱 속도가 느리면 기본 배열 저장소의 속도를 상쇄할 수 있습니다.</font></p>
 </li>
 </ul>
-<aside name="scatter">
-<p>One of the original names for a hash table was “scatter table” because it takes
-the entries and scatters them throughout the array. The word “hash” came from
-the idea that a hash function takes the input data, chops it up, and tosses it
-all together into a pile to come up with a single number from all of those bits.</p>
+<aside name="scatter" style="top: 7970.5px;">
+<p><font papago-translate="translated">해시 테이블의 원래 이름 중 하나는 항목을 가져와서 배열 전체에 분산시키기 때문에 "산란 테이블"이었습니다.</font><font papago-translate="translated"> "해시"라는 단어는 해시 함수가 입력 데이터를 가져와서 잘라내고, 그것을 모두 더미에 던져 그 모든 비트에서 하나의 숫자를 만들어낸다는 아이디어에서 유래했습니다.</font></p>
 </aside>
-<p>There is a veritable pile of hash functions out there. Some are old and
-optimized for architectures no one uses anymore. Some are designed to be fast,
-others cryptographically secure. Some take advantage of vector instructions and
-cache sizes for specific chips, others aim to maximize portability.</p>
-<p>There are people out there for whom designing and evaluating hash functions is,
-like, their <em>jam</em>. I admire them, but I’m not mathematically astute enough to
-<em>be</em> one. So for clox, I picked a simple, well-worn hash function called
-<a href="http://www.isthe.com/chongo/tech/comp/fnv/">FNV-1a</a> that’s served me fine over the years. Consider <span name="thing">trying</span> out different ones in your code and see if they make
-a difference.</p>
-<aside name="thing">
-<p>Who knows, maybe hash functions could turn out to be your thing too?</p>
+<p><font papago-translate="translated">정말 많은 해시 함수들이 존재합니다.</font><font papago-translate="translated"> 일부는 더 이상 아무도 사용하지 않는 오래된 건축물에 최적화되어 있습니다.</font><font papago-translate="translated"> 일부는 빠르고 다른 일부는 암호학적으로 안전하도록 설계되었습니다.</font><font papago-translate="translated"> 일부는 특정 칩에 대한 벡터 명령어와 캐시 크기를 활용하고, 다른 일부는 휴대성을 극대화하는 것을 목표로 합니다.</font></p>
+<p><font papago-translate="translated">해시 함수를 설계하고 평가하는 사람들 중<em>에는 마치 잼과 같은 것</em>들이<em> 있는</em> 사람들도 있습니다.</font><font papago-translate="translated"> 저는 그들을 존경하지만, 수학적으로<em></em> 충분히 예리하지는 않습니다.</font><font papago-translate="translated"> 그래서 clox를 위해, 저는 F<a href="http://www.isthe.com/chongo/tech/comp/fnv/">NV-1</a>a라는 간단하고 잘 착용된 해시 함수를 선택했는데, 이 함수는 수년 동안 잘 사용되었습니다.</font><font papago-translate="translated"> 코드에서 다양한 것을<span name="thing"> 시도</span>해보고 그들이 차이를 만드는지 확인해 보세요.</font></p>
+<aside name="thing" style="top: 8330.5px;">
+<p><font papago-translate="translated">해시 함수도 당신의 것이 될 수 있다는 것을 누가 알겠어요?</font></p>
 </aside>
-<p>OK, that’s a quick run through of buckets, load factors, open addressing,
-collision resolution, and hash functions. That’s an awful lot of text and not a
-lot of real code. Don’t worry if it still seems vague. Once we’re done coding it
-up, it will all click into place.</p>
-<h2><a href="#building-a-hash-table" id="building-a-hash-table"><small>20 . 4</small>Building a Hash Table</a></h2>
-<p>The great thing about hash tables compared to other classic techniques like
-balanced search trees is that the actual data structure is so simple. Ours goes
-into a new module.</p>
-<div class="codehilite"><div class="source-file"><em>table.h</em><br/>
-create new file</div>
+<p><font papago-translate="translated">좋아요, 버킷, 로드 팩터, 오픈 어드레싱, 충돌 해결, 해시 함수를 빠르게 살펴봅니다.</font><font papago-translate="translated"> 텍스트는 엄청나게 많고 실제 코드는 많지 않습니다.</font><font papago-translate="translated"> 아직 모호해 보이더라도 걱정하지 마세요.</font><font papago-translate="translated"> 코딩이 끝나면 모든 것이 제자리에서 클릭됩니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/hash-tables.html#building-a-hash-table" id="building-a-hash-table"><small><font papago-translate="translated">20 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">해시 테이블 만들기</font></font></a></h2>
+<p><font papago-translate="translated">해시 테이블의 장점은 균형 검색 트리와 같은 다른 고전적인 기법과 비교했을 때 실제 데이터 구조가 매우 간단하다는 점입니다.</font><font papago-translate="translated"> 우리 것은 새로운 모듈에 들어갑니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 새 파일 만들기</font></font></div>
 <pre translate="no"><span class="a">#ifndef clox_table_h</span>
 <span class="a">#define clox_table_h</span>
 
@@ -391,46 +187,34 @@ create new file</div>
 <span class="a">#endif</span>
 </pre></div>
 <div class="source-file-narrow"><em>table.h</em>, create new file</div>
-<p>A hash table is an array of entries. As in our dynamic array earlier, we keep
-track of both the allocated size of the array (<code translate="no">capacity</code>) and the number of
-key/value pairs currently stored in it (<code translate="no">count</code>). The ratio of count to capacity
-is exactly the load factor of the hash table.</p>
-<p>Each entry is one of these:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">해시 테이블은 항목들의 배열입니다.</font><font papago-translate="translated"> 이전의 동적 배열에서와 같이, 우리는 배열의 할당된 크기를 모두 추적합니다 (</font></font><code translate="no">capacity</code><font papago-translate="splitted"><font papago-translate="translated">) 및 현재 저장된 키/값 쌍의 수 (</font></font><code translate="no">count</code><font papago-translate="splitted"><font papago-translate="translated">). 카운트 대 용량의 비율은 해시 테이블의 로드 팩터입니다.</font></font></p>
+<p><font papago-translate="translated">각 항목은 다음 중 하나입니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include "value.h"
-</pre><div class="source-file"><em>table.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">테이블.h</font></em></div>
 <pre class="insert" translate="no">
-
 <span class="k">typedef</span> <span class="k">struct</span> {
   <span class="t">ObjString</span>* <span class="i">key</span>;
   <span class="t">Value</span> <span class="i">value</span>;
 } <span class="t">Entry</span>;
 </pre><pre class="insert-after" translate="no">
-
 typedef struct {
 </pre></div>
 <div class="source-file-narrow"><em>table.h</em></div>
-<p>It’s a simple key/value pair. Since the key is always a <span name="string">string</span>, we store the ObjString pointer directly instead of
-wrapping it in a Value. It’s a little faster and smaller this way.</p>
-<aside name="string">
-<p>In clox, we only need to support keys that are strings. Handling other types of
-keys doesn’t add much complexity. As long as you can compare two objects for
-equality and reduce them to sequences of bits, it’s easy to use them as hash
-keys.</p>
+<p><font papago-translate="translated">간단한 키/값 쌍입니다.</font><font papago-translate="translated"> 키는 항상<span name="string"> 문자열</span>이기 때문에, 우리는 ObjString 포인터를 Value로 감싸지 않고 직접 저장합니다.</font><font papago-translate="translated"> 이렇게 하면 조금 더 빠르고 작아집니다.</font></p>
+<aside name="string" style="top: 9326.5px;">
+<p><font papago-translate="translated">clox에서는 문자열인 키만 지원하면 됩니다.</font><font papago-translate="translated"> 다른 유형의 키를 다루는 것은 큰 복잡성을 추가하지 않습니다.</font><font papago-translate="translated"> 두 객체를 동등하게 비교하고 비트 시퀀스로 줄일 수만 있다면 해시 키로 쉽게 사용할 수 있습니다.</font></p>
 </aside>
-<p>To create a new, empty hash table, we declare a constructor-like function.</p>
+<p><font papago-translate="translated">새로운 빈 해시 테이블을 만들기 위해, 우리는 생성자와 유사한 함수를 선언합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">} Table;
 
-</pre><div class="source-file"><em>table.h</em><br/>
-add after struct <em>Table</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em></em>구조 테이블 뒤에 추가</font></font></div>
 <pre class="insert" translate="no"><span class="t">void</span> <span class="i">initTable</span>(<span class="t">Table</span>* <span class="i">table</span>);
 
 </pre><pre class="insert-after" translate="no">#endif
 </pre></div>
 <div class="source-file-narrow"><em>table.h</em>, add after struct <em>Table</em></div>
-<p>We need a new implementation file to define that. While we’re at it, let’s get
-all of the pesky includes out of the way.</p>
-<div class="codehilite"><div class="source-file"><em>table.c</em><br/>
-create new file</div>
+<p><font papago-translate="translated">이를 정의하기 위해 새로운 구현 파일이 필요합니다.</font><font papago-translate="translated"> 우리가 하는 동안 성가신 것들은 모두 치워버리자.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 새 파일 만들기</font></font></div>
 <pre translate="no"><span class="a">#include &lt;stdlib.h&gt;</span>
 <span class="a">#include &lt;string.h&gt;</span>
 
@@ -446,106 +230,74 @@ create new file</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, create new file</div>
-<p>As in our dynamic value array type, a hash table initially starts with zero
-capacity and a <code translate="no">NULL</code> array. We don’t allocate anything until needed. Assuming
-we do eventually allocate something, we need to be able to free it too.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">동적 값 배열 유형에서와 같이 해시 테이블은 처음에 용량이 0이고 </font></font><code translate="no">NULL</code><font papago-translate="splitted"><font papago-translate="translated"> 배열.</font><font papago-translate="translated"> 필요할 때까지 아무것도 할당하지 않습니다.</font><font papago-translate="translated"> 우리가 결국 무언가를 할당한다고 가정하면, 그것을 자유롭게 할 수 있어야 합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">void initTable(Table* table);
-</pre><div class="source-file"><em>table.h</em><br/>
-add after <em>initTable</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>initTable</em>() 다음에 추가</font></font></div>
 <pre class="insert" translate="no"><span class="t">void</span> <span class="i">freeTable</span>(<span class="t">Table</span>* <span class="i">table</span>);
 </pre><pre class="insert-after" translate="no">
-
 #endif
 </pre></div>
 <div class="source-file-narrow"><em>table.h</em>, add after <em>initTable</em>()</div>
-<p>And its glorious implementation:</p>
-<div class="codehilite"><div class="source-file"><em>table.c</em><br/>
-add after <em>initTable</em>()</div>
+<p><font papago-translate="translated">그리고 그것의 영광스러운 구현:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>initTable</em>() 다음에 추가</font></font></div>
 <pre translate="no"><span class="t">void</span> <span class="i">freeTable</span>(<span class="t">Table</span>* <span class="i">table</span>) {
   <span class="a">FREE_ARRAY</span>(<span class="t">Entry</span>, <span class="i">table</span>-&gt;<span class="i">entries</span>, <span class="i">table</span>-&gt;<span class="i">capacity</span>);
   <span class="i">initTable</span>(<span class="i">table</span>);
 }
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, add after <em>initTable</em>()</div>
-<p>Again, it looks just like a dynamic array. In fact, you can think of a hash
-table as basically a dynamic array with a really strange policy for inserting
-items. We don’t need to check for <code translate="no">NULL</code> here since <code translate="no">FREE_ARRAY()</code> already
-handles that gracefully.</p>
-<h3><a href="#hashing-strings" id="hashing-strings"><small>20 . 4 . 1</small>Hashing strings</a></h3>
-<p>Before we can start putting entries in the table, we need to, well, hash them.
-To ensure that the entries get distributed uniformly throughout the array, we
-want a good hash function that looks at all of the bits of the key string. If it
-looked at, say, only the first few characters, then a series of strings that all
-shared the same prefix would end up colliding in the same bucket.</p>
-<p>On the other hand, walking the entire string to calculate the hash is kind of
-slow. We’d lose some of the performance benefit of the hash table if we had to
-walk the string every time we looked for a key in the table. So we’ll do the
-obvious thing: cache it.</p>
-<p>Over in the “object” module in ObjString, we add:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다시 말하지만, 그것은 마치 동적 배열처럼 보입니다.</font><font papago-translate="translated"> 사실 해시 테이블은 기본적으로 항목을 삽입하는 데 있어 매우 이상한 정책을 가진 동적 배열이라고 생각할 수 있습니다.</font><font papago-translate="translated"> 확인할 필요가 없습니다 </font></font><code translate="no">NULL</code><font papago-translate="splitted"><font papago-translate="translated"> 다음과 같은 이유로 여기에서 </font></font><code translate="no">FREE_ARRAY()</code><font papago-translate="splitted"><font papago-translate="translated"> 이미 우아하게 처리하고 있습니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/hash-tables.html#hashing-strings" id="hashing-strings"><small><font papago-translate="translated">20 . 4 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">해싱 문자열</font></font></a></h3>
+<p><font papago-translate="translated">표에 항목을 넣기 전에 먼저 해시해야 합니다.</font><font papago-translate="translated"> 항목들이 배열 전체에 고르게 분포되도록 하기 위해, 우리는 키 문자열의 모든 비트를 볼 수 있는 좋은 해시 함수를 원합니다.</font><font papago-translate="translated"> 만약 처음 몇 글자만 본다면, 모두 같은 접두사를 공유하는 일련의 문자열들이 결국 같은 버킷에서 충돌하게 될 것입니다.</font></p>
+<p><font papago-translate="translated">반면에 해시를 계산하기 위해 문자열 전체를 걷는 것은 다소 느립니다.</font><font papago-translate="translated"> 테이블에서 키를 찾을 때마다 문자열을 걸어야 한다면 해시 테이블의 성능 이점 중 일부를 잃게 될 것입니다.</font><font papago-translate="translated"> 그래서 우리는 당연한 일을 할 것입니다: 그것을 현금화하세요.</font></p>
+<p><font papago-translate="translated">ObjString의 "object" 모듈에 다음을 추가합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  char* chars;
-</pre><div class="source-file"><em>object.h</em><br/>
-in struct <em>ObjString</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 구조 Ob<em>jString</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="t">uint32_t</span> <span class="i">hash</span>;
 </pre><pre class="insert-after" translate="no">};
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em>, in struct <em>ObjString</em></div>
-<p>Each ObjString stores the hash code for its string. Since strings are immutable
-in Lox, we can calculate the hash code once up front and be certain that it will
-never get invalidated. Caching it eagerly makes a kind of sense: allocating the
-string and copying its characters over is already an <em>O(n)</em> operation, so it’s a
-good time to also do the <em>O(n)</em> calculation of the string’s hash.</p>
-<p>Whenever we call the internal function to allocate a string, we pass in its
-hash code.</p>
-<div class="codehilite"><div class="source-file"><em>object.c</em><br/>
-function <em>allocateString</em>()<br/>
-replace 1 line</div>
+<p><font papago-translate="translated">각 ObjString은 문자열에 대한 해시 코드를 저장합니다.</font><font papago-translate="translated"> 문자열은 Lox에서 불변하기 때문에 해시 코드를 한 번 미리 계산하고 절대 무효화되지 않도록 보장할 수 있습니다.</font><font papago-translate="translated"> 문자열을 열심히 캐싱하는 것은 일종의 의미가 있습니다. 문자열을 할당하고 문자를 복사하는 것은 이미 O<em>(n</em>) 연산이므로 문자열의 해시를 O<em>(n</em>) 연산하는 것도 좋은 시기입니다.</font></p>
+<p><font papago-translate="translated">문자열을 할당하기 위해 내부 함수를 호출할 때마다 해시 코드를 전달합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 함수<em> allocateString</em>()</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no"><span class="k">static</span> <span class="t">ObjString</span>* <span class="i">allocateString</span>(<span class="t">char</span>* <span class="i">chars</span>, <span class="t">int</span> <span class="i">length</span>,
                                  <span class="t">uint32_t</span> <span class="i">hash</span>) {
 </pre><pre class="insert-after" translate="no">  ObjString* string = ALLOCATE_OBJ(ObjString, OBJ_STRING);
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, function <em>allocateString</em>(), replace 1 line</div>
-<p>That function simply stores the hash in the struct.</p>
+<p><font papago-translate="translated">그 함수는 단순히 해시를 구조물에 저장합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  string-&gt;chars = chars;
-</pre><div class="source-file"><em>object.c</em><br/>
-in <em>allocateString</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>allocateString</em>()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="i">string</span>-&gt;<span class="i">hash</span> = <span class="i">hash</span>;
 </pre><pre class="insert-after" translate="no">  return string;
 }
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, in <em>allocateString</em>()</div>
-<p>The fun happens over at the callers. <code translate="no">allocateString()</code> is called from two
-places: the function that copies a string and the one that takes ownership of an
-existing dynamically allocated string. We’ll start with the first.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">재미있는 일은 발신자들이 하는 곳에서 일어납니다. </font></font><code translate="no">allocateString()</code><font papago-translate="splitted"><font papago-translate="translated"> 문자열을 복사하는 함수와 동적으로 할당된 기존 문자열의 소유권을 가지는 함수 두 곳에서 호출됩니다.</font><font papago-translate="translated"> 첫 번째부터 시작하겠습니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">ObjString* copyString(const char* chars, int length) {
-</pre><div class="source-file"><em>object.c</em><br/>
-in <em>copyString</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>copyString</em>()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="t">uint32_t</span> <span class="i">hash</span> = <span class="i">hashString</span>(<span class="i">chars</span>, <span class="i">length</span>);
 </pre><pre class="insert-after" translate="no">  char* heapChars = ALLOCATE(char, length + 1);
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, in <em>copyString</em>()</div>
-<p>No magic here. We calculate the hash code and then pass it along.</p>
+<p><font papago-translate="translated">여기에는 마법이 없습니다.</font><font papago-translate="translated"> 해시 코드를 계산한 다음 전달합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  memcpy(heapChars, chars, length);
   heapChars[length] = '\0';
-</pre><div class="source-file"><em>object.c</em><br/>
-in <em>copyString</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>copyString</em>()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  <span class="k">return</span> <span class="i">allocateString</span>(<span class="i">heapChars</span>, <span class="i">length</span>, <span class="i">hash</span>);
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, in <em>copyString</em>(), replace 1 line</div>
-<p>The other string function is similar.</p>
+<p><font papago-translate="translated">다른 문자열 함수도 비슷합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">ObjString* takeString(char* chars, int length) {
-</pre><div class="source-file"><em>object.c</em><br/>
-in <em>takeString</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>takeString</em>()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  <span class="t">uint32_t</span> <span class="i">hash</span> = <span class="i">hashString</span>(<span class="i">chars</span>, <span class="i">length</span>);
   <span class="k">return</span> <span class="i">allocateString</span>(<span class="i">chars</span>, <span class="i">length</span>, <span class="i">hash</span>);
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, in <em>takeString</em>(), replace 1 line</div>
-<p>The interesting code is over here:</p>
-<div class="codehilite"><div class="source-file"><em>object.c</em><br/>
-add after <em>allocateString</em>()</div>
+<p><font papago-translate="translated">흥미로운 코드는 여기 있습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>allocate</em>St<em>ring</em>() 후 추가</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">uint32_t</span> <span class="i">hashString</span>(<span class="k">const</span> <span class="t">char</span>* <span class="i">key</span>, <span class="t">int</span> <span class="i">length</span>) {
   <span class="t">uint32_t</span> <span class="i">hash</span> = <span class="n">2166136261u</span>;
   <span class="k">for</span> (<span class="t">int</span> <span class="i">i</span> = <span class="n">0</span>; <span class="i">i</span> &lt; <span class="i">length</span>; <span class="i">i</span>++) {
@@ -556,35 +308,20 @@ add after <em>allocateString</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, add after <em>allocateString</em>()</div>
-<p>This is the actual bona fide “hash function” in clox. The algorithm is called
-“FNV-1a”, and is the shortest decent hash function I know. Brevity is certainly
-a virtue in a book that aims to show you every line of code.</p>
-<p>The basic idea is pretty simple, and many hash functions follow the same
-pattern. You start with some initial hash value, usually a constant with certain
-carefully chosen mathematical properties. Then you walk the data to be hashed.
-For each byte (or sometimes word), you mix the bits into the hash value somehow,
-and then scramble the resulting bits around some.</p>
-<p>What it means to “mix” and “scramble” can get pretty sophisticated. Ultimately,
-though, the basic goal is <em>uniformity</em><span class="em">—</span>we want the resulting hash values to
-be as widely scattered around the numeric range as possible to avoid collisions
-and clustering.</p>
-<h3><a href="#inserting-entries" id="inserting-entries"><small>20 . 4 . 2</small>Inserting entries</a></h3>
-<p>Now that string objects know their hash code, we can start putting them into
-hash tables.</p>
+<p><font papago-translate="translated">이것은 클로크스에서 실제 진정한 "해시 함수"입니다.</font><font papago-translate="translated"> 그 알고리즘은 "FNV-1a"라고 불리며, 제가 아는 가장 짧은 괜찮은 해시 함수입니다.</font><font papago-translate="translated"> 간결함은 모든 코드 라인을 보여주는 것을 목표로 하는 책에서 확실히 미덕입니다.</font></p>
+<p><font papago-translate="translated">기본 아이디어는 꽤 간단하며, 많은 해시 함수들이 동일한 패턴을 따릅니다.</font><font papago-translate="translated"> 초기 해시 값, 일반적으로 신중하게 선택된 특정 수학적 속성을 가진 상수로 시작합니다.</font><font papago-translate="translated"> 그런 다음 해시할 데이터를 걷습니다.</font><font papago-translate="translated"> 각 바이트(또는 때로는 단어)마다 비트를 해시 값에 어떻게든 섞은 다음 결과 비트를 몇 개씩 스크램블링합니다.</font></p>
+<p><font papago-translate="translated">"혼합"과 "스크램블링"의 의미는 꽤 정교해질 수 있습니다.</font><font papago-translate="translated"> 궁극적으로 기본 목표는<em> 일관성</em>입니다—결과 해시 값이 충돌과<span class="em"></span> 클러스터링을 피하기 위해 가능한 한 숫자 범위에 널리 흩어져 있기를 바랍니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/hash-tables.html#inserting-entries" id="inserting-entries"><small><font papago-translate="translated">20 . 4 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">항목 삽입</font></font></a></h3>
+<p><font papago-translate="translated">이제 문자열 객체가 해시 코드를 알고 있으므로 해시 테이블에 입력할 수 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">void freeTable(Table* table);
-</pre><div class="source-file"><em>table.h</em><br/>
-add after <em>freeTable</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>freeTable</em>() 다음에 추가</font></font></div>
 <pre class="insert" translate="no"><span class="t">bool</span> <span class="i">tableSet</span>(<span class="t">Table</span>* <span class="i">table</span>, <span class="t">ObjString</span>* <span class="i">key</span>, <span class="t">Value</span> <span class="i">value</span>);
 </pre><pre class="insert-after" translate="no">
-
 #endif
 </pre></div>
 <div class="source-file-narrow"><em>table.h</em>, add after <em>freeTable</em>()</div>
-<p>This function adds the given key/value pair to the given hash table. If an entry
-for that key is already present, the new value overwrites the old value. The
-function returns <code translate="no">true</code> if a new entry was added. Here’s the implementation:</p>
-<div class="codehilite"><div class="source-file"><em>table.c</em><br/>
-add after <em>freeTable</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 함수는 주어진 키/값 쌍을 주어진 해시 테이블에 추가합니다.</font><font papago-translate="translated"> 해당 키에 대한 항목이 이미 있는 경우 새 값이 이전 값을 덮어씁니다.</font><font papago-translate="translated"> 함수가 반환됩니다 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated"> 새 항목이 추가된 경우.</font><font papago-translate="translated"> 구현은 다음과 같습니다:</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>freeTable</em>() 다음에 추가</font></font></div>
 <pre translate="no"><span class="t">bool</span> <span class="i">tableSet</span>(<span class="t">Table</span>* <span class="i">table</span>, <span class="t">ObjString</span>* <span class="i">key</span>, <span class="t">Value</span> <span class="i">value</span>) {
   <span class="t">Entry</span>* <span class="i">entry</span> = <span class="i">findEntry</span>(<span class="i">table</span>-&gt;<span class="i">entries</span>, <span class="i">table</span>-&gt;<span class="i">capacity</span>, <span class="i">key</span>);
   <span class="t">bool</span> <span class="i">isNewKey</span> = <span class="i">entry</span>-&gt;<span class="i">key</span> == <span class="a">NULL</span>;
@@ -596,20 +333,11 @@ add after <em>freeTable</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, add after <em>freeTable</em>()</div>
-<p>Most of the interesting logic is in <code translate="no">findEntry()</code> which we’ll get to soon. That
-function’s job is to take a key and figure out which bucket in the array it
-should go in. It returns a pointer to that bucket<span class="em">—</span>the address of the Entry in
-the array.</p>
-<p>Once we have a bucket, inserting is straightforward. We update the hash table’s
-size, taking care to not increase the count if we overwrote the value for an
-already-present key. Then we copy the key and value into the corresponding
-fields in the Entry.</p>
-<p>We’re missing a little something here, though. We haven’t actually allocated the
-Entry array yet. Oops! Before we can insert anything, we need to make sure we
-have an array, and that it’s big enough.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">대부분의 흥미로운 논리는 다음과 같습니다 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated"> 곧 도달할 것입니다.</font><font papago-translate="translated"> 그 함수의 역할은 키를 가져와서 배열에서 어떤 버킷을 넣어야 하는지 알아내는 것입니다.</font><font papago-translate="translated"> <span class="em"></span>배열에 있는 항목의 주소인 버킷으로 포인터를 반환합니다.</font></font></p>
+<p><font papago-translate="translated">버킷이 생기면 삽입하는 것이 간단합니다.</font><font papago-translate="translated"> 해시 테이블의 크기를 업데이트하여 이미 존재하는 키의 값을 덮어쓰더라도 카운트가 증가하지 않도록 주의합니다.</font><font papago-translate="translated"> 그런 다음 키와 값을 항목의 해당 필드에 복사합니다.</font></p>
+<p><font papago-translate="translated">하지만 여기서 뭔가를 놓치고 있습니다.</font><font papago-translate="translated"> 우리는 아직 실제로 엔트리 배열을 할당하지 않았습니다.</font><font papago-translate="translated"> 어머나!</font><font papago-translate="translated"> 무엇이든 삽입하기 전에 배열이 있는지, 그리고 배열이 충분히 큰지 확인해야 합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">bool tableSet(Table* table, ObjString* key, Value value) {
-</pre><div class="source-file"><em>table.c</em><br/>
-in <em>tableSet</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>tableSet</em>()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="k">if</span> (<span class="i">table</span>-&gt;<span class="i">count</span> + <span class="n">1</span> &gt; <span class="i">table</span>-&gt;<span class="i">capacity</span> * <span class="a">TABLE_MAX_LOAD</span>) {
     <span class="t">int</span> <span class="i">capacity</span> = <span class="a">GROW_CAPACITY</span>(<span class="i">table</span>-&gt;<span class="i">capacity</span>);
     <span class="i">adjustCapacity</span>(<span class="i">table</span>, <span class="i">capacity</span>);
@@ -618,34 +346,22 @@ in <em>tableSet</em>()</div>
 </pre><pre class="insert-after" translate="no">  Entry* entry = findEntry(table-&gt;entries, table-&gt;capacity, key);
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, in <em>tableSet</em>()</div>
-<p>This is similar to the code we wrote a while back for growing a dynamic array.
-If we don’t have enough capacity to insert an item, we reallocate and grow the
-array. The <code translate="no">GROW_CAPACITY()</code> macro takes an existing capacity and grows it by
-a multiple to ensure that we get amortized constant performance over a series
-of inserts.</p>
-<p>The interesting difference here is that <code translate="no">TABLE_MAX_LOAD</code> constant.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 우리가 얼마 전에 동적 배열을 성장시키기 위해 작성한 코드와 유사합니다.</font><font papago-translate="translated"> 항목을 삽입할 수 있는 용량이 충분하지 않으면 배열을 재할당하고 확장합니다.</font><font papago-translate="translated"> 그 </font></font><code translate="no">GROW_CAPACITY()</code><font papago-translate="splitted"><font papago-translate="translated"> 매크로는 기존 용량을 사용하여 배수로 확장하여 일련의 삽입물에 대해 일정한 성능을 보장합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">여기서 흥미로운 차이점은 </font></font><code translate="no">TABLE_MAX_LOAD</code><font papago-translate="splitted"><font papago-translate="translated"> 일정한.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include "value.h"
 
-</pre><div class="source-file"><em>table.c</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">테이블.c</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define TABLE_MAX_LOAD 0.75</span>
 
 </pre><pre class="insert-after" translate="no">void initTable(Table* table) {
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em></div>
-<p>This is how we manage the table’s <span name="75">load</span> factor. We don’t
-grow when the capacity is completely full. Instead, we grow the array before
-then, when the array becomes at least 75% full.</p>
-<aside name="75">
-<p>Ideal max load factor varies based on the hash function, collision-handling
-strategy, and typical keysets you’ll see. Since a toy language like Lox doesn’t
-have “real world” data sets, it’s hard to optimize this, and I picked 75%
-somewhat arbitrarily. When you build your own hash tables, benchmark and tune
-this.</p>
+<p><font papago-translate="translated">이것이 우리가 테이블<span name="75">의 하중</span> 계수를 관리하는 방법입니다.</font><font papago-translate="translated"> 용량이 완전히 채워지면 성장하지 않습니다.</font><font papago-translate="translated"> 대신, 배열이 적어도 75% 이상 채워질 때 그 전에 배열을 확장합니다.</font></p>
+<aside name="75" style="top: 13782.5px;">
+<p><font papago-translate="translated">이상적인 최대 부하 계수는 해시 함수, 충돌 처리 전략, 그리고 앞으로 보게 될 일반적인 키셋에 따라 달라집니다.</font><font papago-translate="translated"> Lox와 같은 장난감 언어에는 "실제 세계" 데이터 세트가 없기 때문에 이를 최적화하기가 어렵고, 저는 임의로 75%를 선택했습니다.</font><font papago-translate="translated"> 자신만의 해시 테이블을 만들 때, 이를 벤치마킹하고 조정하세요.</font></p>
 </aside>
-<p>We’ll get to the implementation of <code translate="no">adjustCapacity()</code> soon. First, let’s look
-at that <code translate="no">findEntry()</code> function you’ve been wondering about.</p>
-<div class="codehilite"><div class="source-file"><em>table.c</em><br/>
-add after <em>freeTable</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 다음과 같은 구현에 도달할 것입니다 </font></font><code translate="no">adjustCapacity()</code><font papago-translate="splitted"><font papago-translate="translated"> 곧. 먼저, 그것을 살펴보겠습니다 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated"> 당신이 궁금해하던 기능.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>freeTable</em>() 다음에 추가</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">Entry</span>* <span class="i">findEntry</span>(<span class="t">Entry</span>* <span class="i">entries</span>, <span class="t">int</span> <span class="i">capacity</span>,
                         <span class="t">ObjString</span>* <span class="i">key</span>) {
   <span class="t">uint32_t</span> <span class="i">index</span> = <span class="i">key</span>-&gt;<span class="i">hash</span> % <span class="i">capacity</span>;
@@ -660,60 +376,28 @@ add after <em>freeTable</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, add after <em>freeTable</em>()</div>
-<p>This function is the real core of the hash table. It’s responsible for taking a
-key and an array of buckets, and figuring out which bucket the entry belongs in.
-This function is also where linear probing and collision handling come into
-play. We’ll use <code translate="no">findEntry()</code> both to look up existing entries in the hash
-table and to decide where to insert new ones.</p>
-<p>For all that, there isn’t much to it. First, we use modulo to map the key’s hash
-code to an index within the array’s bounds. That gives us a bucket index where,
-ideally, we’ll be able to find or place the entry.</p>
-<p>There are a few cases to check for:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 함수는 해시 테이블의 실제 핵심입니다.</font><font papago-translate="translated"> 키와 버킷 배열을 가져와서 항목이 어느 버킷에 속하는지 알아내는 역할을 합니다.</font><font papago-translate="translated"> 이 기능은 또한 선형 탐사 및 충돌 처리가 이루어지는 곳입니다.</font><font papago-translate="translated"> 우리는 사용할 것입니다 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated"> 해시 테이블에서 기존 항목을 조회하고 새 항목을 삽입할 위치를 결정합니다.</font></font></p>
+<p><font papago-translate="translated">그럼에도 불구하고, 별로 큰 의미가 없습니다.</font><font papago-translate="translated"> 먼저, 모듈로를 사용하여 키의 해시 코드를 배열의 경계 내 인덱스에 매핑합니다.</font><font papago-translate="translated"> 이를 통해 이상적으로 항목을 찾거나 배치할 수 있는 버킷 인덱스를 얻을 수 있습니다.</font></p>
+<p><font papago-translate="translated">확인해야 할 몇 가지 사례가 있습니다:</font></p>
 <ul>
 <li>
-<p>If the key for the Entry at that array index is <code translate="no">NULL</code>, then the bucket is
-empty. If we’re using <code translate="no">findEntry()</code> to look up something in the hash table,
-this means it isn’t there. If we’re using it to insert, it means we’ve found
-a place to add the new entry.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">해당 배열 인덱스에서 엔트리의 키가 다음과 같은 경우 </font></font><code translate="no">NULL</code><font papago-translate="splitted"><font papago-translate="translated">, 그러면 양동이가 비어 있습니다.</font><font papago-translate="translated"> 우리가 사용하는 경우 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated"> 해시 테이블에서 무언가를 찾는다는 것은 그것이 존재하지 않는다는 것을 의미합니다.</font><font papago-translate="translated"> 이를 사용하여 삽입한다는 것은 새 항목을 추가할 장소를 찾았다는 뜻입니다.</font></font></p>
 </li>
 <li>
-<p>If the key in the bucket is <span name="equal">equal</span> to the key we’re
-looking for, then that key is already present in the table. If we’re doing a
-lookup, that’s good<span class="em">—</span>we’ve found the key we seek. If we’re doing an insert,
-this means we’ll be replacing the value for that key instead of adding a new
-entry.</p>
+<p><font papago-translate="translated">버킷의 키가 우리가 찾고 있는 키와<span name="equal"> 같</span>다면, 그 키는 이미 테이블에 존재합니다.</font><font papago-translate="translated"> 우리가 검색을 하고 있다면, 그것은 좋은 일입니다.<span class="em"></span> 우리가 찾고자 하는 열쇠를 찾았습니다.</font><font papago-translate="translated"> 삽입을 하는 경우 새 항목을 추가하는 대신 해당 키의 값을 대체하게 됩니다.</font></p>
 </li>
 </ul>
-<aside name="equal">
-<p>It looks like we’re using <code translate="no">==</code> to see if two strings are equal. That doesn’t
-work, does it? There could be two copies of the same string at different places
-in memory. Fear not, astute reader. We’ll solve this further on. And, strangely
-enough, it’s a hash table that provides the tool we need.</p>
+<aside name="equal" style="top: 14598.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 다음을 사용하는 것 같습니다 </font></font><code translate="no">==</code><font papago-translate="splitted"><font papago-translate="translated"> 두 줄이 같은지 확인하기.</font><font papago-translate="translated"> 그건 안 되죠, 그렇죠?</font><font papago-translate="translated"> 메모리의 다른 위치에 동일한 문자열의 복사본이 두 개 있을 수 있습니다.</font><font papago-translate="translated"> 두려워하지 마세요, 예리한 독자.</font><font papago-translate="translated"> 우리는 이 문제를 더 깊이 해결할 것입니다.</font><font papago-translate="translated"> 그리고 이상하게도, 그것은 우리가 필요로 하는 도구를 제공하는 해시 테이블입니다.</font></font></p>
 </aside>
 <ul>
-<li>Otherwise, the bucket has an entry in it, but with a different key. This is
-a collision. In that case, we start probing. That’s what that <code translate="no">for</code> loop
-does. We start at the bucket where the entry would ideally go. If that
-bucket is empty or has the same key, we’re done. Otherwise, we advance to
-the next element<span class="em">—</span>this is the <em>linear</em> part of “linear probing”<span class="em">—</span>and
-check there. If we go past the end of the array, that second modulo operator
-wraps us back around to the beginning.</li>
+<li><font papago-translate="splitted"><font papago-translate="translated">그렇지 않으면 버킷에 항목이 있지만 다른 키가 있습니다.</font><font papago-translate="translated"> 이것은 충돌입니다.</font><font papago-translate="translated"> 이 경우, 우리는 탐사를 시작합니다.</font><font papago-translate="translated"> 그것이 바로 그것입니다 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 루프가 그렇습니다.</font><font papago-translate="translated"> 우리는 항목이 이상적일 수 있는 버킷에서 시작합니다.</font><font papago-translate="translated"> 그 양동이가 비어 있거나 같은 열쇠를 가지고 있다면, 우리는 끝입니다.</font><font papago-translate="translated"> 그렇지 않으면 다음 요소인 "선형 탐색<span class="em">"</span><em>의 선형</em> 부분으로 이동하여<span class="em"></span> 확인합니다.</font><font papago-translate="translated"> 배열의 끝을 지나면 두 번째 모듈로 연산자가 우리를 처음으로 감싸줍니다.</font></font></li>
 </ul>
-<p>We exit the loop when we find either an empty bucket or a bucket with the same
-key as the one we’re looking for. You might be wondering about an infinite loop.
-What if we collide with <em>every</em> bucket? Fortunately, that can’t happen thanks to
-our load factor. Because we grow the array as soon as it gets close to being
-full, we know there will always be empty buckets.</p>
-<p>We return directly from within the loop, yielding a pointer to the found Entry
-so the caller can either insert something into it or read from it. Way back in
-<code translate="no">tableSet()</code>, the function that first kicked this off, we store the new entry in
-that returned bucket and we’re done.</p>
-<h3><a href="#allocating-and-resizing" id="allocating-and-resizing"><small>20 . 4 . 3</small>Allocating and resizing</a></h3>
-<p>Before we can put entries in the hash table, we do need a place to actually
-store them. We need to allocate an array of buckets. That happens in this
-function:</p>
-<div class="codehilite"><div class="source-file"><em>table.c</em><br/>
-add after <em>findEntry</em>()</div>
+<p><font papago-translate="translated">빈 양동이나 우리가 찾고 있는 것과 같은 열쇠를 가진 양동이를 찾으면 루프를 종료합니다.</font><font papago-translate="translated"> 무한 루프에 대해 궁금해하실 수도 있습니다.</font><font papago-translate="translated"> <em>모든</em> 버킷과 충돌하면 어떻게 될까요?</font><font papago-translate="translated"> 다행히도 부하 계수 덕분에 그런 일은 일어날 수 없습니다.</font><font papago-translate="translated"> 배열이 가득 차면 바로 재배하기 때문에 항상 빈 버킷이 있다는 것을 알 수 있습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 루프 내에서 직접 돌아와서, 호출자가 무언가를 삽입하거나 읽을 수 있도록 발견된 항목에 대한 포인터를 제공합니다.</font><font papago-translate="translated"> 훨씬 전에 </font></font><code translate="no">tableSet()</code><font papago-translate="splitted"><font papago-translate="translated">, 이것을 처음 시작한 함수는 반환된 버킷에 새 항목을 저장하면 끝입니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/hash-tables.html#allocating-and-resizing" id="allocating-and-resizing"><small><font papago-translate="translated">20 . 4 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">할당 및 크기 조정</font></font></a></h3>
+<p><font papago-translate="translated">해시 테이블에 항목을 넣기 전에 실제로 저장할 수 있는 장소가 필요합니다.</font><font papago-translate="translated"> 버킷 배열을 할당해야 합니다.</font><font papago-translate="translated"> 그것은 이 함수에서 발생합니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>findEntry</em>() 이후에 추가</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">adjustCapacity</span>(<span class="t">Table</span>* <span class="i">table</span>, <span class="t">int</span> <span class="i">capacity</span>) {
   <span class="t">Entry</span>* <span class="i">entries</span> = <span class="a">ALLOCATE</span>(<span class="t">Entry</span>, <span class="i">capacity</span>);
   <span class="k">for</span> (<span class="t">int</span> <span class="i">i</span> = <span class="n">0</span>; <span class="i">i</span> &lt; <span class="i">capacity</span>; <span class="i">i</span>++) {
@@ -726,25 +410,13 @@ add after <em>findEntry</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, add after <em>findEntry</em>()</div>
-<p>We create a bucket array with <code translate="no">capacity</code> entries. After we allocate the array,
-we initialize every element to be an empty bucket and then store the array (and
-its capacity) in the hash table’s main struct. This code is fine for when we
-insert the very first entry into the table, and we require the first allocation
-of the array. But what about when we already have one and we need to grow it?</p>
-<p>Back when we were doing a dynamic array, we could just use <code translate="no">realloc()</code> and let
-the C standard library copy everything over. That doesn’t work for a hash table.
-Remember that to choose the bucket for each entry, we take its hash key <em>modulo
-the array size</em>. That means that when the array size changes, entries may end up
-in different buckets.</p>
-<p>Those new buckets may have new collisions that we need to deal with. So the
-simplest way to get every entry where it belongs is to rebuild the table from
-scratch by re-inserting every entry into the new empty array.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">버킷 배열을 만듭니다 </font></font><code translate="no">capacity</code><font papago-translate="splitted"><font papago-translate="translated"> 항목들.</font><font papago-translate="translated"> 배열을 할당한 후, 모든 요소를 빈 버킷으로 초기화한 다음 배열(및 그 용량)을 해시 테이블의 주요 구조에 저장합니다.</font><font papago-translate="translated"> 이 코드는 테이블에 첫 번째 항목을 삽입할 때 사용할 수 있으며, 배열의 첫 번째 할당이 필요합니다.</font><font papago-translate="translated"> 하지만 이미 하나를 가지고 있어서 키워야 할 때는 어떻게 해야 할까요?</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리가 동적 배열을 할 때, 그냥 사용할 수 있었습니다 </font></font><code translate="no">realloc()</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 C 표준 라이브러리가 모든 것을 복사하도록 하세요.</font><font papago-translate="translated"> 해시 테이블에서는 작동하지 않습니다.</font><font papago-translate="translated"> 각 항목의 버킷을 선택하려면 해시 키<em> 모듈을 배열 크기로</em> 변환해야 한다는 점을 기억하세요.</font><font papago-translate="translated"> 즉, 배열 크기가 변경되면 항목이 다른 버킷에 들어갈 수 있습니다.</font></font></p>
+<p><font papago-translate="translated">그 새로운 버킷들은 우리가 처리해야 할 새로운 충돌이 있을 수 있습니다.</font><font papago-translate="translated"> 따라서 모든 항목을 원래 위치로 가져오는 가장 간단한 방법은 새로운 빈 배열에 모든 항목을 다시 삽입하여 테이블을 처음부터 다시 구축하는 것입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    entries[i].value = NIL_VAL;
   }
-</pre><div class="source-file"><em>table.c</em><br/>
-in <em>adjustCapacity</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>adjustCapacity</em>()에서</font></font></div>
 <pre class="insert" translate="no">
-
   <span class="k">for</span> (<span class="t">int</span> <span class="i">i</span> = <span class="n">0</span>; <span class="i">i</span> &lt; <span class="i">table</span>-&gt;<span class="i">capacity</span>; <span class="i">i</span>++) {
     <span class="t">Entry</span>* <span class="i">entry</span> = &amp;<span class="i">table</span>-&gt;<span class="i">entries</span>[<span class="i">i</span>];
     <span class="k">if</span> (<span class="i">entry</span>-&gt;<span class="i">key</span> == <span class="a">NULL</span>) <span class="k">continue</span>;
@@ -754,45 +426,30 @@ in <em>adjustCapacity</em>()</div>
     <span class="i">dest</span>-&gt;<span class="i">value</span> = <span class="i">entry</span>-&gt;<span class="i">value</span>;
   }
 </pre><pre class="insert-after" translate="no">
-
   table-&gt;entries = entries;
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, in <em>adjustCapacity</em>()</div>
-<p>We walk through the old array front to back. Any time we find a non-empty
-bucket, we insert that entry into the new array. We use <code translate="no">findEntry()</code>, passing
-in the <em>new</em> array instead of the one currently stored in the Table. (This is
-why <code translate="no">findEntry()</code> takes a pointer directly to an Entry array and not the whole
-<code translate="no">Table</code> struct. That way, we can pass the new array and capacity before we’ve
-stored those in the struct.)</p>
-<p>After that’s done, we can release the memory for the old array.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 오래된 배열을 앞뒤로 걷습니다.</font><font papago-translate="translated"> 비어 있지 않은 버킷을 찾을 때마다 해당 항목을 새 배열에 삽입합니다.</font><font papago-translate="translated"> 우리는 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated">, 현재 테이블에 저장된 배열 대신<em> 새</em> 배열을 전달합니다. (이것이 바로 이유입니다.) </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated"> 포인터를 전체가 아닌 엔트리 배열로 직접 가져옵니다 </font></font><code translate="no">Table</code><font papago-translate="splitted"><font papago-translate="translated"> 구조.</font><font papago-translate="translated"> 그렇게 하면 구조물에 저장하기 전에 새로운 배열과 용량을 전달할 수 있습니다.)</font></font></p>
+<p><font papago-translate="translated">그 후에, 이전 배열의 메모리를 해제할 수 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    dest-&gt;value = entry-&gt;value;
   }
 
-</pre><div class="source-file"><em>table.c</em><br/>
-in <em>adjustCapacity</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>adjustCapacity</em>()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="a">FREE_ARRAY</span>(<span class="t">Entry</span>, <span class="i">table</span>-&gt;<span class="i">entries</span>, <span class="i">table</span>-&gt;<span class="i">capacity</span>);
 </pre><pre class="insert-after" translate="no">  table-&gt;entries = entries;
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, in <em>adjustCapacity</em>()</div>
-<p>With that, we have a hash table that we can stuff as many entries into as we
-like. It handles overwriting existing keys and growing itself as needed to
-maintain the desired load capacity.</p>
-<p>While we’re at it, let’s also define a helper function for copying all of the
-entries of one hash table into another.</p>
+<p><font papago-translate="translated">이를 통해 원하는 만큼 많은 항목을 넣을 수 있는 해시 테이블이 있습니다.</font><font papago-translate="translated"> 기존 키를 덮어 쓰고 필요에 따라 스스로 성장하여 원하는 부하 용량을 유지합니다.</font></p>
+<p><font papago-translate="translated">그 과정에서 한 해시 테이블의 모든 항목을 다른 해시 테이블로 복사하는 도우미 함수도 정의해 보겠습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">bool tableSet(Table* table, ObjString* key, Value value);
-</pre><div class="source-file"><em>table.h</em><br/>
-add after <em>tableSet</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 테이블 뒤에 추가<em>Set</em>()</font></font></div>
 <pre class="insert" translate="no"><span class="t">void</span> <span class="i">tableAddAll</span>(<span class="t">Table</span>* <span class="i">from</span>, <span class="t">Table</span>* <span class="i">to</span>);
 </pre><pre class="insert-after" translate="no">
-
 #endif
 </pre></div>
 <div class="source-file-narrow"><em>table.h</em>, add after <em>tableSet</em>()</div>
-<p>We won’t need this until much later when we support method inheritance, but we
-may as well implement it now while we’ve got all the hash table stuff fresh in
-our minds.</p>
-<div class="codehilite"><div class="source-file"><em>table.c</em><br/>
-add after <em>tableSet</em>()</div>
+<p><font papago-translate="translated">메서드 상속을 지원할 때까지는 이 기능이 필요하지 않겠지만, 지금 당장 구현하는 것이 좋습니다. 해시 테이블에 대한 모든 내용이 새로워졌을 때 말이죠.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 테이블 뒤에 추가<em>Set</em>()</font></font></div>
 <pre translate="no"><span class="t">void</span> <span class="i">tableAddAll</span>(<span class="t">Table</span>* <span class="i">from</span>, <span class="t">Table</span>* <span class="i">to</span>) {
   <span class="k">for</span> (<span class="t">int</span> <span class="i">i</span> = <span class="n">0</span>; <span class="i">i</span> &lt; <span class="i">from</span>-&gt;<span class="i">capacity</span>; <span class="i">i</span>++) {
     <span class="t">Entry</span>* <span class="i">entry</span> = &amp;<span class="i">from</span>-&gt;<span class="i">entries</span>[<span class="i">i</span>];
@@ -803,26 +460,18 @@ add after <em>tableSet</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, add after <em>tableSet</em>()</div>
-<p>There’s not much to say about this. It walks the bucket array of the source hash
-table. Whenever it finds a non-empty bucket, it adds the entry to the
-destination hash table using the <code translate="no">tableSet()</code> function we recently defined.</p>
-<h3><a href="#retrieving-values" id="retrieving-values"><small>20 . 4 . 4</small>Retrieving values</a></h3>
-<p>Now that our hash table contains some stuff, let’s start pulling things back
-out. Given a key, we can look up the corresponding value, if there is one, with
-this function:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이에 대해 할 말이 별로 없습니다.</font><font papago-translate="translated"> 소스 해시 테이블의 버킷 배열을 걷습니다.</font><font papago-translate="translated"> 비어 있지 않은 버킷을 찾을 때마다 다음을 사용하여 대상 해시 테이블에 항목을 추가합니다 </font></font><code translate="no">tableSet()</code><font papago-translate="splitted"><font papago-translate="translated"> 우리가 최근에 정의한 함수.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/hash-tables.html#retrieving-values" id="retrieving-values"><small><font papago-translate="translated">20 . 4 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">값 가져오기</font></font></a></h3>
+<p><font papago-translate="translated">이제 해시 테이블에 몇 가지 항목이 포함되어 있으므로 다시 항목을 꺼내기 시작하겠습니다.</font><font papago-translate="translated"> 키가 주어지면, 이 함수를 사용하여 해당 값을 찾을 수 있습니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">void freeTable(Table* table);
-</pre><div class="source-file"><em>table.h</em><br/>
-add after <em>freeTable</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>freeTable</em>() 다음에 추가</font></font></div>
 <pre class="insert" translate="no"><span class="t">bool</span> <span class="i">tableGet</span>(<span class="t">Table</span>* <span class="i">table</span>, <span class="t">ObjString</span>* <span class="i">key</span>, <span class="t">Value</span>* <span class="i">value</span>);
 </pre><pre class="insert-after" translate="no">bool tableSet(Table* table, ObjString* key, Value value);
 </pre></div>
 <div class="source-file-narrow"><em>table.h</em>, add after <em>freeTable</em>()</div>
-<p>You pass in a table and a key. If it finds an entry with that key, it returns
-<code translate="no">true</code>, otherwise it returns <code translate="no">false</code>. If the entry exists, the <code translate="no">value</code> output
-parameter points to the resulting value.</p>
-<p>Since <code translate="no">findEntry()</code> already does the hard work, the implementation isn’t bad.</p>
-<div class="codehilite"><div class="source-file"><em>table.c</em><br/>
-add after <em>findEntry</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">테이블과 키를 전달합니다.</font><font papago-translate="translated"> 해당 키가 있는 항목을 찾으면 반환됩니다 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated">, 그렇지 않으면 반환됩니다 </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated">. 항목이 존재하는 경우 </font></font><code translate="no">value</code><font papago-translate="splitted"><font papago-translate="translated"> 출력 매개변수는 결과 값을 가리킵니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">부터 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated"> 이미 힘든 작업을 수행하고 있으며 구현도 나쁘지 않습니다.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>findEntry</em>() 이후에 추가</font></font></div>
 <pre translate="no"><span class="t">bool</span> <span class="i">tableGet</span>(<span class="t">Table</span>* <span class="i">table</span>, <span class="t">ObjString</span>* <span class="i">key</span>, <span class="t">Value</span>* <span class="i">value</span>) {
   <span class="k">if</span> (<span class="i">table</span>-&gt;<span class="i">count</span> == <span class="n">0</span>) <span class="k">return</span> <span class="k">false</span>;
 
@@ -834,61 +483,28 @@ add after <em>findEntry</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, add after <em>findEntry</em>()</div>
-<p>If the table is completely empty, we definitely won’t find the entry, so we
-check for that first. This isn’t just an optimization<span class="em">—</span>it also ensures that we
-don’t try to access the bucket array when the array is <code translate="no">NULL</code>. Otherwise, we let
-<code translate="no">findEntry()</code> work its magic. That returns a pointer to a bucket. If the bucket
-is empty, which we detect by seeing if the key is <code translate="no">NULL</code>, then we didn’t find an
-Entry with our key. If <code translate="no">findEntry()</code> does return a non-empty Entry, then that’s
-our match. We take the Entry’s value and copy it to the output parameter so the
-caller can get it. Piece of cake.</p>
-<h3><a href="#deleting-entries" id="deleting-entries"><small>20 . 4 . 5</small>Deleting entries</a></h3>
-<p>There is one more fundamental operation a full-featured hash table needs to
-support: removing an entry. This seems pretty obvious, if you can add things,
-you should be able to <em>un</em>-add them, right? But you’d be surprised how many
-tutorials on hash tables omit this.</p>
-<p>I could have taken that route too. In fact, we use deletion in clox only in a
-tiny edge case in the VM. But if you want to actually understand how to
-completely implement a hash table, this feels important. I can sympathize with
-their desire to overlook it. As we’ll see, deleting from a hash table that uses
-<span name="delete">open</span> addressing is tricky.</p>
-<aside name="delete">
-<p>With separate chaining, deleting is as easy as removing a node from a linked
-list.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">테이블이 완전히 비어 있으면 항목을 찾을 수 없으므로 먼저 확인합니다.</font><font papago-translate="translated"> 이것은 단순한 최적화가 아니라, 배열이<span class="em"></span> 다음과 같을 때 버킷 배열에 접근하려고 하지 않도록 보장합니다 </font></font><code translate="no">NULL</code><font papago-translate="splitted"><font papago-translate="translated">. 그렇지 않으면 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated"> 마법으로 작동합니다.</font><font papago-translate="translated"> 그것은 버킷에 대한 포인터를 반환합니다.</font><font papago-translate="translated"> 버킷이 비어 있으면 키가 다음과 같은지 확인하여 감지합니다 </font></font><code translate="no">NULL</code><font papago-translate="splitted"><font papago-translate="translated">, 그러면 우리는 키가 있는 항목을 찾지 못했습니다. 만약 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated"> 비어 있지 않은 항목을 반환하면, 그것이 우리의 일치입니다.</font><font papago-translate="translated"> 우리는 항목의 값을 가져와서 발신자가 그것을 받을 수 있도록 출력 매개변수에 복사합니다.</font><font papago-translate="translated"> 식은 죽 먹기지.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/hash-tables.html#deleting-entries" id="deleting-entries"><small><font papago-translate="translated">20 . 4 . 5</font></small><font papago-translate="splitted"><font papago-translate="translated">항목 삭제</font></font></a></h3>
+<p><font papago-translate="translated">완전한 기능을 갖춘 해시 테이블이 지원해야 할 또 다른 기본 작업은 항목 제거입니다.</font><font papago-translate="translated"> 이것은 꽤 분명해 보이는데, 추가할 수 있다면 추가<em>를 해제</em>할 수 있어야 하죠, 그렇죠?</font><font papago-translate="translated"> 하지만 해시 테이블에서 이것을 생략하는 튜토리얼이 얼마나 많은지 놀랄 것입니다.</font></p>
+<p><font papago-translate="translated">저도 그 길을 택할 수 있었습니다.</font><font papago-translate="translated"> 사실, 우리는 VM의 작은 엣지 케이스에서만 clox에서 삭제를 사용합니다.</font><font papago-translate="translated"> 하지만 해시 테이블을 완전히 구현하는 방법을 실제로 이해하고 싶다면, 이것이 중요하게 느껴집니다.</font><font papago-translate="translated"> 그들이 그것을 간과하고 싶어하는 마음에 공감할 수 있습니다.</font><font papago-translate="translated"> <span name="delete">보시다시피, 오픈</span> 어드레싱을 사용하는 해시 테이블에서 삭제하는 것은 어렵습니다.</font></p>
+<aside name="delete" style="top: 18254.5px;">
+<p><font papago-translate="translated">별도의 체인을 사용하면 링크된 목록에서 노드를 삭제하는 것만큼이나 쉽습니다.</font></p>
 </aside>
-<p>At least the declaration is simple.</p>
+<p><font papago-translate="translated">적어도 선언은 간단합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">bool tableSet(Table* table, ObjString* key, Value value);
-</pre><div class="source-file"><em>table.h</em><br/>
-add after <em>tableSet</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 테이블 뒤에 추가<em>Set</em>()</font></font></div>
 <pre class="insert" translate="no"><span class="t">bool</span> <span class="i">tableDelete</span>(<span class="t">Table</span>* <span class="i">table</span>, <span class="t">ObjString</span>* <span class="i">key</span>);
 </pre><pre class="insert-after" translate="no">void tableAddAll(Table* from, Table* to);
 </pre></div>
 <div class="source-file-narrow"><em>table.h</em>, add after <em>tableSet</em>()</div>
-<p>The obvious approach is to mirror insertion. Use <code translate="no">findEntry()</code> to look up the
-entry’s bucket. Then clear out the bucket. Done!</p>
-<p>In cases where there are no collisions, that works fine. But if a collision has
-occurred, then the bucket where the entry lives may be part of one or more
-implicit probe sequences. For example, here’s a hash table containing three keys
-all with the same preferred bucket, 2:</p><img alt="A hash table containing 'bagel' in bucket 2, 'biscuit' in bucket 3, and 'jam' in bucket 4." src="image/hash-tables/delete-1.png"/>
-<p>Remember that when we’re walking a probe sequence to find an entry, we know
-we’ve reached the end of a sequence and that the entry isn’t present when we hit
-an empty bucket. It’s like the probe sequence is a list of entries and an empty
-entry terminates that list.</p>
-<p>If we delete “biscuit” by simply clearing the Entry, then we break that probe
-sequence in the middle, leaving the trailing entries orphaned and unreachable.
-Sort of like removing a node from a linked list without relinking the pointer
-from the previous node to the next one.</p>
-<p>If we later try to look for “jam”, we’d start at “bagel”, stop at the next
-empty Entry, and never find it.</p><img alt="The 'biscuit' entry has been deleted from the hash table, breaking the chain." src="image/hash-tables/delete-2.png"/>
-<p>To solve this, most implementations use a trick called <span name="tombstone"><strong>tombstones</strong></span>. Instead of clearing the entry on
-deletion, we replace it with a special sentinel entry called a “tombstone”. When
-we are following a probe sequence during a lookup, and we hit a tombstone, we
-<em>don’t</em> treat it like an empty slot and stop iterating. Instead, we keep going
-so that deleting an entry doesn’t break any implicit collision chains and we can
-still find entries after it.</p><img alt="Instead of deleting 'biscuit', it's replaced with a tombstone." src="image/hash-tables/delete-3.png"/>
-<p>The code looks like this:</p>
-<div class="codehilite"><div class="source-file"><em>table.c</em><br/>
-add after <em>tableSet</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">명백한 접근 방식은 거울 삽입입니다.</font><font papago-translate="translated"> 사용하다 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated"> 항목의 버킷을 조회합니다.</font><font papago-translate="translated"> 그런 다음 양동이를 치웁니다.</font><font papago-translate="translated"> 알았어!</font></font></p>
+<p><font papago-translate="translated">충돌이 없는 경우에도 괜찮습니다.</font><font papago-translate="translated"> 하지만 충돌이 발생했다면, 항목이 있는 버킷은 하나 이상의 암묵적인 프로브 시퀀스의 일부일 수 있습니다.</font><font papago-translate="translated"> 예를 들어, 여기 동일한 선호 버킷을 가진 세 개의 키가 포함된 해시 테이블이 있습니다:</font></p><img alt="A hash table containing 'bagel' in bucket 2, 'biscuit' in bucket 3, and 'jam' in bucket 4." src="https://youhogeon-meritz.github.io/image/hash-tables/delete-1.png">
+<p><font papago-translate="translated">우리가 항목을 찾기 위해 탐색 순서를 걸을 때, 우리가 순서의 끝에 도달했음을 알고 빈 양동이를 눌렀을 때 그 항목이 존재하지 않는다는 것을 기억하세요.</font><font papago-translate="translated"> 프로브 시퀀스가 항목 목록이고 빈 항목이 해당 목록을 종료하는 것과 같습니다.</font></p>
+<p><font papago-translate="translated">항목을 단순히 클리어하여 "비스킷"을 삭제하면 중간에 있는 프로브 시퀀스가 중단되어 후행 항목이 고아가 되어 도달할 수 없게 됩니다.</font><font papago-translate="translated"> 마치 이전 노드에서 다음 노드로 포인터를 다시 연결하지 않고 링크된 목록에서 노드를 제거하는 것과 같습니다.</font></p>
+<p><font papago-translate="translated">나중에 "잼"을 찾으려고 하면 "베이글"에서 시작해서 다음 빈 항목에 들렀다가 다시는 찾지 못할 것입니다.</font></p><img alt="The 'biscuit' entry has been deleted from the hash table, breaking the chain." src="https://youhogeon-meritz.github.io/image/hash-tables/delete-2.png">
+<p><font papago-translate="translated">이 문제를 해결하기 위해 대부분의 구현에서는<span name="tombstone"><strong> 묘비라는</strong></span> 트릭을 사용합니다.</font><font papago-translate="translated"> 삭제 시 항목을 지우는 대신 "툼스톤"이라는 특수 감시 항목으로 대체합니다.</font><font papago-translate="translated"> 조회 중에 탐침 시퀀스를 따르고 묘비를 맞출 때, 우리는 그것을 빈 슬롯처럼 취급하지 않고<em></em> 반복을 중지합니다.</font><font papago-translate="translated"> 대신, 항목을 삭제해도 암묵적인 충돌 체인이 끊어지지 않고 그 이후에도 항목을 찾을 수 있도록 계속 진행합니다.</font></p><img alt="Instead of deleting 'biscuit', it's replaced with a tombstone." src="https://youhogeon-meritz.github.io/image/hash-tables/delete-3.png">
+<p><font papago-translate="translated">코드는 다음과 같습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 테이블 뒤에 추가<em>Set</em>()</font></font></div>
 <pre translate="no"><span class="t">bool</span> <span class="i">tableDelete</span>(<span class="t">Table</span>* <span class="i">table</span>, <span class="t">ObjString</span>* <span class="i">key</span>) {
   <span class="k">if</span> (<span class="i">table</span>-&gt;<span class="i">count</span> == <span class="n">0</span>) <span class="k">return</span> <span class="k">false</span>;
 
@@ -903,24 +519,14 @@ add after <em>tableSet</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, add after <em>tableSet</em>()</div>
-<p>First, we find the bucket containing the entry we want to delete. (If we don’t
-find it, there’s nothing to delete, so we bail out.) We replace the entry with a
-tombstone. In clox, we use a <code translate="no">NULL</code> key and a <code translate="no">true</code> value to represent that,
-but any representation that can’t be confused with an empty bucket or a valid
-entry works.</p>
-<aside name="tombstone"><img alt="A tombstone enscribed 'Here lies entry biscuit → 3.75, gone but not deleted'." src="image/hash-tables/tombstone.png"/>
+<p><font papago-translate="splitted"><font papago-translate="translated">먼저, 삭제할 항목이 포함된 버킷을 찾습니다.</font><font papago-translate="translated"> ( 찾지 못하면 삭제할 내용이 없으므로 구제금융을 받습니다.)</font><font papago-translate="translated"> 우리는 항목을 묘비로 대체합니다.</font><font papago-translate="translated"> clox에서는 다음을 사용합니다 </font></font><code translate="no">NULL</code><font papago-translate="splitted"><font papago-translate="translated"> 키와 a </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated"> 이를 나타내는 값이지만 빈 버킷이나 유효한 항목과 혼동할 수 없는 모든 표현이 작동합니다.</font></font></p>
+<aside name="tombstone" style="top: 19153.5px;"><img alt="A tombstone enscribed 'Here lies entry biscuit → 3.75, gone but not deleted'." src="https://youhogeon-meritz.github.io/image/hash-tables/tombstone.png">
 </aside>
-<p>That’s all we need to do to delete an entry. Simple and fast. But all of the
-other operations need to correctly handle tombstones too. A tombstone is a sort
-of “half” entry. It has some of the characteristics of a present entry, and some
-of the characteristics of an empty one.</p>
-<p>When we are following a probe sequence during a lookup, and we hit a tombstone,
-we note it and keep going.</p>
+<p><font papago-translate="translated">항목을 삭제하기만 하면 됩니다.</font><font papago-translate="translated"> 간단하고 빠릅니다.</font><font papago-translate="translated"> 하지만 다른 모든 작업도 묘비를 올바르게 처리해야 합니다.</font><font papago-translate="translated"> 묘비는 일종의 "반쪽" 항목입니다.</font><font papago-translate="translated"> 현재 항목의 몇 가지 특성과 빈 항목의 몇 가지 특성이 있습니다.</font></p>
+<p><font papago-translate="translated">조회 중에 탐침 순서를 따르고 있을 때 묘비를 맞출 때, 우리는 그것을 기록하고 계속 진행합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  for (;;) {
     Entry* entry = &amp;entries[index];
-</pre><div class="source-file"><em>table.c</em><br/>
-in <em>findEntry</em>()<br/>
-replace 3 lines</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>findEntry</em>()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 3줄 교체</font></font></div>
 <pre class="insert" translate="no">    <span class="k">if</span> (<span class="i">entry</span>-&gt;<span class="i">key</span> == <span class="a">NULL</span>) {
       <span class="k">if</span> (<span class="a">IS_NIL</span>(<span class="i">entry</span>-&gt;<span class="i">value</span>)) {
         <span class="c">// Empty entry.</span>
@@ -934,205 +540,105 @@ replace 3 lines</div>
       <span class="k">return</span> <span class="i">entry</span>;
     }
 </pre><pre class="insert-after" translate="no">
-
     index = (index + 1) % capacity;
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, in <em>findEntry</em>(), replace 3 lines</div>
-<p>The first time we pass a tombstone, we store it in this local variable:</p>
+<p><font papago-translate="translated">처음 묘비를 넘길 때는 이 지역 변수에 저장합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  uint32_t index = key-&gt;hash % capacity;
-</pre><div class="source-file"><em>table.c</em><br/>
-in <em>findEntry</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>findEntry</em>()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="t">Entry</span>* <span class="i">tombstone</span> = <span class="a">NULL</span>;
 
 </pre><pre class="insert-after" translate="no">  for (;;) {
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, in <em>findEntry</em>()</div>
-<p>If we reach a truly empty entry, then the key isn’t present. In that case, if we
-have passed a tombstone, we return its bucket instead of the later empty one. If
-we’re calling <code translate="no">findEntry()</code> in order to insert a node, that lets us treat the
-tombstone bucket as empty and reuse it for the new entry.</p>
-<p>Reusing tombstone slots automatically like this helps reduce the number of
-tombstones wasting space in the bucket array. In typical use cases where there
-is a mixture of insertions and deletions, the number of tombstones grows for a
-while and then tends to stabilize.</p>
-<p>Even so, there’s no guarantee that a large number of deletes won’t cause the
-array to be full of tombstones. In the very worst case, we could end up with
-<em>no</em> empty buckets. That would be bad because, remember, the only thing
-preventing an infinite loop in <code translate="no">findEntry()</code> is the assumption that we’ll
-eventually hit an empty bucket.</p>
-<p>So we need to be thoughtful about how tombstones interact with the table’s load
-factor and resizing. The key question is, when calculating the load factor,
-should we treat tombstones like full buckets or empty ones?</p>
-<h3><a href="#counting-tombstones" id="counting-tombstones"><small>20 . 4 . 6</small>Counting tombstones</a></h3>
-<p>If we treat tombstones like full buckets, then we may end up with a bigger array
-than we probably need because it artificially inflates the load factor. There
-are tombstones we could reuse, but they aren’t treated as unused so we end up
-growing the array prematurely.</p>
-<p>But if we treat tombstones like empty buckets and <em>don’t</em> include them in the
-load factor, then we run the risk of ending up with <em>no</em> actual empty buckets to
-terminate a lookup. An infinite loop is a much worse problem than a few extra
-array slots, so for load factor, we consider tombstones to be full buckets.</p>
-<p>That’s why we don’t reduce the count when deleting an entry in the previous
-code. The count is no longer the number of entries in the hash table, it’s the
-number of entries plus tombstones. That implies that we increment the count
-during insertion only if the new entry goes into an entirely empty bucket.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">만약 우리가 정말 빈 항목에 도달하면, 그 열쇠는 존재하지 않습니다.</font><font papago-translate="translated"> 이 경우, 우리가 묘비를 넘겼다면 나중에 빈 양동이 대신 그 양동이를 반환합니다.</font><font papago-translate="translated"> 우리가 전화하는 경우 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated"> 노드를 삽입하려면, 이를 통해 묘비 버킷을 비어 있는 것으로 간주하고 새 항목에 재사용할 수 있습니다.</font></font></p>
+<p><font papago-translate="translated">이렇게 자동으로 묘비 슬롯을 재사용하면 버킷 배열에서 공간을 낭비하는 묘비의 수를 줄이는 데 도움이 됩니다.</font><font papago-translate="translated"> 삽입과 삭제가 혼합된 일반적인 사용 사례에서는 묘비의 수가 잠시 증가했다가 안정화되는 경향이 있습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그럼에도 불구하고, 많은 삭제가 배열에 묘비가 가득 차 있다는 보장은 없습니다.</font><font papago-translate="translated"> 최악의 경우 빈 양동이<em>가 없을</em> 수도 있습니다.</font><font papago-translate="translated"> 그것은 나쁜 일입니다. 왜냐하면 기억하세요, 무한 루프를 막는 유일한 방법은 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated"> 결국 빈 양동이에 부딪히게 될 것이라는 가정입니다.</font></font></p>
+<p><font papago-translate="translated">따라서 묘비가 테이블의 하중 계수 및 크기 조정과 어떻게 상호 작용하는지에 대해 신중하게 고려해야 합니다.</font><font papago-translate="translated"> 핵심 질문은 하중 계수를 계산할 때 묘비를 전체 양동이로 처리해야 하는지 아니면 빈 양동이로 처리해야 하는지입니다?</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/hash-tables.html#counting-tombstones" id="counting-tombstones"><small><font papago-translate="translated">20 . 4 . 6</font></small><font papago-translate="splitted"><font papago-translate="translated">묘비 세기</font></font></a></h3>
+<p><font papago-translate="translated">묘비를 풀 버킷처럼 취급하면 하중 계수를 인위적으로 부풀리기 때문에 필요한 것보다 더 큰 배열을 얻을 수 있습니다.</font><font papago-translate="translated"> 재사용할 수 있는 묘비가 있지만, 사용되지 않은 것으로 취급되지 않아 결국 배열을 일찍 재배하게 됩니다.</font></p>
+<p><font papago-translate="translated">하지만 묘비를 빈 버킷처럼 취급하고 로드 팩터에 포함시키지 않으면<em></em> 조회를 종료할 수 있는 실제 빈 버킷<em>이 없을</em> 위험이 있습니다.</font><font papago-translate="translated"> 무한 루프는 몇 개의 추가 배열 슬롯보다 훨씬 더 나쁜 문제이므로, 로드 팩터의 경우 톰스톤을 풀 버킷으로 간주합니다.</font></p>
+<p><font papago-translate="translated">그렇기 때문에 이전 코드에서 항목을 삭제할 때 카운트를 줄이지 않습니다.</font><font papago-translate="translated"> 카운트는 더 이상 해시 테이블의 항목 수가 아니라 항목 수에 묘비를 더한 값입니다.</font><font papago-translate="translated"> 이는 새 항목이 완전히 빈 버킷에 들어갈 때만 삽입 시 카운트를 증가시킨다는 것을 의미합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  bool isNewKey = entry-&gt;key == NULL;
-</pre><div class="source-file"><em>table.c</em><br/>
-in <em>tableSet</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>tableSet</em>()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  <span class="k">if</span> (<span class="i">isNewKey</span> &amp;&amp; <span class="a">IS_NIL</span>(<span class="i">entry</span>-&gt;<span class="i">value</span>)) <span class="i">table</span>-&gt;<span class="i">count</span>++;
 </pre><pre class="insert-after" translate="no">
-
   entry-&gt;key = key;
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, in <em>tableSet</em>(), replace 1 line</div>
-<p>If we are replacing a tombstone with a new entry, the bucket has already been
-accounted for and the count doesn’t change.</p>
-<p>When we resize the array, we allocate a new array and re-insert all of the
-existing entries into it. During that process, we <em>don’t</em> copy the tombstones
-over. They don’t add any value since we’re rebuilding the probe sequences
-anyway, and would just slow down lookups. That means we need to recalculate the
-count since it may change during a resize. So we clear it out:</p>
+<p><font papago-translate="translated">묘비를 새 항목으로 교체하는 경우 버킷은 이미 계산되었으며 카운트는 변경되지 않습니다.</font></p>
+<p><font papago-translate="translated">배열 크기를 조정할 때, 새로운 배열을 할당하고 기존의 모든 항목을 다시 삽입합니다.</font><font papago-translate="translated"> 그 과정에서 우리는 묘<em></em>비를 복사하지 않습니다.</font><font papago-translate="translated"> 어차피 프로브 시퀀스를 재구성하고 있기 때문에 값을 추가하지 않고 검색 속도를 늦출 뿐입니다.</font><font papago-translate="translated"> 즉, 크기 조정 중에 변경될 수 있으므로 카운트를 다시 계산해야 합니다.</font><font papago-translate="translated"> 그래서 우리는 그것을 분명히 합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  }
 
-</pre><div class="source-file"><em>table.c</em><br/>
-in <em>adjustCapacity</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>adjustCapacity</em>()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="i">table</span>-&gt;<span class="i">count</span> = <span class="n">0</span>;
 </pre><pre class="insert-after" translate="no">  for (int i = 0; i &lt; table-&gt;capacity; i++) {
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, in <em>adjustCapacity</em>()</div>
-<p>Then each time we find a non-tombstone entry, we increment it.</p>
+<p><font papago-translate="translated">그런 다음 비원석 항목을 찾을 때마다 이를 증가시킵니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    dest-&gt;value = entry-&gt;value;
-</pre><div class="source-file"><em>table.c</em><br/>
-in <em>adjustCapacity</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>adjustCapacity</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="i">table</span>-&gt;<span class="i">count</span>++;
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, in <em>adjustCapacity</em>()</div>
-<p>This means that when we grow the capacity, we may end up with <em>fewer</em> entries in
-the resulting larger array because all of the tombstones get discarded. That’s a
-little wasteful, but not a huge practical problem.</p>
-<p>I find it interesting that much of the work to support deleting entries is in
-<code translate="no">findEntry()</code> and <code translate="no">adjustCapacity()</code>. The actual delete logic is quite simple
-and fast. In practice, deletions tend to be rare, so you’d expect a hash table
-to do as much work as it can in the delete function and leave the other
-functions alone to keep them faster. With our tombstone approach, deletes are
-fast, but lookups get penalized.</p>
-<p>I did a little benchmarking to test this out in a few different deletion
-scenarios. I was surprised to discover that tombstones did end up being faster
-overall compared to doing all the work during deletion to reinsert the affected
-entries.</p>
-<p>But if you think about it, it’s not that the tombstone approach pushes the work
-of fully deleting an entry to other operations, it’s more that it makes deleting
-<em>lazy</em>. At first, it does the minimal work to turn the entry into a tombstone.
-That can cause a penalty when later lookups have to skip over it. But it also
-allows that tombstone bucket to be reused by a later insert too. That reuse is a
-very efficient way to avoid the cost of rearranging all of the following
-affected entries. You basically recycle a node in the chain of probed entries.
-It’s a neat trick.</p>
-<h2><a href="#string-interning" id="string-interning"><small>20 . 5</small>String Interning</a></h2>
-<p>We’ve got ourselves a hash table that mostly works, though it has a critical
-flaw in its center. Also, we aren’t using it for anything yet. It’s time to
-address both of those and, in the process, learn a classic technique used by
-interpreters.</p>
-<p>The reason the hash table doesn’t totally work is that when <code translate="no">findEntry()</code> checks
-to see if an existing key matches the one it’s looking for, it uses <code translate="no">==</code> to
-compare two strings for equality. That only returns true if the two keys are the
-exact same string in memory. Two separate strings with the same characters
-should be considered equal, but aren’t.</p>
-<p>Remember, back when we added strings in the last chapter, we added <a href="strings.html#operations-on-strings">explicit
-support to compare the strings character-by-character</a> in order to get
-true value equality. We could do that in <code translate="no">findEntry()</code>, but that’s <span name="hash-collision">slow</span>.</p>
-<aside name="hash-collision">
-<p>In practice, we would first compare the hash codes of the two strings. That
-quickly detects almost all different strings<span class="em">—</span>it wouldn’t be a very good hash
-function if it didn’t. But when the two hashes are the same, we still have to
-compare characters to make sure we didn’t have a hash collision on different
-strings.</p>
+<p><font papago-translate="translated">즉, 용량을 늘릴 때 모든 묘비가 버려지기 때문에 결과적으로 더 큰 배열에 더<em> 적은</em> 항목이 들어갈 수 있습니다.</font><font papago-translate="translated"> 그것은 약간 낭비적이지만, 큰 실질적인 문제는 아닙니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">항목 삭제를 지원하는 많은 작업이 다음과 같은 곳에서 이루어지고 있다는 점이 흥미롭습니다 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">adjustCapacity()</code><font papago-translate="splitted"><font papago-translate="translated">. 실제 삭제 논리는 매우 간단하고 빠릅니다.</font><font papago-translate="translated"> 실제로 삭제는 드문 경우가 많기 때문에 해시 테이블은 삭제 함수에서 최대한 많은 작업을 수행하고 다른 함수들은 그대로 두어 더 빠르게 유지할 수 있을 것입니다.</font><font papago-translate="translated"> 우리의 묘비 접근 방식에서는 삭제가 빠르지만, 조회는 불이익을 받습니다.</font></font></p>
+<p><font papago-translate="translated">몇 가지 다른 삭제 시나리오에서 이를 테스트하기 위해 약간의 벤치마킹을 했습니다.</font><font papago-translate="translated"> 삭제 중에 영향을 받은 항목을 다시 삽입하기 위해 모든 작업을 수행하는 것보다 묘비가 전체적으로 더 빠르다는 사실에 놀랐습니다.</font></p>
+<p><font papago-translate="translated">하지만 생각해보면, 묘비 접근 방식이 다른 작업의 항목을 완전히 삭제하는 작업을 밀어붙이는 것이 아니라, 삭제<em>를 게을</em>리하게 만드는 것에 더 가깝습니다.</font><font papago-translate="translated"> 처음에는 입구를 묘비로 바꾸는 최소한의 작업만 수행합니다.</font><font papago-translate="translated"> 나중에 조회할 때 건너뛸 때 페널티가 발생할 수 있습니다.</font><font papago-translate="translated"> 하지만 그것은 또한 나중에 삽입할 때도 그 묘비 버킷을 재사용할 수 있게 해줍니다.</font><font papago-translate="translated"> 그 재사용은 다음과 같은 모든 영향을 받는 항목을 재배열하는 비용을 피하는 매우 효율적인 방법입니다.</font><font papago-translate="translated"> 기본적으로 탐색된 항목의 체인에서 노드를 재활용합니다.</font><font papago-translate="translated"> 멋진 트릭입니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/hash-tables.html#string-interning" id="string-interning"><small><font papago-translate="translated">20 . 5</font></small><font papago-translate="splitted"><font papago-translate="translated">스트링 인터닝</font></font></a></h2>
+<p><font papago-translate="translated">우리는 주로 작동하는 해시 테이블을 가지고 있지만, 그 중앙에는 중요한 결함이 있습니다.</font><font papago-translate="translated"> 또한, 우리는 아직 그것을 아무것도 사용하지 않고 있습니다.</font><font papago-translate="translated"> 이제 이 두 가지를 모두 해결하고 그 과정에서 통역사들이 사용하는 고전적인 기법을 배울 때입니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">해시 테이블이 완전히 작동하지 않는 이유는 다음과 같습니다 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated"> 기존 키가 찾고 있는 키와 일치하는지 확인합니다 </font></font><code translate="no">==</code><font papago-translate="splitted"><font papago-translate="translated"> 평등을 위해 두 문자열을 비교합니다.</font><font papago-translate="translated"> 그것은 두 키가 메모리에서 정확히 동일한 문자열일 때만 참으로 반환됩니다.</font><font papago-translate="translated"> 동일한 문자를 가진 두 개의 개별 문자열은 동등하다고 간주되어야 하지만 그렇지 않습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">기억하세요, 지난 장에서 문자열을 추가했을 때, 문자열<a href="https://youhogeon-meritz.github.io/strings.html#operations-on-strings">을 문자별로 비교하여</a> 진정한 가치 평등을 얻기<a href="https://youhogeon-meritz.github.io/strings.html#operations-on-strings"> 위해 명시적인 지원</a>을 추가했습니다.</font><font papago-translate="translated"> 우리는 그것을 다음에서 할 수 있습니다 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated">, 하지만<span name="hash-collision"> 느립니다</span>.</font></font></p>
+<aside name="hash-collision" style="top: 22991.5px;">
+<p><font papago-translate="translated">실제로 우리는 먼저 두 문자열의 해시 코드를 비교할 것입니다.</font><font papago-translate="translated"> 그것은 거의 모든 다른 문자열을 빠르게 감지합니다.<span class="em"></span> 그렇지 않다면 그다지 좋은 해시 함수가 아닐 것입니다.</font><font papago-translate="translated"> 하지만 두 해시가 동일할 때는 다른 문자열에서 해시 충돌이 발생하지 않았는지 확인하기 위해 문자를 비교해야 합니다.</font></p>
 </aside>
-<p>Instead, we’ll use a technique called <strong>string interning</strong>. The core problem is
-that it’s possible to have different strings in memory with the same characters.
-Those need to behave like equivalent values even though they are distinct
-objects. They’re essentially duplicates, and we have to compare all of their
-bytes to detect that.</p>
-<p><span name="intern">String interning</span> is a process of deduplication. We
-create a collection of “interned” strings. Any string in that collection is
-guaranteed to be textually distinct from all others. When you intern a string,
-you look for a matching string in the collection. If found, you use that
-original one. Otherwise, the string you have is unique, so you add it to the
-collection.</p>
-<aside name="intern">
-<p>I’m guessing “intern” is short for “internal”. I think the idea is that the
-language’s runtime keeps its own “internal” collection of these strings, whereas
-other strings could be user created and floating around in memory. When you
-intern a string, you ask the runtime to add the string to that internal
-collection and return a pointer to it.</p>
-<p>Languages vary in how much string interning they do and how it’s exposed to the
-user. Lua interns <em>all</em> strings, which is what clox will do too. Lisp, Scheme,
-Smalltalk, Ruby and others have a separate string-like type called “symbol” that
-is implicitly interned. (This is why they say symbols are “faster” in Ruby.)
-Java interns constant strings by default, and provides an API to let you
-explicitly intern any string you give it.</p>
+<p><font papago-translate="translated">대신<strong>, 우리</strong>는<strong> 문자열 인터닝</strong>이라는 기법을 사용할 것입니다.</font><font papago-translate="translated"> 핵심 문제는 동일한 문자로 메모리에 다른 문자열을 가질 수 있다는 것입니다.</font><font papago-translate="translated"> 그것들은 별개의 객체일지라도 동등한 가치처럼 행동해야 합니다.</font><font papago-translate="translated"> 그것들은 본질적으로 중복된 것이며, 이를 감지하려면 모든 바이트를 비교해야 합니다.</font></p>
+<p><font papago-translate="translated"><span name="intern">문자열 인터닝</span>은 중복 제거 과정입니다<span name="intern">.</span></font><font papago-translate="translated"> 우리는 "삽입된" 문자열 모음을 만듭니다.</font><font papago-translate="translated"> 해당 컬렉션의 문자열은 다른 모든 문자열과 텍스트적으로 구별될 수 있습니다.</font><font papago-translate="translated"> 문자열을 삽입할 때 컬렉션에서 일치하는 문자열을 찾습니다.</font><font papago-translate="translated"> 발견되면 원래 것을 사용합니다.</font><font papago-translate="translated"> 그렇지 않으면, 당신이 가지고 있는 문자열은 고유하므로 컬렉션에 추가합니다.</font></p>
+<aside name="intern" style="top: 23183.5px;">
+<p><font papago-translate="translated">"인턴"은 "내부"의 줄임말인 것 같아요.</font><font papago-translate="translated"> 언어의 런타임은 이러한 문자열의 자체 "내부" 컬렉션을 유지하는 반면, 다른 문자열은 사용자가 생성하고 메모리에 떠돌아다닐 수 있다는 아이디어라고 생각합니다.</font><font papago-translate="translated"> 문자열을 삽입할 때 런타임에 해당 내부 컬렉션에 문자열을 추가하고 포인터를 반환하도록 요청합니다.</font></p>
+<p><font papago-translate="translated">언어는 문자열 인터닝의 양과 사용자에게 노출되는 방식에 따라 다릅니다.</font><font papago-translate="translated"> 루아는<em> 모든</em> 조건을 충족시키기 위해 인턴을 합니다. 클록스도 그렇게 할 것입니다.</font><font papago-translate="translated"> 리스프, 스킴, 스몰토크, 루비 등은 암묵적으로 삽입된 "심볼"이라는 별도의 문자열 유형을 가지고 있습니다.</font><font papago-translate="translated"> (이것이 바로 루비에서 기호가 "더 빠르다"고 말하는 이유입니다.)</font><font papago-translate="translated"> Java 인턴은 기본적으로 문자열을 일정하게 유지하며, 주어진 문자열을 명시적으로 인턴할 수 있는 API를 제공합니다.</font></p>
 </aside>
-<p>In this way, you know that each sequence of characters is represented by only
-one string in memory. This makes value equality trivial. If two strings point
-to the same address in memory, they are obviously the same string and must be
-equal. And, because we know strings are unique, if two strings point to
-different addresses, they must be distinct strings.</p>
-<p>Thus, pointer equality exactly matches value equality. Which in turn means that
-our existing <code translate="no">==</code> in <code translate="no">findEntry()</code> does the right thing. Or, at least, it will
-once we intern all the strings. In order to reliably deduplicate all strings,
-the VM needs to be able to find every string that’s created. We do that by
-giving it a hash table to store them all.</p>
+<p><font papago-translate="translated">이렇게 하면 각 문자 시퀀스가 메모리에서 하나의 문자열로만 표현된다는 것을 알 수 있습니다.</font><font papago-translate="translated"> 이것은 가치 평등을 사소하게 만듭니다.</font><font papago-translate="translated"> 두 문자열이 메모리에서 동일한 주소를 가리키면 분명히 동일한 문자열이므로 같아야 합니다.</font><font papago-translate="translated"> 그리고 문자열이 고유하다는 것을 알기 때문에 두 문자열이 서로 다른 주소를 가리키면 서로 다른 문자열이어야 합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">따라서 포인터 등식은 값 등식과 정확히 일치합니다.</font><font papago-translate="translated"> 그 말은 결국 우리의 기존 </font></font><code translate="no">==</code><font papago-translate="splitted"><font papago-translate="translated"> 에서 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated"> 올바른 일을 합니다.</font><font papago-translate="translated"> 또는 적어도 모든 문자열을 삽입하면 됩니다.</font><font papago-translate="translated"> 모든 문자열을 신뢰성 있게 중복 제거하려면 VM이 생성된 모든 문자열을 찾을 수 있어야 합니다.</font><font papago-translate="translated"> 이를 위해 해시 테이블을 제공하여 모두 저장합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  Value* stackTop;
-</pre><div class="source-file"><em>vm.h</em><br/>
-in struct <em>VM</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">VM.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em></em>구조 VM에서</font></font></div>
 <pre class="insert" translate="no">  <span class="t">Table</span> <span class="i">strings</span>;
 </pre><pre class="insert-after" translate="no">  Obj* objects;
 </pre></div>
 <div class="source-file-narrow"><em>vm.h</em>, in struct <em>VM</em></div>
-<p>As usual, we need an include.</p>
+<p><font papago-translate="translated">평소처럼 인클루시브가 필요합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include "chunk.h"
-</pre><div class="source-file"><em>vm.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">VM.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#include "table.h"</span>
 </pre><pre class="insert-after" translate="no">#include "value.h"
 </pre></div>
 <div class="source-file-narrow"><em>vm.h</em></div>
-<p>When we spin up a new VM, the string table is empty.</p>
+<p><font papago-translate="translated">새 VM을 회전시키면 문자열 테이블이 비어 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  vm.objects = NULL;
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>initVM</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>initVM</em>()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="i">initTable</span>(&amp;<span class="i">vm</span>.<span class="i">strings</span>);
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>initVM</em>()</div>
-<p>And when we shut down the VM, we clean up any resources used by the table.</p>
+<p><font papago-translate="translated">그리고 VM을 종료하면 테이블에서 사용하는 모든 리소스를 정리합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">void freeVM() {
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>freeVM</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>무료</em> VM()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="i">freeTable</span>(&amp;<span class="i">vm</span>.<span class="i">strings</span>);
 </pre><pre class="insert-after" translate="no">  freeObjects();
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>freeVM</em>()</div>
-<p>Some languages have a separate type or an explicit step to intern a string. For
-clox, we’ll automatically intern every one. That means whenever we create a new
-unique string, we add it to the table.</p>
+<p><font papago-translate="translated">일부 언어에는 문자열을 삽입하는 별도의 유형이나 명시적인 단계가 있습니다.</font><font papago-translate="translated"> clox의 경우, 모든 것을 자동으로 인턴으로 처리합니다.</font><font papago-translate="translated"> 즉, 새로운 고유 문자열을 만들 때마다 테이블에 추가합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  string-&gt;hash = hash;
-</pre><div class="source-file"><em>object.c</em><br/>
-in <em>allocateString</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>allocateString</em>()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="i">tableSet</span>(&amp;<span class="i">vm</span>.<span class="i">strings</span>, <span class="i">string</span>, <span class="a">NIL_VAL</span>);
 </pre><pre class="insert-after" translate="no">  return string;
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, in <em>allocateString</em>()</div>
-<p>We’re using the table more like a hash <em>set</em> than a hash <em>table</em>. The keys are
-the strings and those are all we care about, so we just use <code translate="no">nil</code> for the
-values.</p>
-<p>This gets a string into the table assuming that it’s unique, but we need to
-actually check for duplication before we get here. We do that in the two
-higher-level functions that call <code translate="no">allocateString()</code>. Here’s one:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 그 테이블을 해시<em> 테이블</em>이라기보다는 해시<em> 집합</em>처럼 사용하고 있습니다.</font><font papago-translate="translated"> 열쇠는 줄이며, 그것들이 우리가 신경 쓰는 전부입니다. 그래서 우리는 그냥 사용합니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 가치를 위해.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 고유하다고 가정하여 테이블에 문자열을 입력하지만, 여기에 도착하기 전에 중복 여부를 실제로 확인해야 합니다.</font><font papago-translate="translated"> 우리는 그것을 다음과 같은 두 가지 상위 수준 함수에서 수행합니다 </font></font><code translate="no">allocateString()</code><font papago-translate="splitted"><font papago-translate="translated">. 여기 하나 있습니다:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  uint32_t hash = hashString(chars, length);
-</pre><div class="source-file"><em>object.c</em><br/>
-in <em>copyString</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>copyString</em>()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="t">ObjString</span>* <span class="i">interned</span> = <span class="i">tableFindString</span>(&amp;<span class="i">vm</span>.<span class="i">strings</span>, <span class="i">chars</span>, <span class="i">length</span>,
                                         <span class="i">hash</span>);
   <span class="k">if</span> (<span class="i">interned</span> != <span class="a">NULL</span>) <span class="k">return</span> <span class="i">interned</span>;
@@ -1140,14 +646,10 @@ in <em>copyString</em>()</div>
 </pre><pre class="insert-after" translate="no">  char* heapChars = ALLOCATE(char, length + 1);
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, in <em>copyString</em>()</div>
-<p>When copying a string into a new LoxString, we look it up in the string table
-first. If we find it, instead of “copying”, we just return a reference to that
-string. Otherwise, we fall through, allocate a new string, and store it in the
-string table.</p>
-<p>Taking ownership of a string is a little different.</p>
+<p><font papago-translate="translated">문자열을 새 LoxString에 복사할 때는 문자열 테이블에서 먼저 찾습니다.</font><font papago-translate="translated"> 만약 우리가 그것을 찾으면, "복사" 대신에 그 문자열에 대한 참조를 반환할 뿐입니다.</font><font papago-translate="translated"> 그렇지 않으면 새 문자열을 할당하고 문자열 테이블에 저장합니다.</font></p>
+<p><font papago-translate="translated">문자열의 소유권을 갖는 것은 조금 다릅니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  uint32_t hash = hashString(chars, length);
-</pre><div class="source-file"><em>object.c</em><br/>
-in <em>takeString</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>takeString</em>()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="t">ObjString</span>* <span class="i">interned</span> = <span class="i">tableFindString</span>(&amp;<span class="i">vm</span>.<span class="i">strings</span>, <span class="i">chars</span>, <span class="i">length</span>,
                                         <span class="i">hash</span>);
   <span class="k">if</span> (<span class="i">interned</span> != <span class="a">NULL</span>) {
@@ -1158,33 +660,25 @@ in <em>takeString</em>()</div>
 </pre><pre class="insert-after" translate="no">  return allocateString(chars, length, hash);
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, in <em>takeString</em>()</div>
-<p>Again, we look up the string in the string table first. If we find it, before we
-return it, we free the memory for the string that was passed in. Since ownership
-is being passed to this function and we no longer need the duplicate string,
-it’s up to us to free it.</p>
-<p>Before we get to the new function we need to write, there’s one more include.</p>
+<p><font papago-translate="translated">다시 말하지만, 먼저 문자열 테이블에서 문자열을 찾아봅니다.</font><font papago-translate="translated"> 우리가 그것을 찾으면, 반환하기 전에 전달된 문자열의 메모리를 해제합니다.</font><font papago-translate="translated"> 소유권이 이 함수로 이전되고 더 이상 중복 문자열이 필요하지 않으므로, 이를 해제하는 것은 우리에게 달려 있습니다.</font></p>
+<p><font papago-translate="translated">우리가 작성해야 할 새로운 함수에 도달하기 전에, 하나 더 포함되어야 할 것이 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include "object.h"
-</pre><div class="source-file"><em>object.c</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">객체.c</font></em></div>
 <pre class="insert" translate="no"><span class="a">#include "table.h"</span>
 </pre><pre class="insert-after" translate="no">#include "value.h"
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em></div>
-<p>To look for a string in the table, we can’t use the normal <code translate="no">tableGet()</code> function
-because that calls <code translate="no">findEntry()</code>, which has the exact problem with duplicate
-strings that we’re trying to fix right now. Instead, we use this new function:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">테이블에서 문자열을 찾으려면 일반 문자열을 사용할 수 없습니다 </font></font><code translate="no">tableGet()</code><font papago-translate="splitted"><font papago-translate="translated"> 다음과 같은 이유로 기능합니다 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated">, 현재 우리가 고치려고 하는 중복 문자열에 정확한 문제가 있습니다.</font><font papago-translate="translated"> 대신, 우리는 이 새로운 기능을 사용합니다:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">void tableAddAll(Table* from, Table* to);
-</pre><div class="source-file"><em>table.h</em><br/>
-add after <em>tableAddAll</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 테이블 뒤에 추가Ad<em>dAll</em>()</font></font></div>
 <pre class="insert" translate="no"><span class="t">ObjString</span>* <span class="i">tableFindString</span>(<span class="t">Table</span>* <span class="i">table</span>, <span class="k">const</span> <span class="t">char</span>* <span class="i">chars</span>,
                            <span class="t">int</span> <span class="i">length</span>, <span class="t">uint32_t</span> <span class="i">hash</span>);
 </pre><pre class="insert-after" translate="no">
-
 #endif
 </pre></div>
 <div class="source-file-narrow"><em>table.h</em>, add after <em>tableAddAll</em>()</div>
-<p>The implementation looks like so:</p>
-<div class="codehilite"><div class="source-file"><em>table.c</em><br/>
-add after <em>tableAddAll</em>()</div>
+<p><font papago-translate="translated">구현은 다음과 같습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 테이블 뒤에 추가Ad<em>dAll</em>()</font></font></div>
 <pre translate="no"><span class="t">ObjString</span>* <span class="i">tableFindString</span>(<span class="t">Table</span>* <span class="i">table</span>, <span class="k">const</span> <span class="t">char</span>* <span class="i">chars</span>,
                            <span class="t">int</span> <span class="i">length</span>, <span class="t">uint32_t</span> <span class="i">hash</span>) {
   <span class="k">if</span> (<span class="i">table</span>-&gt;<span class="i">count</span> == <span class="n">0</span>) <span class="k">return</span> <span class="a">NULL</span>;
@@ -1207,88 +701,42 @@ add after <em>tableAddAll</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, add after <em>tableAddAll</em>()</div>
-<p>It appears we have copy-pasted <code translate="no">findEntry()</code>. There is a lot of redundancy, but
-also a couple of key differences. First, we pass in the raw character array of
-the key we’re looking for instead of an ObjString. At the point that we call
-this, we haven’t created an ObjString yet.</p>
-<p>Second, when checking to see if we found the key, we look at the actual strings.
-We first see if they have matching lengths and hashes. Those are quick to check
-and if they aren’t equal, the strings definitely aren’t the same.</p>
-<p>If there is a hash collision, we do an actual character-by-character string
-comparison. This is the one place in the VM where we actually test strings for
-textual equality. We do it here to deduplicate strings and then the rest of the
-VM can take for granted that any two strings at different addresses in memory
-must have different contents.</p>
-<p>In fact, now that we’ve interned all the strings, we can take advantage of it in
-the bytecode interpreter. When a user does <code translate="no">==</code> on two objects that happen to be
-strings, we don’t need to test the characters any more.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">복사 붙여넣기가 완료된 것 같습니다 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated">. 중복이 많지만 몇 가지 주요 차이점도 있습니다.</font><font papago-translate="translated"> 먼저, 우리가 찾고 있는 키의 원시 문자 배열을 ObjString 대신 전달합니다.</font><font papago-translate="translated"> 이 시점에서 우리는 아직 ObjString을 만들지 않았습니다.</font></font></p>
+<p><font papago-translate="translated">둘째, 열쇠를 찾았는지 확인할 때 실제 문자열을 살펴봅니다.</font><font papago-translate="translated"> 먼저 길이와 해시가 일치하는지 확인합니다.</font><font papago-translate="translated"> 그것들은 빠르게 확인할 수 있으며, 만약 그것들이 같지 않다면, 문자열들은 확실히 같지 않습니다.</font></p>
+<p><font papago-translate="translated">해시 충돌이 발생하면 실제 문자별 문자열 비교를 수행합니다.</font><font papago-translate="translated"> 여기가 바로 VM에서 문자열을 텍스트 평등으로 테스트하는 유일한 장소입니다.</font><font papago-translate="translated"> 여기서 문자열을 중복 제거하면 메모리의 다른 주소에 있는 두 문자열이 서로 다른 내용을 가져야 한다는 것을 당연하게 여길 수 있습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">사실, 이제 모든 문자열을 삽입했으니 바이트코드 인터프리터에서 이를 활용할 수 있습니다.</font><font papago-translate="translated"> 사용자가 그렇게 할 때 </font></font><code translate="no">==</code><font papago-translate="splitted"><font papago-translate="translated"> 문자열인 두 개체에 대해서는 더 이상 문자를 테스트할 필요가 없습니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    case VAL_NUMBER: return AS_NUMBER(a) == AS_NUMBER(b);
-</pre><div class="source-file"><em>value.c</em><br/>
-in <em>valuesEqual</em>()<br/>
-replace 7 lines</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>값</em>이 같습니다()</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 7줄 교체</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">VAL_OBJ</span>:    <span class="k">return</span> <span class="a">AS_OBJ</span>(<span class="i">a</span>) == <span class="a">AS_OBJ</span>(<span class="i">b</span>);
 </pre><pre class="insert-after" translate="no">    default:         return false; // Unreachable.
 </pre></div>
 <div class="source-file-narrow"><em>value.c</em>, in <em>valuesEqual</em>(), replace 7 lines</div>
-<p>We’ve added a little overhead when creating strings to intern them. But in
-return, at runtime, the equality operator on strings is much faster. With that,
-we have a full-featured hash table ready for us to use for tracking variables,
-instances, or any other key-value pairs that might show up.</p>
-<p>We also sped up testing strings for equality. This is nice for when the user
-does <code translate="no">==</code> on strings. But it’s even more critical in a dynamically typed
-language like Lox where method calls and instance fields are looked up by name
-at runtime. If testing a string for equality is slow, then that means looking up
-a method by name is slow. And if <em>that’s</em> slow in your object-oriented language,
-then <em>everything</em> is slow.</p>
+<p><font papago-translate="translated">문자열을 삽입할 때 약간의 오버헤드를 추가했습니다.</font><font papago-translate="translated"> 하지만 결과적으로 런타임 시 문자열의 등호 연산자가 훨씬 빠릅니다.</font><font papago-translate="translated"> 이를 통해 변수, 인스턴스 또는 나타날 수 있는 다른 키-값 쌍을 추적하는 데 사용할 수 있는 완전한 기능을 갖춘 해시 테이블이 준비되었습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 또한 평등을 위한 문자열 테스트 속도를 높였습니다.</font><font papago-translate="translated"> 사용자가 다음과 같은 작업을 수행할 때 좋습니다 </font></font><code translate="no">==</code><font papago-translate="splitted"><font papago-translate="translated"> 현악기로.</font><font papago-translate="translated"> 하지만 런타임 시 메서드 호출과 인스턴스 필드가 이름으로 조회되는 Lox와 같은 동적으로 입력된 언어에서는 더욱 중요합니다.</font><font papago-translate="translated"> 문자열의 동일성을 테스트하는 것이 느리다면, 이는 이름으로 방법을 찾는 것이 느리다는 것을 의미합니다.</font><font papago-translate="translated"> 그리고 그것<em>이</em> 객체 지향 언어에서 느리다면<em>, 모든 것</em>이 느리다는 것입니다.</font></font></p>
 <div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+<h2><a href="https://youhogeon-meritz.github.io/hash-tables.html#challenges" id="challenges"><font papago-translate="translated">과제들</font></a></h2>
 <ol>
 <li>
-<p>In clox, we happen to only need keys that are strings, so the hash table we
-built is hardcoded for that key type. If we exposed hash tables to Lox users
-as a first-class collection, it would be useful to support different kinds
-of keys.</p>
-<p>Add support for keys of the other primitive types: numbers, Booleans, and
-<code translate="no">nil</code>. Later, clox will support user-defined classes. If we want to support
-keys that are instances of those classes, what kind of complexity does that
-add?</p>
+<p><font papago-translate="translated">clox에서는 문자열인 키만 필요하므로, 우리가 만든 해시 테이블은 해당 키 유형에 맞게 하드코딩되어 있습니다.</font><font papago-translate="translated"> 만약 우리가 Lox 사용자들에게 해시 테이블을 일류 컬렉션으로 노출시킨다면, 다양한 종류의 키를 지원하는 것이 유용할 것입니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다른 기본 유형의 키에 대한 지원을 추가합니다: 숫자, 부울, 그리고 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">. 나중에 clox는 사용자 정의 클래스를 지원할 것입니다.</font><font papago-translate="translated"> 해당 클래스의 인스턴스인 키를 지원하려면 어떤 종류의 복잡성이 추가되나요?</font></font></p>
 </li>
 <li>
-<p>Hash tables have a lot of knobs you can tweak that affect their performance.
-You decide whether to use separate chaining or open addressing. Depending on
-which fork in that road you take, you can tune how many entries are stored
-in each node, or the probing strategy you use. You control the hash
-function, load factor, and growth rate.</p>
-<p>All of this variety wasn’t created just to give CS doctoral candidates
-something to <span name="publish">publish</span> theses on: each has its
-uses in the many varied domains and hardware scenarios where hashing comes
-into play. Look up a few hash table implementations in different open source
-systems, research the choices they made, and try to figure out why they did
-things that way.</p>
-<aside name="publish">
-<p>Well, at least that wasn’t the <em>only</em> reason they were created. Whether that
-was the <em>main</em> reason is up for debate.</p>
+<p><font papago-translate="translated">해시 테이블에는 성능에 영향을 미치는 많은 노브를 조정할 수 있습니다.</font><font papago-translate="translated"> 별도의 체인을 사용할지 아니면 오픈 주소를 사용할지 결정합니다.</font><font papago-translate="translated"> 그 길에서 어떤 분기점을 선택하느냐에 따라 각 노드에 저장된 항목의 수나 탐색 전략을 조정할 수 있습니다.</font><font papago-translate="translated"> 해시 함수, 부하 계수 및 성장률을 제어합니다.</font></p>
+<p><font papago-translate="translated">이 모든 종류는 CS 박사 후보자들에게 논문<span name="publish">을 출판</span>할 수 있는 무언가를 제공하기 위해 만들어진 것이 아닙니다. 각 분야는 해싱이 적용되는 다양한 분야와 하드웨어 시나리오에서 사용됩니다.</font><font papago-translate="translated"> 다양한 오픈 소스 시스템에서 몇 가지 해시 테이블 구현을 찾아보고, 그들이 내린 선택 사항을 조사한 다음, 왜 그런 방식으로 일을 했는지 알아보세요.</font></p>
+<aside name="publish" style="top: 27089.5px;">
+<p><font papago-translate="translated">적어도 그것들이 만들어진 이유<em>는</em> 그것<em>뿐만이</em> 아니었습니다.</font><font papago-translate="translated"> 그것이<em> 주된</em> 이유였는지는 논쟁의 여지가 있습니다.</font></p>
 </aside></li>
 <li>
-<p>Benchmarking a hash table is notoriously difficult. A hash table
-implementation may perform well with some keysets and poorly with others. It
-may work well at small sizes but degrade as it grows, or vice versa. It may
-choke when deletions are common, but fly when they aren’t. Creating
-benchmarks that accurately represent how your users will use the hash table
-is a challenge.</p>
-<p>Write a handful of different benchmark programs to validate our hash table
-implementation. How does the performance vary between them? Why did you
-choose the specific test cases you chose?</p>
+<p><font papago-translate="translated">해시 테이블을 벤치마킹하는 것은 매우 어렵습니다.</font><font papago-translate="translated"> 해시 테이블 구현은 일부 키셋에서는 잘 작동하고 다른 키셋에서는 잘 작동하지 않을 수 있습니다.</font><font papago-translate="translated"> 작은 크기에서는 잘 작동할 수 있지만 성장함에 따라 성능이 저하되거나 그 반대의 경우도 마찬가지입니다.</font><font papago-translate="translated"> 삭제가 흔할 때는 질식할 수 있지만, 그렇지 않을 때는 날아갑니다.</font><font papago-translate="translated"> 사용자가 해시 테이블을 어떻게 사용할지 정확하게 나타내는 벤치마크를 만드는 것은 어려운 일입니다.</font></p>
+<p><font papago-translate="translated">해시 테이블 구현을 검증하기 위해 몇 가지 다양한 벤치마크 프로그램을 작성하세요.</font><font papago-translate="translated"> 성능은 어떻게 다른가요?</font><font papago-translate="translated"> 선택한 특정 테스트 사례를 선택한 이유는 무엇입니까?</font></p>
 </li>
 </ol>
 </div>
 <footer>
-<a class="next" href="global-variables.html">
-  Next Chapter: “Global Variables” →
-</a>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+<a class="next" href="https://youhogeon-meritz.github.io/global-variables.html"><font papago-translate="translated"> 다음 장: "글로벌 변수" → </font></a><font papago-translate="splitted"><font papago-translate="translated"> 로버트 니스트롬이 수작업으로 제작한 -<a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE"> © 2015 ~ 2021</a></font></font>
 </footer>
-</img></article>
+</article>
 </div>
-</body>
-</html>
+
+
+</body></html>

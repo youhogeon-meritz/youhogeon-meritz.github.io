@@ -1,264 +1,180 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-234bac5b-d747-4c44-9aff-279c25e3aa40@mhtml.blink" />
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>Evaluating Expressions · Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/style.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
-<script src="jquery-3.4.1.min.js"></script>
-<script src="script.js"></script>
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+
+<!-- Google analytics -->
+
+</head>
 <body id="top">
 <!-- <div class="scrim"></div> -->
 <nav class="wide">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="contents">
-<h3><a href="#top">Evaluating Expressions<small>7</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#top"><font papago-translate="splitted"><font papago-translate="translated">표현식 평가하기</font></font><small>7</small></a></h3>
 <ul>
-<li><a href="#representing-values"><small>7.1</small> Representing Values</a></li>
-<li><a href="#evaluating-expressions"><small>7.2</small> Evaluating Expressions</a></li>
-<li><a href="#runtime-errors"><small>7.3</small> Runtime Errors</a></li>
-<li><a href="#hooking-up-the-interpreter"><small>7.4</small> Hooking Up the Interpreter</a></li>
+<li><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#representing-values"><small>7.1</small><font papago-translate="splitted"><font papago-translate="translated"> 가치를 표현하기</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#evaluating-expressions"><small>7.2</small><font papago-translate="splitted"><font papago-translate="translated"> 표현식 평가하기</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#runtime-errors"><small>7.3</small><font papago-translate="splitted"><font papago-translate="translated"> 런타임 오류</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#hooking-up-the-interpreter"><small>7.4</small><font papago-translate="splitted"><font papago-translate="translated" class=""> 통역사 연결하기</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
-<li class="end-part"><a href="#design-note"><small>note</small>Static and Dynamic Typing</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#challenges"><font papago-translate="translated">과제들</font></a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#design-note"><small><font papago-translate="translated">메모</font></small><font papago-translate="splitted"><font papago-translate="translated">정적 및 동적 타이핑</font></font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="parsing-expressions.html" title="Parsing Expressions">← Previous</a>
-<a href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑ Up</a>
-<a class="right" href="statements-and-state.html" title="Statements and State">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/parsing-expressions.html" title="구문 분석 표현" papago-attr-id="1"><font papago-translate="translated">← 이전</font></a>
+<a href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="나무 산책 통역사" papago-attr-id="2"><font papago-translate="translated">↑ 위로</font></a>
+<a class="right" href="https://youhogeon-meritz.github.io/statements-and-state.html" title="진술 및 진술" papago-attr-id="3"><font papago-translate="translated">다음 →</font></a>
 </div> </div>
 </nav>
 <nav class="narrow">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
-<a class="prev" href="parsing-expressions.html" title="Parsing Expressions">←</a>
-<a class="next" href="statements-and-state.html" title="Statements and State">→</a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
+<a class="prev" href="https://youhogeon-meritz.github.io/parsing-expressions.html" title="Parsing Expressions">←</a>
+<a class="next" href="https://youhogeon-meritz.github.io/statements-and-state.html" title="Statements and State">→</a>
 </nav>
 <div class="page">
 <div class="nav-wrapper">
 <nav class="floating">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="expandable">
-<h3><a href="#top">Evaluating Expressions<small>7</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#top"><font papago-translate="splitted"><font papago-translate="translated">표현식 평가하기</font></font><small>7</small></a></h3>
 <ul>
-<li><a href="#representing-values"><small>7.1</small> Representing Values</a></li>
-<li><a href="#evaluating-expressions"><small>7.2</small> Evaluating Expressions</a></li>
-<li><a href="#runtime-errors"><small>7.3</small> Runtime Errors</a></li>
-<li><a href="#hooking-up-the-interpreter"><small>7.4</small> Hooking Up the Interpreter</a></li>
+<li><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#representing-values"><small>7.1</small><font papago-translate="splitted"><font papago-translate="translated"> 가치를 표현하기</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#evaluating-expressions"><small>7.2</small><font papago-translate="splitted"><font papago-translate="translated"> 표현식 평가하기</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#runtime-errors"><small>7.3</small><font papago-translate="splitted"><font papago-translate="translated"> 런타임 오류</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#hooking-up-the-interpreter"><small>7.4</small><font papago-translate="splitted"><font papago-translate="translated"> 통역사 연결하기</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
-<li class="end-part"><a href="#design-note"><small>note</small>Static and Dynamic Typing</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#design-note"><small>note</small><font papago-translate="splitted"><font papago-translate="translated">정적 및 동적 타이핑</font></font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="parsing-expressions.html" title="Parsing Expressions">← Previous</a>
-<a href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑ Up</a>
-<a class="right" href="statements-and-state.html" title="Statements and State">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/parsing-expressions.html" title="Parsing Expressions">←&nbsp;Previous</a>
+<a href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑&nbsp;Up</a>
+<a class="right" href="https://youhogeon-meritz.github.io/statements-and-state.html" title="Statements and State">Next&nbsp;→</a>
 </div> </div>
 <a id="expand-nav">≡</a>
 </nav>
 </div>
 <article class="chapter">
 <div class="number">7</div>
-<h1>Evaluating Expressions</h1>
+<h1><font papago-translate="translated" class="">표현식 평가하기</font></h1>
 <blockquote>
-<p>You are my creator, but I am your master; Obey!</p>
+<p><font papago-translate="translated">당신은 나의 창조자이지만, 나는 당신의 주인입니다; 순종하라!</font></p>
 <p><cite>Mary Shelley, <em>Frankenstein</em></cite></p>
 </blockquote>
-<p>If you want to properly set the mood for this chapter, try to conjure up a
-thunderstorm, one of those swirling tempests that likes to yank open shutters at
-the climax of the story. Maybe toss in a few bolts of lightning. In this
-chapter, our interpreter will take breath, open its eyes, and execute some code.</p>
-<p><span name="spooky"></span></p><img alt="A bolt of lightning strikes a Victorian mansion. Spooky!" src="image/evaluating-expressions/lightning.png">
-<aside name="spooky">
-<p>A decrepit Victorian mansion is optional, but adds to the ambiance.</p>
+<p><font papago-translate="translated" class="">이 장의 분위기를 제대로 설정하고 싶다면 이야기의 절정에서 셔터를 여는 것을 좋아하는 소용돌이치는 폭풍 중 하나인 뇌우를 떠올려 보세요.</font><font papago-translate="translated"> 번개 몇 개를 던져도 될까요.</font><font papago-translate="translated"> 이 장에서는 통역사가 숨을 쉬고 눈을 뜨고 코드를 실행할 것입니다.</font></p>
+<p><span name="spooky"></span></p><img alt="A bolt of lightning strikes a Victorian mansion. Spooky!" src="https://youhogeon-meritz.github.io/image/evaluating-expressions/lightning.png">
+<aside name="spooky" style="top: 422px;">
+<p><font papago-translate="translated">퇴폐적인 빅토리아 시대 저택은 선택 사항이지만 분위기를 더해줍니다.</font></p>
 </aside>
-<p>There are all manner of ways that language implementations make a computer do
-what the user’s source code commands. They can compile it to machine code,
-translate it to another high-level language, or reduce it to some bytecode
-format for a virtual machine to run. For our first interpreter, though, we are
-going to take the simplest, shortest path and execute the syntax tree itself.</p>
-<p>Right now, our parser only supports expressions. So, to “execute” code, we will
-evaluate an expression and produce a value. For each kind of expression syntax
-we can parse<span class="em">—</span>literal, operator, etc.<span class="em">—</span>we need a corresponding chunk of code
-that knows how to evaluate that tree and produce a result. That raises two
-questions:</p>
+<p><font papago-translate="translated">언어 구현이 컴퓨터가 사용자의 소스 코드 명령을 수행하도록 하는 방법에는 여러 가지가 있습니다.</font><font papago-translate="translated"> 그들은 그것을 기계 코드로 컴파일하거나, 다른 고급 언어로 번역하거나, 가상 머신이 실행할 바이트코드 형식으로 축소할 수 있습니다.</font><font papago-translate="translated"> 하지만 첫 번째 통역사는 가장 간단하고 짧은 경로를 사용하여 구문 트리 자체를 실행할 것입니다.</font></p>
+<p><font papago-translate="translated">현재 저희 파서는 표현식만 지원합니다.</font><font papago-translate="translated"> 그래서 코드를 "실행"하기 위해, 우리는 표현식을 평가하고 값을 생성할 것입니다.</font><font papago-translate="translated"> 각 종류의 표현 구문에 대해 리터럴, 연산자<span class="em"></span> 등을 구문 분석할 수 있습니다.</font><font papago-translate="translated"><span class="em">-</span>우리는 해당 트리를 평가하고 결과를 생성하는 방법을 아는 코드 조각이 필요합니다<span class="em">.</span></font><font papago-translate="translated"> 그것은 두 가지 질문을 제기합니다:</font></p>
 <ol>
 <li>
-<p>What kinds of values do we produce?</p>
+<p><font papago-translate="translated">우리는 어떤 종류의 가치를 창출하나요?</font></p>
 </li>
 <li>
-<p>How do we organize those chunks of code?</p>
+<p><font papago-translate="translated">그 코드 덩어리들을 어떻게 정리할 수 있을까요?</font></p>
 </li>
 </ol>
-<p>Taking them on one at a time<span class="ellipse"> . . . </span></p>
-<h2><a href="#representing-values" id="representing-values"><small>7 . 1</small>Representing Values</a></h2>
-<p>In Lox, <span name="value">values</span> are created by literals, computed by
-expressions, and stored in variables. The user sees these as <em>Lox</em> objects, but
-they are implemented in the underlying language our interpreter is written in.
-That means bridging the lands of Lox’s dynamic typing and Java’s static types. A
-variable in Lox can store a value of any (Lox) type, and can even store values
-of different types at different points in time. What Java type might we use to
-represent that?</p>
-<aside name="value">
-<p>Here, I’m using “value” and “object” pretty much interchangeably.</p>
-<p>Later in the C interpreter we’ll make a slight distinction between them, but
-that’s mostly to have unique terms for two different corners of the
-implementation<span class="em">—</span>in-place versus heap-allocated data. From the user’s
-perspective, the terms are synonymous.</p>
+<p><font papago-translate="translated">한 번에 하나씩 도전<span class="ellipse">하기 . . .</span></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#representing-values" id="representing-values"><small><font papago-translate="translated">7 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">가치를 표현하기</font></font></a></h2>
+<p><font papago-translate="translated">Lox에서는<span name="value"> 리터</span>럴로<span name="value"> 값을</span> 생성하고, 식으로 계산하여 변수에 저장합니다.</font><font papago-translate="translated"> 사용자는 이것들을 Lox 객체로 보지만, 우리의 통역사<em></em>가 작성한 기본 언어로 구현됩니다.</font><font papago-translate="translated"> 이는 Lox의 동적 타이핑과 Java의 정적 타이핑 영역을 연결하는 것을 의미합니다.</font><font papago-translate="translated"> Lox의 변수는 모든 (Lox) 유형의 값을 저장할 수 있으며, 다양한 시점에 다른 유형의 값을 저장할 수도 있습니다.</font><font papago-translate="translated"> 이를 표현하기 위해 어떤 Java 유형을 사용할 수 있을까요?</font></p>
+<aside name="value" style="top: 1270.5px;">
+<p><font papago-translate="translated">여기서 저는 "가치"와 "객체"를 거의 동일하게 사용하고 있습니다.</font></p>
+<p><font papago-translate="translated">나중에 C 인터프리터에서 이 둘을 약간 구분하겠지만, 이는 주로 구현의 두 가지 다른 코너, 즉 제자리 데이터와 힙 할당<span class="em"></span> 데이터에 대해 고유한 용어를 사용하는 것입니다.</font><font papago-translate="translated"> 사용자의 관점에서 보면, 그 용어들은 동의어입니다.</font></p>
 </aside>
-<p>Given a Java variable with that static type, we must also be able to determine
-which kind of value it holds at runtime. When the interpreter executes a <code translate="no">+</code>
-operator, it needs to tell if it is adding two numbers or concatenating two
-strings. Is there a Java type that can hold numbers, strings, Booleans, and
-more? Is there one that can tell us what its runtime type is? There is! Good old
-java.lang.Object.</p>
-<p>In places in the interpreter where we need to store a Lox value, we can use
-Object as the type. Java has boxed versions of its primitive types that all
-subclass Object, so we can use those for Lox’s built-in types:</p><table>
+<p><font papago-translate="splitted"><font papago-translate="translated">해당 정적 유형의 Java 변수가 주어지면 런타임에 어떤 값을 유지하는지도 결정할 수 있어야 합니다.</font><font papago-translate="translated"> 통역사가 다음을 실행할 때 </font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated"> 연산자는 두 개의 숫자를 더하는지 아니면 두 개의 문자열을 연결하는지 확인해야 합니다.</font><font papago-translate="translated"> 숫자, 문자열, 불리언 등을 저장할 수 있는 Java 유형이 있습니까?</font><font papago-translate="translated"> 런타임 유형이 무엇인지 알려줄 수 있는 것이 있나요?</font><font papago-translate="translated"> 있습니다!</font><font papago-translate="translated"> 좋은 오래된 java.lang.</font><font papago-translate="translated">물건.</font></font></p>
+<p><font papago-translate="translated">인터프리터에서 Lox 값을 저장해야 하는 곳에서는 Object를 타입으로 사용할 수 있습니다.</font><font papago-translate="translated"> Java는 모든 하위 클래스 Object인 원시 유형의 박스형 버전을 보유하고 있으므로 Lox의 내장형 유형에 사용할 수 있습니다:</font></p><table>
 <thead>
 <tr>
-<td>Lox type</td>
-<td>Java representation</td>
+<td><font papago-translate="translated">록스 유형</font></td>
+<td><font papago-translate="translated">자바 표현</font></td>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Any Lox value</td>
-<td>Object</td>
+<td><font papago-translate="translated">임의의 Lox 값</font></td>
+<td><font papago-translate="translated">물건</font></td>
 </tr>
 <tr>
 <td><code translate="no">nil</code></td>
 <td><code translate="no">null</code></td>
 </tr>
 <tr>
-<td>Boolean</td>
-<td>Boolean</td>
+<td><font papago-translate="translated">불리언</font></td>
+<td><font papago-translate="translated">불리언</font></td>
 </tr>
 <tr>
-<td>number</td>
-<td>Double</td>
+<td><font papago-translate="translated">번호</font></td>
+<td><font papago-translate="translated">더블</font></td>
 </tr>
 <tr>
-<td>string</td>
-<td>String</td>
+<td><font papago-translate="translated">문자열</font></td>
+<td><font papago-translate="translated">문자열</font></td>
 </tr>
 </tbody>
 </table>
-<p>Given a value of static type Object, we can determine if the runtime value is a
-number or a string or whatever using Java’s built-in <code translate="no">instanceof</code> operator. In
-other words, the <span name="jvm">JVM</span>’s own object representation
-conveniently gives us everything we need to implement Lox’s built-in types.
-We’ll have to do a little more work later when we add Lox’s notions of
-functions, classes, and instances, but Object and the boxed primitive classes
-are sufficient for the types we need right now.</p>
-<aside name="jvm">
-<p>Another thing we need to do with values is manage their memory, and Java does
-that too. A handy object representation and a really nice garbage collector are
-the main reasons we’re writing our first interpreter in Java.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">정적 유형의 객체 값이 주어지면 Java의 내장형을 사용하여 런타임 값이 숫자인지 문자열인지 등을 확인할 수 있습니다 </font></font><code translate="no">instanceof</code><font papago-translate="splitted"><font papago-translate="translated"> 교환입니다.</font><font papago-translate="translated"> 다시 말해, J<span name="jvm">VM</span>의 자체 객체 표현은 Lox의 내장형 타입을 구현하는 데 필요한 모든 것을 편리하게 제공합니다.</font><font papago-translate="translated"> 나중에 Lox의 함수, 클래스, 인스턴스 개념을 추가하면 조금 더 많은 작업을 해야겠지만, 지금 당장 필요한 유형에는 Object와 박스형 원시 클래스가 충분합니다.</font></font></p>
+<aside name="jvm" style="top: 1882.5px;">
+<p><font papago-translate="translated">우리가 가치에 대해 해야 할 또 다른 일은 그들의 기억을 관리하는 것이며, 자바도 그렇게 합니다.</font><font papago-translate="translated"> 편리한 객체 표현과 정말 멋진 쓰레기 수거기가 우리가 자바로 첫 번째 통역사를 작성하는 주된 이유입니다.</font></p>
 </aside>
-<h2><a href="#evaluating-expressions" id="evaluating-expressions"><small>7 . 2</small>Evaluating Expressions</a></h2>
-<p>Next, we need blobs of code to implement the evaluation logic for each kind of
-expression we can parse. We could stuff that code into the syntax tree classes
-in something like an <code translate="no">interpret()</code> method. In effect, we could tell each syntax
-tree node, “Interpret thyself”. This is the Gang of Four’s
-<a href="https://en.wikipedia.org/wiki/Interpreter_pattern">Interpreter design pattern</a>. It’s a neat pattern, but like I mentioned
-earlier, it gets messy if we jam all sorts of logic into the tree classes.</p>
-<p>Instead, we’re going to reuse our groovy <a href="representing-code.html#the-visitor-pattern">Visitor pattern</a>. In the previous
-chapter, we created an AstPrinter class. It took in a syntax tree and
-recursively traversed it, building up a string which it ultimately returned.
-That’s almost exactly what a real interpreter does, except instead of
-concatenating strings, it computes values.</p>
-<p>We start with a new class.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-create new file</div>
+<h2><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#evaluating-expressions" id="evaluating-expressions"><small><font papago-translate="translated">7 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">표현식 평가하기</font></font></a></h2>
+<p><font papago-translate="splitted"><font papago-translate="translated">다음으로, 우리가 구문 분석할 수 있는 각 종류의 표현에 대한 평가 논리를 구현하기 위해 코드 덩어리가 필요합니다.</font><font papago-translate="translated"> 우리는 그 코드를 구문 트리 클래스에 넣을 수 있습니다 </font></font><code translate="no">interpret()</code><font papago-translate="splitted"><font papago-translate="translated"> 방법.</font><font papago-translate="translated"> 사실상, 우리는 각 구문 트리 노드에 "자신을 해석하라"고 말할 수 있습니다.</font><font papago-translate="translated"> 이것은 4인방의 통역<a href="https://en.wikipedia.org/wiki/Interpreter_pattern">사 디자인 패턴입니다</a>.</font><font papago-translate="translated"> 깔끔한 패턴이지만 앞서 말씀드린 것처럼 트리 클래스에 모든 종류의 논리를 입력하면 혼란스러워집니다.</font></font></p>
+<p><font papago-translate="translated">대신, 우리는 그루비한 방문<a href="https://youhogeon-meritz.github.io/representing-code.html#the-visitor-pattern">자 패턴</a>을 재사용할 것입니다.</font><font papago-translate="translated"> 이전 장에서는 AstPrinter 클래스를 만들었습니다.</font><font papago-translate="translated"> 구문 트리를 가져와서 재귀적으로 탐색한 후 문자열을 만들어 최종적으로 반환했습니다.</font><font papago-translate="translated"> 실제 통역사는 문자열을 연결하는 대신 값을 계산한다는 점을 제외하면 거의 정확히 그렇게 합니다.</font></p>
+<p><font papago-translate="translated">우리는 새로운 수업으로 시작합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 새 파일 만들기</font></font></div>
 <pre translate="no"><span class="k">package</span> <span class="i">com.craftinginterpreters.lox</span>;
 
 <span class="k">class</span> <span class="t">Interpreter</span> <span class="k">implements</span> <span class="t">Expr</span>.<span class="t">Visitor</span>&lt;<span class="t">Object</span>&gt; {
 }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, create new file</div>
-<p>The class declares that it’s a visitor. The return type of the visit methods
-will be Object, the root class that we use to refer to a Lox value in our Java
-code. To satisfy the Visitor interface, we need to define visit methods for each
-of the four expression tree classes our parser produces. We’ll start with the
-simplest<span class="ellipse"> . . . </span></p>
-<h3><a href="#evaluating-literals" id="evaluating-literals"><small>7 . 2 . 1</small>Evaluating literals</a></h3>
-<p>The leaves of an expression tree<span class="em">—</span>the atomic bits of syntax that all other
-expressions are composed of<span class="em">—</span>are <span name="leaf">literals</span>. Literals
-are almost values already, but the distinction is important. A literal is a <em>bit
-of syntax</em> that produces a value. A literal always appears somewhere in the
-user’s source code. Lots of values are produced by computation and don’t exist
-anywhere in the code itself. Those aren’t literals. A literal comes from the
-parser’s domain. Values are an interpreter concept, part of the runtime’s world.</p>
-<aside name="leaf">
-<p>In the <a href="statements-and-state.html">next chapter</a>, when we implement variables, we’ll add identifier
-expressions, which are also leaf nodes.</p>
+<p><font papago-translate="translated">수업에서 방문자임을 선언합니다.</font><font papago-translate="translated"> 방문 메서드의 반환 유형은 Java 코드에서 Lox 값을 참조하는 루트 클래스인 Object입니다.</font><font papago-translate="translated"> 방문자 인터페이스를 만족시키기 위해서는 파서가 생성하는 네 가지 표현 트리 클래스 각각에 대한 방문 방법을 정의해야 합니다.</font><font papago-translate="translated"> 가장 간단한<span class="ellipse"> 것</span>부터 시작하겠습니다<span class="ellipse"> . .</span></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#evaluating-literals" id="evaluating-literals"><small><font papago-translate="translated">7 . 2 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">리터럴 평가하기</font></font></a></h3>
+<p><font papago-translate="translated">다른 모든 표현이 구성된 구문의 원자 비트인 표현 트리의 잎은<span class="em"></span><span class="em"></span><span name="leaf"> 리터럴</span>입니다.</font><font papago-translate="translated"> 리터럴은 이미 거의 가치에 가깝지만, 그 구분이 중요합니다.</font><font papago-translate="translated"> 리터럴은 값을 생성하는<em> 구문의 일종</em>입니다.</font><font papago-translate="translated"> 리터럴은 항상 사용자의 소스 코드 어딘가에 나타납니다.</font><font papago-translate="translated"> 많은 값이 계산에 의해 생성되며 코드 자체의 어느 곳에도 존재하지 않습니다.</font><font papago-translate="translated"> 그것들은 문자 그대로의 것이 아닙니다.</font><font papago-translate="translated"> 리터럴은 파서의 도메인에서 나옵니다.</font><font papago-translate="translated"> 값은 런타임 세계의 일부인 인터프리터 개념입니다.</font></p>
+<aside name="leaf" style="top: 2826.5px;">
+<p><font papago-translate="translated"><a href="https://youhogeon-meritz.github.io/statements-and-state.html">다음 장</a>에서는 변수를 구현할 때 리프 노드인 식별자 표현식을 추가할 것입니다.</font></p>
 </aside>
-<p>So, much like we converted a literal <em>token</em> into a literal <em>syntax tree node</em>
-in the parser, now we convert the literal tree node into a runtime value. That
-turns out to be trivial.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in class <em>Interpreter</em></div>
+<p><font papago-translate="translated">따라서 구문 분석기에서 리터럴<em> 토큰</em>을 리터럴<em> 구문 트리 노드</em>로 변환한 것과 마찬가지로, 이제 리터럴 트리 노드를 런타임 값으로 변환합니다.</font><font papago-translate="translated"> 그것은 사소한 것으로 밝혀졌습니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 클래스<em> 인터프리터</em>에서</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Object</span> <span class="i">visitLiteralExpr</span>(<span class="t">Expr</span>.<span class="t">Literal</span> <span class="i">expr</span>) {
     <span class="k">return</span> <span class="i">expr</span>.<span class="i">value</span>;
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in class <em>Interpreter</em></div>
-<p>We eagerly produced the runtime value way back during scanning and stuffed it in
-the token. The parser took that value and stuck it in the literal tree node,
-so to evaluate a literal, we simply pull it back out.</p>
-<h3><a href="#evaluating-parentheses" id="evaluating-parentheses"><small>7 . 2 . 2</small>Evaluating parentheses</a></h3>
-<p>The next simplest node to evaluate is grouping<span class="em">—</span>the node you get as a result
-of using explicit parentheses in an expression.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in class <em>Interpreter</em></div>
+<p><font papago-translate="translated">스캔하는 동안 런타임 값을 열심히 생성하여 토큰에 채웠습니다.</font><font papago-translate="translated"> 파서는 그 값을 리터럴 트리 노드에 붙였습니다. 따라서 리터럴을 평가하기 위해 단순히 그것을 다시 꺼냅니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#evaluating-parentheses" id="evaluating-parentheses"><small><font papago-translate="translated">7 . 2 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">괄호 평가하기</font></font></a></h3>
+<p><font papago-translate="translated">다음으로 간단하게 평가할 수 있는 노드는 그룹화입니다. 이는 표현<span class="em"></span>식에서 명시적인 괄호를 사용한 결과로 얻을 수 있는 노드입니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 클래스<em> 인터프리터</em>에서</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Object</span> <span class="i">visitGroupingExpr</span>(<span class="t">Expr</span>.<span class="t">Grouping</span> <span class="i">expr</span>) {
     <span class="k">return</span> <span class="i">evaluate</span>(<span class="i">expr</span>.<span class="i">expression</span>);
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in class <em>Interpreter</em></div>
-<p>A <span name="grouping">grouping</span> node has a reference to an inner node
-for the expression contained inside the parentheses. To evaluate the grouping
-expression itself, we recursively evaluate that subexpression and return it.</p>
-<p>We rely on this helper method which simply sends the expression back into the
-interpreter’s visitor implementation:</p>
-<aside name="grouping">
-<p>Some parsers don’t define tree nodes for parentheses. Instead, when parsing a
-parenthesized expression, they simply return the node for the inner expression.
-We do create a node for parentheses in Lox because we’ll need it later to
-correctly handle the left-hand sides of assignment expressions.</p>
+<p><font papago-translate="translated"><span name="grouping">그룹</span>화 노드는 괄호 안에 포함된 표현식에 대한 내부 노드를 참조합니다.</font><font papago-translate="translated"> 그룹화 표현식 자체를 평가하기 위해, 우리는 그 하위 표현식을 재귀적으로 평가하고 반환합니다.</font></p>
+<p><font papago-translate="translated">우리는 단순히 통역사의 방문자 구현으로 표현을 다시 보내는 도우미 방법에 의존합니다:</font></p>
+<aside name="grouping" style="top: 3562.5px;">
+<p><font papago-translate="translated">일부 파서는 괄호에 대한 트리 노드를 정의하지 않습니다.</font><font papago-translate="translated"> 대신, 괄호로 묶은 표현식을 구문 분석할 때는 단순히 내부 표현식의 노드를 반환합니다.</font><font papago-translate="translated"> Lox에서 괄호를 만들기 위한 노드는 나중에 할당 표현식의 왼쪽 부분을 올바르게 처리하기 위해 필요하기 때문에 생성됩니다.</font></p>
 </aside>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in class <em>Interpreter</em></div>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 클래스<em> 인터프리터</em>에서</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Object</span> <span class="i">evaluate</span>(<span class="t">Expr</span> <span class="i">expr</span>) {
     <span class="k">return</span> <span class="i">expr</span>.<span class="i">accept</span>(<span class="k">this</span>);
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in class <em>Interpreter</em></div>
-<h3><a href="#evaluating-unary-expressions" id="evaluating-unary-expressions"><small>7 . 2 . 3</small>Evaluating unary expressions</a></h3>
-<p>Like grouping, unary expressions have a single subexpression that we must
-evaluate first. The difference is that the unary expression itself does a little
-work afterwards.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-add after <em>visitLiteralExpr</em>()</div>
+<h3><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#evaluating-unary-expressions" id="evaluating-unary-expressions"><small><font papago-translate="translated">7 . 2 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">단항식 평가하기</font></font></a></h3>
+<p><font papago-translate="translated">그룹화와 마찬가지로 단항식은 먼저 평가해야 하는 단일 부분 표현식을 가지고 있습니다.</font><font papago-translate="translated"> 차이점은 단항식 자체가 나중에 약간의 효과를 낸다는 것입니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가L<em>iteralEx</em>pr()</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Object</span> <span class="i">visitUnaryExpr</span>(<span class="t">Expr</span>.<span class="t">Unary</span> <span class="i">expr</span>) {
     <span class="t">Object</span> <span class="i">right</span> = <span class="i">evaluate</span>(<span class="i">expr</span>.<span class="i">right</span>);
@@ -273,58 +189,33 @@ add after <em>visitLiteralExpr</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, add after <em>visitLiteralExpr</em>()</div>
-<p>First, we evaluate the operand expression. Then we apply the unary operator
-itself to the result of that. There are two different unary expressions,
-identified by the type of the operator token.</p>
-<p>Shown here is <code translate="no">-</code>, which negates the result of the subexpression. The
-subexpression must be a number. Since we don’t <em>statically</em> know that in Java,
-we <span name="cast">cast</span> it before performing the operation. This type
-cast happens at runtime when the <code translate="no">-</code> is evaluated. That’s the core of what makes
-a language dynamically typed right there.</p>
-<aside name="cast">
-<p>You’re probably wondering what happens if the cast fails. Fear not, we’ll get
-into that soon.</p>
+<p><font papago-translate="translated">먼저, 피연산자 표현식을 평가합니다.</font><font papago-translate="translated"> 그런 다음 우리는 그 결과에 단항 연산자 자체를 적용합니다.</font><font papago-translate="translated"> 연산자 토큰의 유형에 따라 두 가지 다른 단항식이 식별됩니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">여기 표시된 것은 </font></font><code translate="no">-</code><font papago-translate="splitted"><font papago-translate="translated">, 이는 하위 표현의 결과를 부정합니다.</font><font papago-translate="translated"> 하위 표현식은 숫자여야 합니다.</font><font papago-translate="translated"> Java에서는 이를<em> 정적</em>으로 알지 못하기 때문에 작업을 수행하기 전<span name="cast">에 캐스팅합니다</span>.</font><font papago-translate="translated"> 이 유형의 캐스트는 런타임에 발생합니다 </font></font><code translate="no">-</code><font papago-translate="splitted"><font papago-translate="translated"> 평가됩니다.</font><font papago-translate="translated"> 그것이 바로 언어를 동적으로 타이핑하는 핵심입니다.</font></font></p>
+<aside name="cast" style="top: 4390.5px;">
+<p><font papago-translate="translated">출연진이 실패하면 어떻게 될지 궁금하실 겁니다.</font><font papago-translate="translated"> 걱정하지 마세요, 곧 시작하겠습니다.</font></p>
 </aside>
-<p>You can start to see how evaluation recursively traverses the tree. We can’t
-evaluate the unary operator itself until after we evaluate its operand
-subexpression. That means our interpreter is doing a <strong>post-order traversal</strong><span class="em">—</span>each node evaluates its children before doing its own work.</p>
-<p>The other unary operator is logical not.</p>
+<p><font papago-translate="translated">평가가 트리를 재귀적으로 가로지르는 방식을 볼 수 있습니다.</font><font papago-translate="translated"> 단항 연산자 자체는 피연산자 부분 표현식을 평가한 후에야 평가할 수 있습니다.</font><font papago-translate="translated"> 즉, 우리의 통역사가<strong> 순서 후 탐색</strong>을 수행하고 있다는 뜻입니다. 각 노드는 자신<span class="em"></span>의 작업을 수행하기 전에 자식들을 평가합니다.</font></p>
+<p><font papago-translate="translated">다른 단항 연산자는 논리적이지 않습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    switch (expr.operator.type) {
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitUnaryExpr</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 중에</font><font papago-translate="translated"><em>유니리익스프</em>레스(<em>)</em></font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="i">BANG</span>:
         <span class="k">return</span> !<span class="i">isTruthy</span>(<span class="i">right</span>);
 </pre><pre class="insert-after" translate="no">      case MINUS:
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitUnaryExpr</em>()</div>
-<p>The implementation is simple, but what is this “truthy” thing about? We need to
-make a little side trip to one of the great questions of Western philosophy:
-<em>What is truth?</em></p>
-<h3><a href="#truthiness-and-falsiness" id="truthiness-and-falsiness"><small>7 . 2 . 4</small>Truthiness and falsiness</a></h3>
-<p>OK, maybe we’re not going to really get into the universal question, but at
-least inside the world of Lox, we need to decide what happens when you use
-something other than <code translate="no">true</code> or <code translate="no">false</code> in a logic operation like <code translate="no">!</code> or any
-other place where a Boolean is expected.</p>
-<p>We <em>could</em> just say it’s an error because we don’t roll with implicit
-conversions, but most dynamically typed languages aren’t that ascetic. Instead,
-they take the universe of values of all types and partition them into two sets,
-one of which they define to be “true”, or “truthful”, or (my favorite) “truthy”,
-and the rest which are “false” or “falsey”. This partitioning is somewhat
-arbitrary and gets <span name="weird">weird</span> in a few languages.</p>
-<aside class="bottom" name="weird">
-<p>In JavaScript, strings are truthy, but empty strings are not. Arrays are truthy
-but empty arrays are<span class="ellipse"> . . . </span>also truthy. The number <code translate="no">0</code> is falsey, but the <em>string</em>
-<code translate="no">"0"</code> is truthy.</p>
-<p>In Python, empty strings are falsey like in JS, but other empty sequences are
-falsey too.</p>
-<p>In PHP, both the number <code translate="no">0</code> and the string <code translate="no">"0"</code> are falsey. Most other
-non-empty strings are truthy.</p>
-<p>Get all that?</p>
+<p><font papago-translate="translated">구현은 간단하지만, 이 "진실"이라는 것은 무엇에 관한 것일까요?</font><font papago-translate="translated"> 우리는 서양 철학의 위대한 질문 중 하나에 대해 약간의 부차적인 이야기를 나눌 필요가 있습니다:</font><font papago-translate="translated"> <em>진실이란 무엇인가요?</em></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#truthiness-and-falsiness" id="truthiness-and-falsiness"><small><font papago-translate="translated">7 . 2 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">진실과 거짓</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">좋아요, 어쩌면 우리는 보편적인 질문에 대해서는 다루지 않을 수도 있지만, 적어도 록스의 세계 안에서는 다른 것을 사용할 때 어떤 일이 일어나는지 결정해야 합니다 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated"> 다음과 같은 논리 연산에서 </font></font><code translate="no">!</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 불리언이 예상되는 다른 장소.</font></font></p>
+<p><font papago-translate="translated">암묵적인 변환을 사용하지 않기 때문에 오류라고 말할<em> 수</em> 있지만, 대부분의 동적으로 입력된 언어는 그렇게 금욕적이지 않습니다.</font><font papago-translate="translated"> 대신, 그들은 모든 유형의 가치의 우주를 두 세트로 나누는데, 그 중 하나는 "진실" 또는 "진실" 또는 (내가 가장 좋아하는) "진실"이고 나머지는 "거짓" 또는 "거짓"이라고 정의합니다.</font><font papago-translate="translated"> 이 분할은 다소 자의적이며 몇 가지 언어에서는<span name="weird"> 이상</span>해집니다.</font></p>
+<aside class="bottom" name="weird" style="top: 4951.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">JavaScript에서는 문자열이 참이지만, 빈 문자열은 그렇지 않습니다.</font><font papago-translate="translated"> 배열은 진리이지만 빈 배열은<span class="ellipse"> 진리</span>입니다<span class="ellipse">.</span></font><font papago-translate="translated"> 갯수 </font></font><code translate="no">0</code><font papago-translate="splitted"><font papago-translate="translated"> 거짓이지만<em> 문자열</em></font></font>
+<code translate="no">"0"</code><font papago-translate="splitted"><font papago-translate="translated"> 진실입니다.</font></font></p>
+<p><font papago-translate="translated">파이썬에서 빈 문자열은 JS에서처럼 거짓이지만, 다른 빈 시퀀스도 거짓입니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">PHP에서 두 숫자 모두 </font></font><code translate="no">0</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 끈 </font></font><code translate="no">"0"</code><font papago-translate="splitted"><font papago-translate="translated"> 거짓입니다.</font><font papago-translate="translated"> 대부분의 다른 비어 있지 않은 문자열은 진실입니다.</font></font></p>
+<p><font papago-translate="translated">다 이해했어요?</font></p>
 </aside>
-<p>Lox follows Ruby’s simple rule: <code translate="no">false</code> and <code translate="no">nil</code> are falsey, and everything else
-is truthy. We implement that like so:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-add after <em>visitUnaryExpr</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">Lox는 Ruby의 간단한 규칙을 따릅니다: </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 거짓이고, 다른 모든 것은 진실입니다.</font><font papago-translate="translated"> 우리는 그렇게 구현합니다:</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가</font><font papago-translate="translated"><em>유니리익스프</em>레스(<em>)</em></font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">boolean</span> <span class="i">isTruthy</span>(<span class="t">Object</span> <span class="i">object</span>) {
     <span class="k">if</span> (<span class="i">object</span> == <span class="k">null</span>) <span class="k">return</span> <span class="k">false</span>;
     <span class="k">if</span> (<span class="i">object</span> <span class="k">instanceof</span> <span class="t">Boolean</span>) <span class="k">return</span> (<span class="t">boolean</span>)<span class="i">object</span>;
@@ -332,11 +223,9 @@ add after <em>visitUnaryExpr</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, add after <em>visitUnaryExpr</em>()</div>
-<h3><a href="#evaluating-binary-operators" id="evaluating-binary-operators"><small>7 . 2 . 5</small>Evaluating binary operators</a></h3>
-<p>On to the last expression tree class, binary operators. There’s a handful of
-them, and we’ll start with the arithmetic ones.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-add after <em>evaluate</em>()</div>
+<h3><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#evaluating-binary-operators" id="evaluating-binary-operators"><small><font papago-translate="translated">7 . 2 . 5</font></small><font papago-translate="splitted"><font papago-translate="translated">이진 연산자 평가하기</font></font></a></h3>
+<p><font papago-translate="translated">마지막 표현 트리 클래스에서는 이진 연산자를 사용합니다.</font><font papago-translate="translated"> 몇 가지가 있는데, 산술적인 것부터 시작하겠습니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> ()<em>을 평가</em>한 후 추가</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Object</span> <span class="i">visitBinaryExpr</span>(<span class="t">Expr</span>.<span class="t">Binary</span> <span class="i">expr</span>) {
     <span class="t">Object</span> <span class="i">left</span> = <span class="i">evaluate</span>(<span class="i">expr</span>.<span class="i">left</span>);
@@ -356,22 +245,16 @@ add after <em>evaluate</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, add after <em>evaluate</em>()</div>
-<aside name="left">
-<p>Did you notice we pinned down a subtle corner of the language semantics here?
-In a binary expression, we evaluate the operands in left-to-right order. If
-those operands have side effects, that choice is user visible, so this isn’t
-simply an implementation detail.</p>
-<p>If we want our two interpreters to be consistent (hint: we do), we’ll need to
-make sure clox does the same thing.</p>
+<aside name="left" style="top: 5661.5px;">
+<p><font papago-translate="translated">여기서 우리가 언어 의미론의 미묘한 구석을 파고든 것을 눈치채셨나요?</font><font papago-translate="translated"> 이진 표현식에서는 피연산자를 왼쪽에서 오른쪽으로 순서대로 평가합니다.</font><font papago-translate="translated"> 그 피연산자들이 부작용을 가지고 있다면, 그 선택은 사용자가 볼 수 있는 것입니다. 따라서 이것은 단순히 구현 세부 사항이 아닙니다.</font></p>
+<p><font papago-translate="translated">두 명의 통역사가 일관되게 유지되기를 원한다면 (힌트: 그렇습니다), clox도 같은 작업을 수행하도록 해야 합니다.</font></p>
 </aside>
-<p>I think you can figure out what’s going on here. The main difference from the
-unary negation operator is that we have two operands to evaluate.</p>
-<p>I left out one arithmetic operator because it’s a little special.</p>
+<p><font papago-translate="translated">여기서 무슨 일이 일어나고 있는지 알아낼 수 있을 것 같습니다.</font><font papago-translate="translated"> 단항 부정 연산자와의 주요 차이점은 평가해야 할 피연산자가 두 개 있다는 점입니다.</font></p>
+<p><font papago-translate="translated">산술 연산자가 조금 특별해서 하나 빠뜨렸습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    switch (expr.operator.type) {
       case MINUS:
         return (double)left - (double)right;
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitBinaryExpr</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>BinaryExp</em>r<em>() 방문</em> 시</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="i">PLUS</span>:
         <span class="k">if</span> (<span class="i">left</span> <span class="k">instanceof</span> <span class="t">Double</span> &amp;&amp; <span class="i">right</span> <span class="k">instanceof</span> <span class="t">Double</span>) {
           <span class="k">return</span> (<span class="t">double</span>)<span class="i">left</span> + (<span class="t">double</span>)<span class="i">right</span>;
@@ -385,23 +268,14 @@ in <em>visitBinaryExpr</em>()</div>
 </pre><pre class="insert-after" translate="no">      case SLASH:
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitBinaryExpr</em>()</div>
-<p>The <code translate="no">+</code> operator can also be used to concatenate two strings. To handle that, we
-don’t just assume the operands are a certain type and <em>cast</em> them, we
-dynamically <em>check</em> the type and choose the appropriate operation. This is why
-we need our object representation to support <code translate="no">instanceof</code>.</p>
-<aside name="plus">
-<p>We could have defined an operator specifically for string concatenation. That’s
-what Perl (<code translate="no">.</code>), Lua (<code translate="no">..</code>), Smalltalk (<code translate="no">,</code>), Haskell (<code translate="no">++</code>), and others do.</p>
-<p>I thought it would make Lox a little more approachable to use the same syntax as
-Java, JavaScript, Python, and others. This means that the <code translate="no">+</code> operator is
-<strong>overloaded</strong> to support both adding numbers and concatenating strings. Even in
-languages that don’t use <code translate="no">+</code> for strings, they still often overload it for
-adding both integers and floating-point numbers.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그 </font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated"> 연산자는 두 문자열을 연결하는 데에도 사용할 수 있습니다.</font><font papago-translate="translated"> 이를 처리하기 위해 피연산자가 특정 유형이라고 가정하고<em> 캐스팅</em>하는 것이 아니라, 동적<em>으로</em> 유형<em>을 확인</em>하고 적절한 작업을 선택합니다.</font><font papago-translate="translated"> 이것이 바로 우리가 객체 표현을 지원해야 하는 이유입니다 </font></font><code translate="no">instanceof</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<aside name="plus" style="top: 6205.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">문자열 연결을 위해 특별히 연산자를 정의할 수도 있었습니다.</font><font papago-translate="translated"> 그것이 Perl입니다 (</font></font><code translate="no">.</code><font papago-translate="splitted"><font papago-translate="translated">루아 ()</font></font><code translate="no">..</code><font papago-translate="splitted"><font papago-translate="translated">), 스몰토크 (</font></font><code translate="no">,</code><font papago-translate="splitted"><font papago-translate="translated">), 하스켈 ()</font></font><code translate="no">++</code><font papago-translate="splitted"><font papago-translate="translated">), 그리고 다른 사람들도 그렇습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">저는 Lox가 Java, JavaScript, Python 등과 같은 구문을 사용하면 조금 더 쉽게 접근할 수 있을 것이라고 생각했습니다.</font><font papago-translate="translated"> 이것은 다음을 의미합니다 </font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated"> 연산자가 숫자 추가와 문자열 연결을 모두 지원하도록<strong> 오버로드되었습니다</strong>.</font><font papago-translate="translated"> 사용하지 않는 언어에서도 </font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated"> 문자열의 경우 정수와 부동소수점 숫자를 모두 더하기 위해 여전히 과부하가 걸리는 경우가 많습니다.</font></font></p>
 </aside>
-<p>Next up are the comparison operators.</p>
+<p><font papago-translate="translated">다음은 비교 연산자입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    switch (expr.operator.type) {
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitBinaryExpr</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>BinaryExp</em>r<em>() 방문</em> 시</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="i">GREATER</span>:
         <span class="k">return</span> (<span class="t">double</span>)<span class="i">left</span> &gt; (<span class="t">double</span>)<span class="i">right</span>;
       <span class="k">case</span> <span class="i">GREATER_EQUAL</span>:
@@ -413,26 +287,19 @@ in <em>visitBinaryExpr</em>()</div>
 </pre><pre class="insert-after" translate="no">      case MINUS:
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitBinaryExpr</em>()</div>
-<p>They are basically the same as arithmetic. The only difference is that where the
-arithmetic operators produce a value whose type is the same as the operands
-(numbers or strings), the comparison operators always produce a Boolean.</p>
-<p>The last pair of operators are equality.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitBinaryExpr</em>()</div>
+<p><font papago-translate="translated">그것들은 기본적으로 산술과 동일합니다.</font><font papago-translate="translated"> 유일한 차이점은 산술 연산자가 피연산자(숫자 또는 문자열)와 동일한 유형의 값을 생성할 때, 비교 연산자는 항상 부울을 생성한다는 것입니다.</font></p>
+<p><font papago-translate="translated">마지막 연산자 쌍은 평등입니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>BinaryExp</em>r<em>() 방문</em> 시</font></font></div>
 <pre translate="no">      <span class="k">case</span> <span class="i">BANG_EQUAL</span>: <span class="k">return</span> !<span class="i">isEqual</span>(<span class="i">left</span>, <span class="i">right</span>);
       <span class="k">case</span> <span class="i">EQUAL_EQUAL</span>: <span class="k">return</span> <span class="i">isEqual</span>(<span class="i">left</span>, <span class="i">right</span>);
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitBinaryExpr</em>()</div>
-<p>Unlike the comparison operators which require numbers, the equality operators
-support operands of any type, even mixed ones. You can’t ask Lox if 3 is <em>less</em>
-than <code translate="no">"three"</code>, but you can ask if it’s <span name="equal"><em>equal</em></span> to
-it.</p>
-<aside name="equal">
-<p>Spoiler alert: it’s not.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">숫자가 필요한 비교 연산자와 달리, 등식 연산자는 모든 유형의 피연산자, 심지어 혼합 피연산자도 지원합니다.</font><font papago-translate="translated"> 3이 다음보다<em> 작은</em>지 Lox에게 물어볼 수 없습니다 </font></font><code translate="no">"three"</code><font papago-translate="splitted"><font papago-translate="translated">, 하지만 그것과<span name="equal"><em> 같은</em></span>지 물어볼 수 있습니다.</font></font></p>
+<aside name="equal" style="top: 7038.5px;">
+<p><font papago-translate="translated">스포일러 경고: 그렇지 않습니다.</font></p>
 </aside>
-<p>Like truthiness, the equality logic is hoisted out into a separate method.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-add after <em>isTruthy</em>()</div>
+<p><font papago-translate="translated">진실성처럼 평등 논리도 별도의 방법으로 제시됩니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>is</em>Tr<em>uthy</em>() 다음에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">boolean</span> <span class="i">isEqual</span>(<span class="t">Object</span> <span class="i">a</span>, <span class="t">Object</span> <span class="i">b</span>) {
     <span class="k">if</span> (<span class="i">a</span> == <span class="k">null</span> &amp;&amp; <span class="i">b</span> == <span class="k">null</span>) <span class="k">return</span> <span class="k">true</span>;
     <span class="k">if</span> (<span class="i">a</span> == <span class="k">null</span>) <span class="k">return</span> <span class="k">false</span>;
@@ -441,103 +308,52 @@ add after <em>isTruthy</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, add after <em>isTruthy</em>()</div>
-<p>This is one of those corners where the details of how we represent Lox objects
-in terms of Java matter. We need to correctly implement <em>Lox’s</em> notion of
-equality, which may be different from Java’s.</p>
-<p>Fortunately, the two are pretty similar. Lox doesn’t do implicit conversions in
-equality and Java does not either. We do have to handle <code translate="no">nil</code>/<code translate="no">null</code> specially
-so that we don’t throw a NullPointerException if we try to call <code translate="no">equals()</code> on
-<code translate="no">null</code>. Otherwise, we’re fine. Java’s <span name="nan"><code translate="no">equals()</code></span> method
-on Boolean, Double, and String have the behavior we want for Lox.</p>
-<aside name="nan">
-<p>What do you expect this to evaluate to:</p>
+<p><font papago-translate="translated">이것은 자바 물질의 관점에서 Lox 객체를 어떻게 표현하는지에 대한 세부 사항이 있는 코너 중 하나입니다.</font><font papago-translate="translated"> 우리는 자바와는 다를 수 있는 L<em>ox</em>의 평등 개념을 올바르게 구현해야 합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다행히도 두 가지는 꽤 비슷합니다.</font><font papago-translate="translated"> Lox는 암묵적 변환을 동등하게 하지 않으며 Java도 하지 않습니다.</font><font papago-translate="translated"> 우리는 처리해야 합니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">/</font></font><code translate="no">null</code><font papago-translate="splitted"><font papago-translate="translated"> 널포인터를 던지지 않도록 특별히</font><font papago-translate="translated">전화를 시도할 경우 예외 </font></font><code translate="no">equals()</code><font papago-translate="splitted"><font papago-translate="translated"> 위에 </font></font><code translate="no">null</code><font papago-translate="splitted"><font papago-translate="translated">. 그렇지 않으면 괜찮습니다.</font><font papago-translate="translated"> Java<span name="nan">의 B</span>oolean, Double, String<span name="nan"> 방법</span>은 Lox에 대해 원하는 동작을 제공합니다.</font></font></p>
+<aside name="nan" style="top: 7446.5px;">
+<p><font papago-translate="translated">이것이 무엇을 평가할 것으로 예상하십니까:</font></p>
 <div class="codehilite"><pre translate="no">(<span class="n">0</span> / <span class="n">0</span>) == (<span class="n">0</span> / <span class="n">0</span>)
 </pre></div>
-<p>According to <a href="https://en.wikipedia.org/wiki/IEEE_754">IEEE 754</a>, which specifies the behavior of double-precision
-numbers, dividing a zero by zero gives you the special <strong>NaN</strong> (“not a number”)
-value. Strangely enough, NaN is <em>not</em> equal to itself.</p>
-<p>In Java, the <code translate="no">==</code> operator on primitive doubles preserves that behavior, but the
-<code translate="no">equals()</code> method on the Double class does not. Lox uses the latter, so doesn’t
-follow IEEE. These kinds of subtle incompatibilities occupy a dismaying fraction
-of language implementers’ lives.</p>
+<p><font papago-translate="translated">IEEE<a href="https://en.wikipedia.org/wiki/IEEE_754"> 75</a>4에 따르면, 이중 정밀도 숫자의 동작을 명시하고 있습니다. 0을 0으로 나누면 특별한 NaN<strong></strong> 값("숫자가 아님")을 얻을 수 있습니다.</font><font papago-translate="translated"> 이상하게도 NaN은 자신과 같지<em> 않습니다</em>.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">자바에서는 </font></font><code translate="no">==</code><font papago-translate="splitted"><font papago-translate="translated"> 원시 이중 연산자는 이러한 동작을 유지하지만 </font></font><code translate="no">equals()</code><font papago-translate="splitted"><font papago-translate="translated"> 더블 클래스의 메서드는 그렇지 않습니다.</font><font papago-translate="translated"> Lox는 후자를 사용하므로 IEEE를 따르지 않습니다.</font><font papago-translate="translated"> 이러한 미묘한 비호환성은 언어 구현자의 삶에서 실망스러운 부분을 차지합니다.</font></font></p>
 </aside>
-<p>And that’s it! That’s all the code we need to correctly interpret a valid Lox
-expression. But what about an <em>invalid</em> one? In particular, what happens when a
-subexpression evaluates to an object of the wrong type for the operation being
-performed?</p>
-<h2><a href="#runtime-errors" id="runtime-errors"><small>7 . 3</small>Runtime Errors</a></h2>
-<p>I was cavalier about jamming casts in whenever a subexpression produces an
-Object and the operator requires it to be a number or a string. Those casts can
-fail. Even though the user’s code is erroneous, if we want to make a <span name="fail">usable</span> language, we are responsible for handling that error
-gracefully.</p>
-<aside name="fail">
-<p>We could simply not detect or report a type error at all. This is what C does if
-you cast a pointer to some type that doesn’t match the data that is actually
-being pointed to. C gains flexibility and speed by allowing that, but is
-also famously dangerous. Once you misinterpret bits in memory, all bets are off.</p>
-<p>Few modern languages accept unsafe operations like that. Instead, most are
-<strong>memory safe</strong> and ensure<span class="em">—</span>through a combination of static and runtime checks<span class="em">—</span>that a program can never incorrectly interpret the value stored in a piece of
-memory.</p>
+<p><font papago-translate="translated">그게 다예요!</font><font papago-translate="translated"> 유효한 Lox 표현식을 올바르게 해석하는 데 필요한 코드는 이것뿐입니다.</font><font papago-translate="translated"> <em>하지만 유효하지 않은</em> 것은 어떨까요?</font><font papago-translate="translated"> 특히, 하위 표현식이 수행 중인 작업에 대해 잘못된 유형의 객체를 평가할 때 어떤 일이 발생합니까?</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#runtime-errors" id="runtime-errors"><small><font papago-translate="translated">7 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">런타임 오류</font></font></a></h2>
+<p><font papago-translate="translated">저는 서브 표현식이 객체를 생성할 때마다 캐스트를 방해하는 것에 대해 무심했습니다. 연산자가 그것을 숫자나 문자열로 요구할 때마다 말이죠.</font><font papago-translate="translated"> 그 출연진들은 실패할 수 있습니다.</font><font papago-translate="translated"> 사용자의 코드가 잘못되었음에도<span name="fail"> 불구하고, 사용 가능</span>한 언어를 만들고 싶다면 그 오류를 우아하게 처리할 책임이 있습니다.</font></p>
+<aside name="fail" style="top: 7782.5px;">
+<p><font papago-translate="translated">우리는 단순히 유형 오류를 전혀 감지하거나 보고할 수 없었습니다.</font><font papago-translate="translated"> 이것은 실제로 가리키는 데이터와 일치하지 않는 유형에 포인터를 던졌을 때 C가 하는 일입니다.</font><font papago-translate="translated"> C는 그것을 허용함으로써 유연성과 속도를 얻지만, 또한 위험하기로 유명합니다.</font><font papago-translate="translated"> 메모리의 비트를 잘못 해석하면 모든 베팅이 중단됩니다.</font></p>
+<p><font papago-translate="translated">현대 언어 중에는 그런 안전하지 않은 작업을 받아들이는 언어가 거의 없습니다.</font><font papago-translate="translated"> 대신, 대부분<strong>의</strong> 메모리<strong>는 안전</strong>하며 정적 및 런타임 검사를 결합하여 프로그램이<span class="em"></span><span class="em"></span> 메모리 조각에 저장된 값을 잘못 해석할 수 없도록 보장합니다.</font></p>
 </aside>
-<p>It’s time for us to talk about <strong>runtime errors</strong>. I spilled a lot of ink in the
-previous chapters talking about error handling, but those were all <em>syntax</em> or
-<em>static</em> errors. Those are detected and reported before <em>any</em> code is executed.
-Runtime errors are failures that the language semantics demand we detect and
-report while the program is running (hence the name).</p>
-<p>Right now, if an operand is the wrong type for the operation being performed,
-the Java cast will fail and the JVM will throw a ClassCastException. That
-unwinds the whole stack and exits the application, vomiting a Java stack trace
-onto the user. That’s probably not what we want. The fact that Lox is
-implemented in Java should be a detail hidden from the user. Instead, we want
-them to understand that a <em>Lox</em> runtime error occurred, and give them an error
-message relevant to our language and their program.</p>
-<p>The Java behavior does have one thing going for it, though. It correctly stops
-executing any code when the error occurs. Let’s say the user enters some
-expression like:</p>
+<p><font papago-translate="translated"><strong>이제 런타임 오류</strong>에 대해 이야기할 시간입니다.</font><font papago-translate="translated"> 이전 장에서 오류 처리에 대해 이야기하면서 잉크를 많이 흘렸지만, 그것들은<em> 모두 구문</em>이나<em> 정적</em> 오류였습니다.</font><font papago-translate="translated"> 코드<em></em>가 실행되기 전에 이를 감지하고 보고합니다.</font><font papago-translate="translated"> 런타임 오류는 프로그램이 실행되는 동안 언어 의미론에서 요구하는 오류를 감지하고 보고합니다 (따라서 이름이 붙여졌습니다).</font></p>
+<p><font papago-translate="translated">현재 수행 중인 작업에 대해 오퍼랜드가 잘못된 유형이면 Java 캐스트가 실패하고 JVM이 ClassCastException을 실행합니다.</font><font papago-translate="translated"> 이는 전체 스택을 풀고 애플리케이션을 종료하여 Java 스택 추적을 사용자에게 구토하게 만듭니다.</font><font papago-translate="translated"> 그것은 아마도 우리가 원하는 것이 아닐 것입니다.</font><font papago-translate="translated"> Lox가 Java로 구현되었다는 사실은 사용자에게 숨겨진 세부 사항이어야 합니다.</font><font papago-translate="translated"> 대신, 우리는 그들이 Lox 런타임 오류가 발생했음을 이해하고 우리 언어와 그들<em></em>의 프로그램과 관련된 오류 메시지를 주기를 원합니다.</font></p>
+<p><font papago-translate="translated">하지만 자바 행동에는 한 가지 이유가 있습니다.</font><font papago-translate="translated"> 오류가 발생하면 코드 실행을 올바르게 중지합니다.</font><font papago-translate="translated"> 사용자가 다음과 같은 표현을 입력한다고 가정해 보겠습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="n">2</span> * (<span class="n">3</span> / -<span class="s">"muffin"</span>)
 </pre></div>
-<p>You can’t negate a <span name="muffin">muffin</span>, so we need to report a
-runtime error at that inner <code translate="no">-</code> expression. That in turn means we can’t evaluate
-the <code translate="no">/</code> expression since it has no meaningful right operand. Likewise for the
-<code translate="no">*</code>. So when a runtime error occurs deep in some expression, we need to escape
-all the way out.</p>
-<aside name="muffin">
-<p>I don’t know, man, <em>can</em> you negate a muffin?</p><img alt="A muffin, negated." src="image/evaluating-expressions/muffin.png">
-</img></aside>
-<p>We could print a runtime error and then abort the process and exit the
-application entirely. That has a certain melodramatic flair. Sort of the
-programming language interpreter equivalent of a mic drop.</p>
-<p>Tempting as that is, we should probably do something a little less cataclysmic.
-While a runtime error needs to stop evaluating the <em>expression</em>, it shouldn’t
-kill the <em>interpreter</em>. If a user is running the REPL and has a typo in a line
-of code, they should still be able to keep the session going and enter more code
-after that.</p>
-<h3><a href="#detecting-runtime-errors" id="detecting-runtime-errors"><small>7 . 3 . 1</small>Detecting runtime errors</a></h3>
-<p>Our tree-walk interpreter evaluates nested expressions using recursive method
-calls, and we need to unwind out of all of those. Throwing an exception in Java
-is a fine way to accomplish that. However, instead of using Java’s own cast
-failure, we’ll define a Lox-specific one so that we can handle it how we want.</p>
-<p>Before we do the cast, we check the object’s type ourselves. So, for unary <code translate="no">-</code>,
-we add:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><span name="muffin">머핀</span>을 무효화할 수 없으므로 해당 내부에서 런타임 오류를 보고해야 합니다 </font></font><code translate="no">-</code><font papago-translate="splitted"><font papago-translate="translated"> 표현.</font><font papago-translate="translated"> 그것은 결국 우리가 평가할 수 없다는 것을 의미합니다 </font></font><code translate="no">/</code><font papago-translate="splitted"><font papago-translate="translated"> 의미 있는 오른쪽 피연산자가 없기 때문에 표현식.</font><font papago-translate="translated"> 마찬가지로 </font></font><code translate="no">*</code><font papago-translate="splitted"><font papago-translate="translated">. 따라서 어떤 식에서 런타임 오류가 발생하면 끝까지 탈출해야 합니다.</font></font></p>
+<aside name="muffin" style="top: 8330.5px;">
+<p><font papago-translate="translated">모르겠어요, 머핀을 무효화<em>할 수 있나</em>요?</font></p><img alt="A muffin, negated." src="https://youhogeon-meritz.github.io/image/evaluating-expressions/muffin.png">
+</aside>
+<p><font papago-translate="translated">런타임 오류를 출력한 다음 프로세스를 중단하고 애플리케이션을 완전히 종료할 수 있습니다.</font><font papago-translate="translated"> 그것은 특정한 멜로드라마적 감각을 가지고 있습니다.</font><font papago-translate="translated"> 일종의 프로그래밍 언어 통역기는 마이크 드롭과 같습니다.</font></p>
+<p><font papago-translate="translated">유혹적이긴 하지만, 우리는 아마도 조금 덜 격변적인 일을 해야 할 것 같습니다.</font><font papago-translate="translated"> 런타임 오류는<em> 표현식</em> 평가를 중단해야 하지만<em>, 인터프리터</em>를 죽여서는 안 됩니다.</font><font papago-translate="translated"> 사용자가 REPL을 실행 중이고 코드 줄에 오타가 있는 경우, 세션을 계속 진행하고 그 이후에도 더 많은 코드를 입력할 수 있어야 합니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#detecting-runtime-errors" id="detecting-runtime-errors"><small><font papago-translate="translated">7 . 3 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">런타임 오류 감지</font></font></a></h3>
+<p><font papago-translate="translated">우리의 트리 워크 인터프리터는 재귀적 메서드 호출을 사용하여 중첩된 표현식을 평가합니다. 우리는 이 모든 표현식에서 벗어나야 합니다.</font><font papago-translate="translated"> Java에서 예외를 적용하는 것은 이를 달성하는 좋은 방법입니다.</font><font papago-translate="translated"> 그러나 Java의 자체 캐스트 실패를 사용하는 대신, 우리가 원하는 방식으로 처리할 수 있도록 Lox에 특화된 캐스트 실패를 정의할 것입니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">출연진을 하기 전에, 우리는 직접 그 물체의 종류를 확인합니다.</font><font papago-translate="translated"> 그래서, 단항의 경우 </font></font><code translate="no">-</code><font papago-translate="splitted"><font papago-translate="translated">, 추가합니다:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      case MINUS:
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitUnaryExpr</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 중에</font><font papago-translate="translated"><em>유니리익스프</em>레스(<em>)</em></font></font></div>
 <pre class="insert" translate="no">        <span class="i">checkNumberOperand</span>(<span class="i">expr</span>.<span class="i">operator</span>, <span class="i">right</span>);
 </pre><pre class="insert-after" translate="no">        return -(double)right;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitUnaryExpr</em>()</div>
-<p>The code to check the operand is:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-add after <em>visitUnaryExpr</em>()</div>
+<p><font papago-translate="translated">피연산자를 확인하는 코드는 다음과 같습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가</font><font papago-translate="translated"><em>유니리익스프</em>레스(<em>)</em></font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">void</span> <span class="i">checkNumberOperand</span>(<span class="t">Token</span> <span class="i">operator</span>, <span class="t">Object</span> <span class="i">operand</span>) {
     <span class="k">if</span> (<span class="i">operand</span> <span class="k">instanceof</span> <span class="t">Double</span>) <span class="k">return</span>;
     <span class="k">throw</span> <span class="k">new</span> <span class="t">RuntimeError</span>(<span class="i">operator</span>, <span class="s">"Operand must be a number."</span>);
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, add after <em>visitUnaryExpr</em>()</div>
-<p>When the check fails, it throws one of these:</p>
-<div class="codehilite"><div class="source-file"><em>lox/RuntimeError.java</em><br/>
-create new file</div>
+<p><font papago-translate="translated">검사가 실패하면 다음 중 하나를 던집니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/RuntimeError.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 새 파일 만들기</font></font></div>
 <pre translate="no"><span class="k">package</span> <span class="i">com.craftinginterpreters.lox</span>;
 
 <span class="k">class</span> <span class="t">RuntimeError</span> <span class="k">extends</span> <span class="t">RuntimeException</span> {
@@ -550,78 +366,62 @@ create new file</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>lox/RuntimeError.java</em>, create new file</div>
-<p>Unlike the Java cast exception, our <span name="class">class</span> tracks the
-token that identifies where in the user’s code the runtime error came from. As
-with static errors, this helps the user know where to fix their code.</p>
-<aside name="class">
-<p>I admit the name “RuntimeError” is confusing since Java defines a
-RuntimeException class. An annoying thing about building interpreters is your
-names often collide with ones already taken by the implementation language. Just
-wait until we support Lox classes.</p>
+<p><font papago-translate="translated">Java 캐스트 예외와 달리, 우리<span name="class"> 클래스는</span> 사용자 코드에서 런타임 오류가 발생한 위치를 식별하는 토큰을 추적합니다.</font><font papago-translate="translated"> 정적 오류와 마찬가지로, 이는 사용자가 코드를 어디서 수정해야 하는지 알 수 있도록 도와줍니다.</font></p>
+<aside name="class" style="top: 9462.5px;">
+<p><font papago-translate="translated">Java가 런타임을 정의하기 때문에 "RuntimeError"라는 이름이 혼란스럽다는 것을 인정합니다</font><font papago-translate="translated">예외 클래스.</font><font papago-translate="translated"> 통역사를 구축할 때 성가신 점은 구현 언어에서 이미 사용하는 이름과 종종 충돌한다는 것입니다.</font><font papago-translate="translated"> Lox 수업을 지원할 때까지 기다려 주세요.</font></p>
 </aside>
-<p>We need similar checking for the binary operators. Since I promised you every
-single line of code needed to implement the interpreters, I’ll run through them
-all.</p>
-<p>Greater than:</p>
+<p><font papago-translate="translated">이진 연산자에 대해서도 유사한 검사가 필요합니다.</font><font papago-translate="translated"> 통역사를 구현하는 데 필요한 모든 코드 라인을 약속드렸으니, 제가 모두 살펴보겠습니다.</font></p>
+<p><font papago-translate="translated">다음보다 큽니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      case GREATER:
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitBinaryExpr</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>BinaryExp</em>r<em>() 방문</em> 시</font></font></div>
 <pre class="insert" translate="no">        <span class="i">checkNumberOperands</span>(<span class="i">expr</span>.<span class="i">operator</span>, <span class="i">left</span>, <span class="i">right</span>);
 </pre><pre class="insert-after" translate="no">        return (double)left &gt; (double)right;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitBinaryExpr</em>()</div>
-<p>Greater than or equal to:</p>
+<p><font papago-translate="translated">크거나 같습니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      case GREATER_EQUAL:
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitBinaryExpr</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>BinaryExp</em>r<em>() 방문</em> 시</font></font></div>
 <pre class="insert" translate="no">        <span class="i">checkNumberOperands</span>(<span class="i">expr</span>.<span class="i">operator</span>, <span class="i">left</span>, <span class="i">right</span>);
 </pre><pre class="insert-after" translate="no">        return (double)left &gt;= (double)right;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitBinaryExpr</em>()</div>
-<p>Less than:</p>
+<p><font papago-translate="translated">미만:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      case LESS:
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitBinaryExpr</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>BinaryExp</em>r<em>() 방문</em> 시</font></font></div>
 <pre class="insert" translate="no">        <span class="i">checkNumberOperands</span>(<span class="i">expr</span>.<span class="i">operator</span>, <span class="i">left</span>, <span class="i">right</span>);
 </pre><pre class="insert-after" translate="no">        return (double)left &lt; (double)right;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitBinaryExpr</em>()</div>
-<p>Less than or equal to:</p>
+<p><font papago-translate="translated">이하:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      case LESS_EQUAL:
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitBinaryExpr</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>BinaryExp</em>r<em>() 방문</em> 시</font></font></div>
 <pre class="insert" translate="no">        <span class="i">checkNumberOperands</span>(<span class="i">expr</span>.<span class="i">operator</span>, <span class="i">left</span>, <span class="i">right</span>);
 </pre><pre class="insert-after" translate="no">        return (double)left &lt;= (double)right;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitBinaryExpr</em>()</div>
-<p>Subtraction:</p>
+<p><font papago-translate="translated">뺄셈:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      case MINUS:
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitBinaryExpr</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>BinaryExp</em>r<em>() 방문</em> 시</font></font></div>
 <pre class="insert" translate="no">        <span class="i">checkNumberOperands</span>(<span class="i">expr</span>.<span class="i">operator</span>, <span class="i">left</span>, <span class="i">right</span>);
 </pre><pre class="insert-after" translate="no">        return (double)left - (double)right;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitBinaryExpr</em>()</div>
-<p>Division:</p>
+<p><font papago-translate="translated">부서:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      case SLASH:
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitBinaryExpr</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>BinaryExp</em>r<em>() 방문</em> 시</font></font></div>
 <pre class="insert" translate="no">        <span class="i">checkNumberOperands</span>(<span class="i">expr</span>.<span class="i">operator</span>, <span class="i">left</span>, <span class="i">right</span>);
 </pre><pre class="insert-after" translate="no">        return (double)left / (double)right;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitBinaryExpr</em>()</div>
-<p>Multiplication:</p>
+<p><font papago-translate="translated">곱셈:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      case STAR:
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitBinaryExpr</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>BinaryExp</em>r<em>() 방문</em> 시</font></font></div>
 <pre class="insert" translate="no">        <span class="i">checkNumberOperands</span>(<span class="i">expr</span>.<span class="i">operator</span>, <span class="i">left</span>, <span class="i">right</span>);
 </pre><pre class="insert-after" translate="no">        return (double)left * (double)right;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitBinaryExpr</em>()</div>
-<p>All of those rely on this validator, which is virtually the same as the unary
-one:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-add after <em>checkNumberOperand</em>()</div>
+<p><font papago-translate="translated">이 모든 것은 사실상 단항 검증기와 동일한 검증기에 의존합니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>check</em>Num<em>berOperand</em>() 후에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">void</span> <span class="i">checkNumberOperands</span>(<span class="t">Token</span> <span class="i">operator</span>,
                                    <span class="t">Object</span> <span class="i">left</span>, <span class="t">Object</span> <span class="i">right</span>) {
     <span class="k">if</span> (<span class="i">left</span> <span class="k">instanceof</span> <span class="t">Double</span> &amp;&amp; <span class="i">right</span> <span class="k">instanceof</span> <span class="t">Double</span>) <span class="k">return</span>;
@@ -630,40 +430,26 @@ add after <em>checkNumberOperand</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, add after <em>checkNumberOperand</em>()</div>
-<aside name="operand">
-<p>Another subtle semantic choice: We evaluate <em>both</em> operands before checking the
-type of <em>either</em>. Imagine we have a function <code translate="no">say()</code> that prints its argument
-then returns it. Using that, we write:</p>
+<aside name="operand" style="top: 10685.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">또 다른 미묘한 의미론적 선택:</font><font papago-translate="translated"> 두 피연산자<em></em>의 유형을 확인하기 전에<em> 두</em> 피연산자를 모두 평가합니다.</font><font papago-translate="translated"> 함수가 있다고 상상해 보세요 </font></font><code translate="no">say()</code><font papago-translate="splitted"><font papago-translate="translated"> 그것이 그 주장을 출력한 후에 반환합니다.</font><font papago-translate="translated"> 이를 사용하여 다음과 같이 작성합니다:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="i">say</span>(<span class="s">"left"</span>) - <span class="i">say</span>(<span class="s">"right"</span>);
 </pre></div>
-<p>Our interpreter prints “left” and “right” before reporting the runtime error. We
-could have instead specified that the left operand is checked before even
-evaluating the right.</p>
+<p><font papago-translate="translated">우리 통역사는 런타임 오류를 보고하기 전에 "왼쪽"과 "오른쪽"을 출력합니다.</font><font papago-translate="translated"> 대신 오른쪽 피연산자를 평가하기 전에 왼쪽 피연산자를 확인하도록 지정할 수도 있었습니다.</font></p>
 </aside>
-<p>The last remaining operator, again the odd one out, is addition. Since <code translate="no">+</code> is
-overloaded for numbers and strings, it already has code to check the types. All
-we need to do is fail if neither of the two success cases match.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">마지막 남은 연산자, 다시 홀수 연산자는 덧셈입니다.</font><font papago-translate="translated"> 부터 </font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated"> 숫자와 문자열에 과부하가 걸렸으며, 이미 유형을 확인할 수 있는 코드가 있습니다.</font><font papago-translate="translated"> 두 성공 사례 중 어느 것도 일치하지 않으면 실패하기만 하면 됩니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">          return (String)left + (String)right;
         }
 
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitBinaryExpr</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>BinaryExp</em>r<em>() 방문</em> 시</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">        <span class="k">throw</span> <span class="k">new</span> <span class="t">RuntimeError</span>(<span class="i">expr</span>.<span class="i">operator</span>,
             <span class="s">"Operands must be two numbers or two strings."</span>);
 </pre><pre class="insert-after" translate="no">      case SLASH:
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitBinaryExpr</em>(), replace 1 line</div>
-<p>That gets us detecting runtime errors deep in the innards of the evaluator. The
-errors are getting thrown. The next step is to write the code that catches them.
-For that, we need to wire up the Interpreter class into the main Lox class that
-drives it.</p>
-<h2><a href="#hooking-up-the-interpreter" id="hooking-up-the-interpreter"><small>7 . 4</small>Hooking Up the Interpreter</a></h2>
-<p>The visit methods are sort of the guts of the Interpreter class, where the real
-work happens. We need to wrap a skin around them to interface with the rest of
-the program. The Interpreter’s public API is simply one method.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in class <em>Interpreter</em></div>
+<p><font papago-translate="translated">이를 통해 평가자의 내면 깊숙한 곳에서 런타임 오류를 감지할 수 있습니다.</font><font papago-translate="translated"> 오류가 발생하고 있습니다.</font><font papago-translate="translated"> 다음 단계는 그들을 포착하는 코드를 작성하는 것입니다.</font><font papago-translate="translated"> 이를 위해 인터프리터 클래스를 구동하는 메인 Lox 클래스에 연결해야 합니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#hooking-up-the-interpreter" id="hooking-up-the-interpreter"><small><font papago-translate="translated">7 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">통역사 연결하기</font></font></a></h2>
+<p><font papago-translate="translated">방문 방법은 실제 업무가 이루어지는 통역사 수업의 핵심입니다.</font><font papago-translate="translated"> 나머지 프로그램과 소통하려면 피부를 감싸야 합니다.</font><font papago-translate="translated"> 인터프리터의 공개 API는 단지 하나의 방법일 뿐입니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 클래스<em> 인터프리터</em>에서</font></font></div>
 <pre translate="no">  <span class="t">void</span> <span class="i">interpret</span>(<span class="t">Expr</span> <span class="i">expression</span>) {<span name="void"> </span>
     <span class="k">try</span> {
       <span class="t">Object</span> <span class="i">value</span> = <span class="i">evaluate</span>(<span class="i">expression</span>);
@@ -674,12 +460,8 @@ in class <em>Interpreter</em></div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in class <em>Interpreter</em></div>
-<p>This takes in a syntax tree for an expression and evaluates it. If that
-succeeds, <code translate="no">evaluate()</code> returns an object for the result value. <code translate="no">interpret()</code>
-converts that to a string and shows it to the user. To convert a Lox value to a
-string, we rely on:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-add after <em>isEqual</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 표현식에 대한 구문 트리를 가져와서 평가합니다.</font><font papago-translate="translated"> 만약 그것이 성공한다면, </font></font><code translate="no">evaluate()</code><font papago-translate="splitted"><font papago-translate="translated"> 결과 값에 대한 객체를 반환합니다. </font></font><code translate="no">interpret()</code><font papago-translate="splitted"><font papago-translate="translated"> 문자열로 변환하여 사용자에게 보여줍니다.</font><font papago-translate="translated"> Lox 값을 문자열로 변환하려면 다음에 의존합니다:</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>is</em>E<em>qual</em>() 뒤에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">String</span> <span class="i">stringify</span>(<span class="t">Object</span> <span class="i">object</span>) {
     <span class="k">if</span> (<span class="i">object</span> == <span class="k">null</span>) <span class="k">return</span> <span class="s">"nil"</span>;
 
@@ -695,32 +477,16 @@ add after <em>isEqual</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, add after <em>isEqual</em>()</div>
-<p>This is another of those pieces of code like <code translate="no">isTruthy()</code> that crosses the
-membrane between the user’s view of Lox objects and their internal
-representation in Java.</p>
-<p>It’s pretty straightforward. Since Lox was designed to be familiar to someone
-coming from Java, things like Booleans look the same in both languages. The two
-edge cases are <code translate="no">nil</code>, which we represent using Java’s <code translate="no">null</code>, and numbers.</p>
-<p>Lox uses double-precision numbers even for integer values. In that case, they
-should print without a decimal point. Since Java has both floating point and
-integer types, it wants you to know which one you’re using. It tells you by
-adding an explicit <code translate="no">.0</code> to integer-valued doubles. We don’t care about that, so
-we <span name="number">hack</span> it off the end.</p>
-<aside name="number">
-<p>Yet again, we take care of this edge case with numbers to ensure that jlox and
-clox work the same. Handling weird corners of the language like this will drive
-you crazy but is an important part of the job.</p>
-<p>Users rely on these details<span class="em">—</span>either deliberately or inadvertently<span class="em">—</span>and if
-the implementations aren’t consistent, their program will break when they run it
-on different interpreters.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 또 다른 코드 조각입니다 </font></font><code translate="no">isTruthy()</code><font papago-translate="splitted"><font papago-translate="translated"> 사용자가 Lox 객체를 보는 시점과 Java에서 내부 표현 사이의 막을 통과합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">꽤 간단합니다.</font><font papago-translate="translated"> Lox는 자바에서 온 사람에게 친숙하도록 설계되었기 때문에, 불리언과 같은 것들은 두 언어 모두에서 동일하게 보입니다.</font><font papago-translate="translated"> 두 엣지 케이스는 다음과 같습니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">, Java를 사용하여 표현합니다 </font></font><code translate="no">null</code><font papago-translate="splitted"><font papago-translate="translated">, 그리고 숫자.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">Lox는 정수 값에 대해서도 이중 정밀도를 사용합니다.</font><font papago-translate="translated"> 이 경우 소수점 없이 인쇄해야 합니다.</font><font papago-translate="translated"> Java는 부동 소수점 유형과 정수 유형을 모두 가지고 있기 때문에 어떤 유형을 사용하고 있는지 알려주시기 바랍니다.</font><font papago-translate="translated"> 명시적인 내용을 추가하여 알려줍니다 </font></font><code translate="no">.0</code><font papago-translate="splitted"><font papago-translate="translated"> 정수 값의 두 배로 증가합니다.</font><font papago-translate="translated"> 우리는 그것에 신경 쓰지 않아서 끝까지<span name="number"> 해킹</span>합니다.</font></font></p>
+<aside name="number" style="top: 12126.5px;">
+<p><font papago-translate="translated">다시 말하지만, 우리는 이 엣지 케이스를 숫자로 처리하여 jlox와 clox가 동일하게 작동하도록 합니다.</font><font papago-translate="translated"> 언어의 이상한 구석을 이렇게 다루는 것은 당신을 미치게 만들지만, 업무에서 중요한 부분입니다.</font></p>
+<p><font papago-translate="translated">사용자들은 의도적이든 의도하지 않든 이러한 세부 사항에 의존하며, 구현이 일관되지 않으면 다른 인터프리<span class="em"></span><span class="em"></span>터에서 실행할 때 프로그램이 중단될 것입니다.</font></p>
 </aside>
-<h3><a href="#reporting-runtime-errors" id="reporting-runtime-errors"><small>7 . 4 . 1</small>Reporting runtime errors</a></h3>
-<p>If a runtime error is thrown while evaluating the expression, <code translate="no">interpret()</code>
-catches it. This lets us report the error to the user and then gracefully
-continue. All of our existing error reporting code lives in the Lox class, so we
-put this method there too:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Lox.java</em><br/>
-add after <em>error</em>()</div>
+<h3><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#reporting-runtime-errors" id="reporting-runtime-errors"><small><font papago-translate="translated">7 . 4 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">런타임 오류 보고</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">표현식을 평가하는 동안 런타임 오류가 발생하면, </font></font><code translate="no">interpret()</code><font papago-translate="splitted"><font papago-translate="translated"> 잡습니다.</font><font papago-translate="translated"> 이렇게 하면 사용자에게 오류를 보고한 다음 우아하게 계속 진행할 수 있습니다.</font><font papago-translate="translated"> 우리의 기존 오류 보고 코드는 모두 Lox 클래스에 속하므로, 이 메서드도 여기에 포함시킵니다:</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Lox.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>오류</em> 후 추가 ()</font></font></div>
 <pre translate="no">  <span class="k">static</span> <span class="t">void</span> <span class="i">runtimeError</span>(<span class="t">RuntimeError</span> <span class="i">error</span>) {
     <span class="t">System</span>.<span class="i">err</span>.<span class="i">println</span>(<span class="i">error</span>.<span class="i">getMessage</span>() +
         <span class="s">"</span><span class="e">\n</span><span class="s">[line "</span> + <span class="i">error</span>.<span class="i">token</span>.<span class="i">line</span> + <span class="s">"]"</span>);
@@ -728,149 +494,88 @@ add after <em>error</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Lox.java</em>, add after <em>error</em>()</div>
-<p>We use the token associated with the RuntimeError to tell the user what line of
-code was executing when the error occurred. Even better would be to give the
-user an entire call stack to show how they <em>got</em> to be executing that code. But
-we don’t have function calls yet, so I guess we don’t have to worry about it.</p>
-<p>After showing the error, <code translate="no">runtimeError()</code> sets this field:</p>
+<p><font papago-translate="translated">런타임 오류와 관련된 토큰을 사용하여 오류가 발생했을 때 실행 중인 코드 라인을 사용자에게 알려줍니다.</font><font papago-translate="translated"> 사용자가<em></em> 해당 코드를 실행하는 방법을 보여주기 위해 전체 통화 스택을 제공하는 것이 더 좋습니다.</font><font papago-translate="translated"> 하지만 아직 함수 호출이 없으니 걱정할 필요가 없을 것 같습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">오류를 표시한 후, </font></font><code translate="no">runtimeError()</code><font papago-translate="splitted"><font papago-translate="translated"> 이 필드를 설정합니다:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  static boolean hadError = false;
-</pre><div class="source-file"><em>lox/Lox.java</em><br/>
-in class <em>Lox</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Lox.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em></em>Lox 클래스에서</font></font></div>
 <pre class="insert" translate="no">  <span class="k">static</span> <span class="t">boolean</span> <span class="i">hadRuntimeError</span> = <span class="k">false</span>;
 
 </pre><pre class="insert-after" translate="no">  public static void main(String[] args) throws IOException {
 </pre></div>
 <div class="source-file-narrow"><em>lox/Lox.java</em>, in class <em>Lox</em></div>
-<p>That field plays a small but important role.</p>
+<p><font papago-translate="translated">그 분야는 작지만 중요한 역할을 합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    run(new String(bytes, Charset.defaultCharset()));
 
     // Indicate an error in the exit code.
     if (hadError) System.exit(65);
-</pre><div class="source-file"><em>lox/Lox.java</em><br/>
-in <em>runFile</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Lox.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>runFile</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">if</span> (<span class="i">hadRuntimeError</span>) <span class="t">System</span>.<span class="i">exit</span>(<span class="n">70</span>);
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Lox.java</em>, in <em>runFile</em>()</div>
-<p>If the user is running a Lox <span name="repl">script from a file</span> and a
-runtime error occurs, we set an exit code when the process quits to let the
-calling process know. Not everyone cares about shell etiquette, but we do.</p>
-<aside name="repl">
-<p>If the user is running the REPL, we don’t care about tracking runtime errors.
-After they are reported, we simply loop around and let them input new code and
-keep going.</p>
+<p><font papago-translate="translated">사용자가<span name="repl"> 파일에서</span> Lox<span name="repl"> 스크립트</span>를 실행 중인데 런타임 오류가 발생하면 프로세스가 종료될 때 종료 코드를 설정하여 호출 프로세스에 알립니다.</font><font papago-translate="translated"> 모든 사람이 조개껍질 에티켓에 신경 쓰지는 않지만, 우리는 신경 씁니다.</font></p>
+<aside name="repl" style="top: 13002.5px;">
+<p><font papago-translate="translated">사용자가 REPL을 실행 중이라면 런타임 오류를 추적하는 데 신경 쓰지 않습니다.</font><font papago-translate="translated"> 보고된 후, 우리는 단순히 반복해서 새로운 코드를 입력하고 계속 진행하게 합니다.</font></p>
 </aside>
-<h3><a href="#running-the-interpreter" id="running-the-interpreter"><small>7 . 4 . 2</small>Running the interpreter</a></h3>
-<p>Now that we have an interpreter, the Lox class can start using it.</p>
+<h3><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#running-the-interpreter" id="running-the-interpreter"><small><font papago-translate="translated">7 . 4 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">인터프리터 실행</font></font></a></h3>
+<p><font papago-translate="translated">이제 통역사가 생겼으니 Lox 클래스에서 이를 사용할 수 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">public class Lox {
-</pre><div class="source-file"><em>lox/Lox.java</em><br/>
-in class <em>Lox</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Lox.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em></em>Lox 클래스에서</font></font></div>
 <pre class="insert" translate="no">  <span class="k">private</span> <span class="k">static</span> <span class="k">final</span> <span class="t">Interpreter</span> <span class="i">interpreter</span> = <span class="k">new</span> <span class="t">Interpreter</span>();
 </pre><pre class="insert-after" translate="no">  static boolean hadError = false;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Lox.java</em>, in class <em>Lox</em></div>
-<p>We make the field static so that successive calls to <code translate="no">run()</code> inside a REPL
-session reuse the same interpreter. That doesn’t make a difference now, but it
-will later when the interpreter stores global variables. Those variables should
-persist throughout the REPL session.</p>
-<p>Finally, we remove the line of temporary code from the <a href="parsing-expressions.html">last chapter</a> for
-printing the syntax tree and replace it with this:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">필드를 정적으로 설정하여 연속적으로 호출합니다 </font></font><code translate="no">run()</code><font papago-translate="splitted"><font papago-translate="translated"> REPL 세션 내에서 동일한 인터프리터를 재사용합니다.</font><font papago-translate="translated"> 지금은 차이가 없지만, 나중에 통역사가 전역 변수를 저장할 때 차이가 생길 것입니다.</font><font papago-translate="translated"> 이러한 변수는 REPL 세션 내내 지속되어야 합니다.</font></font></p>
+<p><font papago-translate="translated">마지막<a href="https://youhogeon-meritz.github.io/parsing-expressions.html">으로</a> 구문 트리를 인쇄하기 위해<a href="https://youhogeon-meritz.github.io/parsing-expressions.html"> 마지막 장</a>에서 임시 코드 줄을 제거하고 다음과 같이 대체합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    // Stop if there was a syntax error.
     if (hadError) return;
 
-</pre><div class="source-file"><em>lox/Lox.java</em><br/>
-in <em>run</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Lox.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">    <span class="i">interpreter</span>.<span class="i">interpret</span>(<span class="i">expression</span>);
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Lox.java</em>, in <em>run</em>(), replace 1 line</div>
-<p>We have an entire language pipeline now: scanning, parsing, and
-execution. Congratulations, you now have your very own arithmetic calculator.</p>
-<p>As you can see, the interpreter is pretty bare bones. But the Interpreter class
-and the Visitor pattern we’ve set up today form the skeleton that later chapters
-will stuff full of interesting guts<span class="em">—</span>variables, functions, etc. Right now, the
-interpreter doesn’t do very much, but it’s alive!</p><img alt="A skeleton waving hello." src="image/evaluating-expressions/skeleton.png">
+<p><font papago-translate="translated">우리는 이제 스캔, 구문 분석, 실행이라는 전체 언어 파이프라인을 가지고 있습니다.</font><font papago-translate="translated"> 축하합니다, 이제 당신만의 산술 계산기가 생겼습니다.</font></p>
+<p><font papago-translate="translated">보시다시피 통역사는 뼈가 거의 없습니다.</font><font papago-translate="translated"> 하지만 오늘 우리가 설정한 인터프리터 클래스와 방문자 패턴은 나중에 장에서 변수, 함수<span class="em"></span> 등 흥미로운 배짱으로 가득 차게 될 골격을 형성합니다.</font><font papago-translate="translated"> 지금은 통역사가 별로 할 일이 없지만, 여전히 살아 있습니다!</font></p><img alt="A skeleton waving hello." src="https://youhogeon-meritz.github.io/image/evaluating-expressions/skeleton.png">
 <div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+<h2><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#challenges" id="challenges"><font papago-translate="translated">과제들</font></a></h2>
 <ol>
 <li>
-<p>Allowing comparisons on types other than numbers could be useful. The
-operators might have a reasonable interpretation for strings. Even
-comparisons among mixed types, like <code translate="no">3 &lt; "pancake"</code> could be handy to enable
-things like ordered collections of heterogeneous types. Or it could simply
-lead to bugs and confusion.</p>
-<p>Would you extend Lox to support comparing other types? If so, which pairs of
-types do you allow and how do you define their ordering? Justify your
-choices and compare them to other languages.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">숫자 이외의 유형에 대한 비교를 허용하는 것이 유용할 수 있습니다.</font><font papago-translate="translated"> 연산자들은 문자열에 대해 합리적인 해석을 할 수 있습니다.</font><font papago-translate="translated"> 혼합 유형 간의 비교도 마찬가지입니다 </font></font><code translate="no">3 &lt; "pancake"</code><font papago-translate="splitted"><font papago-translate="translated"> 이질적인 유형의 주문형 컬렉션과 같은 것을 활성화하는 데 유용할 수 있습니다.</font><font papago-translate="translated"> 또는 단순히 버그와 혼란을 초래할 수도 있습니다.</font></font></p>
+<p><font papago-translate="translated">다른 유형을 비교할 수 있도록 Lox를 확장하시겠습니까?</font><font papago-translate="translated"> 그렇다면 어떤 종류의 쌍을 허용하고 그 순서를 어떻게 정의하시겠습니까?</font><font papago-translate="translated"> 선택을 정당화하고 다른 언어와 비교하세요.</font></p>
 </li>
 <li>
-<p>Many languages define <code translate="no">+</code> such that if <em>either</em> operand is a string, the
-other is converted to a string and the results are then concatenated. For
-example, <code translate="no">"scone" + 4</code> would yield <code translate="no">scone4</code>. Extend the code in
-<code translate="no">visitBinaryExpr()</code> to support that.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">많은 언어는 다음을 정의합니다 </font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated"> 두 피연산자<em> 중 하나가</em> 문자열인 경우, 다른 피연산자는 문자열로 변환되고 결과는 연결됩니다.</font><font papago-translate="translated"> 예를들면, </font></font><code translate="no">"scone" + 4</code><font papago-translate="splitted"><font papago-translate="translated"> 을 산출할 것입니다 </font></font><code translate="no">scone4</code><font papago-translate="splitted"><font papago-translate="translated">. 코드를 확장합니다 </font></font><code translate="no">visitBinaryExpr()</code><font papago-translate="splitted"><font papago-translate="translated"> 이를 뒷받침하기 위해.</font></font></p>
 </li>
 <li>
-<p>What happens right now if you divide a number by zero? What do you think
-should happen? Justify your choice. How do other languages you know handle
-division by zero, and why do they make the choices they do?</p>
-<p>Change the implementation in <code translate="no">visitBinaryExpr()</code> to detect and report a
-runtime error for this case.</p>
+<p><font papago-translate="translated">숫자를 0으로 나누면 지금 무슨 일이 일어날까요?</font><font papago-translate="translated"> 어떻게 해야 한다고 생각하시나요?</font><font papago-translate="translated"> 당신의 선택을 정당화하세요.</font><font papago-translate="translated"> 당신이 알고 있는 다른 언어들은 어떻게 0으로 나눕니까? 그리고 왜 그들은 자신이 선택하는 언어들을 사용하나요?</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">구현 변경 </font></font><code translate="no">visitBinaryExpr()</code><font papago-translate="splitted"><font papago-translate="translated"> 이 경우의 런타임 오류를 감지하고 보고합니다.</font></font></p>
 </li>
 </ol>
 </div>
 <div class="design-note">
-<h2><a href="#design-note" id="design-note">Design Note: Static and Dynamic Typing</a></h2>
-<p>Some languages, like Java, are statically typed which means type errors are
-detected and reported at compile time before any code is run. Others, like Lox,
-are dynamically typed and defer checking for type errors until runtime right
-before an operation is attempted. We tend to consider this a black-and-white
-choice, but there is actually a continuum between them.</p>
-<p>It turns out even most statically typed languages do <em>some</em> type checks at
-runtime. The type system checks most type rules statically, but inserts runtime
-checks in the generated code for other operations.</p>
-<p>For example, in Java, the <em>static</em> type system assumes a cast expression will
-always safely succeed. After you cast some value, you can statically treat it as
-the destination type and not get any compile errors. But downcasts can fail,
-obviously. The only reason the static checker can presume that casts always
-succeed without violating the language’s soundness guarantees, is because the
-cast is checked <em>at runtime</em> and throws an exception on failure.</p>
-<p>A more subtle example is <a href="https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)#Covariant_arrays_in_Java_and_C.23">covariant arrays</a> in Java and C#. The static
-subtyping rules for arrays allow operations that are not sound. Consider:</p>
+<h2><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html#design-note" id="design-note"><font papago-translate="translated">디자인 노트:</font><font papago-translate="translated"> 정적 및 동적 타이핑</font></a></h2>
+<p><font papago-translate="translated">Java와 같은 일부 언어는 정적으로 타이핑되므로 코드가 실행되기 전에 컴파일 시 타입 오류가 감지되고 보고됩니다.</font><font papago-translate="translated"> Lox와 같은 다른 것들은 동적으로 타이핑되며, 작업이 시도되기 직전에 실행될 때까지 타입 오류를 확인하는 것을 연기합니다.</font><font papago-translate="translated"> 우리는 이것을 흑백 선택으로 여기는 경향이 있지만, 실제로는 그들 사이에 연속성이 있습니다.</font></p>
+<p><font papago-translate="translated">알고 보니 대부분의 정적으로 입력된 언어들도<em></em> 런타임에 몇 가지 유형 검사를 합니다.</font><font papago-translate="translated"> 타입 시스템은 대부분의 타입 규칙을 정적으로 확인하지만, 생성된 코드에 다른 작업에 대한 런타임 확인을 삽입합니다.</font></p>
+<p><font papago-translate="translated">예를 들어, Java에서는<em> 정적</em> 타입 시스템이 항상 캐스트 표현식이 안전하게 성공할 것이라고 가정합니다.</font><font papago-translate="translated"> 값을 입력한 후에는 대상 유형으로 정적으로 처리하고 컴파일 오류를 발생시키지 않을 수 있습니다.</font><font papago-translate="translated"> 하지만 다운캐스트는 당연히 실패할 수 있습니다.</font><font papago-translate="translated"> 정적 검사기가 언어의 건전성 보장을 위반하지 않고 항상 캐스트가 성공한다고 가정할 수 있는 유일한 이유는<em> 캐</em>스트<em>가 런타임에</em> 검사되어 실패에 대한 예외가 발생하기 때문입니다.</font></p>
+<p><font papago-translate="translated">더 미묘한 예로는 Java와 C#의<a href="https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)#Covariant_arrays_in_Java_and_C.23"> 공변 배열이</a> 있습니다.</font><font papago-translate="translated"> 배열에 대한 정적 하위 유형 규칙은 건전하지 않은 작업을 허용합니다.</font><font papago-translate="translated"> 고려:</font></p>
 <div class="codehilite"><pre translate="no"><span class="t">Object</span>[] <span class="i">stuff</span> = <span class="k">new</span> <span class="t">Integer</span>[<span class="n">1</span>];
 <span class="i">stuff</span>[<span class="n">0</span>] = <span class="s">"not an int!"</span>;
 </pre></div>
-<p>This code compiles without any errors. The first line upcasts the Integer array
-and stores it in a variable of type Object array. The second line stores a
-string in one of its cells. The Object array type statically allows that<span class="em">—</span>strings <em>are</em> Objects<span class="em">—</span>but the actual Integer array that <code translate="no">stuff</code> refers to
-at runtime should never have a string in it! To avoid that catastrophe, when you
-store a value in an array, the JVM does a <em>runtime</em> check to make sure it’s an
-allowed type. If not, it throws an ArrayStoreException.</p>
-<p>Java could have avoided the need to check this at runtime by disallowing the
-cast on the first line. It could make arrays <em>invariant</em> such that an array of
-Integers is <em>not</em> an array of Objects. That’s statically sound, but it prohibits
-common and safe patterns of code that only read from arrays. Covariance is safe
-if you never <em>write</em> to the array. Those patterns were particularly important
-for usability in Java 1.0 before it supported generics. James Gosling and the
-other Java designers traded off a little static safety and performance<span class="em">—</span>those
-array store checks take time<span class="em">—</span>in return for some flexibility.</p>
-<p>There are few modern statically typed languages that don’t make that trade-off
-<em>somewhere</em>. Even Haskell will let you run code with non-exhaustive matches. If
-you find yourself designing a statically typed language, keep in mind that you
-can sometimes give users more flexibility without sacrificing <em>too</em> many of the
-benefits of static safety by deferring some type checks until runtime.</p>
-<p>On the other hand, a key reason users choose statically typed languages is
-because of the confidence the language gives them that certain kinds of errors
-can <em>never</em> occur when their program is run. Defer too many type checks until
-runtime, and you erode that confidence.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 코드는 오류 없이 컴파일됩니다.</font><font papago-translate="translated"> 첫 번째 줄은 정수 배열을 업캐스트하여 객체 배열 유형의 변수에 저장합니다.</font><font papago-translate="translated"> 두 번째 줄은 셀 중 하나에 문자열을 저장합니다.</font><font papago-translate="translated"> 객체 배열 유형은 정적으로 문자열<em>은</em> 객체<em>이지만</em> 실제 정수 배열<span class="em"></span><span class="em"></span>은 다음과 같습니다 </font></font><code translate="no">stuff</code><font papago-translate="splitted"><font papago-translate="translated"> 런타임 시 문자열이 없어야 한다는 것을 의미합니다!</font><font papago-translate="translated"> 이러한 재앙을 피하기 위해, 값을 배열에 저장할 때 JVM은<em> 허용</em>된 유형인지<em> 확인하기 위해 런타임</em> 검사를 수행합니다.</font><font papago-translate="translated" class=""> 그렇지 않으면 ArrayStoreException이 발생합니다.</font></font></p>
+<p><font papago-translate="translated">Java는 첫 번째 줄에서 캐스트를 허용하지 않음으로써 런타임 시 이를 확인할 필요를 피할 수 있었습니다.</font><font papago-translate="translated"> 배열<em>을 불변으로</em> 만들어 정수 배열이 객체 배열<em>이 되지</em> 않도록 할 수 있습니다.</font><font papago-translate="translated"> 그것은 정적으로 들리지만, 배열에서만 읽는 일반적이고 안전한 코드 패턴을 금지합니다.</font><font papago-translate="translated"> 공분산은 배열에<em> 절대 쓰지</em> 않으면 안전합니다.</font><font papago-translate="translated"> 이러한 패턴들은 Java 1.0이 제네릭을 지원하기 전에는 특히 사용성 면에서 중요했습니다.</font><font papago-translate="translated"> 제임스 고슬링과 다른 자바 디자이너들은 약간의 정적인 안전성과 성능, 즉 어레이 스토어 점검에 시간이 걸리는 것을 유연<span class="em"></span><span class="em"></span>성을 대가로 맞바꿨습니다.</font></p>
+<p><font papago-translate="translated">현대의 정적으로 입력된 언어들<em> 중 어딘가에서</em> 이러한 균형을 이루지 못하는 언어는 거의 없습니다.</font><font papago-translate="translated"> 하스켈도 완전하지 않은 매치로 코드를 실행할 수 있게 해줍니다.</font><font papago-translate="translated"> 정적으로 타이핑된 언어를 설계하는 경우 런타임까지 일부 타이핑 검사를 연기하여 정적 안전의 이점을<em> 너무</em> 많이 희생하지 않고도 사용자에게 더 많은 유연성을 제공할 수 있다는 점을 명심하세요.</font></p>
+<p><font papago-translate="translated">반면에, 사용자들이 정적으로 입력된 언어를 선택하는 주요 이유는 프로그램이 실행될 때 특정 종류의 오류가<em> 절대</em> 발생할 수 없다는 자신감 때문입니다.</font><font papago-translate="translated"> 런타임까지 너무 많은 유형 검사를 미루면 그 신뢰도가 약화됩니다.</font></p>
 </div>
 <footer>
-<a class="next" href="statements-and-state.html">
-  Next Chapter: “Statements and State” →
-</a>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+<a class="next" href="https://youhogeon-meritz.github.io/statements-and-state.html"><font papago-translate="translated"> 다음 장: "진술과 진술" → </font></a><font papago-translate="splitted"><font papago-translate="translated"> 로버트 니스트롬이 수작업으로 제작한 -<a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE"> © 2015 ~ 2021</a></font></font>
 </footer>
-</img></img></article>
+</article>
 </div>
-</body>
-</html>
+
+
+<div id="papagoTooltip" margin="5" style="display: none;">
+        <h1 id="tooltipTitle">원문</h1>
+        <p id="tooltipText"></p>
+      </div>
+      </body></html>

@@ -1,167 +1,126 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-90fd5890-39f1-46c1-bd66-2190db5eca3e@mhtml.blink" />
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>Classes and Instances · Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/style.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
-<script src="jquery-3.4.1.min.js"></script>
-<script src="script.js"></script>
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+
+<!-- Google analytics -->
+
+</head>
 <body id="top">
 <!-- <div class="scrim"></div> -->
 <nav class="wide">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="contents">
-<h3><a href="#top">Classes and Instances<small>27</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/classes-and-instances.html#top"><font papago-translate="splitted"><font papago-translate="translated">클래스 및 인스턴스</font></font><small>27</small></a></h3>
 <ul>
-<li><a href="#class-objects"><small>27.1</small> Class Objects</a></li>
-<li><a href="#class-declarations"><small>27.2</small> Class Declarations</a></li>
-<li><a href="#instances-of-classes"><small>27.3</small> Instances of Classes</a></li>
-<li><a href="#get-and-set-expressions"><small>27.4</small> Get and Set Expressions</a></li>
+<li><a href="https://youhogeon-meritz.github.io/classes-and-instances.html#class-objects"><small>27.1</small><font papago-translate="splitted"><font papago-translate="translated"> 클래스 객체</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/classes-and-instances.html#class-declarations"><small>27.2</small><font papago-translate="splitted"><font papago-translate="translated"> 클래스 선언</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/classes-and-instances.html#instances-of-classes"><small>27.3</small><font papago-translate="splitted"><font papago-translate="translated"> 수업 사례</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/classes-and-instances.html#get-and-set-expressions"><small>27.4</small><font papago-translate="splitted"><font papago-translate="translated"> 식 가져오기 및 설정</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/classes-and-instances.html#challenges"><font papago-translate="translated">과제들</font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="garbage-collection.html" title="Garbage Collection">← Previous</a>
-<a href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑ Up</a>
-<a class="right" href="methods-and-initializers.html" title="Methods and Initializers">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/garbage-collection.html" title="쓰레기 수거" papago-attr-id="1"><font papago-translate="translated">← 이전</font></a>
+<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="바이트코드 가상 머신" papago-attr-id="2"><font papago-translate="translated">↑ 위로</font></a>
+<a class="right" href="https://youhogeon-meritz.github.io/methods-and-initializers.html" title="메서드 및 초기화" papago-attr-id="3"><font papago-translate="translated">다음 →</font></a>
 </div> </div>
 </nav>
 <nav class="narrow">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
-<a class="prev" href="garbage-collection.html" title="Garbage Collection">←</a>
-<a class="next" href="methods-and-initializers.html" title="Methods and Initializers">→</a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
+<a class="prev" href="https://youhogeon-meritz.github.io/garbage-collection.html" title="Garbage Collection">←</a>
+<a class="next" href="https://youhogeon-meritz.github.io/methods-and-initializers.html" title="Methods and Initializers">→</a>
 </nav>
 <div class="page">
 <div class="nav-wrapper">
 <nav class="floating">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="expandable">
-<h3><a href="#top">Classes and Instances<small>27</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/classes-and-instances.html#top"><font papago-translate="splitted"><font papago-translate="translated">클래스 및 인스턴스</font></font><small>27</small></a></h3>
 <ul>
-<li><a href="#class-objects"><small>27.1</small> Class Objects</a></li>
-<li><a href="#class-declarations"><small>27.2</small> Class Declarations</a></li>
-<li><a href="#instances-of-classes"><small>27.3</small> Instances of Classes</a></li>
-<li><a href="#get-and-set-expressions"><small>27.4</small> Get and Set Expressions</a></li>
+<li><a href="https://youhogeon-meritz.github.io/classes-and-instances.html#class-objects"><small>27.1</small><font papago-translate="splitted"><font papago-translate="translated"> 클래스 객체</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/classes-and-instances.html#class-declarations"><small>27.2</small><font papago-translate="splitted"><font papago-translate="translated"> 클래스 선언</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/classes-and-instances.html#instances-of-classes"><small>27.3</small><font papago-translate="splitted"><font papago-translate="translated"> 수업 사례</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/classes-and-instances.html#get-and-set-expressions"><small>27.4</small><font papago-translate="splitted"><font papago-translate="translated"> 식 가져오기 및 설정</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/classes-and-instances.html#challenges">Challenges</a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="garbage-collection.html" title="Garbage Collection">← Previous</a>
-<a href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑ Up</a>
-<a class="right" href="methods-and-initializers.html" title="Methods and Initializers">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/garbage-collection.html" title="Garbage Collection">←&nbsp;Previous</a>
+<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑&nbsp;Up</a>
+<a class="right" href="https://youhogeon-meritz.github.io/methods-and-initializers.html" title="Methods and Initializers">Next&nbsp;→</a>
 </div> </div>
 <a id="expand-nav">≡</a>
 </nav>
 </div>
 <article class="chapter">
 <div class="number">27</div>
-<h1>Classes and Instances</h1>
+<h1><font papago-translate="translated">클래스 및 인스턴스</font></h1>
 <blockquote>
-<p>Caring too much for objects can destroy you. Only<span class="em">—</span>if you care for a thing
-enough, it takes on a life of its own, doesn’t it? And isn’t the whole point
-of things<span class="em">—</span>beautiful things<span class="em">—</span>that they connect you to some larger beauty?</p>
+<p><font papago-translate="translated">물건을 너무 많이 신경 쓰면 당신을 망칠 수 있습니다.</font><font papago-translate="translated"> 오직—어떤 것을 충분히 신경 쓰면, 그 자체로 삶을 살게 되죠,<span class="em"></span> 그렇지 않나요?</font><font papago-translate="translated"> 그리고 아름다운 것들이 당신을 더 큰<span class="em"></span><span class="em"></span> 아름다움과 연결해 주는 것이 핵심이 아닐까요?</font></p>
 <p><cite>Donna Tartt, <em>The Goldfinch</em></cite></p>
 </blockquote>
-<p>The last area left to implement in clox is object-oriented programming. <span name="oop">OOP</span> is a bundle of intertwined features: classes, instances,
-fields, methods, initializers, and inheritance. Using relatively high-level
-Java, we packed all that into two chapters. Now that we’re coding in C, which
-feels like building a model of the Eiffel tower out of toothpicks, we’ll devote
-three chapters to covering the same territory. This makes for a leisurely stroll
-through the implementation. After strenuous chapters like <a href="closures.html">closures</a> and the
-<a href="garbage-collection.html">garbage collector</a>, you have earned a rest. In fact, the book should be easy
-from here on out.</p>
-<aside name="oop">
-<p>People who have strong opinions about object-oriented programming<span class="em">—</span>read
-“everyone”<span class="em">—</span>tend to assume OOP means some very specific list of language
-features, but really there’s a whole space to explore, and each language has its
-own ingredients and recipes.</p>
-<p>Self has objects but no classes. CLOS has methods but doesn’t attach them to
-specific classes. C++ initially had no runtime polymorphism<span class="em">—</span>no virtual
-methods. Python has multiple inheritance, but Java does not. Ruby attaches
-methods to classes, but you can also define methods on a single object.</p>
+<p><font papago-translate="translated">clox에서 마지막으로 구현해야 할 영역은 객체 지향 프로그래밍입니다.</font><font papago-translate="translated"> <span name="oop">OOP</span>는 클래스, 인스턴스, 필드, 메서드, 초기화자, 상속 등 다양한 기능이 얽혀 있는 번들입니다<span name="oop">.</span></font><font papago-translate="translated" class=""> 비교적 높은 수준의 Java를 사용하여 이 모든 것을 두 장으로 나누었습니다.</font><font papago-translate="translated"> 이제 이쑤시개로 에펠탑 모형을 만드는 것 같은 느낌의 C로 코딩하고 있으니, 같은 영역을 다루는 데 세 개의 챕터를 할애하겠습니다.</font><font papago-translate="translated"> 이렇게 하면 구현 과정을 여유롭게 거닐 수 있습니다.</font><font papago-translate="translated"> <a href="https://youhogeon-meritz.github.io/closures.html">폐쇄</a>와<a href="https://youhogeon-meritz.github.io/garbage-collection.html"> 쓰레기 수거</a> 같은 힘든 장을 거친 후, 당신은 휴식을 얻었습니다.</font><font papago-translate="translated"> 사실, 이 책은 이제부터 쉽게 읽을 수 있을 것입니다.</font></p>
+<aside name="oop" style="top: 448px;">
+<p><font papago-translate="translated" class="">객체 지향 프로그래밍에 대해 강한 의견을 가진 사람들, 즉 "모두"를 읽는 사람들은 OOP가 매우 구체적인 언어 특징 목록을 의미한다고 생각하는 경향이 있습니다. 하지만 실제로 탐구할 수 있는 공간이 전체적으로 존재하며 각 언어에는 고유한 재료와<span class="em"></span><span class="em"></span> 레시피가 있습니다.</font></p>
+<p><font papago-translate="translated">자아는 대상은 있지만 계급은 없습니다.</font><font papago-translate="translated"> CLOSS에는 메서드가 있지만 특정 클래스에 연결하지는 않습니다.</font><font papago-translate="translated" class=""> C++는 처음에는 런타임 다형성이 없었고, 가상<span class="em"></span> 메서드도 없었습니다.</font><font papago-translate="translated"> 파이썬은 여러 개의 상속을 받지만, 자바는 그렇지 않습니다.</font><font papago-translate="translated"> Ruby는 메서드를 클래스에 첨부하지만, 단일 객체에 메서드를 정의할 수도 있습니다.</font></p>
 </aside>
-<p>In this chapter, we cover the first three features: classes, instances, and
-fields. This is the stateful side of object orientation. Then in the next two
-chapters, we will hang behavior and code reuse off of those objects.</p>
-<h2><a href="#class-objects" id="class-objects"><small>27 . 1</small>Class Objects</a></h2>
-<p>In a class-based object-oriented language, everything begins with classes. They
-define what sorts of objects exist in the program and are the factories used to
-produce new instances. Going bottom-up, we’ll start with their runtime
-representation and then hook that into the language.</p>
-<p>By this point, we’re well-acquainted with the process of adding a new object
-type to the VM. We start with a struct.</p>
+<p><font papago-translate="translated">이 장에서는 클래스, 인스턴스, 필드의 처음 세 가지 기능을 다룹니다.</font><font papago-translate="translated"> 이것은 객체 지향의 상태적인 측면입니다.</font><font papago-translate="translated"> 그런 다음 다음 두 장에서는 이러한 객체의 동작과 코드 재사용을 중단하겠습니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/classes-and-instances.html#class-objects" id="class-objects"><small><font papago-translate="translated">27 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">클래스 객체</font></font></a></h2>
+<p><font papago-translate="translated">수업 기반 객체 지향 언어에서는 모든 것이 수업에서 시작됩니다.</font><font papago-translate="translated"> 그들은 프로그램에 존재하는 객체의 종류와 새로운 인스턴스를 생성하는 데 사용되는 공장을 정의합니다.</font><font papago-translate="translated"> 요약하자면, 우리는 그들의 런타임 표현부터 시작해서 그것을 언어에 연결할 것입니다.</font></p>
+<p><font papago-translate="translated">이 시점에서 우리는 VM에 새로운 객체 유형을 추가하는 과정에 대해 잘 알고 있습니다.</font><font papago-translate="translated"> 구조부터 시작합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">} ObjClosure;
-</pre><div class="source-file"><em>object.h</em><br/>
-add after struct <em>ObjClosure</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 구조 후 Ob<em>jClosure</em> 추가</font></font></div>
 <pre class="insert" translate="no">
-
 <span class="k">typedef</span> <span class="k">struct</span> {
   <span class="t">Obj</span> <span class="i">obj</span>;
   <span class="t">ObjString</span>* <span class="i">name</span>;
 } <span class="t">ObjClass</span>;
 </pre><pre class="insert-after" translate="no">
-
 ObjClosure* newClosure(ObjFunction* function);
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em>, add after struct <em>ObjClosure</em></div>
-<p>After the Obj header, we store the class’s name. This isn’t strictly needed for
-the user’s program, but it lets us show the name at runtime for things like
-stack traces.</p>
-<p>The new type needs a corresponding case in the ObjType enum.</p>
+<p><font papago-translate="translated">Obj 헤더 뒤에 클래스 이름을 저장합니다.</font><font papago-translate="translated"> 이것은 사용자의 프로그램에 꼭 필요한 것은 아니지만, 스택 트레이스와 같은 것들의 이름을 런타임에 표시할 수 있게 해줍니다.</font></p>
+<p><font papago-translate="translated">새로운 유형은 ObjType 열거에 해당하는 대문자가 필요합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">typedef enum {
-</pre><div class="source-file"><em>object.h</em><br/>
-in enum <em>ObjType</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum Ob<em>jType</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="a">OBJ_CLASS</span>,
 </pre><pre class="insert-after" translate="no">  OBJ_CLOSURE,
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em>, in enum <em>ObjType</em></div>
-<p>And that type gets a corresponding pair of macros. First, for testing an
-object’s type:</p>
+<p><font papago-translate="translated">그리고 그 유형은 해당하는 매크로 쌍을 얻습니다.</font><font papago-translate="translated"> 먼저, 객체의 유형을 테스트하기 위해:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define OBJ_TYPE(value)        (AS_OBJ(value)-&gt;type)
 
-</pre><div class="source-file"><em>object.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">객체.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define IS_CLASS(value)        isObjType(value, OBJ_CLASS)</span>
 </pre><pre class="insert-after" translate="no">#define IS_CLOSURE(value)      isObjType(value, OBJ_CLOSURE)
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em></div>
-<p>And then for casting a Value to an ObjClass pointer:</p>
+<p><font papago-translate="translated">그리고 ObjClass 포인터에 값을 할당하는 경우:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define IS_STRING(value)       isObjType(value, OBJ_STRING)
 
-</pre><div class="source-file"><em>object.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">객체.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define AS_CLASS(value)        ((ObjClass*)AS_OBJ(value))</span>
 </pre><pre class="insert-after" translate="no">#define AS_CLOSURE(value)      ((ObjClosure*)AS_OBJ(value))
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em></div>
-<p>The VM creates new class objects using this function:</p>
+<p><font papago-translate="translated">VM은 이 함수를 사용하여 새로운 클래스 객체를 생성합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">} ObjClass;
 
-</pre><div class="source-file"><em>object.h</em><br/>
-add after struct <em>ObjClass</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 구조 Ob<em>jClass</em> 뒤에 추가</font></font></div>
 <pre class="insert" translate="no"><span class="t">ObjClass</span>* <span class="i">newClass</span>(<span class="t">ObjString</span>* <span class="i">name</span>);
 </pre><pre class="insert-after" translate="no">ObjClosure* newClosure(ObjFunction* function);
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em>, add after struct <em>ObjClass</em></div>
-<p>The implementation lives over here:</p>
-<div class="codehilite"><div class="source-file"><em>object.c</em><br/>
-add after <em>allocateObject</em>()</div>
+<p><font papago-translate="translated">구현은 여기에 있습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>할당</em> 후 추가O<em>bject</em>()</font></font></div>
 <pre translate="no"><span class="t">ObjClass</span>* <span class="i">newClass</span>(<span class="t">ObjString</span>* <span class="i">name</span>) {
   <span class="t">ObjClass</span>* <span class="i">klass</span> = <span class="a">ALLOCATE_OBJ</span>(<span class="t">ObjClass</span>, <span class="a">OBJ_CLASS</span>);
   <span class="i">klass</span>-&gt;<span class="i">name</span> = <span class="i">name</span>;<span name="klass"> </span>
@@ -169,18 +128,13 @@ add after <em>allocateObject</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, add after <em>allocateObject</em>()</div>
-<p>Pretty much all boilerplate. It takes in the class’s name as a string and stores
-it. Every time the user declares a new class, the VM will create a new one of
-these ObjClass structs to represent it.</p>
-<aside name="klass"><img alt="'Klass' in a zany kidz font." src="image/classes-and-instances/klass.png">
-<p>I named the variable “klass” not just to give the VM a zany preschool “Kidz
-Korner” feel. It makes it easier to get clox compiling as C++ where “class” is
-a reserved word.</p>
-</img></aside>
-<p>When the VM no longer needs a class, it frees it like so:</p>
+<p><font papago-translate="translated">거의 모든 것이 보일러 플레이트입니다.</font><font papago-translate="translated"> 클래스 이름을 문자열로 가져와서 저장합니다.</font><font papago-translate="translated"> 사용자가 새 클래스를 선언할 때마다 VM은 이를 표현할 새로운 ObjClass 구조를 생성합니다.</font></p>
+<aside name="klass" style="top: 2003px;"><img alt="'Klass' in a zany kidz font." src="https://youhogeon-meritz.github.io/image/classes-and-instances/klass.png">
+<p><font papago-translate="translated">저는 VM에게 단순히 "Kidz Korner" 같은 느낌을 주기 위해 변수를 "class"라고 명명했습니다.</font><font papago-translate="translated"> "clox 컴파일을 C++로 얻는 것을 더 쉽게 만듭니다. 여기서 "class"는 예약된 단어입니다.</font></p>
+</aside>
+<p><font papago-translate="translated">VM에 더 이상 클래스가 필요하지 않을 때는 다음과 같이 자유롭게 합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  switch (object-&gt;type) {
-</pre><div class="source-file"><em>memory.c</em><br/>
-in <em>freeObject</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">메모리.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>free</em>O<em>bject</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OBJ_CLASS</span>: {
       <span class="a">FREE</span>(<span class="t">ObjClass</span>, <span class="i">object</span>);
       <span class="k">break</span>;
@@ -188,15 +142,12 @@ in <em>freeObject</em>()</div>
 </pre><pre class="insert-after" translate="no">    case OBJ_CLOSURE: {
 </pre></div>
 <div class="source-file-narrow"><em>memory.c</em>, in <em>freeObject</em>()</div>
-<aside name="braces">
-<p>The braces here are pointless now, but will be useful in the next chapter when
-we add some more code to the switch case.</p>
+<aside name="braces" style="top: 2311px;">
+<p><font papago-translate="translated">여기 있는 괄호는 이제 의미가 없지만, 다음 장에서 스위치 케이스에 코드를 추가할 때 유용할 것입니다.</font></p>
 </aside>
-<p>We have a memory manager now, so we also need to support tracing through class
-objects.</p>
+<p><font papago-translate="translated">현재 메모리 관리자가 있으므로 클래스 객체를 통한 추적도 지원해야 합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  switch (object-&gt;type) {
-</pre><div class="source-file"><em>memory.c</em><br/>
-in <em>blackenObject</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">메모리.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>blacken</em>O<em>bject</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OBJ_CLASS</span>: {
       <span class="t">ObjClass</span>* <span class="i">klass</span> = (<span class="t">ObjClass</span>*)<span class="i">object</span>;
       <span class="i">markObject</span>((<span class="t">Obj</span>*)<span class="i">klass</span>-&gt;<span class="i">name</span>);
@@ -205,36 +156,29 @@ in <em>blackenObject</em>()</div>
 </pre><pre class="insert-after" translate="no">    case OBJ_CLOSURE: {
 </pre></div>
 <div class="source-file-narrow"><em>memory.c</em>, in <em>blackenObject</em>()</div>
-<p>When the GC reaches a class object, it marks the class’s name to keep that
-string alive too.</p>
-<p>The last operation the VM can perform on a class is printing it.</p>
+<p><font papago-translate="translated">GC가 클래스 객체에 도달하면 해당 문자열을 유지하기 위해 클래스 이름도 표시합니다.</font></p>
+<p><font papago-translate="translated">VM이 클래스에서 수행할 수 있는 마지막 작업은 이를 인쇄하는 것입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  switch (OBJ_TYPE(value)) {
-</pre><div class="source-file"><em>object.c</em><br/>
-in <em>printObject</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>print</em>O<em>bject</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OBJ_CLASS</span>:
       <span class="i">printf</span>(<span class="s">"%s"</span>, <span class="a">AS_CLASS</span>(<span class="i">value</span>)-&gt;<span class="i">name</span>-&gt;<span class="i">chars</span>);
       <span class="k">break</span>;
 </pre><pre class="insert-after" translate="no">    case OBJ_CLOSURE:
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, in <em>printObject</em>()</div>
-<p>A class simply says its own name.</p>
-<h2><a href="#class-declarations" id="class-declarations"><small>27 . 2</small>Class Declarations</a></h2>
-<p>Runtime representation in hand, we are ready to add support for classes to the
-language. Next, we move into the parser.</p>
+<p><font papago-translate="translated">수업은 단순히 자신의 이름을 말합니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/classes-and-instances.html#class-declarations" id="class-declarations"><small><font papago-translate="translated">27 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">클래스 선언</font></font></a></h2>
+<p><font papago-translate="translated">런타임 표현을 통해 언어에 수업 지원을 추가할 준비가 되었습니다.</font><font papago-translate="translated"> 다음으로 파서로 이동합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">static void declaration() {
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>declaration</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>선언</em>문 ()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  <span class="k">if</span> (<span class="i">match</span>(<span class="a">TOKEN_CLASS</span>)) {
     <span class="i">classDeclaration</span>();
   } <span class="k">else</span> <span class="k">if</span> (<span class="i">match</span>(<span class="a">TOKEN_FUN</span>)) {
 </pre><pre class="insert-after" translate="no">    funDeclaration();
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>declaration</em>(), replace 1 line</div>
-<p>Class declarations are statements, and the parser recognizes one by the leading
-<code translate="no">class</code> keyword. The rest of the compilation happens over here:</p>
-<div class="codehilite"><div class="source-file"><em>compiler.c</em><br/>
-add after <em>function</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">클래스 선언문은 진술이며, 파서는 선두자가 하나를 인식합니다 </font></font><code translate="no">class</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드.</font><font papago-translate="translated"> 나머지 컴파일은 여기에서 이루어집니다:</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>함수</em> () 후에 추가</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">classDeclaration</span>() {
   <span class="i">consume</span>(<span class="a">TOKEN_IDENTIFIER</span>, <span class="s">"Expect class name."</span>);
   <span class="t">uint8_t</span> <span class="i">nameConstant</span> = <span class="i">identifierConstant</span>(&amp;<span class="i">parser</span>.<span class="i">previous</span>);
@@ -248,186 +192,120 @@ add after <em>function</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after <em>function</em>()</div>
-<p>Immediately after the <code translate="no">class</code> keyword is the class’s name. We take that
-identifier and add it to the surrounding function’s constant table as a string.
-As you just saw, printing a class shows its name, so the compiler needs to stuff
-the name string somewhere that the runtime can find. The constant table is the
-way to do that.</p>
-<p>The class’s <span name="variable">name</span> is also used to bind the class
-object to a variable of the same name. So we declare a variable with that
-identifier right after consuming its token.</p>
-<aside name="variable">
-<p>We could have made class declarations be <em>expressions</em> instead of statements<span class="em">—</span>they are essentially a literal that produces a value after all. Then users would
-have to explicitly bind the class to a variable themselves like:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">직후에 </font></font><code translate="no">class</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드는 클래스의 이름입니다.</font><font papago-translate="translated"> 우리는 그 식별자를 가져와서 주변 함수의 상수 테이블에 문자열로 추가합니다.</font><font papago-translate="translated"> 방금 보신 것처럼 클래스를 인쇄하면 이름이 표시되므로 컴파일러는 런타임이 찾을 수 있는 곳에 이름 문자열을 채워야 합니다.</font><font papago-translate="translated"> 상수 테이블이 그것을 하는 방법입니다.</font></font></p>
+<p><font papago-translate="translated">클래스<span name="variable"> 이름</span>은 클래스 객체를 같은 이름의 변수에 바인딩하는 데에도 사용됩니다.</font><font papago-translate="translated"> 그래서 우리는 그 식별자가 있는 변수를 토큰을 소비한 직후에 선언합니다.</font></p>
+<aside name="variable" style="top: 3632px;">
+<p><font papago-translate="translated">클래스 선언을 문장 대신<em> 표현</em>으로 만들 수도 있었는데, 결국<span class="em"></span> 가치를 창출하는 리터럴입니다.</font><font papago-translate="translated"> 그러면 사용자는 클래스를 다음과 같은 변수에 명시적으로 바인딩해야 합니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="t">Pie</span> = <span class="k">class</span> {}
 </pre></div>
-<p>Sort of like lambda functions but for classes. But since we generally want
-classes to be named anyway, it makes sense to treat them as declarations.</p>
+<p><font papago-translate="translated">람다 함수와 비슷하지만 클래스용입니다.</font><font papago-translate="translated"> 하지만 우리는 일반적으로 어쨌든 수업 이름이 붙여지기를 원하기 때문에, 그것들을 선언문으로 취급하는 것이 합리적입니다.</font></p>
 </aside>
-<p>Next, we emit a new instruction to actually create the class object at runtime.
-That instruction takes the constant table index of the class’s name as an
-operand.</p>
-<p>After that, but before compiling the body of the class, we define the variable
-for the class’s name. <em>Declaring</em> the variable adds it to the scope, but recall
-from <a href="local-variables.html#another-scope-edge-case">a previous chapter</a> that we can’t <em>use</em> the variable until it’s
-<em>defined</em>. For classes, we define the variable before the body. That way, users
-can refer to the containing class inside the bodies of its own methods. That’s
-useful for things like factory methods that produce new instances of the class.</p>
-<p>Finally, we compile the body. We don’t have methods yet, so right now it’s
-simply an empty pair of braces. Lox doesn’t require fields to be declared in the
-class, so we’re done with the body<span class="em">—</span>and the parser<span class="em">—</span>for now.</p>
-<p>The compiler is emitting a new instruction, so let’s define that.</p>
+<p><font papago-translate="translated">다음으로, 런타임 시 클래스 객체를 실제로 생성하기 위한 새로운 지침을 제시합니다.</font><font papago-translate="translated"> 이 명령어는 클래스 이름의 상수 테이블 인덱스를 피연산자로 사용합니다.</font></p>
+<p><font papago-translate="translated">그 후에, 수업 본문을 작성하기 전에, 우리는 수업 이름에 대한 변수를 정의합니다.</font><font papago-translate="translated"> 변수<em>를 선언하면</em> 범위에 추가되지만, 이전<a href="https://youhogeon-meritz.github.io/local-variables.html#another-scope-edge-case"> 장</a>에서 변수<em>가 정의</em>될 때까지<em> 사용할</em> 수 없다는 점을 기억하세요<em>.</em></font><font papago-translate="translated"> 수업에서는 본문 앞에 변수를 정의합니다.</font><font papago-translate="translated"> 그렇게 하면 사용자는 자체 메서드의 본문에 포함된 클래스를 참조할 수 있습니다.</font><font papago-translate="translated"> 그것은 수업의 새로운 사례를 생성하는 공장 방법과 같은 것들에 유용합니다.</font></p>
+<p><font papago-translate="translated">마침내, 우리는 본문을 편집합니다.</font><font papago-translate="translated"> 아직 방법이 없기 때문에 지금은 단순히 빈 보조기 한 쌍에 불과합니다.</font><font papago-translate="translated"> Lox는 클래스에서 필드를 선언할 필요가 없으므로 현재로서는 본문과 파<span class="em"></span><span class="em"></span>서를 모두 마쳤습니다.</font></p>
+<p><font papago-translate="translated">컴파일러가 새로운 명령어를 방출하고 있으므로 이를 정의해 보겠습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  OP_RETURN,
-</pre><div class="source-file"><em>chunk.h</em><br/>
-in enum <em>OpCode</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">청크.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum O<em>pCode</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="a">OP_CLASS</span>,
 </pre><pre class="insert-after" translate="no">} OpCode;
 </pre></div>
 <div class="source-file-narrow"><em>chunk.h</em>, in enum <em>OpCode</em></div>
-<p>And add it to the disassembler:</p>
+<p><font papago-translate="translated">그리고 분해기에 추가합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    case OP_RETURN:
       return simpleInstruction("OP_RETURN", offset);
-</pre><div class="source-file"><em>debug.c</em><br/>
-in <em>disassembleInstruction</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">debug.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>분해</em> 중 지침()</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OP_CLASS</span>:
       <span class="k">return</span> <span class="i">constantInstruction</span>(<span class="s">"OP_CLASS"</span>, <span class="i">chunk</span>, <span class="i">offset</span>);
 </pre><pre class="insert-after" translate="no">    default:
 </pre></div>
 <div class="source-file-narrow"><em>debug.c</em>, in <em>disassembleInstruction</em>()</div>
-<p>For such a large-seeming feature, the interpreter support is minimal.</p>
+<p><font papago-translate="translated">이러한 대형 기능의 경우 인터프리터 지원이 최소화됩니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">        break;
       }
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OP_CLASS</span>:
         <span class="i">push</span>(<span class="a">OBJ_VAL</span>(<span class="i">newClass</span>(<span class="a">READ_STRING</span>())));
         <span class="k">break</span>;
 </pre><pre class="insert-after" translate="no">    }
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>()</div>
-<p>We load the string for the class’s name from the constant table and pass that to
-<code translate="no">newClass()</code>. That creates a new class object with the given name. We push that
-onto the stack and we’re good. If the class is bound to a global variable, then
-the compiler’s call to <code translate="no">defineVariable()</code> will emit code to store that object
-from the stack into the global variable table. Otherwise, it’s right where it
-needs to be on the stack for a new <span name="local">local</span> variable.</p>
-<aside name="local">
-<p>“Local” classes<span class="em">—</span>classes declared inside the body of a function or block, are
-an unusual concept. Many languages don’t allow them at all. But since Lox is a
-dynamically typed scripting language, it treats the top level of a program and
-the bodies of functions and blocks uniformly. Classes are just another kind of
-declaration, and since you can declare variables and functions inside blocks,
-you can declare classes in there too.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 상수 테이블에서 클래스 이름의 문자열을 로드하고 그것을 다음과 같이 전달합니다 </font></font><code translate="no">newClass()</code><font papago-translate="splitted"><font papago-translate="translated">. 그러면 지정된 이름을 가진 새로운 클래스 객체가 생성됩니다.</font><font papago-translate="translated"> 우리는 그것을 스택에 밀어 넣으면 괜찮습니다.</font><font papago-translate="translated"> 클래스가 전역 변수에 바인딩된 경우 컴파일러의 호출은 다음과 같습니다 </font></font><code translate="no">defineVariable()</code><font papago-translate="splitted"><font papago-translate="translated"> 스택에서 해당 객체를 글로벌 변수 테이블에 저장하기 위해 코드를 방출합니다.</font><font papago-translate="translated"> 그렇지 않으면 새로운<span name="local"> 로컬</span> 변수를 위해 스택에 있어야 하는 바로 그 위치에 있습니다.</font></font></p>
+<aside name="local" style="top: 4704px;">
+<p><font papago-translate="translated">"로컬" 클래스—함수나 블록의 본문 안에 선언된 클래스들은 특이<span class="em"></span>한 개념입니다.</font><font papago-translate="translated"> 많은 언어들이 그것들을 전혀 허용하지 않습니다.</font><font papago-translate="translated"> 하지만 Lox는 동적으로 타입화된 스크립팅 언어이기 때문에 프로그램의 최상위 레벨과 함수 및 블록을 균일하게 처리합니다.</font><font papago-translate="translated"> 클래스는 또 다른 종류의 선언일 뿐이며, 블록 안에서 변수와 함수를 선언할 수 있기 때문에 블록 안에서도 클래스를 선언할 수 있습니다.</font></p>
 </aside>
-<p>There you have it, our VM supports classes now. You can run this:</p>
+<p><font papago-translate="translated">이제 VM이 수업을 지원합니다.</font><font papago-translate="translated"> 실행할 수 있습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Brioche</span> {}
 <span class="k">print</span> <span class="t">Brioche</span>;
 </pre></div>
-<p>Unfortunately, printing is about <em>all</em> you can do with classes, so next is
-making them more useful.</p>
-<h2><a href="#instances-of-classes" id="instances-of-classes"><small>27 . 3</small>Instances of Classes</a></h2>
-<p>Classes serve two main purposes in a language:</p>
+<p><font papago-translate="translated">안타깝게도 인쇄는 수업에서 할 수<em> 있는 거의 모든 것</em>이므로 다음은 수업을 더 유용하게 만드는 것입니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/classes-and-instances.html#instances-of-classes" id="instances-of-classes"><small><font papago-translate="translated">27 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">수업 사례</font></font></a></h2>
+<p><font papago-translate="translated">수업은 언어에서 두 가지 주요 목적을 수행합니다:</font></p>
 <ul>
 <li>
-<p><strong>They are how you create new instances.</strong> Sometimes this involves a <code translate="no">new</code>
-keyword, other times it’s a method call on the class object, but you usually
-mention the class by name <em>somehow</em> to get a new instance.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><strong>이것이 바로 새로운 인스턴스를 만드는 방법입니다.</strong></font><font papago-translate="translated"> 때때로 이것은 다음과 같은 것을 포함합니다 </font></font><code translate="no">new</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드, 다른 경우에는 클래스 객체에 대한 메서드 호출이지만, 보통 새로운 인스턴스를 얻기 위해<em> 클래스</em>를 어떻게<em>든</em> 이름으로 언급합니다.</font></font></p>
 </li>
 <li>
-<p><strong>They contain methods.</strong> These define how all instances of the class
-behave.</p>
+<p><font papago-translate="translated"><strong>그들은 방법을 포함하고 있습니다.</strong></font><font papago-translate="translated"> 이것들은 클래스의 모든 인스턴스가 어떻게 작동하는지를 정의합니다.</font></p>
 </li>
 </ul>
-<p>We won’t get to methods until the next chapter, so for now we will only worry
-about the first part. Before classes can create instances, we need a
-representation for them.</p>
+<p><font papago-translate="translated">다음 장까지는 방법에 접근할 수 없으므로 지금은 첫 번째 부분만 걱정하겠습니다.</font><font papago-translate="translated"> 수업이 인스턴스를 만들기 전에, 우리는 그들을 위한 표현이 필요합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">} ObjClass;
-</pre><div class="source-file"><em>object.h</em><br/>
-add after struct <em>ObjClass</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 구조 Ob<em>jClass</em> 뒤에 추가</font></font></div>
 <pre class="insert" translate="no">
-
 <span class="k">typedef</span> <span class="k">struct</span> {
   <span class="t">Obj</span> <span class="i">obj</span>;
   <span class="t">ObjClass</span>* <span class="i">klass</span>;
   <span class="t">Table</span> <span class="i">fields</span>;<span name="fields"> </span>
 } <span class="t">ObjInstance</span>;
 </pre><pre class="insert-after" translate="no">
-
 ObjClass* newClass(ObjString* name);
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em>, add after struct <em>ObjClass</em></div>
-<p>Instances know their class<span class="em">—</span>each instance has a pointer to the class that it
-is an instance of.  We won’t use this much in this chapter, but it will become
-critical when we add methods.</p>
-<p>More important to this chapter is how instances store their state. Lox lets
-users freely add fields to an instance at runtime. This means we need a storage
-mechanism that can grow. We could use a dynamic array, but we also want to look
-up fields by name as quickly as possible. There’s a data structure that’s just
-perfect for quickly accessing a set of values by name and<span class="em">—</span>even more conveniently<span class="em">—</span>we’ve already implemented it. Each instance stores
-its fields using a hash table.</p>
-<aside name="fields">
-<p>Being able to freely add fields to an object at runtime is a big practical
-difference between most dynamic and static languages. Statically typed languages
-usually require fields to be explicitly declared. This way, the compiler knows
-exactly what fields each instance has. It can use that to determine the precise
-amount of memory needed for each instance and the offsets in that memory where
-each field can be found.</p>
-<p>In Lox and other dynamic languages, accessing a field is usually a hash table
-lookup. Constant time, but still pretty heavyweight. In a language like C++,
-accessing a field is as fast as offsetting a pointer by an integer constant.</p>
+<p><font papago-translate="translated">인스턴스는 자신의 클래스를 알고 있으며, 각 인스턴스는<span class="em"></span> 자신이 인스턴스인 클래스에 대한 포인터를 가지고 있습니다.</font><font papago-translate="translated"> 이 장에서는 이 정도는 사용하지 않겠지만, 방법을 추가하면 중요해질 것입니다.</font></p>
+<p><font papago-translate="translated">이 장에서 더 중요한 것은 인스턴스가 상태를 저장하는 방식입니다.</font><font papago-translate="translated"> Lox는 런타임 시 사용자가 인스턴스에 필드를 자유롭게 추가할 수 있도록 합니다.</font><font papago-translate="translated"> 이는 성장할 수 있는 저장 메커니즘이 필요하다는 것을 의미합니다.</font><font papago-translate="translated"> 동적 배열을 사용할 수도 있지만, 가능한 한 빨리 이름별 필드를 찾고 싶습니다.</font><font papago-translate="translated"> 이름별로 일련의 값에 빠르게 접근할 수 있는 완벽한 데이터 구조가 있으며, 더욱 편리하게는 이미<span class="em"></span><span class="em"></span> 구현했습니다.</font><font papago-translate="translated"> 각 인스턴스는 해시 테이블을 사용하여 필드를 저장합니다.</font></p>
+<aside name="fields" style="top: 5443px;">
+<p><font papago-translate="translated">런타임에 객체에 필드를 자유롭게 추가할 수 있다는 것은 대부분의 동적 언어와 정적 언어 사이에 큰 실질적인 차이가 있습니다.</font><font papago-translate="translated"> 정적으로 입력된 언어는 일반적으로 필드를 명시적으로 선언해야 합니다.</font><font papago-translate="translated"> 이렇게 하면 컴파일러는 각 인스턴스에 어떤 필드가 있는지 정확히 알 수 있습니다.</font><font papago-translate="translated"> 이를 사용하여 각 인스턴스에 필요한 정확한 메모리 양과 각 필드를 찾을 수 있는 메모리의 오프셋을 결정할 수 있습니다.</font></p>
+<p><font papago-translate="translated">Lox 및 기타 동적 언어에서는 일반적으로 필드에 액세스하는 것이 해시 테이블 조회입니다.</font><font papago-translate="translated"> 일정한 시간이지만 여전히 꽤 무겁습니다.</font><font papago-translate="translated"> C++와 같은 언어에서는 필드에 접근하는 것이 포인터를 정수 상수만큼 오프셋하는 것만큼 빠릅니다.</font></p>
 </aside>
-<p>We only need to add an include, and we’ve got it.</p>
+<p><font papago-translate="translated">포함 항목만 추가하면 됩니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include "chunk.h"
-</pre><div class="source-file"><em>object.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">객체.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#include "table.h"</span>
 </pre><pre class="insert-after" translate="no">#include "value.h"
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em></div>
-<p>This new struct gets a new object type.</p>
+<p><font papago-translate="translated">이 새로운 구조는 새로운 객체 유형을 얻습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  OBJ_FUNCTION,
-</pre><div class="source-file"><em>object.h</em><br/>
-in enum <em>ObjType</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum Ob<em>jType</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="a">OBJ_INSTANCE</span>,
 </pre><pre class="insert-after" translate="no">  OBJ_NATIVE,
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em>, in enum <em>ObjType</em></div>
-<p>I want to slow down a bit here because the Lox <em>language’s</em> notion of “type” and
-the VM <em>implementation’s</em> notion of “type” brush against each other in ways that
-can be confusing. Inside the C code that makes clox, there are a number of
-different types of Obj<span class="em">—</span>ObjString, ObjClosure, etc. Each has its own internal
-representation and semantics.</p>
-<p>In the Lox <em>language</em>, users can define their own classes<span class="em">—</span>say Cake and Pie<span class="em">—</span>and then create instances of those classes. From the user’s perspective, an
-instance of Cake is a different type of object than an instance of Pie. But,
-from the VM’s perspective, every class the user defines is simply another value
-of type ObjClass. Likewise, each instance in the user’s program, no matter what
-class it is an instance of, is an ObjInstance. That one VM object type covers
-instances of all classes. The two worlds map to each other something like this:</p><img alt="A set of class declarations and instances, and the runtime representations each maps to." src="image/classes-and-instances/lox-clox.png">
-<p>Got it? OK, back to the implementation. We also get our usual macros.</p>
+<p><font papago-translate="translated">여기서 조금 천천히 하고 싶습니다. 왜냐하면 L<em>ox 언어의</em> "유형" 개념과 VM<em> 구현의</em> "유형" 개념이 혼동될 수 있는 방식으로 서로 충돌하기 때문입니다.</font><font papago-translate="translated"> 클록스를 만드는 C 코드 내부에는 여러 가지 종류의 Ob<span class="em">j</span>-ObjString, ObjClosure 등이 있습니다.</font><font papago-translate="translated"> 각각은 고유한 내적 표현과 의미를 가지고 있습니다.</font></p>
+<p><font papago-translate="translated">L<em>ox 언어에서는</em> 사용자가 자신만의 클래스(예: Cake and Pie)를 정의한 다음 해당<span class="em"></span><span class="em"></span> 클래스의 인스턴스를 만들 수 있습니다.</font><font papago-translate="translated"> 사용자의 관점에서 보면, 케이크의 인스턴스는 파이의 인스턴스와는 다른 유형의 객체입니다.</font><font papago-translate="translated"> 하지만 VM의 관점에서 보면 사용자가 정의하는 모든 클래스는 단순히 ObjClass 유형의 또 다른 값일 뿐입니다.</font><font papago-translate="translated"> 마찬가지로, 사용자 프로그램의 각 인스턴스는 어떤 클래스의 인스턴스이든 상관없이 ObjInstance입니다.</font><font papago-translate="translated"> 그 하나의 VM 객체 유형은 모든 클래스의 인스턴스를 다룹니다.</font><font papago-translate="translated"> 두 세계는 서로 다음과 같은 방식으로 매핑됩니다:</font></p><img alt="A set of class declarations and instances, and the runtime representations each maps to." src="https://youhogeon-meritz.github.io/image/classes-and-instances/lox-clox.png">
+<p><font papago-translate="translated">알겠어요?</font><font papago-translate="translated"> 좋아요, 다시 구현으로 돌아갑니다.</font><font papago-translate="translated"> 우리는 또한 평소의 매크로를 얻습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define IS_FUNCTION(value)     isObjType(value, OBJ_FUNCTION)
-</pre><div class="source-file"><em>object.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">객체.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define IS_INSTANCE(value)     isObjType(value, OBJ_INSTANCE)</span>
 </pre><pre class="insert-after" translate="no">#define IS_NATIVE(value)       isObjType(value, OBJ_NATIVE)
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em></div>
-<p>And:</p>
+<p><font papago-translate="translated">그리고:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define AS_FUNCTION(value)     ((ObjFunction*)AS_OBJ(value))
-</pre><div class="source-file"><em>object.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">객체.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define AS_INSTANCE(value)     ((ObjInstance*)AS_OBJ(value))</span>
 </pre><pre class="insert-after" translate="no">#define AS_NATIVE(value) \
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em></div>
-<p>Since fields are added after the instance is created, the “constructor” function
-only needs to know the class.</p>
+<p><font papago-translate="translated">인스턴스가 생성된 후 필드가 추가되므로 "생성자" 함수는 클래스만 알면 됩니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">ObjFunction* newFunction();
-</pre><div class="source-file"><em>object.h</em><br/>
-add after <em>newFunction</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>newFunction</em>() 다음에 추가</font></font></div>
 <pre class="insert" translate="no"><span class="t">ObjInstance</span>* <span class="i">newInstance</span>(<span class="t">ObjClass</span>* <span class="i">klass</span>);
 </pre><pre class="insert-after" translate="no">ObjNative* newNative(NativeFn function);
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em>, add after <em>newFunction</em>()</div>
-<p>We implement that function here:</p>
-<div class="codehilite"><div class="source-file"><em>object.c</em><br/>
-add after <em>newFunction</em>()</div>
+<p><font papago-translate="translated">우리는 여기서 그 기능을 구현합니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>newFunction</em>() 다음에 추가</font></font></div>
 <pre translate="no"><span class="t">ObjInstance</span>* <span class="i">newInstance</span>(<span class="t">ObjClass</span>* <span class="i">klass</span>) {
   <span class="t">ObjInstance</span>* <span class="i">instance</span> = <span class="a">ALLOCATE_OBJ</span>(<span class="t">ObjInstance</span>, <span class="a">OBJ_INSTANCE</span>);
   <span class="i">instance</span>-&gt;<span class="i">klass</span> = <span class="i">klass</span>;
@@ -436,14 +314,12 @@ add after <em>newFunction</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, add after <em>newFunction</em>()</div>
-<p>We store a reference to the instance’s class. Then we initialize the field
-table to an empty hash table. A new baby object is born!</p>
-<p>At the sadder end of the instance’s lifespan, it gets freed.</p>
+<p><font papago-translate="translated">인스턴스의 클래스에 대한 참조를 저장합니다.</font><font papago-translate="translated"> 그런 다음 필드 테이블을 빈 해시 테이블로 초기화합니다.</font><font papago-translate="translated"> 새로운 아기 물체가 태어납니다!</font></p>
+<p><font papago-translate="translated">인스턴스의 수명이 더 슬픈 끝에서 해방됩니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      FREE(ObjFunction, object);
       break;
     }
-</pre><div class="source-file"><em>memory.c</em><br/>
-in <em>freeObject</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">메모리.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>free</em>O<em>bject</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OBJ_INSTANCE</span>: {
       <span class="t">ObjInstance</span>* <span class="i">instance</span> = (<span class="t">ObjInstance</span>*)<span class="i">object</span>;
       <span class="i">freeTable</span>(&amp;<span class="i">instance</span>-&gt;<span class="i">fields</span>);
@@ -453,17 +329,12 @@ in <em>freeObject</em>()</div>
 </pre><pre class="insert-after" translate="no">    case OBJ_NATIVE:
 </pre></div>
 <div class="source-file-narrow"><em>memory.c</em>, in <em>freeObject</em>()</div>
-<p>The instance owns its field table so when freeing the instance, we also free the
-table. We don’t explicitly free the entries <em>in</em> the table, because there may
-be other references to those objects. The garbage collector will take care of
-those for us. Here we free only the entry array of the table itself.</p>
-<p>Speaking of the garbage collector, it needs support for tracing through
-instances.</p>
+<p><font papago-translate="translated">인스턴스는 필드 테이블을 소유하고 있으므로 인스턴스를 해제할 때 테이블도 해제합니다.</font><font papago-translate="translated"> 우리는 표의 항목들을 명시적으로 자유롭게 하지 않습니다. 왜냐하면 그<em></em> 객체들에 대한 다른 참조가 있을 수 있기 때문입니다.</font><font papago-translate="translated"> 쓰레기 수거원이 우리를 위해 그것들을 처리해 줄 것입니다.</font><font papago-translate="translated"> 여기서는 테이블 자체의 항목 배열만 해제합니다.</font></p>
+<p><font papago-translate="translated">쓰레기 수거기에 대해 말하자면, 사례를 추적할 수 있는 지원이 필요합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      markArray(&amp;function-&gt;chunk.constants);
       break;
     }
-</pre><div class="source-file"><em>memory.c</em><br/>
-in <em>blackenObject</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">메모리.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>blacken</em>O<em>bject</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OBJ_INSTANCE</span>: {
       <span class="t">ObjInstance</span>* <span class="i">instance</span> = (<span class="t">ObjInstance</span>*)<span class="i">object</span>;
       <span class="i">markObject</span>((<span class="t">Obj</span>*)<span class="i">instance</span>-&gt;<span class="i">klass</span>);
@@ -473,15 +344,10 @@ in <em>blackenObject</em>()</div>
 </pre><pre class="insert-after" translate="no">    case OBJ_UPVALUE:
 </pre></div>
 <div class="source-file-narrow"><em>memory.c</em>, in <em>blackenObject</em>()</div>
-<p>If the instance is alive, we need to keep its class around. Also, we need to
-keep every object referenced by the instance’s fields. Most live objects that
-are not roots are reachable because some instance refers to the object in a
-field. Fortunately, we already have a nice <code translate="no">markTable()</code> function to make
-tracing them easy.</p>
-<p>Less critical but still important is printing.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">인스턴스가 살아 있다면 클래스를 유지해야 합니다.</font><font papago-translate="translated"> 또한 인스턴스 필드에서 참조되는 모든 객체를 유지해야 합니다.</font><font papago-translate="translated"> 루트가 아닌 대부분의 살아있는 객체는 필드에 있는 객체를 참조하는 경우가 있기 때문에 도달할 수 있습니다.</font><font papago-translate="translated"> 다행히도 이미 좋은 제품이 있습니다 </font></font><code translate="no">markTable()</code><font papago-translate="splitted"><font papago-translate="translated"> 추적을 쉽게 하는 기능.</font></font></p>
+<p><font papago-translate="translated">덜 중요하지만 여전히 중요한 것은 인쇄입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      break;
-</pre><div class="source-file"><em>object.c</em><br/>
-in <em>printObject</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>print</em>O<em>bject</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OBJ_INSTANCE</span>:
       <span class="i">printf</span>(<span class="s">"%s instance"</span>,
              <span class="a">AS_INSTANCE</span>(<span class="i">value</span>)-&gt;<span class="i">klass</span>-&gt;<span class="i">name</span>-&gt;<span class="i">chars</span>);
@@ -489,24 +355,14 @@ in <em>printObject</em>()</div>
 </pre><pre class="insert-after" translate="no">    case OBJ_NATIVE:
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, in <em>printObject</em>()</div>
-<p><span name="print">An</span> instance prints its name followed by “instance”.
-(The “instance” part is mainly so that classes and instances don’t print the
-same.)</p>
-<aside name="print">
-<p>Most object-oriented languages let a class define some sort of <code translate="no">toString()</code>
-method that lets the class specify how its instances are converted to a string
-and printed. If Lox was less of a toy language, I would want to support that
-too.</p>
+<p><font papago-translate="translated">인스턴스<span name="print"></span>는 이름 뒤에 "인스턴스"를 출력합니다.</font><font papago-translate="translated"> "인스턴스" 부분은 주로 수업과 인스턴스가 동일하게 인쇄되지 않도록 하는 것입니다</font></p>
+<aside name="print" style="top: 8714px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">대부분의 객체 지향 언어는 클래스가 다음과 같은 정의를 내릴 수 있도록 합니다 </font></font><code translate="no">toString()</code><font papago-translate="splitted"><font papago-translate="translated"> 클래스가 인스턴스를 문자열로 변환하고 인쇄하는 방법을 지정할 수 있는 메서드입니다.</font><font papago-translate="translated"> Lox가 장난감 언어가 아니었다면 저도 그것을 지지하고 싶었습니다.</font></font></p>
 </aside>
-<p>The real fun happens over in the interpreter. Lox has no special <code translate="no">new</code> keyword.
-The way to create an instance of a class is to invoke the class itself as if it
-were a function. The runtime already supports function calls, and it checks the
-type of object being called to make sure the user doesn’t try to invoke a number
-or other invalid type.</p>
-<p>We extend that runtime checking with a new case.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">진정한 재미는 통역사를 통해 이루어집니다.</font><font papago-translate="translated"> Lox에는 특별한 것이 없습니다 </font></font><code translate="no">new</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드.</font><font papago-translate="translated"> 클래스의 인스턴스를 만드는 방법은 클래스 자체를 함수처럼 호출하는 것입니다.</font><font papago-translate="translated"> 런타임은 이미 함수 호출을 지원하며, 호출되는 객체의 유형을 확인하여 사용자가 숫자나 다른 유효하지 않은 유형을 호출하려고 하지 않는지 확인합니다.</font></font></p>
+<p><font papago-translate="translated">우리는 그 런타임 검사를 새로운 사례로 확장합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    switch (OBJ_TYPE(callee)) {
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>callValue</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>callValue</em>()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OBJ_CLASS</span>: {
         <span class="t">ObjClass</span>* <span class="i">klass</span> = <span class="a">AS_CLASS</span>(<span class="i">callee</span>);
         <span class="i">vm</span>.<span class="i">stackTop</span>[-<span class="i">argCount</span> - <span class="n">1</span>] = <span class="a">OBJ_VAL</span>(<span class="i">newInstance</span>(<span class="i">klass</span>));
@@ -515,49 +371,32 @@ in <em>callValue</em>()</div>
 </pre><pre class="insert-after" translate="no">      case OBJ_CLOSURE:
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>callValue</em>()</div>
-<p>If the value being called<span class="em">—</span>the object that results when evaluating the
-expression to the left of the opening parenthesis<span class="em">—</span>is a class, then we treat
-it as a constructor call. We <span name="args">create</span> a new instance of
-the called class and store the result on the stack.</p>
-<aside name="args">
-<p>We ignore any arguments passed to the call for now. We’ll revisit this code in
-the <a href="methods-and-initializers.html">next chapter</a> when we add support for initializers.</p>
+<p><font papago-translate="translated">호출되는 값이 클래스라면(열린 괄호의 왼쪽에 있는 표현식을 평가할 때 나타나는 객체), 이 값을 생성<span class="em"></span><span class="em"></span>자 호출로 취급합니다.</font><font papago-translate="translated"> 호출된 클래스의 새 인스턴스<span name="args">를 생성</span>하고 그 결과를 스택에 저장합니다.</font></p>
+<aside name="args" style="top: 9166px;">
+<p><font papago-translate="translated">현재로서는 통화에 전달된 모든 인수를 무시합니다.</font><font papago-translate="translated"> 다음<a href="https://youhogeon-meritz.github.io/methods-and-initializers.html"> 장에서</a> 이니셜라이저 지원을 추가할 때 이 코드를 다시 살펴보겠습니다.</font></p>
 </aside>
-<p>We’re one step farther. Now we can define classes and create instances of them.</p>
+<p><font papago-translate="translated">우리는 한 걸음 더 나아갔습니다.</font><font papago-translate="translated"> 이제 클래스를 정의하고 인스턴스를 만들 수 있습니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Brioche</span> {}
 <span class="k">print</span> <span class="t">Brioche</span>();
 </pre></div>
-<p>Note the parentheses after <code translate="no">Brioche</code> on the second line now. This prints
-“Brioche instance”.</p>
-<h2><a href="#get-and-set-expressions" id="get-and-set-expressions"><small>27 . 4</small>Get and Set Expressions</a></h2>
-<p>Our object representation for instances can already store state, so all that
-remains is exposing that functionality to the user. Fields are accessed and
-modified using get and set expressions. Not one to break with tradition, Lox
-uses the classic “dot” syntax:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다음 괄호를 메모합니다 </font></font><code translate="no">Brioche</code><font papago-translate="splitted"><font papago-translate="translated"> 지금 두 번째 줄에 있습니다.</font><font papago-translate="translated"> 이것은 "브리오슈 사례"를 인쇄합니다.</font></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/classes-and-instances.html#get-and-set-expressions" id="get-and-set-expressions"><small><font papago-translate="translated">27 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">식 가져오기 및 설정</font></font></a></h2>
+<p><font papago-translate="translated">인스턴스에 대한 객체 표현은 이미 상태를 저장할 수 있으므로 남은 것은 사용자에게 해당 기능을 노출하는 것뿐입니다.</font><font papago-translate="translated"> 필드는 get 및 set 표현식을 사용하여 접근하고 수정합니다.</font><font papago-translate="translated"> 전통을 깨는 사람은 없지만, Lox는 고전적인 "점" 구문을 사용합니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">eclair</span>.<span class="i">filling</span> = <span class="s">"pastry creme"</span>;
 <span class="k">print</span> <span class="i">eclair</span>.<span class="i">filling</span>;
 </pre></div>
-<p>The period<span class="em">—</span>full stop for my English friends<span class="em">—</span>works <span name="sort">sort</span> of like an infix operator. There is an expression to the
-left that is evaluated first and produces an instance. After that is the <code translate="no">.</code>
-followed by a field name. Since there is a preceding operand, we hook this into
-the parse table as an infix expression.</p>
-<aside name="sort">
-<p>I say “sort of” because the right-hand side after the <code translate="no">.</code> is not an expression,
-but a single identifier whose semantics are handled by the get or set expression
-itself. It’s really closer to a postfix expression.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">제 영어 친구들을 위한 그 기간은 마치 infix<span name="sort"></span><span class="em"></span><span class="em"></span> 연산자처럼 작동합니다.</font><font papago-translate="translated"> 왼쪽에 먼저 평가하고 인스턴스를 생성하는 표현이 있습니다.</font><font papago-translate="translated"> 그 후에는 </font></font><code translate="no">.</code><font papago-translate="splitted"><font papago-translate="translated"> 필드 이름이 이어집니다.</font><font papago-translate="translated"> 선행 피연산자가 있으므로 이를 구문 분석 테이블에 연결하여 infix 표현식으로 사용합니다.</font></font></p>
+<aside name="sort" style="top: 9702px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">저는 "일종의"라고 말합니다. 왜냐하면 오른쪽이 다음과 같기 때문입니다 </font></font><code translate="no">.</code><font papago-translate="splitted"><font papago-translate="translated"> 는 표현식이 아니라 의미론이 get 또는 set 표현식 자체에 의해 처리되는 단일 식별자입니다.</font><font papago-translate="translated"> 그것은 정말로 포스트픽스 표현에 더 가깝습니다.</font></font></p>
 </aside>
 <div class="codehilite"><pre class="insert-before" translate="no">  [TOKEN_COMMA]         = {NULL,     NULL,   PREC_NONE},
-</pre><div class="source-file"><em>compiler.c</em><br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  [<span class="a">TOKEN_DOT</span>]           = {<span class="a">NULL</span>,     <span class="i">dot</span>,    <span class="a">PREC_CALL</span>},
 </pre><pre class="insert-after" translate="no">  [TOKEN_MINUS]         = {unary,    binary, PREC_TERM},
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, replace 1 line</div>
-<p>As in other languages, the <code translate="no">.</code> operator binds tightly, with precedence as high
-as the parentheses in a function call. After the parser consumes the dot token,
-it dispatches to a new parse function.</p>
-<div class="codehilite"><div class="source-file"><em>compiler.c</em><br/>
-add after <em>call</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">다른 언어들과 마찬가지로 </font></font><code translate="no">.</code><font papago-translate="splitted"><font papago-translate="translated"> 연산자는 함수 호출의 괄호만큼 높은 우선순위로 단단히 결합합니다.</font><font papago-translate="translated"> 파서가 도트 토큰을 소비한 후, 새로운 파서 함수로 이동합니다.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>통화</em> 후 () 추가</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">dot</span>(<span class="t">bool</span> <span class="i">canAssign</span>) {
   <span class="i">consume</span>(<span class="a">TOKEN_IDENTIFIER</span>, <span class="s">"Expect property name after '.'."</span>);
   <span class="t">uint8_t</span> <span class="i">name</span> = <span class="i">identifierConstant</span>(&amp;<span class="i">parser</span>.<span class="i">previous</span>);
@@ -571,58 +410,32 @@ add after <em>call</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after <em>call</em>()</div>
-<p>The parser expects to find a <span name="prop">property</span> name immediately
-after the dot. We load that token’s lexeme into the constant table as a string
-so that the name is available at runtime.</p>
-<aside name="prop">
-<p>The compiler uses “property” instead of “field” here because, remember, Lox also
-lets you use dot syntax to access a method without calling it. “Property” is the
-general term we use to refer to any named entity you can access on an instance.
-Fields are the subset of properties that are backed by the instance’s state.</p>
+<p><font papago-translate="translated">파서는 점 직후<span name="prop">에 속성</span> 이름을 찾을 것으로 예상합니다.</font><font papago-translate="translated"> 토큰의 어휘소를 문자열로 상수 테이블에 로드하여 런타임에 이름을 사용할 수 있도록 합니다.</font></p>
+<aside name="prop" style="top: 10222px;">
+<p><font papago-translate="translated">컴파일러는 여기서 "필드" 대신 "속성"을 사용합니다. 왜냐하면 Lox는 점 구문을 사용하여 메서드를 호출하지 않고 접근할 수 있게 해주기 때문입니다.</font><font papago-translate="translated"> "Property"는 인스턴스에서 접근할 수 있는 모든 명명된 엔티티를 지칭하는 일반적인 용어입니다.</font><font papago-translate="translated"> 필드는 인스턴스의 상태에 의해 지원되는 속성의 하위 집합입니다.</font></p>
 </aside>
-<p>We have two new expression forms<span class="em">—</span>getters and setters<span class="em">—</span>that this one
-function handles. If we see an equals sign after the field name, it must be a
-set expression that is assigning to a field. But we don’t <em>always</em> allow an
-equals sign after the field to be compiled. Consider:</p>
+<p><font papago-translate="translated">이 하나의 함수<span class="em"></span><span class="em"></span>가 처리하는 두 가지 새로운 표현 형식인 게터와 세터가 있습니다.</font><font papago-translate="translated"> 필드 이름 뒤에 등호가 표시되면 필드에 할당되는 집합 식이어야 합니다.</font><font papago-translate="translated"> 하지만 필드 뒤에 등호가<em></em> 항상 컴파일되도록 허용하는 것은 아닙니다.</font><font papago-translate="translated"> 고려:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">a</span> + <span class="i">b</span>.<span class="i">c</span> = <span class="n">3</span>
 </pre></div>
-<p>This is syntactically invalid according to Lox’s grammar, which means our Lox
-implementation is obligated to detect and report the error. If <code translate="no">dot()</code> silently
-parsed the <code translate="no">= 3</code> part, we would incorrectly interpret the code as if the user
-had written:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이는 Lox의 문법에 따르면 구문적으로 유효하지 않으므로 Lox 구현은 오류를 감지하고 보고할 의무가 있습니다 </font></font><code translate="no">dot()</code><font papago-translate="splitted"><font papago-translate="translated"> 조용히 파싱했습니다 </font></font><code translate="no">= 3</code><font papago-translate="splitted"><font papago-translate="translated"> 부분적으로, 우리는 사용자가 작성한 것처럼 코드를 잘못 해석할 것입니다:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="i">a</span> + (<span class="i">b</span>.<span class="i">c</span> = <span class="n">3</span>)
 </pre></div>
-<p>The problem is that the <code translate="no">=</code> side of a set expression has much lower precedence
-than the <code translate="no">.</code> part. The parser may call <code translate="no">dot()</code> in a context that is too high
-precedence to permit a setter to appear. To avoid incorrectly allowing that, we
-parse and compile the equals part only when <code translate="no">canAssign</code> is true. If an equals
-token appears when <code translate="no">canAssign</code> is false, <code translate="no">dot()</code> leaves it alone and returns. In
-that case, the compiler will eventually unwind up to <code translate="no">parsePrecedence()</code>, which
-stops at the unexpected <code translate="no">=</code> still sitting as the next token and reports an
-error.</p>
-<p>If we find an <code translate="no">=</code> in a context where it <em>is</em> allowed, then we compile the
-expression that follows. After that, we emit a new <span name="set"><code translate="no">OP_SET_PROPERTY</code></span> instruction. That takes a single operand for
-the index of the property name in the constant table. If we didn’t compile a set
-expression, we assume it’s a getter and emit an <code translate="no">OP_GET_PROPERTY</code> instruction,
-which also takes an operand for the property name.</p>
-<aside name="set">
-<p>You can’t <em>set</em> a non-field property, so I suppose that instruction could have
-been <code translate="no">OP_SET_FIELD</code>, but I thought it looked nicer to be consistent with the get
-instruction.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">문제는 </font></font><code translate="no">=</code><font papago-translate="splitted"><font papago-translate="translated"> 집합 식의 측면은 다음보다 훨씬 낮은 우선순위를 갖습니다 </font></font><code translate="no">.</code><font papago-translate="splitted"><font papago-translate="translated"> 파서가 전화할 수 있습니다 </font></font><code translate="no">dot()</code><font papago-translate="splitted"><font papago-translate="translated"> 설정자가 나타나도록 허용하기에는 너무 높은 우선순위의 맥락에서.</font><font papago-translate="translated"> 이를 잘못 허용하지 않도록 다음과 같은 경우에만 동일한 부분을 구문 분석하고 컴파일합니다 </font></font><code translate="no">canAssign</code><font papago-translate="splitted"><font papago-translate="translated"> 사실입니다.</font><font papago-translate="translated"> 동등한 토큰이 나타나는 경우 </font></font><code translate="no">canAssign</code><font papago-translate="splitted"><font papago-translate="translated"> 거짓입니다, </font></font><code translate="no">dot()</code><font papago-translate="splitted"><font papago-translate="translated"> 그냥 두었다가 다시 돌아옵니다.</font><font papago-translate="translated"> 이 경우 컴파일러는 결국 다음과 같이 해제됩니다 </font></font><code translate="no">parsePrecedence()</code><font papago-translate="splitted"><font papago-translate="translated">, 예상치 못한 순간에 멈춥니다 </font></font><code translate="no">=</code><font papago-translate="splitted"><font papago-translate="translated"> 여전히 다음 토큰으로 남아 있으며 오류를 보고합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">만약 우리가 </font></font><code translate="no">=</code><font papago-translate="splitted"><font papago-translate="translated"> 허용되는 맥락에서<em></em> 다음과 같은 식을 컴파일합니다.</font><font papago-translate="translated"> 그 후, 우리는 새로운<span name="set"> 지침</span>을 발표합니다.</font><font papago-translate="translated"> 이는 상수 테이블의 속성 이름 인덱스에 대한 단일 피연산자를 필요로 합니다.</font><font papago-translate="translated"> 우리가 집합 표현식을 컴파일하지 않았다면, 그것이 게터라고 가정하고 방출합니다 </font></font><code translate="no">OP_GET_PROPERTY</code><font papago-translate="splitted"><font papago-translate="translated"> 명령어는 속성 이름에 대한 피연산자도 필요로 합니다.</font></font></p>
+<aside name="set" style="top: 10838px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">비필드 속성<em>을 설정</em>할 수 없으므로 해당 지침은 다음과 같을 수 있습니다 </font></font><code translate="no">OP_SET_FIELD</code><font papago-translate="splitted"><font papago-translate="translated">, 하지만 겟 지시에 일관되게 따르는 것이 더 보기 좋다고 생각했습니다.</font></font></p>
 </aside>
-<p>Now is a good time to define these two new instructions.</p>
+<p><font papago-translate="translated">지금이 이 두 가지 새로운 지침을 정의하기에 좋은 시기입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  OP_SET_UPVALUE,
-</pre><div class="source-file"><em>chunk.h</em><br/>
-in enum <em>OpCode</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">청크.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum O<em>pCode</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="a">OP_GET_PROPERTY</span>,
   <span class="a">OP_SET_PROPERTY</span>,
 </pre><pre class="insert-after" translate="no">  OP_EQUAL,
 </pre></div>
 <div class="source-file-narrow"><em>chunk.h</em>, in enum <em>OpCode</em></div>
-<p>And add support for disassembling them:</p>
+<p><font papago-translate="translated">그리고 분해를 위한 지지대를 추가합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      return byteInstruction("OP_SET_UPVALUE", chunk, offset);
-</pre><div class="source-file"><em>debug.c</em><br/>
-in <em>disassembleInstruction</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">debug.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>분해</em> 중 지침()</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OP_GET_PROPERTY</span>:
       <span class="k">return</span> <span class="i">constantInstruction</span>(<span class="s">"OP_GET_PROPERTY"</span>, <span class="i">chunk</span>, <span class="i">offset</span>);
     <span class="k">case</span> <span class="a">OP_SET_PROPERTY</span>:
@@ -630,12 +443,10 @@ in <em>disassembleInstruction</em>()</div>
 </pre><pre class="insert-after" translate="no">    case OP_EQUAL:
 </pre></div>
 <div class="source-file-narrow"><em>debug.c</em>, in <em>disassembleInstruction</em>()</div>
-<h3><a href="#interpreting-getter-and-setter-expressions" id="interpreting-getter-and-setter-expressions"><small>27 . 4 . 1</small>Interpreting getter and setter expressions</a></h3>
-<p>Sliding over to the runtime, we’ll start with get expressions since those are a
-little simpler.</p>
+<h3><a href="https://youhogeon-meritz.github.io/classes-and-instances.html#interpreting-getter-and-setter-expressions" id="interpreting-getter-and-setter-expressions"><small><font papago-translate="translated">27 . 4 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">게터 및 세터 표현식 해석</font></font></a></h3>
+<p><font papago-translate="translated">런타임으로 넘어가면, 그것들이 조금 더 간단하기 때문에 get expressions로 시작하겠습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      }
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OP_GET_PROPERTY</span>: {
         <span class="t">ObjInstance</span>* <span class="i">instance</span> = <span class="a">AS_INSTANCE</span>(<span class="i">peek</span>(<span class="n">0</span>));
         <span class="t">ObjString</span>* <span class="i">name</span> = <span class="a">READ_STRING</span>();
@@ -650,52 +461,31 @@ in <em>run</em>()</div>
 </pre><pre class="insert-after" translate="no">      case OP_EQUAL: {
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>()</div>
-<p>When the interpreter reaches this instruction, the expression to the left of the
-dot has already been executed and the resulting instance is on top of the stack.
-We read the field name from the constant pool and look it up in the instance’s
-field table. If the hash table contains an entry with that name, we pop the
-instance and push the entry’s value as the result.</p>
-<p>Of course, the field might not exist. In Lox, we’ve defined that to be a runtime
-error. So we add a check for that and abort if it happens.</p>
+<p><font papago-translate="translated">인터프리터가 이 명령에 도달하면 점의 왼쪽에 있는 표현식이 이미 실행되어 결과 인스턴스가 스택 위에 있습니다.</font><font papago-translate="translated"> 상수 풀에서 필드 이름을 읽고 인스턴스의 필드 테이블에서 찾습니다.</font><font papago-translate="translated"> 해시 테이블에 해당 이름의 항목이 포함되어 있으면 인스턴스를 팝업하고 그 결과 항목의 값을 푸시합니다.</font></p>
+<p><font papago-translate="translated">물론, 그 분야는 존재하지 않을 수도 있습니다.</font><font papago-translate="translated"> Lox에서는 이를 런타임 오류로 정의했습니다.</font><font papago-translate="translated"> 그래서 우리는 그것을 확인하기 위해 체크를 추가하고, 만약 그런 일이 발생하면 중단합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">          push(value);
           break;
         }
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">
-
         <span class="i">runtimeError</span>(<span class="s">"Undefined property '%s'."</span>, <span class="i">name</span>-&gt;<span class="i">chars</span>);
         <span class="k">return</span> <span class="a">INTERPRET_RUNTIME_ERROR</span>;
 </pre><pre class="insert-after" translate="no">      }
       case OP_EQUAL: {
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>()</div>
-<p><span name="field">There</span> is another failure mode to handle which you’ve
-probably noticed. The above code assumes the expression to the left of the dot
-did evaluate to an ObjInstance. But there’s nothing preventing a user from
-writing this:</p>
+<p><font papago-translate="translated">아마 눈치채셨을 또 다른 실패 모드가 있습니다<span name="field">.</span></font><font papago-translate="translated"> 위 코드는 점의 왼쪽에 있는 표현이 ObjInstance로 평가되었다고 가정합니다.</font><font papago-translate="translated"> 하지만 사용자가 이 글을 쓰는 것을 막을 수 있는 것은 없습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">obj</span> = <span class="s">"not an instance"</span>;
 <span class="k">print</span> <span class="i">obj</span>.<span class="i">field</span>;
 </pre></div>
-<p>The user’s program is wrong, but the VM still has to handle it with some grace.
-Right now, it will misinterpret the bits of the ObjString as an ObjInstance and,
-I don’t know, catch on fire or something definitely not graceful.</p>
-<p>In Lox, only instances are allowed to have fields. You can’t stuff a field onto
-a string or number. So we need to check that the value is an instance before
-accessing any fields on it.</p>
-<aside name="field">
-<p>Lox <em>could</em> support adding fields to values of other types. It’s our language
-and we can do what we want. But it’s likely a bad idea. It significantly
-complicates the implementation in ways that hurt performance<span class="em">—</span>for example,
-string interning gets a lot harder.</p>
-<p>Also, it raises gnarly semantic questions around the equality and identity of
-values. If I attach a field to the number <code translate="no">3</code>, does the result of <code translate="no">1 + 2</code> have
-that field as well? If so, how does the implementation track that? If not, are
-those two resulting “threes” still considered equal?</p>
+<p><font papago-translate="translated">사용자의 프로그램이 잘못되었지만, VM은 여전히 신중하게 처리해야 합니다.</font><font papago-translate="translated"> 지금 당장은 ObjString의 비트를 ObjInstance로 오해하고 불이 붙거나 전혀 우아하지 않은 것으로 오해할 수 있습니다.</font></p>
+<p><font papago-translate="translated">Lox에서는 인스턴스에만 필드가 허용됩니다.</font><font papago-translate="translated"> 문자열이나 숫자에 필드를 채울 수 없습니다.</font><font papago-translate="translated"> 따라서 필드에 액세스하기 전에 값이 인스턴스인지 확인해야 합니다.</font></p>
+<aside name="field" style="top: 12154px;">
+<p><font papago-translate="translated">Lox는 다른 유형의 값에 필드를 추가하는 것을 지원<em>할 수 있습니다</em>.</font><font papago-translate="translated"> 그것은 우리의 언어이며 우리가 원하는 것을 할 수 있습니다.</font><font papago-translate="translated"> 하지만 나쁜 생각일 가능성이 높습니다.</font><font papago-translate="translated"> 성능을 저하시키는 방식으로 구현을 상당히 복잡하게 만듭니다. 예를 들어, 문자열 인터닝은 훨씬<span class="em"></span> 더 어려워집니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">또한, 그것은 가치의 평등과 정체성에 관한 심오한 의미론적 질문을 제기합니다.</font><font papago-translate="translated"> 숫자에 필드를 첨부하면 </font></font><code translate="no">3</code><font papago-translate="splitted"><font papago-translate="translated">, 다음과 같은 결과를 가져옵니다 </font></font><code translate="no">1 + 2</code><font papago-translate="splitted"><font papago-translate="translated"> 그 분야도 있나요?</font><font papago-translate="translated"> 그렇다면 구현은 이를 어떻게 추적하나요?</font><font papago-translate="translated"> 그렇지 않다면, 그 결과로 나온 두 "세"는 여전히 동등한 것으로 간주됩니까?</font></font></p>
 </aside>
 <div class="codehilite"><pre class="insert-before" translate="no">      case OP_GET_PROPERTY: {
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">        <span class="k">if</span> (!<span class="a">IS_INSTANCE</span>(<span class="i">peek</span>(<span class="n">0</span>))) {
           <span class="i">runtimeError</span>(<span class="s">"Only instances have properties."</span>);
           <span class="k">return</span> <span class="a">INTERPRET_RUNTIME_ERROR</span>;
@@ -704,14 +494,11 @@ in <em>run</em>()</div>
 </pre><pre class="insert-after" translate="no">        ObjInstance* instance = AS_INSTANCE(peek(0));
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>()</div>
-<p>If the value on the stack isn’t an instance, we report a runtime error and
-safely exit.</p>
-<p>Of course, get expressions are not very useful when no instances have any
-fields. For that we need setters.</p>
+<p><font papago-translate="translated">스택의 값이 인스턴스가 아닌 경우 런타임 오류를 보고하고 안전하게 종료합니다.</font></p>
+<p><font papago-translate="translated">물론 필드가 없는 인스턴스에서는 get 식을 사용하는 것이 그다지 유용하지 않습니다.</font><font papago-translate="translated"> 이를 위해서는 세터가 필요합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">        return INTERPRET_RUNTIME_ERROR;
       }
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OP_SET_PROPERTY</span>: {
         <span class="t">ObjInstance</span>* <span class="i">instance</span> = <span class="a">AS_INSTANCE</span>(<span class="i">peek</span>(<span class="n">1</span>));
         <span class="i">tableSet</span>(&amp;<span class="i">instance</span>-&gt;<span class="i">fields</span>, <span class="a">READ_STRING</span>(), <span class="i">peek</span>(<span class="n">0</span>));
@@ -723,30 +510,18 @@ in <em>run</em>()</div>
 </pre><pre class="insert-after" translate="no">      case OP_EQUAL: {
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>()</div>
-<p>This is a little more complex than <code translate="no">OP_GET_PROPERTY</code>. When this executes, the
-top of the stack has the instance whose field is being set and above that, the
-value to be stored. Like before, we read the instruction’s operand and find the
-field name string. Using that, we store the value on top of the stack into the
-instance’s field table.</p>
-<p>After that is a little <span name="stack">stack</span> juggling. We pop the
-stored value off, then pop the instance, and finally push the value back on. In
-other words, we remove the <em>second</em> element from the stack while leaving the top
-alone. A setter is itself an expression whose result is the assigned value, so
-we need to leave that value on the stack. Here’s what I mean:</p>
-<aside name="stack">
-<p>The stack operations go like this:</p><img alt="Popping two values and then pushing the first value back on the stack." src="image/classes-and-instances/stack.png">
-</img></aside>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 다음보다 조금 더 복잡합니다 </font></font><code translate="no">OP_GET_PROPERTY</code><font papago-translate="splitted"><font papago-translate="translated">. 이것이 실행될 때, 스택의 상단에는 필드가 설정되는 인스턴스와 그 위에 저장될 값이 있습니다.</font><font papago-translate="translated"> 이전과 마찬가지로, 우리는 명령어의 피연산자를 읽고 필드 이름 문자열을 찾습니다.</font><font papago-translate="translated"> 이를 사용하여 스택 상단의 값을 인스턴스의 필드 테이블에 저장합니다.</font></font></p>
+<p><font papago-translate="translated">그 다음에는<span name="stack"> 작은 스택</span> 저글링이 있습니다.</font><font papago-translate="translated"> 저장된 값을 꺼내고 인스턴스를 터뜨린 다음 마지막으로 값을 다시 밀어 넣습니다.</font><font papago-translate="translated"> 즉, 상단은 그대로 두고 스택에서<em> 두 번째</em> 요소를 제거합니다.</font><font papago-translate="translated"> 세터는 그 자체로 할당된 값의 결과를 나타내는 표현이므로, 그 값을 스택에 남겨두어야 합니다.</font><font papago-translate="translated"> 제 말은 이렇습니다:</font></p>
+<aside name="stack" style="top: 13178px;">
+<p><font papago-translate="translated">스택 작업은 다음과 같이 진행됩니다:</font></p><img alt="Popping two values and then pushing the first value back on the stack." src="https://youhogeon-meritz.github.io/image/classes-and-instances/stack.png">
+</aside>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Toast</span> {}
 <span class="k">var</span> <span class="i">toast</span> = <span class="t">Toast</span>();
 <span class="k">print</span> <span class="i">toast</span>.<span class="i">jam</span> = <span class="s">"grape"</span>; <span class="c">// Prints "grape".</span>
 </pre></div>
-<p>Unlike when reading a field, we don’t need to worry about the hash table not
-containing the field. A setter implicitly creates the field if needed. We do
-need to handle the user incorrectly trying to store a field on a value that
-isn’t an instance.</p>
+<p><font papago-translate="translated">필드를 읽을 때와 달리, 해시 테이블에 필드가 포함되지 않은 것에 대해 걱정할 필요가 없습니다.</font><font papago-translate="translated"> 필요한 경우 세터가 암묵적으로 필드를 생성합니다.</font><font papago-translate="translated"> 인스턴스가 아닌 값에 필드를 저장하려는 사용자를 잘못 처리해야 합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      case OP_SET_PROPERTY: {
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">        <span class="k">if</span> (!<span class="a">IS_INSTANCE</span>(<span class="i">peek</span>(<span class="n">1</span>))) {
           <span class="i">runtimeError</span>(<span class="s">"Only instances have fields."</span>);
           <span class="k">return</span> <span class="a">INTERPRET_RUNTIME_ERROR</span>;
@@ -755,9 +530,7 @@ in <em>run</em>()</div>
 </pre><pre class="insert-after" translate="no">        ObjInstance* instance = AS_INSTANCE(peek(1));
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>()</div>
-<p>Exactly like with get expressions, we check the value’s type and report a
-runtime error if it’s invalid. And, with that, the stateful side of Lox’s
-support for object-oriented programming is in place. Give it a try:</p>
+<p><font papago-translate="translated">get 식과 마찬가지로 값의 유형을 확인하고 유효하지 않은 경우 런타임 오류를 보고합니다.</font><font papago-translate="translated"> 그리고 그와 함께 객체 지향 프로그래밍에 대한 Lox의 지원은 확고한 측면을 가지고 있습니다.</font><font papago-translate="translated"> 한 번 시도해 보세요:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Pair</span> {}
 
 <span class="k">var</span> <span class="i">pair</span> = <span class="t">Pair</span>();
@@ -765,51 +538,35 @@ support for object-oriented programming is in place. Give it a try:</p>
 <span class="i">pair</span>.<span class="i">second</span> = <span class="n">2</span>;
 <span class="k">print</span> <span class="i">pair</span>.<span class="i">first</span> + <span class="i">pair</span>.<span class="i">second</span>; <span class="c">// 3.</span>
 </pre></div>
-<p>This doesn’t really feel very <em>object</em>-oriented. It’s more like a strange,
-dynamically typed variant of C where objects are loose struct-like bags of data.
-Sort of a dynamic procedural language. But this is a big step in expressiveness.
-Our Lox implementation now lets users freely aggregate data into bigger units.
-In the next chapter, we will breathe life into those inert blobs.</p>
+<p><font papago-translate="translated"><em>이것</em>은<em> 별로 사물</em> 지향적으로 느껴지지 않습니다.</font><font papago-translate="translated"> 그것은 물체가 느슨한 구조물 같은 데이터 묶음인 이상하고 동적으로 유형화된 C의 변형에 더 가깝습니다.</font><font papago-translate="translated"> 일종의 역동적인 절차 언어.</font><font papago-translate="translated"> 하지만 이것은 표현력의 큰 단계입니다.</font><font papago-translate="translated"> 이제 Lox 구현을 통해 사용자는 데이터를 더 큰 단위로 자유롭게 수집할 수 있습니다.</font><font papago-translate="translated"> 다음 장에서는 그 비활성 덩어리들에 생명을 불어넣을 것입니다.</font></p>
 <div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+<h2><a href="https://youhogeon-meritz.github.io/classes-and-instances.html#challenges" id="challenges"><font papago-translate="translated">과제들</font></a></h2>
 <ol>
 <li>
-<p>Trying to access a non-existent field on an object immediately aborts the
-entire VM. The user has no way to recover from this runtime error, nor is
-there any way to see if a field exists <em>before</em> trying to access it. It’s up
-to the user to ensure on their own that only valid fields are read.</p>
-<p>How do other dynamically typed languages handle missing fields? What do you
-think Lox should do? Implement your solution.</p>
+<p><font papago-translate="translated">객체에 존재하지 않는 필드에 액세스하려고 하면 전체 VM이 즉시 중단됩니다.</font><font papago-translate="translated"> 사용자는 이 런타임 오류로부터 복구할 방법이 없으며, 필드에 접근하기<em> 전에</em> 필드가 존재하는지 확인할 방법도 없습니다.</font><font papago-translate="translated"> 유효한 필드만 읽는 것은 사용자의 몫입니다.</font></p>
+<p><font papago-translate="translated">다른 동적으로 입력된 언어들은 누락된 필드를 어떻게 처리하나요?</font><font papago-translate="translated"> 록스는 어떻게 해야 한다고 생각하시나요?</font><font papago-translate="translated"> 솔루션을 구현합니다.</font></p>
 </li>
 <li>
-<p>Fields are accessed at runtime by their <em>string</em> name. But that name must
-always appear directly in the source code as an <em>identifier token</em>. A user
-program cannot imperatively build a string value and then use that as the
-name of a field. Do you think they should be able to? Devise a language
-feature that enables that and implement it.</p>
+<p><font papago-translate="translated">필드는 런타임에<em> 문자열</em> 이름으로 액세스됩니다.</font><font papago-translate="translated"> 하지만 그 이름은 항상 소스 코드에<em> 식별자 토큰</em>으로 직접 나타나야 합니다.</font><font papago-translate="translated"> 사용자 프로그램은 문자열 값을 필수적으로 생성한 다음 이를 필드 이름으로 사용할 수 없습니다.</font><font papago-translate="translated"> 그들이 할 수 있어야 한다고 생각하시나요?</font><font papago-translate="translated"> 이를 가능하게 하는 언어 기능을 고안하고 구현합니다.</font></p>
 </li>
 <li>
-<p>Conversely, Lox offers no way to <em>remove</em> a field from an instance. You can
-set a field’s value to <code translate="no">nil</code>, but the entry in the hash table is still
-there. How do other languages handle this? Choose and implement a strategy
-for Lox.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">반대로, Lox는 인스턴스에서 필드<em>를 제거</em>할 방법을 제공하지 않습니다.</font><font papago-translate="translated"> 필드의 값을 다음과 같이 설정할 수 있습니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">, 하지만 해시 테이블의 항목은 여전히 존재합니다.</font><font papago-translate="translated"> 다른 언어들은 이 문제를 어떻게 처리하나요?</font><font papago-translate="translated"> Lox를 위한 전략을 선택하고 실행하세요.</font></font></p>
 </li>
 <li>
-<p>Because fields are accessed by name at runtime, working with instance state
-is slow. It’s technically a constant-time operation<span class="em">—</span>thanks, hash tables<span class="em">—</span>but the constant factors are relatively large. This is a major component
-of why dynamic languages are slower than statically typed ones.</p>
-<p>How do sophisticated implementations of dynamically typed languages cope
-with and optimize this?</p>
+<p><font papago-translate="translated">필드는 런타임에 이름으로 접근하기 때문에 인스턴스 상태로 작업하는 것이 느립니다.</font><font papago-translate="translated"> 기술적으로는 해시 테이블 덕분에 상수 시간 연산이지만 상수 계수가 상대<span class="em"></span><span class="em"></span>적으로 큽니다.</font><font papago-translate="translated"> 이것이 동적 언어가 정적으로 입력된 언어보다 느린 이유의 주요 구성 요소입니다.</font></p>
+<p><font papago-translate="translated">동적으로 유형화된 언어의 정교한 구현은 이를 어떻게 처리하고 최적화할 수 있습니까?</font></p>
 </li>
 </ol>
 </div>
 <footer>
-<a class="next" href="methods-and-initializers.html">
-  Next Chapter: “Methods and Initializers” →
-</a>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+<a class="next" href="https://youhogeon-meritz.github.io/methods-and-initializers.html"><font papago-translate="translated"> 다음 장: "방법과 초기화" → </font></a><font papago-translate="splitted"><font papago-translate="translated"> 로버트 니스트롬이 수작업으로 제작한 -<a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE"> © 2015 ~ 2021</a></font></font>
 </footer>
-</img></article>
+</article>
 </div>
-</body>
-</html>
+
+
+<div id="papagoTooltip" margin="5" style="display: none; z-index: 2147483647; left: 403.75px; top: 527px !important;">
+        <h1 id="tooltipTitle">원문</h1>
+        <p id="tooltipText"> Using relatively high-level Java, we packed all that into two chapters.</p>
+      </div>
+      </body></html>

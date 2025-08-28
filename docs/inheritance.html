@@ -1,138 +1,87 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>Inheritance · Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/style.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
-<script src="jquery-3.4.1.min.js"></script>
-<script src="script.js"></script>
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+
+<!-- Google analytics -->
+
+</head>
 <body id="top">
 <!-- <div class="scrim"></div> -->
 <nav class="wide">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="contents">
-<h3><a href="#top">Inheritance<small>13</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/inheritance.html#top"><font papago-translate="splitted"><font papago-translate="translated">상속</font></font><small>13</small></a></h3>
 <ul>
-<li><a href="#superclasses-and-subclasses"><small>13.1</small> Superclasses and Subclasses</a></li>
-<li><a href="#inheriting-methods"><small>13.2</small> Inheriting Methods</a></li>
-<li><a href="#calling-superclass-methods"><small>13.3</small> Calling Superclass Methods</a></li>
-<li><a href="#conclusion"><small>13.4</small> Conclusion</a></li>
+<li><a href="https://youhogeon-meritz.github.io/inheritance.html#superclasses-and-subclasses"><small>13.1</small><font papago-translate="splitted"><font papago-translate="translated"> 슈퍼클래스 및 하위 클래스</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/inheritance.html#inheriting-methods"><small>13.2</small><font papago-translate="splitted"><font papago-translate="translated"> 메서드 상속</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/inheritance.html#calling-superclass-methods"><small>13.3</small><font papago-translate="splitted"><font papago-translate="translated"> 호출 슈퍼클래스 메서드</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/inheritance.html#conclusion"><small>13.4</small><font papago-translate="splitted"><font papago-translate="translated"> 결론</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/inheritance.html#challenges"><font papago-translate="translated">과제들</font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="classes.html" title="Classes">← Previous</a>
-<a href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑ Up</a>
-<a class="right" href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/classes.html" title="반" papago-attr-id="1"><font papago-translate="translated">← 이전</font></a>
+<a href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="나무 산책 통역사" papago-attr-id="2"><font papago-translate="translated">↑ 위로</font></a>
+<a class="right" href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="바이트코드 가상 머신" papago-attr-id="3"><font papago-translate="translated">다음 →</font></a>
 </div> </div>
 </nav>
 <nav class="narrow">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
-<a class="prev" href="classes.html" title="Classes">←</a>
-<a class="next" href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">→</a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
+<a class="prev" href="https://youhogeon-meritz.github.io/classes.html" title="Classes">←</a>
+<a class="next" href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">→</a>
 </nav>
 <div class="page">
 <div class="nav-wrapper">
-<nav class="floating">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<nav class="floating pinned">
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="expandable">
-<h3><a href="#top">Inheritance<small>13</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/inheritance.html#top"><font papago-translate="splitted"><font papago-translate="translated">상속</font></font><small>13</small></a></h3>
 <ul>
-<li><a href="#superclasses-and-subclasses"><small>13.1</small> Superclasses and Subclasses</a></li>
-<li><a href="#inheriting-methods"><small>13.2</small> Inheriting Methods</a></li>
-<li><a href="#calling-superclass-methods"><small>13.3</small> Calling Superclass Methods</a></li>
-<li><a href="#conclusion"><small>13.4</small> Conclusion</a></li>
+<li><a href="https://youhogeon-meritz.github.io/inheritance.html#superclasses-and-subclasses"><small>13.1</small><font papago-translate="splitted"><font papago-translate="translated"> 슈퍼클래스 및 하위 클래스</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/inheritance.html#inheriting-methods"><small>13.2</small><font papago-translate="splitted"><font papago-translate="translated"> 메서드 상속</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/inheritance.html#calling-superclass-methods"><small>13.3</small><font papago-translate="splitted"><font papago-translate="translated"> 호출 슈퍼클래스 메서드</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/inheritance.html#conclusion"><small>13.4</small><font papago-translate="splitted"><font papago-translate="translated"> 결론</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/inheritance.html#challenges">Challenges</a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="classes.html" title="Classes">← Previous</a>
-<a href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑ Up</a>
-<a class="right" href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/classes.html" title="Classes">←&nbsp;Previous</a>
+<a href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑&nbsp;Up</a>
+<a class="right" href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">Next&nbsp;→</a>
 </div> </div>
 <a id="expand-nav">≡</a>
 </nav>
 </div>
 <article class="chapter">
 <div class="number">13</div>
-<h1>Inheritance</h1>
+<h1><font papago-translate="translated">상속</font></h1>
 <blockquote>
-<p>Once we were blobs in the sea, and then fishes, and then lizards and rats and
-then monkeys, and hundreds of things in between. This hand was once a fin,
-this hand once had claws! In my human mouth I have the pointy teeth of a wolf
-and the chisel teeth of a rabbit and the grinding teeth of a cow! Our blood is
-as salty as the sea we used to live in! When we’re frightened, the hair on our
-skin stands up, just like it did when we had fur. We are history! Everything
-we’ve ever been on the way to becoming us, we still are.</p>
+<p><font papago-translate="translated">한때 우리는 바다에서 얼룩덜룩한 사람이었고, 그 다음에는 물고기, 그 다음에는 도마뱀과 쥐, 원숭이, 그리고 그 사이에 수백 가지가 있었습니다.</font><font papago-translate="translated"> 이 손은 한때 지느러미였고, 이 손은 한때 발톱이 있었습니다!</font><font papago-translate="translated"> 제 입안에는 늑대의 뾰족한 이빨과 토끼의 끌 이빨, 소의 갈기갈기 같은 이빨이 있습니다!</font><font papago-translate="translated"> 우리의 피는 우리가 살던 바다만큼 짜요!</font><font papago-translate="translated"> 우리가 겁을 먹으면, 털이 있을 때처럼 피부의 털이 일어섭니다.</font><font papago-translate="translated"> 우리는 역사입니다!</font><font papago-translate="translated"> 우리가 우리가 되기 위해 걸어온 모든 것들은 여전히 존재합니다.</font></p>
 <p><cite>Terry Pratchett, <em>A Hat Full of Sky</em></cite></p>
 </blockquote>
-<p>Can you believe it? We’ve reached the last chapter of <a href="a-tree-walk-interpreter.html">Part II</a>. We’re almost
-done with our first Lox interpreter. The <a href="classes.html">previous chapter</a> was a big ball of
-intertwined object-orientation features. I couldn’t separate those from each
-other, but I did manage to untangle one piece. In this chapter, we’ll finish
-off Lox’s class support by adding inheritance.</p>
-<p>Inheritance appears in object-oriented languages all the way back to the <span name="inherited">first</span> one, <a href="https://en.wikipedia.org/wiki/Simula">Simula</a>. Early on, Kristen Nygaard and
-Ole-Johan Dahl noticed commonalities across classes in the simulation programs
-they wrote. Inheritance gave them a way to reuse the code for those similar
-parts.</p>
-<aside name="inherited">
-<p>You could say all those other languages <em>inherited</em> it from Simula. Hey-ooo!
-I’ll, uh, see myself out.</p>
+<p><font papago-translate="translated">당신은 그것을 믿을 수 있나요?</font><font papago-translate="translated"> 우리는<a href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html"> 2</a>부의 마지막 장에 도달했습니다.</font><font papago-translate="translated"> 첫 번째 록스 통역사가 거의 다 끝났습니다.</font><font papago-translate="translated"> <a href="https://youhogeon-meritz.github.io/classes.html">이전 장에서는</a> 서로 얽혀 있는 객체 지향 특징들로 이루어진 큰 공이었습니다.</font><font papago-translate="translated"> 그것들을 서로 분리할 수는 없었지만, 결국 하나의 조각을 풀었습니다.</font><font papago-translate="translated"> 이 장에서는 상속을 추가하여 Lox의 클래스 지원을 마무리하겠습니다.</font></p>
+<p><font papago-translate="translated">상속은 객체 지향 언어에서<span name="inherited"> 첫</span> 번째<a href="https://en.wikipedia.org/wiki/Simula"> 언어인 Simula</a>로 거슬러 올라갑니다.</font><font papago-translate="translated"> 초기에 크리스틴 니가드와 올레-요한 달은 그들이 작성한 시뮬레이션 프로그램에서 수업 전반에 걸쳐 공통점을 발견했습니다.</font><font papago-translate="translated"> 상속을 통해 유사한 부분에 대해 코드를 재사용할 수 있는 방법이 생겼습니다.</font></p>
+<aside name="inherited" style="top: 808px;">
+<p><font papago-translate="translated">다른 모든 언어들<em>이</em> 시물라에서<em> 그것</em>을<em> 물려받았다고</em> 할 수 있습니다.</font><font papago-translate="translated"> 안녕-OOO!</font><font papago-translate="translated"> 제가, 음, 제 자신을 지켜볼게요.</font></p>
 </aside>
-<h2><a href="#superclasses-and-subclasses" id="superclasses-and-subclasses"><small>13 . 1</small>Superclasses and Subclasses</a></h2>
-<p>Given that the concept is “inheritance”, you would hope they would pick a
-consistent metaphor and call them “parent” and “child” classes, but that would
-be too easy. Way back when, C. A. R. Hoare coined the term “<span name="subclass">subclass</span>” to refer to a record type that refines another
-type. Simula borrowed that term to refer to a <em>class</em> that inherits from
-another. I don’t think it was until Smalltalk came along that someone flipped
-the Latin prefix to get “superclass” to refer to the other side of the
-relationship. From C++, you also hear “base” and “derived” classes. I’ll mostly
-stick with “superclass” and “subclass”.</p>
-<aside name="subclass">
-<p>“Super-” and “sub-” mean “above” and “below” in Latin, respectively. Picture an
-inheritance tree like a family tree with the root at the top<span class="em">—</span>subclasses are
-below their superclasses on the diagram. More generally, “sub-” refers to things
-that refine or are contained by some more general concept. In zoology, a
-subclass is a finer categorization of a larger class of living things.</p>
-<p>In set theory, a subset is contained by a larger superset which has all of the
-elements of the subset and possibly more. Set theory and programming languages
-meet each other in type theory. There, you have “supertypes” and “subtypes”.</p>
-<p>In statically typed object-oriented languages, a subclass is also often a
-subtype of its superclass. Say we have a Doughnut superclass and a BostonCream
-subclass. Every BostonCream is also an instance of Doughnut, but there may be
-doughnut objects that are not BostonCreams (like Crullers).</p>
-<p>Think of a type as the set of all values of that type. The set of all Doughnut
-instances contains the set of all BostonCream instances since every BostonCream
-is also a Doughnut. So BostonCream is a subclass, and a subtype, and its
-instances are a subset. It all lines up.</p><img alt="Boston cream &lt;: doughnut." src="image/inheritance/doughnuts.png">
-</img></aside>
-<p>Our first step towards supporting inheritance in Lox is a way to specify a
-superclass when declaring a class. There’s a lot of variety in syntax for this.
-C++ and C# place a <code translate="no">:</code> after the subclass’s name, followed by the superclass
-name. Java uses <code translate="no">extends</code> instead of the colon. Python puts the superclass(es)
-in parentheses after the class name. Simula puts the superclass’s name <em>before</em>
-the <code translate="no">class</code> keyword.</p>
-<p>This late in the game, I’d rather not add a new reserved word or token to the
-lexer. We don’t have <code translate="no">extends</code> or even <code translate="no">:</code>, so we’ll follow Ruby and use a
-less-than sign (<code translate="no">&lt;</code>).</p>
+<h2><a href="https://youhogeon-meritz.github.io/inheritance.html#superclasses-and-subclasses" id="superclasses-and-subclasses"><small><font papago-translate="translated">13 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">슈퍼클래스 및 하위 클래스</font></font></a></h2>
+<p><font papago-translate="translated">개념이 "상속"이라는 점을 고려할 때, 그들이 일관된 은유를 선택하여 "부모"와 "자녀" 수업이라고 부르기를 바라겠지만, 그것은 너무 쉬울 것입니다.</font><font papago-translate="translated"> 오래 전, C. A. R. 호어는 다른 유형을 정제하는 레코드 유형을 지칭하기 위해 "<span name="subclass">서브클래스"</span>라는 용어를 만들었습니다.</font><font papago-translate="translated"> Simula는 다른<em> 클래스</em>로부터 상속받는<em> 클래스</em>를 지칭하기 위해 그 용어를 차용했습니다.</font><font papago-translate="translated"> 스몰토크가 등장하기 전까지는 누군가 라틴어 접두사를 뒤집어서 '슈퍼클래스'가 관계의 다른 면을 가리키게 된 것 같지 않습니다.</font><font papago-translate="translated"> C++에서는 "기본" 및 "유래" 클래스도 들을 수 있습니다.</font><font papago-translate="translated"> 저는 주로 "슈퍼클래스"와 "서브클래스"를 고수할 것입니다.</font></p>
+<aside name="subclass" style="top: 1072px;">
+<p><font papago-translate="translated">"Super-"와 "sub-"는 각각 라틴어로 "위"와 "아래"를 의미합니다.</font><font papago-translate="translated"> 상속 트리가 상위에 뿌리를 두고 있는 가계도와 같다고 상상해 보세요. 다이어그램<span class="em"></span>에서 하위 클래스는 상위 클래스 아래에 있습니다.</font><font papago-translate="translated"> 더 일반적으로, "sub-"는 더 일반적인 개념에 의해 정제되거나 포함된 것들을 의미합니다.</font><font papago-translate="translated"> 동물학에서 하위 분류는 더 큰 생물 클래스를 더 세밀하게 분류하는 것입니다.</font></p>
+<p><font papago-translate="translated">집합 이론에서 부분 집합은 부분 집합의 모든 요소와 그 이상을 포함하는 더 큰 초집합에 의해 포함됩니다.</font><font papago-translate="translated"> 집합 이론과 프로그래밍 언어는 유형 이론에서 서로 만납니다.</font><font papago-translate="translated"> 거기에는 "슈퍼타입"과 "서브타입"이 있습니다.</font></p>
+<p><font papago-translate="translated">정적으로 입력된 객체 지향 언어에서 서브클래스는 종종 슈퍼클래스의 하위 유형이기도 합니다.</font><font papago-translate="translated"> 도넛 슈퍼클래스와 보스턴 크림 서브클래스가 있다고 가정해 보겠습니다.</font><font papago-translate="translated"> 모든 보스턴크림도 도넛의 한 예이지만, 크롤러처럼 보스턴크림이 아닌 도넛 객체도 있을 수 있습니다.</font></p>
+<p><font papago-translate="translated">어떤 유형을 그 유형의 모든 값의 집합이라고 생각해 보세요.</font><font papago-translate="translated"> 모든 보스턴크림도 도넛이기 때문에 모든 도넛 인스턴스 세트에는 모든 보스턴크림 인스턴스 세트가 포함되어 있습니다.</font><font papago-translate="translated"> 따라서 BostonCream은 하위 클래스이자 하위 유형이며 인스턴스는 하위 집합입니다.</font><font papago-translate="translated"> 모든 것이 줄을 잇습니다.</font></p><img alt="Boston cream &lt;: doughnut." src="https://youhogeon-meritz.github.io/image/inheritance/doughnuts.png">
+</aside>
+<p><font papago-translate="splitted"><font papago-translate="translated">Lox에서 상속을 지원하기 위한 첫 번째 단계는 클래스를 선언할 때 슈퍼클래스를 지정하는 방법입니다.</font><font papago-translate="translated"> 구문에는 다양한 종류가 있습니다.</font><font papago-translate="translated"> C++와 C#은 a를 배치합니다 </font></font><code translate="no">:</code><font papago-translate="splitted"><font papago-translate="translated"> 하위 클래스 이름 뒤에 슈퍼클래스 이름이 붙습니다.</font><font papago-translate="translated"> 자바 사용 </font></font><code translate="no">extends</code><font papago-translate="splitted"><font papago-translate="translated"> 결장 대신에.</font><font papago-translate="translated"> Python은 클래스 이름 뒤에 슈퍼클래스를 괄호 안에 넣습니다.</font><font papago-translate="translated"> Simula는 슈퍼클래스<em>의</em> 이름<em> 앞</em>에 </font></font><code translate="no">class</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">게임 후반부에는 렉서에 새로운 예약 단어나 토큰을 추가하지 않는 것이 좋습니다.</font><font papago-translate="translated"> 우리는 없습니다 </font></font><code translate="no">extends</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 심지어 </font></font><code translate="no">:</code><font papago-translate="splitted"><font papago-translate="translated">, 그래서 우리는 Ruby를 따라가서 Less-to-shan 기호를 사용할 것입니다 (</font></font><code translate="no">&lt;</code><font papago-translate="splitted"><font papago-translate="translated">).</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Doughnut</span> {
   <span class="c">// General doughnut stuff...</span>
 }
@@ -141,37 +90,24 @@ less-than sign (<code translate="no">&lt;</code>).</p>
   <span class="c">// Boston Cream-specific stuff...</span>
 }
 </pre></div>
-<p>To work this into the grammar, we add a new optional clause in our existing
-<code translate="no">classDecl</code> rule.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이를 문법에 적용하기 위해 기존에 새로운 선택 조항을 추가합니다 </font></font><code translate="no">classDecl</code><font papago-translate="splitted"><font papago-translate="translated"> 규칙.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="i">classDecl</span>      → <span class="s">"class"</span> <span class="t">IDENTIFIER</span> ( <span class="s">"&lt;"</span> <span class="t">IDENTIFIER</span> )?
                  <span class="s">"{"</span> <span class="i">function</span>* <span class="s">"}"</span> ;
 </pre></div>
-<p>After the class name, you can have a <code translate="no">&lt;</code> followed by the superclass’s name. The
-superclass clause is optional because you don’t <em>have</em> to have a superclass.
-Unlike some other object-oriented languages like Java, Lox has no root “Object”
-class that everything inherits from, so when you omit the superclass clause, the
-class has <em>no</em> superclass, not even an implicit one.</p>
-<p>We want to capture this new syntax in the class declaration’s AST node.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">클래스 이름 뒤에 다음을 가질 수 있습니다 </font></font><code translate="no">&lt;</code><font papago-translate="splitted"><font papago-translate="translated"> 슈퍼클래스의 이름 뒤에.</font><font papago-translate="translated"> 슈퍼클래스 조항은 슈퍼<em></em>클래스가 필요하지 않기 때문에 선택 사항입니다.</font><font papago-translate="translated"> Java와 같은 다른 객체 지향 언어와는 달리, Lox는 모든 것이 상속받는 루트 "객체" 클래스가 없기 때문에, 슈퍼클래스 절을 생략하면 그 클래스는 슈퍼클래스<em>도</em> 없고 암묵적인 클래스도 없습니다.</font></font></p>
+<p><font papago-translate="translated">클래스 선언의 AST 노드에서 이 새로운 구문을 캡처하고자 합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      "Block      : List&lt;Stmt&gt; statements",
-</pre><div class="source-file"><em>tool/GenerateAst.java</em><br/>
-in <em>main</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">도구/GenerateAst.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>메인</em> ()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">      <span class="s">"Class      : Token name, Expr.Variable superclass,"</span> +
                   <span class="s">" List&lt;Stmt.Function&gt; methods"</span>,
 </pre><pre class="insert-after" translate="no">      "Expression : Expr expression",
 </pre></div>
 <div class="source-file-narrow"><em>tool/GenerateAst.java</em>, in <em>main</em>(), replace 1 line</div>
-<p>You might be surprised that we store the superclass name as an Expr.Variable,
-not a Token. The grammar restricts the superclass clause to a single identifier,
-but at runtime, that identifier is evaluated as a variable access. Wrapping the
-name in an Expr.Variable early on in the parser gives us an object that the
-resolver can hang the resolution information off of.</p>
-<p>The new parser code follows the grammar directly.</p>
+<p><font papago-translate="translated">슈퍼클래스 이름을 Exper로 저장한다는 사실에 놀랄 수도 있습니다.</font><font papago-translate="translated">토큰이 아닌 변수.</font><font papago-translate="translated"> 문법은 슈퍼클래스 절을 단일 식별자로 제한하지만, 실행 시 해당 식별자는 변수 접근으로 평가됩니다.</font><font papago-translate="translated"> 이름을 Exper로 포장하기.</font><font papago-translate="translated">파서의 초기 변수는 해결사가 해상도 정보를 끌 수 있는 객체를 제공합니다.</font></p>
+<p><font papago-translate="translated">새로운 파서 코드는 문법을 직접 따릅니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    Token name = consume(IDENTIFIER, "Expect class name.");
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>classDeclaration</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>class</em>D<em>eclaration</em>에서 ()</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="t">Expr</span>.<span class="t">Variable</span> <span class="i">superclass</span> = <span class="k">null</span>;
     <span class="k">if</span> (<span class="i">match</span>(<span class="i">LESS</span>)) {
       <span class="i">consume</span>(<span class="i">IDENTIFIER</span>, <span class="s">"Expect superclass name."</span>);
@@ -181,50 +117,33 @@ in <em>classDeclaration</em>()</div>
 </pre><pre class="insert-after" translate="no">    consume(LEFT_BRACE, "Expect '{' before class body.");
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>classDeclaration</em>()</div>
-<p>Once we’ve (possibly) parsed a superclass declaration, we store it in the AST.</p>
+<p><font papago-translate="translated">슈퍼클래스 선언을 구문 분석한 후(가능성이 있는 경우) AST에 저장합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    consume(RIGHT_BRACE, "Expect '}' after class body.");
 
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>classDeclaration</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>class</em>D<em>eclaration</em>에서 ()</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">    <span class="k">return</span> <span class="k">new</span> <span class="t">Stmt</span>.<span class="t">Class</span>(<span class="i">name</span>, <span class="i">superclass</span>, <span class="i">methods</span>);
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>classDeclaration</em>(), replace 1 line</div>
-<p>If we didn’t parse a superclass clause, the superclass expression will be
-<code translate="no">null</code>. We’ll have to make sure the later passes check for that. The first of
-those is the resolver.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">슈퍼클래스 절을 구문 분석하지 않았다면, 슈퍼클래스 표현식은 다음과 같습니다 </font></font><code translate="no">null</code><font papago-translate="splitted"><font papago-translate="translated">. 나중에 확인할 수 있는 패스를 확인해야 합니다.</font><font papago-translate="translated"> 그 중 첫 번째는 해결사입니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    define(stmt.name);
-</pre><div class="source-file"><em>lox/Resolver.java</em><br/>
-in <em>visitClassStmt</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>Cl<em>assStmt</em>()에서</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="k">if</span> (<span class="i">stmt</span>.<span class="i">superclass</span> != <span class="k">null</span>) {
       <span class="i">resolve</span>(<span class="i">stmt</span>.<span class="i">superclass</span>);
     }
 </pre><pre class="insert-after" translate="no">
-
     beginScope();
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, in <em>visitClassStmt</em>()</div>
-<p>The class declaration AST node has a new subexpression, so we traverse into and
-resolve that. Since classes are usually declared at the top level, the
-superclass name will most likely be a global variable, so this doesn’t usually
-do anything useful. However, Lox allows class declarations even inside blocks,
-so it’s possible the superclass name refers to a local variable. In that case,
-we need to make sure it’s resolved.</p>
-<p>Because even well-intentioned programmers sometimes write weird code, there’s a
-silly edge case we need to worry about while we’re in here. Take a look at this:</p>
+<p><font papago-translate="translated">클래스 선언 AST 노드에 새로운 하위 표현식이 있으므로 이를 탐색하고 해결합니다.</font><font papago-translate="translated"> 수업은 보통 최상위 수준에서 선언되기 때문에 슈퍼클래스 이름은 글로벌 변수가 될 가능성이 높기 때문에 일반적으로 유용한 기능을 하지 못합니다.</font><font papago-translate="translated"> 그러나 Lox는 블록 내에서도 클래스 선언을 허용하므로 슈퍼클래스 이름이 로컬 변수를 참조할 수 있습니다.</font><font papago-translate="translated"> 그렇다면 문제가 해결되었는지 확인해야 합니다.</font></p>
+<p><font papago-translate="translated">선의의 프로그래머도 가끔 이상한 코드를 작성하기 때문에 여기 있는 동안 걱정해야 할 어리석은 엣지 케이스가 있습니다.</font><font papago-translate="translated"> 이것을 보세요:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Oops</span> &lt; <span class="t">Oops</span> {}
 </pre></div>
-<p>There’s no way this will do anything useful, and if we let the runtime try to
-run this, it will break the expectation the interpreter has about there not
-being cycles in the inheritance chain. The safest thing is to detect this case
-statically and report it as an error.</p>
+<p><font papago-translate="translated">이것이 유용한 기능을 할 리가 없으며, 런타임에 이 기능을 실행하도록 하면 상속 체인에 사이클이 없다는 해석자의 기대를 깨뜨릴 수 있습니다.</font><font papago-translate="translated"> 가장 안전한 방법은 이 사례를 정적으로 감지하여 오류로 보고하는 것입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    define(stmt.name);
 
-</pre><div class="source-file"><em>lox/Resolver.java</em><br/>
-in <em>visitClassStmt</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>Cl<em>assStmt</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">if</span> (<span class="i">stmt</span>.<span class="i">superclass</span> != <span class="k">null</span> &amp;&amp;
         <span class="i">stmt</span>.<span class="i">name</span>.<span class="i">lexeme</span>.<span class="i">equals</span>(<span class="i">stmt</span>.<span class="i">superclass</span>.<span class="i">name</span>.<span class="i">lexeme</span>)) {
       <span class="t">Lox</span>.<span class="i">error</span>(<span class="i">stmt</span>.<span class="i">superclass</span>.<span class="i">name</span>,
@@ -234,10 +153,9 @@ in <em>visitClassStmt</em>()</div>
 </pre><pre class="insert-after" translate="no">    if (stmt.superclass != null) {
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, in <em>visitClassStmt</em>()</div>
-<p>Assuming the code resolves without error, the AST travels to the interpreter.</p>
+<p><font papago-translate="translated">코드가 오류 없이 해결된다고 가정하면, AST는 인터프리터로 이동합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  public Void visitClassStmt(Stmt.Class stmt) {
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitClassStmt</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>Cl<em>assStmt</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="t">Object</span> <span class="i">superclass</span> = <span class="k">null</span>;
     <span class="k">if</span> (<span class="i">stmt</span>.<span class="i">superclass</span> != <span class="k">null</span>) {
       <span class="i">superclass</span> = <span class="i">evaluate</span>(<span class="i">stmt</span>.<span class="i">superclass</span>);
@@ -250,73 +168,49 @@ in <em>visitClassStmt</em>()</div>
 </pre><pre class="insert-after" translate="no">    environment.define(stmt.name.lexeme, null);
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitClassStmt</em>()</div>
-<p>If the class has a superclass expression, we evaluate it. Since that could
-potentially evaluate to some other kind of object, we have to check at runtime
-that the thing we want to be the superclass is actually a class. Bad things
-would happen if we allowed code like:</p>
+<p><font papago-translate="translated">그 수업이 초급적인 표현을 가지고 있다면, 우리는 그것을 평가합니다.</font><font papago-translate="translated"> 그것이 다른 종류의 객체에 대해 평가할 가능성이 있기 때문에, 실행 시 우리가 슈퍼클래스가 되고 싶은 것이 실제로 클래스인지 확인해야 합니다.</font><font papago-translate="translated"> 다음과 같은 코드를 허용하면 나쁜 일이 발생할 수 있습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="t">NotAClass</span> = <span class="s">"I am totally not a class"</span>;
 
 <span class="k">class</span> <span class="t">Subclass</span> &lt; <span class="t">NotAClass</span> {} <span class="c">// ?!</span>
 </pre></div>
-<p>Assuming that check passes, we continue on. Executing a class declaration turns
-the syntactic representation of a class<span class="em">—</span>its AST node<span class="em">—</span>into its runtime
-representation, a LoxClass object. We need to plumb the superclass through to
-that too. We pass the superclass to the constructor.</p>
+<p><font papago-translate="translated">체크가 통과한다고 가정하면 계속 진행합니다.</font><font papago-translate="translated"> 클래스 선언을 실행하면 클래스의 구문 표현인 AST 노드를 런타임 표현인 LoxClass<span class="em"></span><span class="em"></span> 객체로 변환합니다.</font><font papago-translate="translated"> 우리는 슈퍼클래스도 그것에 도달해야 합니다.</font><font papago-translate="translated"> 우리는 슈퍼클래스를 생성자에게 전달합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      methods.put(method.name.lexeme, function);
     }
 
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitClassStmt</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>Cl<em>assStmt</em>()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">    <span class="t">LoxClass</span> <span class="i">klass</span> = <span class="k">new</span> <span class="t">LoxClass</span>(<span class="i">stmt</span>.<span class="i">name</span>.<span class="i">lexeme</span>,
         (<span class="t">LoxClass</span>)<span class="i">superclass</span>, <span class="i">methods</span>);
 
 </pre><pre class="insert-after" translate="no">    environment.assign(stmt.name, klass);
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitClassStmt</em>(), replace 1 line</div>
-<p>The constructor stores it in a field.</p>
-<div class="codehilite"><div class="source-file"><em>lox/LoxClass.java</em><br/>
-constructor <em>LoxClass</em>()<br/>
-replace 1 line</div>
+<p><font papago-translate="translated">생성자는 그것을 필드에 저장합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/LoxClass.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 생성자 L<em>oxClass</em>()</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  <span class="t">LoxClass</span>(<span class="t">String</span> <span class="i">name</span>, <span class="t">LoxClass</span> <span class="i">superclass</span>,
            <span class="t">Map</span>&lt;<span class="t">String</span>, <span class="t">LoxFunction</span>&gt; <span class="i">methods</span>) {
     <span class="k">this</span>.<span class="i">superclass</span> = <span class="i">superclass</span>;
 </pre><pre class="insert-after" translate="no">    this.name = name;
 </pre></div>
 <div class="source-file-narrow"><em>lox/LoxClass.java</em>, constructor <em>LoxClass</em>(), replace 1 line</div>
-<p>Which we declare here:</p>
+<p><font papago-translate="translated">여기서 선언합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  final String name;
-</pre><div class="source-file"><em>lox/LoxClass.java</em><br/>
-in class <em>LoxClass</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/LoxClass.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> L<em>ox</em>Cl<em>ass</em> 수업에서</font></font></div>
 <pre class="insert" translate="no">  <span class="k">final</span> <span class="t">LoxClass</span> <span class="i">superclass</span>;
 </pre><pre class="insert-after" translate="no">  private final Map&lt;String, LoxFunction&gt; methods;
 </pre></div>
 <div class="source-file-narrow"><em>lox/LoxClass.java</em>, in class <em>LoxClass</em></div>
-<p>With that, we can define classes that are subclasses of other classes. Now, what
-does having a superclass actually <em>do?</em></p>
-<h2><a href="#inheriting-methods" id="inheriting-methods"><small>13 . 2</small>Inheriting Methods</a></h2>
-<p>Inheriting from another class means that everything that’s <span name="liskov">true</span> of the superclass should be true, more or less, of the
-subclass. In statically typed languages, that carries a lot of implications. The
-sub<em>class</em> must also be a sub<em>type</em>, and the memory layout is controlled so that
-you can pass an instance of a subclass to a function expecting a superclass and
-it can still access the inherited fields correctly.</p>
-<aside name="liskov">
-<p>A fancier name for this hand-wavey guideline is the <a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle"><em>Liskov substitution
-principle</em></a>. Barbara Liskov introduced it in a keynote during the
-formative period of object-oriented programming.</p>
+<p><font papago-translate="translated">이를 통해 다른 클래스의 하위 클래스인 클래스를 정의할 수 있습니다.</font><font papago-translate="translated"> 그렇다면 슈퍼클래스는 실제로 어떤<em> 역할을 할까</em>요?</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/inheritance.html#inheriting-methods" id="inheriting-methods"><small><font papago-translate="translated">13 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">메서드 상속</font></font></a></h2>
+<p><font papago-translate="translated">다른 클래스에서 상속된다는 것은 슈퍼클래스에<span name="liskov"> 해당</span>하는 모든 것이 서브클래스에 해당해야 한다는 것을 의미합니다.</font><font papago-translate="translated"> 정적으로 입력된 언어에서는 많은 영향을 미칩니다.</font><font papago-translate="translated"> 서브<em>클래스</em>는 서브<em>타입</em>이어야 하며, 서브클래스의 인스턴스를 슈퍼클래스를 기대하는 함수에 전달하고 상속된 필드에 올바르게 액세스할 수 있도록 메모리 레이아웃이 제어됩니다.</font></p>
+<aside name="liskov" style="top: 4748px;">
+<p><font papago-translate="translated">이 핸드 웨이브 가이드라인의 더 멋진 이름은 리스<a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle"><em>코프 치환 원리</em></a>입니다.</font><font papago-translate="translated"> 바바라 리스코프는 객체 지향 프로그래밍의 형성기 동안 기조연설을 통해 이를 소개했습니다.</font></p>
 </aside>
-<p>Lox is a dynamically typed language, so our requirements are much simpler.
-Basically, it means that if you can call some method on an instance of the
-superclass, you should be able to call that method when given an instance of the
-subclass. In other words, methods are inherited from the superclass.</p>
-<p>This lines up with one of the goals of inheritance<span class="em">—</span>to give users a way to
-reuse code across classes. Implementing this in our interpreter is
-astonishingly easy.</p>
+<p><font papago-translate="translated">Lox는 동적으로 입력되는 언어이므로 요구 사항이 훨씬 간단합니다.</font><font papago-translate="translated"> 기본적으로 슈퍼클래스의 인스턴스에 대해 어떤 메서드를 호출할 수 있다면, 서브클래스의 인스턴스가 주어졌을 때 그 메서드를 호출할 수 있어야 한다는 의미입니다.</font><font papago-translate="translated"> 다시 말해, 방법은 슈퍼클래스로부터 물려받은 것입니다.</font></p>
+<p><font papago-translate="translated">이는 상속의 목표 중 하나인<span class="em"></span> 사용자가 클래스 간에 코드를 재사용할 수 있는 방법을 제공하는 것과 일치합니다.</font><font papago-translate="translated"> 이를 통역사에서 구현하는 것은 놀라울 정도로 쉽습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      return methods.get(name);
     }
 
-</pre><div class="source-file"><em>lox/LoxClass.java</em><br/>
-in <em>findMethod</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/LoxClass.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>findMethod</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">if</span> (<span class="i">superclass</span> != <span class="k">null</span>) {
       <span class="k">return</span> <span class="i">superclass</span>.<span class="i">findMethod</span>(<span class="i">name</span>);
     }
@@ -324,9 +218,7 @@ in <em>findMethod</em>()</div>
 </pre><pre class="insert-after" translate="no">    return null;
 </pre></div>
 <div class="source-file-narrow"><em>lox/LoxClass.java</em>, in <em>findMethod</em>()</div>
-<p>That’s literally all there is to it. When we are looking up a method on an
-instance, if we don’t find it on the instance’s class, we recurse up through the
-superclass chain and look there. Give it a try:</p>
+<p><font papago-translate="translated">말 그대로 그게 전부입니다.</font><font papago-translate="translated"> 인스턴스에서 메서드를 찾을 때 인스턴스의 클래스에서 메서드를 찾지 못하면 슈퍼클래스 체인을 통해 다시 찾아봅니다.</font><font papago-translate="translated"> 한 번 시도해 보세요:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Doughnut</span> {
   <span class="i">cook</span>() {
     <span class="k">print</span> <span class="s">"Fry until golden brown."</span>;
@@ -337,22 +229,11 @@ superclass chain and look there. Give it a try:</p>
 
 <span class="t">BostonCream</span>().<span class="i">cook</span>();
 </pre></div>
-<p>There we go, half of our inheritance features are complete with only three lines
-of Java code.</p>
-<h2><a href="#calling-superclass-methods" id="calling-superclass-methods"><small>13 . 3</small>Calling Superclass Methods</a></h2>
-<p>In <code translate="no">findMethod()</code> we look for a method on the current class <em>before</em> walking up
-the superclass chain. If a method with the same name exists in both the subclass
-and the superclass, the subclass one takes precedence or <strong>overrides</strong> the
-superclass method. Sort of like how variables in inner scopes shadow outer ones.</p>
-<p>That’s great if the subclass wants to <em>replace</em> some superclass behavior
-completely. But, in practice, subclasses often want to <em>refine</em> the superclass’s
-behavior. They want to do a little work specific to the subclass, but also
-execute the original superclass behavior too.</p>
-<p>However, since the subclass has overridden the method, there’s no way to refer
-to the original one. If the subclass method tries to call it by name, it will
-just recursively hit its own override. We need a way to say “Call this method,
-but look for it directly on my superclass and ignore my override”. Java uses
-<code translate="no">super</code> for this, and we’ll use that same syntax in Lox. Here is an example:</p>
+<p><font papago-translate="translated">여기까지입니다. 상속 기능의 절반은 자바 코드의 세 줄만으로 완성됩니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/inheritance.html#calling-superclass-methods" id="calling-superclass-methods"><small><font papago-translate="translated">13 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">호출 슈퍼클래스 메서드</font></font></a></h2>
+<p><font papago-translate="splitted"><font papago-translate="translated">인 </font></font><code translate="no">findMethod()</code><font papago-translate="splitted"><font papago-translate="translated"> 슈퍼클래스 체인을 시작<em>하기 전</em>에 현재 클래스에 대한 방법을 찾습니다.</font><font papago-translate="translated"> 하위 클래스와 상위 클래스 모두에 동일한 이름을 가진 메서드가 존재하는 경우 하위 클래스가 우선하거나 상위 클래스 메서드<strong>를 우선시합니다</strong>.</font><font papago-translate="translated"> 내부 범위의 변수가 외부 변수를 가리는 것과 비슷합니다.</font></font></p>
+<p><font papago-translate="translated">서브클래스가 어떤 슈퍼클래스 행동<em>을</em> 완전히<em> 대체</em>하고 싶다면 정말 좋습니다.</font><font papago-translate="translated"> 하지만 실제로 하위 클래스는 종종 상위 클래스의 행동<em>을 개선</em>하고자 합니다.</font><font papago-translate="translated"> 그들은 하위 클래스에 특화된 작은 작업을 수행하기를 원하지만, 원래의 슈퍼클래스 행동도 실행하고자 합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그러나 하위 클래스가 메서드를 재정의했기 때문에 원래 메서드를 참조할 방법이 없습니다.</font><font papago-translate="translated"> 하위 클래스 메서드가 이름을 부르려고 하면 자체 오버라이드를 재귀적으로 발생시킵니다.</font><font papago-translate="translated"> "이 메서드를 호출하되, 내 슈퍼클래스에서 직접 찾아보고 내 오버라이드를 무시하세요"라고 말할 수 있는 방법이 필요합니다.</font><font papago-translate="translated"> 자바 사용 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 이를 위해 Lox에서 동일한 구문을 사용하겠습니다.</font><font papago-translate="translated"> 다음은 예시입니다:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Doughnut</span> {
   <span class="i">cook</span>() {
     <span class="k">print</span> <span class="s">"Fry until golden brown."</span>;
@@ -368,53 +249,39 @@ but look for it directly on my superclass and ignore my override”. Java uses
 
 <span class="t">BostonCream</span>().<span class="i">cook</span>();
 </pre></div>
-<p>If you run this, it should print:</p>
+<p><font papago-translate="translated">이것을 실행하면 인쇄됩니다:</font></p>
 <div class="codehilite"><pre translate="no">Fry until golden brown.
 Pipe full of custard and coat with chocolate.
 </pre></div>
-<p>We have a new expression form. The <code translate="no">super</code> keyword, followed by a dot and an
-identifier, looks for a method with that name. Unlike calls on <code translate="no">this</code>, the search
-starts at the superclass.</p>
-<h3><a href="#syntax" id="syntax"><small>13 . 3 . 1</small>Syntax</a></h3>
-<p>With <code translate="no">this</code>, the keyword works sort of like a magic variable, and the expression
-is that one lone token. But with <code translate="no">super</code>, the subsequent <code translate="no">.</code> and property name
-are inseparable parts of the <code translate="no">super</code> expression. You can’t have a bare <code translate="no">super</code>
-token all by itself.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">새로운 표현 양식이 생겼습니다.</font><font papago-translate="translated"> 그 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드 뒤에 점과 식별자가 이어지면 해당 이름을 가진 메서드를 찾습니다.</font><font papago-translate="translated"> 호출과 달리 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated">, 검색은 슈퍼클래스에서 시작됩니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/inheritance.html#syntax" id="syntax"><small><font papago-translate="translated">13 . 3 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">구문</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">와 함께 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated">, 키워드는 일종의 마법 변수처럼 작동하며, 그 표현은 하나의 유일한 토큰입니다.</font><font papago-translate="translated"> 하지만 함께 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated">, 후속 </font></font><code translate="no">.</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 재산 이름은 분리할 수 없는 부분입니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 표현.</font><font papago-translate="translated"> 베어를 가질 수 없습니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 스스로 토큰화합니다.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">print</span> <span class="k">super</span>; <span class="c">// Syntax error.</span>
 </pre></div>
-<p>So the new clause we add to the <code translate="no">primary</code> rule in our grammar includes the
-property access as well.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그래서 우리가 추가하는 새로운 조항은 </font></font><code translate="no">primary</code><font papago-translate="splitted"><font papago-translate="translated"> 문법 규칙에는 속성 접근도 포함됩니다.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="i">primary</span>        → <span class="s">"true"</span> | <span class="s">"false"</span> | <span class="s">"nil"</span> | <span class="s">"this"</span>
                | <span class="t">NUMBER</span> | <span class="t">STRING</span> | <span class="t">IDENTIFIER</span> | <span class="s">"("</span> <span class="i">expression</span> <span class="s">")"</span>
                | <span class="s">"super"</span> <span class="s">"."</span> <span class="t">IDENTIFIER</span> ;
 </pre></div>
-<p>Typically, a <code translate="no">super</code> expression is used for a method call, but, as with regular
-methods, the argument list is <em>not</em> part of the expression. Instead, a super
-<em>call</em> is a super <em>access</em> followed by a function call. Like other method calls,
-you can get a handle to a superclass method and invoke it separately.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">일반적으로 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드 호출에는 표현식이 사용되지만, 일반 메서드와 마찬가지로 인수 목록은 표현식의 일부<em>가 아닙니다</em>.</font><font papago-translate="translated"> 대신 슈퍼<em> 콜</em>은 슈퍼<em> 액세스</em>에 이어 함수 호출로 이어집니다.</font><font papago-translate="translated"> 다른 메서드 호출과 마찬가지로 슈퍼클래스 메서드에 대한 핸들을 가져와 별도로 호출할 수 있습니다.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">method</span> = <span class="k">super</span>.<span class="i">cook</span>;
 <span class="i">method</span>();
 </pre></div>
-<p>So the <code translate="no">super</code> expression itself contains only the token for the <code translate="no">super</code> keyword
-and the name of the method being looked up. The corresponding <span name="super-ast">syntax tree node</span> is thus:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그래서 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 표현 자체에는 토큰만 포함되어 있습니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드와 조회 중인 메서드의 이름.</font><font papago-translate="translated"> <span name="super-ast">따라서 해당 구문 트리 노드</span>는 다음과 같습니다:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      "Set      : Expr object, Token name, Expr value",
-</pre><div class="source-file"><em>tool/GenerateAst.java</em><br/>
-in <em>main</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">도구/GenerateAst.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>메인</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="s">"Super    : Token keyword, Token method"</span>,
 </pre><pre class="insert-after" translate="no">      "This     : Token keyword",
 </pre></div>
 <div class="source-file-narrow"><em>tool/GenerateAst.java</em>, in <em>main</em>()</div>
-<aside name="super-ast">
-<p>The generated code for the new node is in <a href="appendix-ii.html#super-expression">Appendix II</a>.</p>
+<aside name="super-ast" style="top: 7256px;">
+<p><font papago-translate="translated">새 노드에 대한 생성된 코드는 부록<a href="https://youhogeon-meritz.github.io/appendix-ii.html#super-expression"> II</a>에 있습니다.</font></p>
 </aside>
-<p>Following the grammar, the new parsing code goes inside our existing <code translate="no">primary()</code>
-method.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">문법에 따라 새로운 구문 분석 코드가 기존 코드 내부로 들어갑니다 </font></font><code translate="no">primary()</code><font papago-translate="splitted"><font papago-translate="translated"> 방법.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      return new Expr.Literal(previous().literal);
     }
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>primary</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>일차</em> ()에서</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="k">if</span> (<span class="i">match</span>(<span class="i">SUPER</span>)) {
       <span class="t">Token</span> <span class="i">keyword</span> = <span class="i">previous</span>();
       <span class="i">consume</span>(<span class="i">DOT</span>, <span class="s">"Expect '.' after 'super'."</span>);
@@ -423,18 +290,12 @@ in <em>primary</em>()</div>
       <span class="k">return</span> <span class="k">new</span> <span class="t">Expr</span>.<span class="t">Super</span>(<span class="i">keyword</span>, <span class="i">method</span>);
     }
 </pre><pre class="insert-after" translate="no">
-
     if (match(THIS)) return new Expr.This(previous());
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>primary</em>()</div>
-<p>A leading <code translate="no">super</code> keyword tells us we’ve hit a <code translate="no">super</code> expression. After that we
-consume the expected <code translate="no">.</code> and method name.</p>
-<h3><a href="#semantics" id="semantics"><small>13 . 3 . 2</small>Semantics</a></h3>
-<p>Earlier, I said a <code translate="no">super</code> expression starts the method lookup from “the
-superclass”, but <em>which</em> superclass? The naïve answer is the superclass of
-<code translate="no">this</code>, the object the surrounding method was called on. That coincidentally
-produces the right behavior in a lot of cases, but that’s not actually correct.
-Gaze upon:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">선도자 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드를 통해 다음을 확인할 수 있습니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 표현.</font><font papago-translate="translated"> 그 후에 우리는 예상되는 소비를 합니다 </font></font><code translate="no">.</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드 이름.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/inheritance.html#semantics" id="semantics"><small><font papago-translate="translated">13 . 3 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">의미론</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">아까 제가 말했습니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 표현식은 "슈퍼클래스"에서 메서드 조회를 시작하지만<em>, 어떤</em> 슈퍼클래스<em>인가</em>요?</font><font papago-translate="translated"> 순진한 대답은 다음과 같은 슈퍼클래스입니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated">, 주변 메서드가 호출된 객체.</font><font papago-translate="translated"> 그것은 우연히도 많은 경우에 올바른 행동을 보이지만, 실제로는 옳지 않습니다.</font><font papago-translate="translated"> 응시:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">A</span> {
   <span class="i">method</span>() {
     <span class="k">print</span> <span class="s">"A method"</span>;
@@ -455,96 +316,57 @@ Gaze upon:</p>
 
 <span class="t">C</span>().<span class="i">test</span>();
 </pre></div>
-<p>Translate this program to Java, C#, or C++ and it will print “A method”, which
-is what we want Lox to do too. When this program runs, inside the body of
-<code translate="no">test()</code>, <code translate="no">this</code> is an instance of C. The superclass of C is B, but that is
-<em>not</em> where the lookup should start. If it did, we would hit B’s <code translate="no">method()</code>.</p>
-<p>Instead, lookup should start on the superclass of <em>the class containing the
-<code translate="no">super</code> expression</em>. In this case, since <code translate="no">test()</code> is defined inside B, the
-<code translate="no">super</code> expression inside it should start the lookup on <em>B</em>’s superclass<span class="em">—</span>A.</p>
-<p><span name="flow"></span></p><img alt="The call chain flowing through the classes." src="image/inheritance/classes.png">
-<aside name="flow">
-<p>The execution flow looks something like this:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 프로그램을 Java, C# 또는 C++로 번역하면 "A 메서드"가 출력되며, 이는 Lox에서도 수행하기를 원합니다.</font><font papago-translate="translated"> 이 프로그램이 실행될 때, 본체 내부에서 </font></font><code translate="no">test()</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 는 C의 한 예입니다.</font><font papago-translate="translated"> C의 슈퍼클래스는 B이지만 조회가 시작되어야<em> 하는</em> 곳<em>은 아닙니다</em>.</font><font papago-translate="translated"> 만약 그렇다면, 우리는 B의 </font></font><code translate="no">method()</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">대신, 해당<em> 표현이 포함된 클래스</em>의 슈퍼클래스에서 조회를 시작해야 합니다<em>.</em></font><font papago-translate="translated"> 이 경우, 다음과 같이 </font></font><code translate="no">test()</code><font papago-translate="splitted"><font papago-translate="translated"> 는 B 내부에서 정의됩니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 그 안의 표현은 B의 슈퍼클래스—<span class="em"></span><em></em>A에서 조회를 시작해야 합니다.</font></font></p>
+<p><span name="flow"></span></p><img alt="The call chain flowing through the classes." src="https://youhogeon-meritz.github.io/image/inheritance/classes.png">
+<aside name="flow" style="top: 8630px;">
+<p><font papago-translate="translated">실행 흐름은 다음과 같습니다:</font></p>
 <ol>
 <li>
-<p>We call <code translate="no">test()</code> on an instance of C.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 전화합니다 </font></font><code translate="no">test()</code><font papago-translate="splitted"><font papago-translate="translated"> C의 경우에.</font></font></p>
 </li>
 <li>
-<p>That enters the <code translate="no">test()</code> method inherited from B. That calls
-<code translate="no">super.method()</code>.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그것은 들어갑니다 </font></font><code translate="no">test()</code><font papago-translate="splitted"><font papago-translate="translated"> B에서 상속된 메서드.</font><font papago-translate="translated"> 그것은 전화입니다 </font></font><code translate="no">super.method()</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
 </li>
 <li>
-<p>The superclass of B is A, so that chains to <code translate="no">method()</code> on A, and the program
-prints “A method”.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">B의 슈퍼클래스는 A이므로 체인은 다음과 같습니다 </font></font><code translate="no">method()</code><font papago-translate="splitted"><font papago-translate="translated"> A에서 프로그램은 "A 메서드"를 출력합니다.</font></font></p>
 </li>
 </ol>
 </aside>
-<p>Thus, in order to evaluate a <code translate="no">super</code> expression, we need access to the
-superclass of the class definition surrounding the call. Alack and alas, at the
-point in the interpreter where we are executing a <code translate="no">super</code> expression, we don’t
-have that easily available.</p>
-<p>We <em>could</em> add a field to LoxFunction to store a reference to the LoxClass that
-owns that method. The interpreter would keep a reference to the
-currently executing LoxFunction so that we could look it up later when we hit a
-<code translate="no">super</code> expression. From there, we’d get the LoxClass of the method, then its
-superclass.</p>
-<p>That’s a lot of plumbing. In the <a href="classes.html">last chapter</a>, we had a similar problem when
-we needed to add support for <code translate="no">this</code>. In that case, we used our existing
-environment and closure mechanism to store a reference to the current object.
-Could we do something similar for storing the superclass<span name="rhetorical">?</span> Well, I probably wouldn’t be talking about it if the
-answer was no, so<span class="ellipse"> . . . </span>yes.</p>
-<aside name="rhetorical">
-<p>Does anyone even like rhetorical questions?</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">따라서 다음을 평가하기 위해 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 표현하자면, 우리는 통화를 둘러싼 클래스 정의의 슈퍼클래스에 접근할 필요가 있습니다.</font><font papago-translate="translated"> 놀랍게도, 우리가 실행 중인 인터프리터 지점에서 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 표현하자면, 우리는 그렇게 쉽게 구할 수 있는 것이 없습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">LoxFunction에 필드를 추가하여 해당 메서드를 소유한 LoxClass에 대한 참조를 저장<em>할 수 있습니다</em>.</font><font papago-translate="translated"> 인터프리터는 현재 실행 중인 LoxFunction에 대한 참조를 유지하여 나중에 찾을 수 있도록 합니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 표현.</font><font papago-translate="translated"> 거기서부터 우리는 그 방법의 LoxClass를 얻고, 그 다음에는 그 슈퍼클래스를 얻게 될 것입니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">배관이 정말 많네요.</font><font papago-translate="translated"> <a href="https://youhogeon-meritz.github.io/classes.html">지난 장에서</a> 지원을 추가해야 할 때 비슷한 문제가 있었습니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated">. 이 경우, 우리는 현재 객체에 대한 참조를 저장하기 위해 기존 환경과 폐쇄 메커니즘을 사용했습니다.</font><font papago-translate="translated"> 슈퍼<span name="rhetorical"></span>클래스를 보관할 때 비슷한 작업을 할 수 있을까요?</font><font papago-translate="translated"> 글쎄요, 대답이 '아니오'였다면 아마 그것에 대해 이야기하지 않았을 거예요. 그래서<span class="ellipse"> .</span> . . 네.</font></font></p>
+<aside name="rhetorical" style="top: 9469.5px;">
+<p><font papago-translate="translated">수사학적 질문을 좋아하는 사람이 있나요?</font></p>
 </aside>
-<p>One important difference is that we bound <code translate="no">this</code> when the method was <em>accessed</em>.
-The same method can be called on different instances and each needs its own
-<code translate="no">this</code>. With <code translate="no">super</code> expressions, the superclass is a fixed property of the
-<em>class declaration itself</em>. Every time you evaluate some <code translate="no">super</code> expression, the
-superclass is always the same.</p>
-<p>That means we can create the environment for the superclass once, when the class
-definition is executed. Immediately before we define the methods, we make a new
-environment to bind the class’s superclass to the name <code translate="no">super</code>.</p><img alt="The superclass environment." src="image/inheritance/superclass.png">
-<p>When we create the LoxFunction runtime representation for each method, that is
-the environment they will capture in their closure. Later, when a method is
-invoked and <code translate="no">this</code> is bound, the superclass environment becomes the parent for
-the method’s environment, like so:</p><img alt="The environment chain including the superclass environment." src="image/inheritance/environments.png"/>
-<p>That’s a lot of machinery, but we’ll get through it a step at a time. Before we
-can get to creating the environment at runtime, we need to handle the
-corresponding scope chain in the resolver.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">한 가지 중요한 차이점은 다음과 같습니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 방법<em>에 접근</em>했을 때.</font><font papago-translate="translated"> 동일한 메서드를 다른 인스턴스에 호출할 수 있으며 각 인스턴스마다 고유한 메서드가 필요합니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated">.와 함께 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 표현식, 슈퍼클래스는<em> 클래스 선언 자체</em>의 고정된 속성입니다.</font><font papago-translate="translated"> 평가할 때마다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 표현하자면, 슈퍼클래스는 항상 동일합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">즉, 클래스 정의가 실행되면 슈퍼클래스를 위한 환경을 한 번만 조성할 수 있습니다.</font><font papago-translate="translated"> 메서드를 정의하기 직전에 클래스의 슈퍼클래스를 이름에 바인딩할 수 있는 새로운 환경을 만듭니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p><img alt="The superclass environment." src="https://youhogeon-meritz.github.io/image/inheritance/superclass.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">각 메서드에 대한 LoxFunction 런타임 표현을 생성할 때, 이는 메서드가 종료 시 캡처할 환경입니다.</font><font papago-translate="translated"> 나중에 메서드가 호출되면 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 다음과 같이 초급 환경이 메서드 환경의 부모가 됩니다:</font></font></p><img alt="The environment chain including the superclass environment." src="https://youhogeon-meritz.github.io/image/inheritance/environments.png">
+<p><font papago-translate="translated">그것은 많은 기계들이지만, 우리는 한 번에 한 걸음씩 극복해 나갈 것입니다.</font><font papago-translate="translated"> 런타임에 환경을 만들기 전에, 우리는 해결사에서 해당 범위 체인을 처리해야 합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      resolve(stmt.superclass);
     }
-</pre><div class="source-file"><em>lox/Resolver.java</em><br/>
-in <em>visitClassStmt</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>Cl<em>assStmt</em>()에서</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="k">if</span> (<span class="i">stmt</span>.<span class="i">superclass</span> != <span class="k">null</span>) {
       <span class="i">beginScope</span>();
       <span class="i">scopes</span>.<span class="i">peek</span>().<span class="i">put</span>(<span class="s">"super"</span>, <span class="k">true</span>);
     }
 </pre><pre class="insert-after" translate="no">
-
     beginScope();
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, in <em>visitClassStmt</em>()</div>
-<p>If the class declaration has a superclass, then we create a new scope
-surrounding all of its methods. In that scope, we define the name “super”. Once
-we’re done resolving the class’s methods, we discard that scope.</p>
+<p><font papago-translate="translated">클래스 선언에 슈퍼클래스가 있는 경우 모든 메서드를 포함하는 새로운 범위를 만듭니다.</font><font papago-translate="translated"> 그 범위에서 우리는 "슈퍼"라는 이름을 정의합니다.</font><font papago-translate="translated"> 수업 방법을 해결한 후에는 그 범위를 버립니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    endScope();
 
-</pre><div class="source-file"><em>lox/Resolver.java</em><br/>
-in <em>visitClassStmt</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>Cl<em>assStmt</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">if</span> (<span class="i">stmt</span>.<span class="i">superclass</span> != <span class="k">null</span>) <span class="i">endScope</span>();
 
 </pre><pre class="insert-after" translate="no">    currentClass = enclosingClass;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, in <em>visitClassStmt</em>()</div>
-<p>It’s a minor optimization, but we only create the superclass environment if the
-class actually <em>has</em> a superclass. There’s no point creating it when there isn’t
-a superclass since there’d be no superclass to store in it anyway.</p>
-<p>With “super” defined in a scope chain, we are able to resolve the <code translate="no">super</code>
-expression itself.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>visitSetExpr</em>()</div>
+<p><font papago-translate="translated">사소한 최적화이지만, 우리는 그 수업이 실제로 슈퍼클래스<em>를 가질</em> 때만 슈퍼클래스 환경을 만듭니다.</font><font papago-translate="translated"> 슈퍼클래스가 없을 때는 어차피 저장할 슈퍼클래스가 없기 때문에 만들 필요가 없습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">스코프 체인에 "슈퍼"가 정의되면 다음을 해결할 수 있습니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 표현 자체.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>S<em>etExpr</em>() 후 추가</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitSuperExpr</span>(<span class="t">Expr</span>.<span class="t">Super</span> <span class="i">expr</span>) {
     <span class="i">resolveLocal</span>(<span class="i">expr</span>, <span class="i">expr</span>.<span class="i">keyword</span>);
@@ -552,53 +374,38 @@ add after <em>visitSetExpr</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>visitSetExpr</em>()</div>
-<p>We resolve the <code translate="no">super</code> token exactly as if it were a variable. The resolution
-stores the number of hops along the environment chain that the interpreter needs
-to walk to find the environment where the superclass is stored.</p>
-<p>This code is mirrored in the interpreter. When we evaluate a subclass
-definition, we create a new environment.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 다음을 해결합니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 마치 변수인 것처럼 정확히 토큰화합니다.</font><font papago-translate="translated"> 이 결의안은 슈퍼클래스가 저장된 환경을 찾기 위해 통역사가 걸어야 하는 환경 체인을 따라 홉 수를 저장합니다.</font></font></p>
+<p><font papago-translate="translated">이 코드는 인터프리터에 반영되어 있습니다.</font><font papago-translate="translated"> 하위 클래스 정의를 평가할 때, 우리는 새로운 환경을 만듭니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">        throw new RuntimeError(stmt.superclass.name,
             "Superclass must be a class.");
       }
     }
 
     environment.define(stmt.name.lexeme, null);
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitClassStmt</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>Cl<em>assStmt</em>()에서</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="k">if</span> (<span class="i">stmt</span>.<span class="i">superclass</span> != <span class="k">null</span>) {
       <span class="i">environment</span> = <span class="k">new</span> <span class="t">Environment</span>(<span class="i">environment</span>);
       <span class="i">environment</span>.<span class="i">define</span>(<span class="s">"super"</span>, <span class="i">superclass</span>);
     }
 </pre><pre class="insert-after" translate="no">
-
     Map&lt;String, LoxFunction&gt; methods = new HashMap&lt;&gt;();
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitClassStmt</em>()</div>
-<p>Inside that environment, we store a reference to the superclass<span class="em">—</span>the actual
-LoxClass object for the superclass which we have now that we are in the runtime.
-Then we create the LoxFunctions for each method. Those will capture the current
-environment<span class="em">—</span>the one where we just bound “super”<span class="em">—</span>as their closure, holding
-on to the superclass like we need. Once that’s done, we pop the environment.</p>
+<p><font papago-translate="translated">그 환경 안에 우리는<span class="em"></span> 슈퍼클래스에 대한 참조를 저장합니다. 이는 현재 런타임 상태에 있는 슈퍼클래스의 실제 LoxClass 객체입니다.</font><font papago-translate="translated"> 그런 다음 각 메서드에 대한 LoxFunctions를 생성합니다.</font><font papago-translate="translated"> 그것들은 현재의 환경, 즉 우리가 "슈퍼"를 묶어두었던 환경을 우리가<span class="em"></span><span class="em"></span> 필요로 하는 슈퍼 클래스를 붙잡고 있는 상태로 포착할 것입니다.</font><font papago-translate="translated"> 그것이 완료되면, 우리는 환경을 활성화합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    LoxClass klass = new LoxClass(stmt.name.lexeme,
         (LoxClass)superclass, methods);
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitClassStmt</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>Cl<em>assStmt</em>()에서</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="k">if</span> (<span class="i">superclass</span> != <span class="k">null</span>) {
       <span class="i">environment</span> = <span class="i">environment</span>.<span class="i">enclosing</span>;
     }
 </pre><pre class="insert-after" translate="no">
-
     environment.assign(stmt.name, klass);
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitClassStmt</em>()</div>
-<p>We’re ready to interpret <code translate="no">super</code> expressions themselves. There are a few moving
-parts, so we’ll build this method up in pieces.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-add after <em>visitSetExpr</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 해석할 준비가 되었습니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 표현 자체.</font><font papago-translate="translated"> 몇 가지 움직이는 부품이 있으므로 이 방법을 조각조각 쌓아보겠습니다.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>S<em>etExpr</em>() 후 추가</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Object</span> <span class="i">visitSuperExpr</span>(<span class="t">Expr</span>.<span class="t">Super</span> <span class="i">expr</span>) {
     <span class="t">int</span> <span class="i">distance</span> = <span class="i">locals</span>.<span class="i">get</span>(<span class="i">expr</span>);
@@ -607,60 +414,38 @@ add after <em>visitSetExpr</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, add after <em>visitSetExpr</em>()</div>
-<p>First, the work we’ve been leading up to. We look up the surrounding class’s
-superclass by looking up “super” in the proper environment.</p>
-<p>When we access a method, we also need to bind <code translate="no">this</code> to the object the method is
-accessed from. In an expression like <code translate="no">doughnut.cook</code>, the object is whatever we
-get from evaluating <code translate="no">doughnut</code>. In a <code translate="no">super</code> expression like <code translate="no">super.cook</code>, the
-current object is implicitly the <em>same</em> current object that we’re using. In
-other words, <code translate="no">this</code>. Even though we are looking up the <em>method</em> on the
-superclass, the <em>instance</em> is still <code translate="no">this</code>.</p>
-<p>Unfortunately, inside the <code translate="no">super</code> expression, we don’t have a convenient node
-for the resolver to hang the number of hops to <code translate="no">this</code> on. Fortunately, we do
-control the layout of the environment chains. The environment where “this” is
-bound is always right inside the environment where we store “super”.</p>
+<p><font papago-translate="translated">먼저, 우리가 지금까지 해온 작업입니다.</font><font papago-translate="translated"> 우리는 적절한 환경에서 "슈퍼"를 찾아 주변 학급의 슈퍼클래스를 찾습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">메서드에 액세스할 때는 바인딩도 필요합니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드가 액세스되는 객체에 대해.</font><font papago-translate="translated"> 다음과 같은 표현으로 </font></font><code translate="no">doughnut.cook</code><font papago-translate="splitted"><font papago-translate="translated">, 그 대상은 우리가 평가함으로써 얻는 모든 것입니다 </font></font><code translate="no">doughnut</code><font papago-translate="splitted"><font papago-translate="translated">. A에서 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 다음과 같은 표현 </font></font><code translate="no">super.cook</code><font papago-translate="splitted"><font papago-translate="translated">, 현재 객체는 암묵적으로 우리가 사용하고 있는 현재 객체와<em> 동일합니다</em>.</font><font papago-translate="translated"> 다시 말해서, </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated">. 우리가 슈퍼클래스<em>에서 방법을</em> 찾고 있지만<em>, 그 인스턴스</em>는 여전히 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">안타깝게도 내부에서는 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 표현식, 해결사가 홉 수를 걸기에 편리한 노드가 없습니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> on. 다행히도 우리는 환경 사슬의 레이아웃을 제어합니다.</font><font papago-translate="translated"> "이것"이 묶인 환경은 항상 우리가 "슈퍼"를 저장하는 환경 바로 그 안에 있습니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    LoxClass superclass = (LoxClass)environment.getAt(
         distance, "super");
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitSuperExpr</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>S<em>uperExpr</em>()</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="t">LoxInstance</span> <span class="i">object</span> = (<span class="t">LoxInstance</span>)<span class="i">environment</span>.<span class="i">getAt</span>(
         <span class="i">distance</span> - <span class="n">1</span>, <span class="s">"this"</span>);
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitSuperExpr</em>()</div>
-<p>Offsetting the distance by one looks up “this” in that inner environment. I
-admit this isn’t the most <span name="elegant">elegant</span> code, but it
-works.</p>
-<aside name="elegant">
-<p>Writing a book that includes every single line of code for a program means I
-can’t hide the hacks by leaving them as an “exercise for the reader”.</p>
+<p><font papago-translate="translated">거리를 하나씩 상쇄하면 그 내부 환경에서 "이것"을 찾아볼 수 있습니다.</font><font papago-translate="translated"> <span name="elegant">이것</span>이 가장<span name="elegant"> 우아한</span> 코드는 아니지만 작동합니다.</font></p>
+<aside name="elegant" style="top: 12940px;">
+<p><font papago-translate="translated">프로그램의 모든 코드 라인이 포함된 책을 쓴다는 것은 해킹을 "독자를 위한 연습"으로 남겨둘 수 없다는 것을 의미합니다.</font></p>
 </aside>
-<p>Now we’re ready to look up and bind the method, starting at the superclass.</p>
+<p><font papago-translate="translated">이제 슈퍼클래스부터 방법을 찾아 바인딩할 준비가 되었습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    LoxInstance object = (LoxInstance)environment.getAt(
         distance - 1, "this");
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitSuperExpr</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>S<em>uperExpr</em>()</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="t">LoxFunction</span> <span class="i">method</span> = <span class="i">superclass</span>.<span class="i">findMethod</span>(<span class="i">expr</span>.<span class="i">method</span>.<span class="i">lexeme</span>);
     <span class="k">return</span> <span class="i">method</span>.<span class="i">bind</span>(<span class="i">object</span>);
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitSuperExpr</em>()</div>
-<p>This is almost exactly like the code for looking up a method of a get
-expression, except that we call <code translate="no">findMethod()</code> on the superclass instead of on
-the class of the current object.</p>
-<p>That’s basically it. Except, of course, that we might <em>fail</em> to find the method.
-So we check for that too.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 우리가 다음과 같이 부르는 것을 제외하고는 get 표현식 방법을 찾기 위한 코드와 거의 동일합니다 </font></font><code translate="no">findMethod()</code><font papago-translate="splitted"><font papago-translate="translated"> 현재 객체의 클래스가 아닌 슈퍼클래스에서.</font></font></p>
+<p><font papago-translate="translated">그게 전부입니다.</font><font papago-translate="translated"> 물론<em></em> 방법을 찾지 못할 수도 있습니다.</font><font papago-translate="translated"> 그래서 우리도 그것을 확인합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">
-
     LoxFunction method = superclass.findMethod(expr.method.lexeme);
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitSuperExpr</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>S<em>uperExpr</em>()</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="k">if</span> (<span class="i">method</span> == <span class="k">null</span>) {
       <span class="k">throw</span> <span class="k">new</span> <span class="t">RuntimeError</span>(<span class="i">expr</span>.<span class="i">method</span>,
           <span class="s">"Undefined property '"</span> + <span class="i">expr</span>.<span class="i">method</span>.<span class="i">lexeme</span> + <span class="s">"'."</span>);
@@ -670,13 +455,9 @@ in <em>visitSuperExpr</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitSuperExpr</em>()</div>
-<p>There you have it! Take that BostonCream example earlier and give it a try.
-Assuming you and I did everything right, it should fry it first, then stuff it
-with cream.</p>
-<h3><a href="#invalid-uses-of-super" id="invalid-uses-of-super"><small>13 . 3 . 3</small>Invalid uses of super</a></h3>
-<p>As with previous language features, our implementation does the right thing when
-the user writes correct code, but we haven’t bulletproofed the intepreter
-against bad code. In particular, consider:</p>
+<p><font papago-translate="translated">여기 있습니다!</font><font papago-translate="translated"> 앞서 BostonCream의 예를 들어보고 한 번 시도해 보세요.</font><font papago-translate="translated"> 당신과 제가 모든 것을 제대로 했다고 가정하면, 먼저 튀긴 다음 크림을 채워야 합니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/inheritance.html#invalid-uses-of-super" id="invalid-uses-of-super"><small><font papago-translate="translated">13 . 3 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">슈퍼의 유효하지 않은 사용</font></font></a></h3>
+<p><font papago-translate="translated">이전 언어 기능과 마찬가지로, 사용자가 올바른 코드를 작성할 때 우리의 구현은 올바른 역할을 하지만, 인터프리터를 나쁜 코드로부터 완벽하게 보호하지는 못했습니다.</font><font papago-translate="translated"> 특히, 고려해야 합니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Eclair</span> {
   <span class="i">cook</span>() {
     <span class="k">super</span>.<span class="i">cook</span>();
@@ -684,49 +465,30 @@ against bad code. In particular, consider:</p>
   }
 }
 </pre></div>
-<p>This class has a <code translate="no">super</code> expression, but no superclass. At runtime, the code for
-evaluating <code translate="no">super</code> expressions assumes that “super” was successfully resolved
-and will be found in the environment. That’s going to fail here because there is
-no surrounding environment for the superclass since there is no superclass. The
-JVM will throw an exception and bring our interpreter to its knees.</p>
-<p>Heck, there are even simpler broken uses of super:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 클래스에는 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 표현은 있지만, 슈퍼클래스는 없습니다.</font><font papago-translate="translated"> 런타임 시 평가 코드 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 표현식은 "슈퍼"가 성공적으로 해결되었다고 가정하며, 환경에서 발견될 것입니다.</font><font papago-translate="translated"> 슈퍼클래스가 없기 때문에 슈퍼클래스를 위한 주변 환경이 없기 때문에 여기서는 실패할 것입니다.</font><font papago-translate="translated"> JVM은 예외를 인정하고 통역사를 무릎 꿇게 할 것입니다.</font></font></p>
+<p><font papago-translate="translated">슈퍼의 더 간단한 고장난 사용법도 있습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">super</span>.<span class="i">notEvenInAClass</span>();
 </pre></div>
-<p>We could handle errors like these at runtime by checking to see if the lookup
-of “super” succeeded. But we can tell statically<span class="em">—</span>just by looking at the
-source code<span class="em">—</span>that Eclair has no superclass and thus no <code translate="no">super</code> expression will
-work inside it. Likewise, in the second example, we know that the <code translate="no">super</code>
-expression is not even inside a method body.</p>
-<p>Even though Lox is dynamically typed, that doesn’t mean we want to defer
-<em>everything</em> to runtime. If the user made a mistake, we’d like to help them find
-it sooner rather than later. So we’ll report these errors statically, in the
-resolver.</p>
-<p>First, we add a new case to the enum we use to keep track of what kind of class
-is surrounding the current code being visited.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">실행 시 "슈퍼" 조회가 성공했는지 확인하여 이러한 오류를 처리할 수 있습니다.</font><font papago-translate="translated"> 하지만 소스 코드만 봐도 에클레어는 슈퍼클래스가 없으므로<span class="em"></span><span class="em"></span> 없다는 것을 정적으로 알 수 있습니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 표현은 그 안에서 작동할 것입니다.</font><font papago-translate="translated"> 마찬가지로, 두 번째 예제에서 우리는 다음과 같은 것을 알고 있습니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 표현은 메서드 본문 내에 있지도 않습니다.</font></font></p>
+<p><font papago-translate="translated">Lox가 동적으로 입력되더라도, 그렇다고 해서 모든<em> 것</em>을 런타임으로 미루고 싶은 것은 아닙니다.</font><font papago-translate="translated"> 사용자가 실수를 했다면, 저희는 그들이 빨리 찾을 수 있도록 돕고 싶습니다.</font><font papago-translate="translated"> 그래서 우리는 이 오류들을 해결책에 정적으로 보고할 것입니다.</font></p>
+<p><font papago-translate="translated">먼저, 현재 방문 중인 코드를 둘러싼 클래스가 무엇인지 추적하기 위해 사용하는 열거형에 새로운 사례를 추가합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    NONE,
 </pre><pre class="insert-before" translate="no">    <span class="i">CLASS</span><span class="insert-comma">,</span>
-</pre><div class="source-file"><em>lox/Resolver.java</em><br/>
-in enum <em>ClassType</em><br/>
-add <em>“,”</em> to previous line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum Cl<em>assType</em>에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 이전 줄에<em> ","</em>를 추가합니다</font></font></div>
 <pre class="insert" translate="no">    <span class="i">SUBCLASS</span>
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, in enum <em>ClassType</em>, add <em>“,”</em> to previous line</div>
-<p>We’ll use that to distinguish when we’re inside a class that has a superclass
-versus one that doesn’t. When we resolve a class declaration, we set that if the
-class is a subclass.</p>
+<p><font papago-translate="translated">우리는 그것을 사용하여 슈퍼클래스가 있는 클래스와 없는 클래스를 구분할 것입니다.</font><font papago-translate="translated"> 클래스 선언을 해결할 때, 클래스가 하위 클래스인 경우를 설정합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    if (stmt.superclass != null) {
-</pre><div class="source-file"><em>lox/Resolver.java</em><br/>
-in <em>visitClassStmt</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>Cl<em>assStmt</em>()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="i">currentClass</span> = <span class="t">ClassType</span>.<span class="i">SUBCLASS</span>;
 </pre><pre class="insert-after" translate="no">      resolve(stmt.superclass);
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, in <em>visitClassStmt</em>()</div>
-<p>Then, when we resolve a <code translate="no">super</code> expression, we check to see that we are
-currently inside a scope where that’s allowed.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그러면, 우리가 해결할 때 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 표현, 우리는 현재 그것이 허용되는 범위 내에 있는지 확인합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  public Void visitSuperExpr(Expr.Super expr) {
-</pre><div class="source-file"><em>lox/Resolver.java</em><br/>
-in <em>visitSuperExpr</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>S<em>uperExpr</em>()</font></font></div>
 <pre class="insert" translate="no">    <span class="k">if</span> (<span class="i">currentClass</span> == <span class="t">ClassType</span>.<span class="i">NONE</span>) {
       <span class="t">Lox</span>.<span class="i">error</span>(<span class="i">expr</span>.<span class="i">keyword</span>,
           <span class="s">"Can't use 'super' outside of a class."</span>);
@@ -738,82 +500,53 @@ in <em>visitSuperExpr</em>()</div>
 </pre><pre class="insert-after" translate="no">    resolveLocal(expr, expr.keyword);
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, in <em>visitSuperExpr</em>()</div>
-<p>If not<span class="em">—</span>oopsie!<span class="em">—</span>the user made a mistake.</p>
-<h2><a href="#conclusion" id="conclusion"><small>13 . 4</small>Conclusion</a></h2>
-<p>We made it! That final bit of error handling is the last chunk of code needed to
-complete our Java implementation of Lox. This is a real <span name="superhero">accomplishment</span> and one you should be proud of. In the
-past dozen chapters and a thousand or so lines of code, we have learned and
-implemented<span class="ellipse"> . . . </span></p>
+<p><font papago-translate="translated">If not<span class="em">—</span>oopsie!</font><font papago-translate="translated"><span class="em">-</span>사용자가 실수를 했습니다<span class="em">.</span></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/inheritance.html#conclusion" id="conclusion"><small><font papago-translate="translated">13 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">결론</font></font></a></h2>
+<p><font papago-translate="translated">우리가 해냈어!</font><font papago-translate="translated"> 마지막 오류 처리 비트는 Java의 Lox 구현을 완료하는 데 필요한 마지막 코드 조각입니다.</font><font papago-translate="translated"> 이것은 진정<span name="superhero">한 성취</span>이며 자랑스러워해야 할 일입니다.</font><font papago-translate="translated"> 지난 십여 개의 장과 천여 줄의 코드를 통해 우리는 배우고 실행해 왔습니다<span class="ellipse">.</span></font></p>
 <ul>
-<li><a href="scanning.html">tokens and lexing</a>,</li>
-<li><a href="representing-code.html">abstract syntax trees</a>,</li>
-<li><a href="parsing-expressions.html">recursive descent parsing</a>,</li>
-<li>prefix and infix expressions,</li>
-<li>runtime representation of objects,</li>
-<li><a href="evaluating-expressions.html">interpreting code using the Visitor pattern</a>,</li>
-<li><a href="statements-and-state.html">lexical scope</a>,</li>
-<li>environment chains for storing variables,</li>
-<li><a href="control-flow.html">control flow</a>,</li>
-<li><a href="functions.html">functions with parameters</a>,</li>
-<li>closures,</li>
-<li><a href="resolving-and-binding.html">static variable resolution and error detection</a>,</li>
-<li><a href="classes.html">classes</a>,</li>
-<li>constructors,</li>
-<li>fields,</li>
-<li>methods, and finally,</li>
-<li>inheritance.</li>
+<li><font papago-translate="translated"><a href="https://youhogeon-meritz.github.io/scanning.html">토큰 및 렉싱,</a></font></li>
+<li><font papago-translate="translated"><a href="https://youhogeon-meritz.github.io/representing-code.html">추상 구문 트리,</a></font></li>
+<li><font papago-translate="translated"><a href="https://youhogeon-meritz.github.io/parsing-expressions.html">재귀적 하강 구문 분석,</a></font></li>
+<li><font papago-translate="translated">접두사 및 접두사 표현식,</font></li>
+<li><font papago-translate="translated">객체의 런타임 표현,</font></li>
+<li><font papago-translate="translated"><a href="https://youhogeon-meritz.github.io/evaluating-expressions.html">방문자 패턴을 사용하여 코드를 해석하기,</a></font></li>
+<li><font papago-translate="translated"><a href="https://youhogeon-meritz.github.io/statements-and-state.html">어휘 범위,</a></font></li>
+<li><font papago-translate="translated">변수를 저장하기 위한 환경 체인,</font></li>
+<li><font papago-translate="translated"><a href="https://youhogeon-meritz.github.io/control-flow.html">흐름 제어,</a></font></li>
+<li><font papago-translate="translated"><a href="https://youhogeon-meritz.github.io/functions.html">매개변수가 있는 함수,</a></font></li>
+<li><font papago-translate="translated">폐쇄,</font></li>
+<li><font papago-translate="translated"><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html">정적 변수 해상도 및 오류 감지,</a></font></li>
+<li><font papago-translate="translated"><a href="https://youhogeon-meritz.github.io/classes.html">수업,</a></font></li>
+<li><font papago-translate="translated">생성자,</font></li>
+<li><font papago-translate="translated">들판,</font></li>
+<li><font papago-translate="translated">방법들, 그리고 마지막으로,</font></li>
+<li><font papago-translate="translated">상속.</font></li>
 </ul>
-<aside name="superhero"><img alt="You, being your bad self." src="image/inheritance/superhero.png"/>
+<aside name="superhero" style="top: 15300px;"><img alt="You, being your bad self." src="https://youhogeon-meritz.github.io/image/inheritance/superhero.png">
 </aside>
-<p>We did all of that from scratch, with no external dependencies or magic tools.
-Just you and I, our respective text editors, a couple of collection classes in
-the Java standard library, and the JVM runtime.</p>
-<p>This marks the end of Part II, but not the end of the book. Take a break. Maybe
-write a few fun Lox programs and run them in your interpreter. (You may want to
-add a few more native methods for things like reading user input.) When you’re
-refreshed and ready, we’ll embark on our <a href="a-bytecode-virtual-machine.html">next adventure</a>.</p>
+<p><font papago-translate="translated">우리는 외부 의존이나 마법 도구 없이 모든 것을 처음부터 해냈습니다.</font><font papago-translate="translated"> 당신과 나, 각각의 텍스트 편집기, Java 표준 라이브러리의 몇 가지 컬렉션 클래스, 그리고 JVM 런타임.</font></p>
+<p><font papago-translate="translated">이것은 제2부의 끝을 의미하지만, 책의 끝은 아닙니다.</font><font papago-translate="translated"> 휴식을 취하세요.</font><font papago-translate="translated"> 몇 가지 재미있는 Lox 프로그램을 작성하여 인터프리터에서 실행할 수 있습니다. (사용자 입력 읽기와 같은 기본 메서드를 몇 가지 더 추가하는 것도 좋습니다.)</font><font papago-translate="translated"> 상쾌하고 준비가 되시면<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html"> 다음 모험</a>을 시작하겠습니다.</font></p>
 <div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+<h2><a href="https://youhogeon-meritz.github.io/inheritance.html#challenges" id="challenges"><font papago-translate="translated">과제들</font></a></h2>
 <ol>
 <li>
-<p>Lox supports only <em>single inheritance</em><span class="em">—</span>a class may have a single
-superclass and that’s the only way to reuse methods across classes. Other
-languages have explored a variety of ways to more freely reuse and share
-capabilities across classes: mixins, traits, multiple inheritance, virtual
-inheritance, extension methods, etc.</p>
-<p>If you were to add some feature along these lines to Lox, which would you
-pick and why? If you’re feeling courageous (and you should be at this
-point), go ahead and add it.</p>
+<p><font papago-translate="translated">Lox는<em> 단일 상속</em>만 지원합니다. 클래스는 단일 슈퍼클래스를 가질 수 있으며<span class="em"></span>, 이는 클래스 간 메서드를 재사용할 수 있는 유일한 방법입니다.</font><font papago-translate="translated"> 다른 언어들은 믹스인, 특성, 다중 상속, 가상 상속, 확장 방법 등 여러 클래스에서 더 자유롭게 재사용하고 기능을 공유할 수 있는 다양한 방법을 탐구해 왔습니다.</font></p>
+<p><font papago-translate="translated">Lox에 이러한 라인에 기능을 추가한다면 어떤 것을 선택하시겠습니까? 그 이유는 무엇인가요?</font><font papago-translate="translated"> 용기가 있다고 느끼신다면 (그리고 이 시점에 있어야 합니다), 계속해서 추가하세요.</font></p>
 </li>
 <li>
-<p>In Lox, as in most other object-oriented languages, when looking up a
-method, we start at the bottom of the class hierarchy and work our way up<span class="em">—</span>a subclass’s method is preferred over a superclass’s. In order to get to the
-superclass method from within an overriding method, you use <code translate="no">super</code>.</p>
-<p>The language <a href="https://beta.cs.au.dk/">BETA</a> takes the <a href="http://journal.stuffwithstuff.com/2012/12/19/the-impoliteness-of-overriding-methods/">opposite approach</a>. When you call a
-method, it starts at the <em>top</em> of the class hierarchy and works <em>down</em>. A
-superclass method wins over a subclass method. In order to get to the
-subclass method, the superclass method can call <code translate="no">inner</code>, which is sort of
-like the inverse of <code translate="no">super</code>. It chains to the next method down the
-hierarchy.</p>
-<p>The superclass method controls when and where the subclass is allowed to
-refine its behavior. If the superclass method doesn’t call <code translate="no">inner</code> at all,
-then the subclass has no way of overriding or modifying the superclass’s
-behavior.</p>
-<p>Take out Lox’s current overriding and <code translate="no">super</code> behavior and replace it with
-BETA’s semantics. In short:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">Lox에서는 대부분의 다른 객체 지향 언어와 마찬가지로 메서드를 찾을 때 클래스 계층의 맨 아래에서 시작하여 상위 클래스로 이동합니다. 이는 슈퍼<span class="em"></span> 클래스보다 하위 클래스의 메서드가 더 선호됩니다.</font><font papago-translate="translated"> 상위 메서드 내에서 슈퍼클래스 메서드로 이동하려면 다음을 사용합니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">BE<a href="https://beta.cs.au.dk/">TA</a>라는 언어<a href="http://journal.stuffwithstuff.com/2012/12/19/the-impoliteness-of-overriding-methods/">는 반대의 접근 방식</a>을 취합니다.</font><font papago-translate="translated"> 메서드를 호출하면 클래스 계층의<em> 최상위</em>에서 시작하여<em> 아래</em>로 작동합니다.</font><font papago-translate="translated"> 슈퍼클래스 방법이 서브클래스 방법보다 승리합니다.</font><font papago-translate="translated"> 서브클래스 메서드에 도달하려면 슈퍼클래스 메서드는 다음과 같이 할 수 있습니다 </font></font><code translate="no">inner</code><font papago-translate="splitted"><font papago-translate="translated">, 그것은 일종의 역수와 같습니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated">. 계층 구조를 따라 다음 방법으로 연결됩니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">슈퍼클래스 메서드는 하위 클래스가 언제 어디서 동작을 개선할 수 있는지를 제어합니다.</font><font papago-translate="translated"> 슈퍼클래스 메서드가 호출되지 않는 경우 </font></font><code translate="no">inner</code><font papago-translate="splitted"><font papago-translate="translated"> 그러면 하위 클래스는 상위 클래스의 동작을 재정의하거나 수정할 방법이 없습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">Lox의 현재 오버라이딩을 제거합니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 행동을 베타의 의미론으로 대체합니다.</font><font papago-translate="translated"> 간단히 말해서:</font></font></p>
 <ul>
 <li>
-<p>When calling a method on a class, prefer the method <em>highest</em> on the
-class’s inheritance chain.</p>
+<p><font papago-translate="translated">클래스에서 메서드를 호출할 때는 클래스의 상속 체인<em>에서 가장 높은</em> 메서드를 선호합니다.</font></p>
 </li>
 <li>
-<p>Inside the body of a method, a call to <code translate="no">inner</code> looks for a method with
-the same name in the nearest subclass along the inheritance chain
-between the class containing the <code translate="no">inner</code> and the class of <code translate="no">this</code>. If
-there is no matching method, the <code translate="no">inner</code> call does nothing.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">메서드 본문 내부에서 다음과 같은 요청이 있습니다 </font></font><code translate="no">inner</code><font papago-translate="splitted"><font papago-translate="translated"> 클래스 간 상속 체인을 따라 가장 가까운 하위 클래스에서 동일한 이름을 가진 메서드를 찾습니다 </font></font><code translate="no">inner</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated">. 매칭 방법이 없는 경우 </font></font><code translate="no">inner</code><font papago-translate="splitted"><font papago-translate="translated"> 호출은 아무 소용이 없습니다.</font></font></p>
 </li>
 </ul>
-<p>For example:</p>
+<p><font papago-translate="translated">예를 들어:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Doughnut</span> {
   <span class="i">cook</span>() {
     <span class="k">print</span> <span class="s">"Fry until golden brown."</span>;
@@ -830,26 +563,22 @@ there is no matching method, the <code translate="no">inner</code> call does not
 
 <span class="t">BostonCream</span>().<span class="i">cook</span>();
 </pre></div>
-<p>This should print:</p>
+<p><font papago-translate="translated">인쇄해야 합니다:</font></p>
 <div class="codehilite"><pre translate="no">Fry until golden brown.
 Pipe full of custard and coat with chocolate.
 Place in a nice box.
 </pre></div>
 </li>
 <li>
-<p>In the chapter where I introduced Lox, <a href="the-lox-language.html#challenges">I challenged you</a> to
-come up with a couple of features you think the language is missing. Now
-that you know how to build an interpreter, implement one of those features.</p>
+<p><font papago-translate="translated">제가 Lox를 소개한 장에서, 언어가 부족하다고 생각되는 몇 가지 기능을 제시<a href="https://youhogeon-meritz.github.io/the-lox-language.html#challenges">해 달라고 요청</a>했습니다.</font><font papago-translate="translated"> 이제 통역사를 만드는 방법을 알았으니, 그 중 하나의 기능을 구현해 보세요.</font></p>
 </li>
 </ol>
 </div>
 <footer>
-<a class="next" href="a-bytecode-virtual-machine.html">
-  Next Part: “A Bytecode Virtual Machine” →
-</a>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+<a class="next" href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html"><font papago-translate="translated"> 다음 부분: "바이트코드 가상 머신" → </font></a><font papago-translate="splitted"><font papago-translate="translated"> 로버트 니스트롬이 수작업으로 제작한 -<a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE"> © 2015 ~ 2021</a></font></font>
 </footer>
-</img></img></article>
+</article>
 </div>
-</body>
-</html>
+
+
+</body></html>

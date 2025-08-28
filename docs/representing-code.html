@@ -1,241 +1,153 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-7295e20c-b69d-4734-83d9-163e6408e7cc@mhtml.blink" />
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>Representing Code · Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/style.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
-<script src="jquery-3.4.1.min.js"></script>
-<script src="script.js"></script>
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+
+<!-- Google analytics -->
+
+</head>
 <body id="top">
 <!-- <div class="scrim"></div> -->
 <nav class="wide">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="contents">
-<h3><a href="#top">Representing Code<small>5</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/representing-code.html#top"><font papago-translate="splitted"><font papago-translate="translated">대표 코드</font></font><small>5</small></a></h3>
 <ul>
-<li><a href="#context-free-grammars"><small>5.1</small> Context-Free Grammars</a></li>
-<li><a href="#implementing-syntax-trees"><small>5.2</small> Implementing Syntax Trees</a></li>
-<li><a href="#working-with-trees"><small>5.3</small> Working with Trees</a></li>
-<li><a href="#a-not-very-pretty-printer"><small>5.4</small> A (Not Very) Pretty Printer</a></li>
+<li><a href="https://youhogeon-meritz.github.io/representing-code.html#context-free-grammars"><small>5.1</small><font papago-translate="splitted"><font papago-translate="translated"> 문맥 자유 문법</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/representing-code.html#implementing-syntax-trees"><small>5.2</small><font papago-translate="splitted"><font papago-translate="translated"> 구문 트리 구현</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/representing-code.html#working-with-trees"><small>5.3</small><font papago-translate="splitted"><font papago-translate="translated"> 나무 작업</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/representing-code.html#a-not-very-pretty-printer"><small>5.4</small><font papago-translate="splitted"><font papago-translate="translated"> A (별로) 예쁜 프린터</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/representing-code.html#challenges"><font papago-translate="translated">과제들</font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="scanning.html" title="Scanning">← Previous</a>
-<a href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑ Up</a>
-<a class="right" href="parsing-expressions.html" title="Parsing Expressions">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/scanning.html" title="스캔" papago-attr-id="1"><font papago-translate="translated">← 이전</font></a>
+<a href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="나무 산책 통역사" papago-attr-id="2"><font papago-translate="translated">↑ 위로</font></a>
+<a class="right" href="https://youhogeon-meritz.github.io/parsing-expressions.html" title="구문 분석 표현" papago-attr-id="3"><font papago-translate="translated">다음 →</font></a>
 </div> </div>
 </nav>
 <nav class="narrow">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
-<a class="prev" href="scanning.html" title="Scanning">←</a>
-<a class="next" href="parsing-expressions.html" title="Parsing Expressions">→</a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
+<a class="prev" href="https://youhogeon-meritz.github.io/scanning.html" title="Scanning">←</a>
+<a class="next" href="https://youhogeon-meritz.github.io/parsing-expressions.html" title="Parsing Expressions">→</a>
 </nav>
 <div class="page">
 <div class="nav-wrapper">
-<nav class="floating">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<nav class="floating pinned">
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="expandable">
-<h3><a href="#top">Representing Code<small>5</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/representing-code.html#top"><font papago-translate="splitted"><font papago-translate="translated">대표 코드</font></font><small>5</small></a></h3>
 <ul>
-<li><a href="#context-free-grammars"><small>5.1</small> Context-Free Grammars</a></li>
-<li><a href="#implementing-syntax-trees"><small>5.2</small> Implementing Syntax Trees</a></li>
-<li><a href="#working-with-trees"><small>5.3</small> Working with Trees</a></li>
-<li><a href="#a-not-very-pretty-printer"><small>5.4</small> A (Not Very) Pretty Printer</a></li>
+<li><a href="https://youhogeon-meritz.github.io/representing-code.html#context-free-grammars"><small>5.1</small><font papago-translate="splitted"><font papago-translate="translated"> 문맥 자유 문법</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/representing-code.html#implementing-syntax-trees"><small>5.2</small><font papago-translate="splitted"><font papago-translate="translated"> 구문 트리 구현</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/representing-code.html#working-with-trees"><small>5.3</small><font papago-translate="splitted"><font papago-translate="translated"> 나무 작업</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/representing-code.html#a-not-very-pretty-printer"><small>5.4</small><font papago-translate="splitted"><font papago-translate="translated"> A (별로) 예쁜 프린터</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/representing-code.html#challenges">Challenges</a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="scanning.html" title="Scanning">← Previous</a>
-<a href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑ Up</a>
-<a class="right" href="parsing-expressions.html" title="Parsing Expressions">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/scanning.html" title="Scanning">←&nbsp;Previous</a>
+<a href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑&nbsp;Up</a>
+<a class="right" href="https://youhogeon-meritz.github.io/parsing-expressions.html" title="Parsing Expressions">Next&nbsp;→</a>
 </div> </div>
 <a id="expand-nav">≡</a>
 </nav>
 </div>
 <article class="chapter">
 <div class="number">5</div>
-<h1>Representing Code</h1>
+<h1><font papago-translate="translated">대표 코드</font></h1>
 <blockquote>
-<p>To dwellers in a wood, almost every species of tree has its voice as well as
-its feature.
-<cite>Thomas Hardy, <em>Under the Greenwood Tree</em></cite></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">숲 속에 사는 사람들에게 거의 모든 나무 종은 목소리뿐만 아니라 특징도 가지고 있습니다. </font></font><cite>Thomas Hardy, <em>Under the Greenwood Tree</em></cite></p>
 </blockquote>
-<p>In the <a href="scanning.html">last chapter</a>, we took the raw source code as a string and
-transformed it into a slightly higher-level representation: a series of tokens.
-The parser we’ll write in the <a href="parsing-expressions.html">next chapter</a> takes those tokens and
-transforms them yet again, into an even richer, more complex representation.</p>
-<p>Before we can produce that representation, we need to define it. That’s the
-subject of this chapter. Along the way, we’ll <span name="boring">cover</span>
-some theory around formal grammars, feel the difference between functional and
-object-oriented programming, go over a couple of design patterns, and do some
-metaprogramming.</p>
-<aside name="boring">
-<p>I was so worried about this being one of the most boring chapters in the book
-that I kept stuffing more fun ideas into it until I ran out of room.</p>
+<p><font papago-translate="translated"><a href="https://youhogeon-meritz.github.io/scanning.html">마지막 장에서는</a> 원시 소스 코드를 문자열로 가져와서 약간 더 높은 수준의 표현인 일련의 토큰으로 변환했습니다.</font><font papago-translate="translated"> <a href="https://youhogeon-meritz.github.io/parsing-expressions.html">다음 장에서</a> 작성할 파서는 이러한 토큰을 다시 한 번 더 풍부하고 복잡한 표현으로 변환합니다.</font></p>
+<p><font papago-translate="translated">그 표현을 만들기 전에 먼저 정의해야 합니다.</font><font papago-translate="translated"> 이것이 이 장의 주제입니다.</font><font papago-translate="translated"> 그 과정에서 형식 문법에 관한 몇 가지 이론<span name="boring">을 다루고</span>, 기능적 프로그래밍과 객체 지향 프로그래밍의 차이점을 느껴보고, 몇 가지 디자인 패턴을 살펴보고, 메타프로그래밍을 해보겠습니다.</font></p>
+<aside name="boring" style="top: 460px;">
+<p><font papago-translate="translated">책에서 가장 지루한 장 중 하나라는 점이 너무 걱정되어 공간이 부족할 때까지 더 재미있는 아이디어를 계속 넣었습니다.</font></p>
 </aside>
-<p>Before we do all that, let’s focus on the main goal<span class="em">—</span>a representation for
-code. It should be simple for the parser to produce and easy for the
-interpreter to consume. If you haven’t written a parser or interpreter yet,
-those requirements aren’t exactly illuminating. Maybe your intuition can help.
-What is your brain doing when you play the part of a <em>human</em> interpreter? How do
-you mentally evaluate an arithmetic expression like this:</p>
+<p><font papago-translate="translated">그 모든 것을 하기 전에,<span class="em"></span> 주요 목표인 코드의 표현에 집중해 보겠습니다.</font><font papago-translate="translated"> 파서가 생산하기 쉽고 통역사가 소비하기 쉬워야 합니다.</font><font papago-translate="translated"> 아직 파서나 통역사를 작성하지 않으셨다면, 이러한 요구 사항들이 정확히 반영되지는 않습니다.</font><font papago-translate="translated"> 직관이 도움이 될 수도 있습니다.</font><font papago-translate="translated"> <em>인간</em> 통역사 역할을 할 때 뇌는 무엇을 하고 있습니까?</font><font papago-translate="translated"> 이와 같은 산술 표현을 어떻게 정신적으로 평가할 수 있습니까:</font></p>
 <div class="codehilite"><pre translate="no"><span class="n">1</span> + <span class="n">2</span> * <span class="n">3</span> - <span class="n">4</span>
 </pre></div>
-<p>Because you understand the order of operations<span class="em">—</span>the old “<a href="https://en.wikipedia.org/wiki/Order_of_operations#Mnemonics">Please Excuse My
-Dear Aunt Sally</a>” stuff<span class="em">—</span>you know that the multiplication is evaluated
-before the addition or subtraction. One way to visualize that precedence is
-using a tree. Leaf nodes are numbers, and interior nodes are operators with
-branches for each of their operands.</p>
-<p>In order to evaluate an arithmetic node, you need to know the numeric values of
-its subtrees, so you have to evaluate those first. That means working your way
-from the leaves up to the root<span class="em">—</span>a <em>post-order</em> traversal:</p>
-<p><span name="tree-steps"></span></p><img alt="Evaluating the tree from the bottom up." src="image/representing-code/tree-evaluate.png">
-<aside name="tree-steps">
-<p>A. Starting with the full tree, evaluate the bottom-most operation, <code translate="no">2 * 3</code>.</p>
-<p>B. Now we can evaluate the <code translate="no">+</code>.</p>
-<p>C. Next, the <code translate="no">-</code>.</p>
-<p>D. The final answer.</p>
+<p><font papago-translate="translated">당신이 연산 순서를 이해하고 있기 때문에, 예전의 "<a href="https://en.wikipedia.org/wiki/Order_of_operations#Mnemonics">사랑하는 샐리 이모를 용서해 주세요</a>" 같은 것들은 덧셈이나 뺄<span class="em"></span><span class="em"></span>셈 전에 곱셈이 평가된다는 것을 알고 있습니다.</font><font papago-translate="translated"> 그 우선순위를 시각화하는 한 가지 방법은 나무를 사용하는 것입니다.</font><font papago-translate="translated"> 리프 노드는 숫자이고, 내부 노드는 각 피연산자에 대해 분기가 있는 연산자입니다.</font></p>
+<p><font papago-translate="translated">산술 노드를 평가하려면 해당 하위 트리의 숫자 값을 알아야 하므로 먼저 그 값을 평가해야 합니다.</font><font papago-translate="translated"> 즉, 잎에서 뿌리까지,<em> 즉 순서대로</em><span class="em"></span> 이동하는 것을 의미합니다:</font></p>
+<p><span name="tree-steps"></span></p><img alt="Evaluating the tree from the bottom up." src="https://youhogeon-meritz.github.io/image/representing-code/tree-evaluate.png">
+<aside name="tree-steps" style="top: 958px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">A. 전체 트리부터 시작하여 최하위 연산을 평가합니다, </font></font><code translate="no">2 * 3</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">B. 이제 다음을 평가할 수 있습니다 </font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">C. 다음으로 </font></font><code translate="no">-</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="translated">D. 최종 답변.</font></p>
 </aside>
-<p>If I gave you an arithmetic expression, you could draw one of these trees pretty
-easily. Given a tree, you can evaluate it without breaking a sweat. So it
-intuitively seems like a workable representation of our code is a <span name="only">tree</span> that matches the grammatical structure<span class="em">—</span>the operator
-nesting<span class="em">—</span>of the language.</p>
-<aside name="only">
-<p>That’s not to say a tree is the <em>only</em> possible representation of our code. In
-<a href="a-bytecode-virtual-machine.html">Part III</a>, we’ll generate bytecode, another representation that isn’t as
-human friendly but is closer to the machine.</p>
+<p><font papago-translate="translated">제가 산술적인 표현을 해드리면, 이 나무들 중 하나를 꽤 쉽게 그릴 수 있을 겁니다.</font><font papago-translate="translated"> 나무가 주어지면 땀 한 방울 흘리지 않고 평가할 수 있습니다.</font><font papago-translate="translated"> 따라서 직관적으로 우리 코드의 실행 가능한 표현은<span class="em"></span><span class="em"></span> 언어의 문법 구조, 즉 연산자 중첩과 일치<span name="only">하는 트리</span>처럼 보입니다.</font></p>
+<aside name="only" style="top: 1226px;">
+<p><font papago-translate="translated">그렇다고 해서 나무만이<em></em> 우리 코드의 유일한 가능한 표현이라는 뜻은 아닙니다.</font><font papago-translate="translated"> <a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html">파트 III</a>에서는 인간 친화적이지는 않지만 기계에 더 가까운 또 다른 표현인 바이트코드를 생성할 것입니다.</font></p>
 </aside>
-<p>We need to get more precise about what that grammar is then. Like lexical
-grammars in the last chapter, there is a long ton of theory around syntactic
-grammars. We’re going into that theory a little more than we did when scanning
-because it turns out to be a useful tool throughout much of the interpreter.
-We start by moving one level up the <a href="https://en.wikipedia.org/wiki/Chomsky_hierarchy">Chomsky hierarchy</a><span class="ellipse"> . . . </span></p>
-<h2><a href="#context-free-grammars" id="context-free-grammars"><small>5 . 1</small>Context-Free Grammars</a></h2>
-<p>In the last chapter, the formalism we used for defining the lexical grammar<span class="em">—</span>the rules for how characters get grouped into tokens<span class="em">—</span>was called a <em>regular
-language</em>. That was fine for our scanner, which emits a flat sequence of tokens.
-But regular languages aren’t powerful enough to handle expressions which can
-nest arbitrarily deeply.</p>
-<p>We need a bigger hammer, and that hammer is a <strong>context-free grammar</strong>
-(<strong>CFG</strong>). It’s the next heaviest tool in the toolbox of
-<strong><a href="https://en.wikipedia.org/wiki/Formal_grammar">formal grammars</a></strong>. A formal grammar takes a set of atomic pieces it calls
-its “alphabet”. Then it defines a (usually infinite) set of “strings” that are
-“in” the grammar. Each string is a sequence of “letters” in the alphabet.</p>
-<p>I’m using all those quotes because the terms get a little confusing as you move
-from lexical to syntactic grammars. In our scanner’s grammar, the alphabet
-consists of individual characters and the strings are the valid lexemes<span class="em">—</span>roughly “words”. In the syntactic grammar we’re talking about now, we’re at a
-different level of granularity. Now each “letter” in the alphabet is an entire
-token and a “string” is a sequence of <em>tokens</em><span class="em">—</span>an entire expression.</p>
-<p>Oof. Maybe a table will help:</p><table>
+<p><font papago-translate="translated">그렇다면 그 문법이 무엇인지 더 정확하게 파악해야 합니다.</font><font papago-translate="translated"> 지난 장에서 언급한 어휘 문법과 마찬가지로, 구문 문법에 관한 이론은 매우 많습니다.</font><font papago-translate="translated"> 우리는 그 이론을 스캔할 때보다 조금 더 자세히 다루고 있습니다. 왜냐하면 그것이 대부분의 통역사들에게 유용한 도구로 밝혀졌기 때문입니다.</font><font papago-translate="translated"> 우리는 먼저 촘<a href="https://en.wikipedia.org/wiki/Chomsky_hierarchy">스키 계층</a>을 한 단계 높이는 것으로 시작합니다<span class="ellipse">.</span></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/representing-code.html#context-free-grammars" id="context-free-grammars"><small><font papago-translate="translated">5 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">문맥 자유 문법</font></font></a></h2>
+<p><font papago-translate="translated">마지막 장에서 우리가 어휘 문법을 정의할 때 사용한 형식주의, 즉 문자가 토큰으로 그룹화되는 규칙을<em> 정규</em><span class="em"></span><span class="em"></span><em> 언어</em>라고 불렀습니다.</font><font papago-translate="translated"> 우리 스캐너는 평평한 토큰 시퀀스를 방출하기 때문에 괜찮습니다.</font><font papago-translate="translated"> 하지만 일반 언어는 임의로 깊게 자리 잡을 수 있는 표현을 처리할 만큼 강력하지 않습니다.</font></p>
+<p><font papago-translate="translated">우리는 더 큰 망치가 필요하며, 그 망치는<strong> 문맥 없는 문법</strong>(<strong>CF</strong>G)입니다.</font><font papago-translate="translated"> <strong><a href="https://en.wikipedia.org/wiki/Formal_grammar">공식 문법</a></strong> 도구 상자에서 다음으로 무거운 도구입니다.</font><font papago-translate="translated"> 형식 문법은 원자 조각 세트를 "알파벳"이라고 부릅니다.</font><font papago-translate="translated"> 그런 다음 문법에 "들어 있는" (보통 무한한) 문자열 집합을 정의합니다.</font><font papago-translate="translated"> 각 문자열은 알파벳의 "글자" 시퀀스입니다.</font></p>
+<p><font papago-translate="translated">어휘 문법에서 구문 문법으로 이동할 때 용어가 약간 혼란스러워지기 때문에 모든 인용문을 사용하고 있습니다.</font><font papago-translate="translated"> 스캐너의 문법<span class="em"></span>에서 알파벳은 개별 문자로 구성되며 문자열은 유효한 어휘인 대략 "단어"입니다.</font><font papago-translate="translated"> 지금 우리가 이야기하고 있는 구문 문법에서는, 우리는 다른 수준의 세분화에 있습니다.</font><font papago-translate="translated"> 이제 알파벳의 각 "글자"는 전체 토큰이고 "끈"은<em> 토큰</em>의 시퀀스, 즉 전체 표현<span class="em"></span>식입니다.</font></p>
+<p><font papago-translate="translated">Oof. 아마도 테이블이 도움이 될 것입니다:</font></p><table>
 <thead>
 <tr>
-<td>Terminology</td>
+<td><font papago-translate="translated">용어.</font></td>
 <td></td>
-<td>Lexical grammar</td>
-<td>Syntactic grammar</td>
+<td><font papago-translate="translated">어휘 문법</font></td>
+<td><font papago-translate="translated">구문 문법</font></td>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>The “alphabet” is<span class="ellipse"> . . .</span></td>
-<td>→ </td>
-<td>Characters</td>
-<td>Tokens</td>
+<td><font papago-translate="translated">"알파벳"은<span class="ellipse"> . . .</span></font></td>
+<td><font papago-translate="translated">→ </font></td>
+<td><font papago-translate="translated">성격.</font></td>
+<td><font papago-translate="translated">토큰</font></td>
 </tr>
 <tr>
-<td>A “string” is<span class="ellipse"> . . .</span></td>
-<td>→ </td>
-<td>Lexeme or token</td>
-<td>Expression</td>
+<td><font papago-translate="translated">"끈"은<span class="ellipse"> . . .</span></font></td>
+<td><font papago-translate="translated">→ </font></td>
+<td><font papago-translate="translated">렉섬 또는 토큰</font></td>
+<td><font papago-translate="translated">표현</font></td>
 </tr>
 <tr>
-<td>It’s implemented by the<span class="ellipse"> . . .</span></td>
-<td>→ </td>
-<td>Scanner</td>
-<td>Parser</td>
+<td><font papago-translate="translated">그것은 .<span class="ellipse"> . .</span> 에 의해 구현됩니다<span class="ellipse">.</span></font></td>
+<td><font papago-translate="translated">→ </font></td>
+<td><font papago-translate="translated">스캐너</font></td>
+<td><font papago-translate="translated">파서</font></td>
 </tr>
 </tbody>
 </table>
-<p>A formal grammar’s job is to specify which strings are valid and which aren’t.
-If we were defining a grammar for English sentences, “eggs are tasty for
-breakfast” would be in the grammar, but “tasty breakfast for are eggs” would
-probably not.</p>
-<h3><a href="#rules-for-grammars" id="rules-for-grammars"><small>5 . 1 . 1</small>Rules for grammars</a></h3>
-<p>How do we write down a grammar that contains an infinite number of valid
-strings? We obviously can’t list them all out. Instead, we create a finite set
-of rules. You can think of them as a game that you can “play” in one of two
-directions.</p>
-<p>If you start with the rules, you can use them to <em>generate</em> strings that are in
-the grammar. Strings created this way are called <strong>derivations</strong> because each is
-<em>derived</em> from the rules of the grammar. In each step of the game, you pick a
-rule and follow what it tells you to do. Most of the lingo around formal
-grammars comes from playing them in this direction. Rules are called
-<strong>productions</strong> because they <em>produce</em> strings in the grammar.</p>
-<p>Each production in a context-free grammar has a <strong>head</strong><span class="em">—</span>its <span name="name">name</span><span class="em">—</span>and a <strong>body</strong>, which describes what it generates. In
-its pure form, the body is simply a list of symbols. Symbols come in two
-delectable flavors:</p>
-<aside name="name">
-<p>Restricting heads to a single symbol is a defining feature of context-free
-grammars. More powerful formalisms like <strong><a href="https://en.wikipedia.org/wiki/Unrestricted_grammar">unrestricted grammars</a></strong> allow a
-sequence of symbols in the head as well as in the body.</p>
+<p><font papago-translate="translated">형식 문법의 역할은 유효한 문자열과 그렇지 않은 문자열을 지정하는 것입니다.</font><font papago-translate="translated"> 영어 문장에 대한 문법을 정의한다면, "계란은 아침 식사로 맛있습니다"는 문법에 포함될 수 있지만, "계란을 위한 맛있는 아침 식사"는 아마도 그렇지 않을 것입니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/representing-code.html#rules-for-grammars" id="rules-for-grammars"><small><font papago-translate="translated">5 . 1 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">문법 규칙</font></font></a></h3>
+<p><font papago-translate="translated">유효한 문자열이 무한히 많은 문법은 어떻게 작성하나요?</font><font papago-translate="translated"> 물론 모두 나열할 수는 없습니다.</font><font papago-translate="translated"> 대신에, 우리는 유한한 규칙 집합을 만듭니다.</font><font papago-translate="translated"> 두 가지 방향 중 하나로 "플레이"할 수 있는 게임이라고 생각하시면 됩니다.</font></p>
+<p><font papago-translate="translated">규칙부터 시작하면 문법에 맞는 문자열<em>을 생성</em>하는 데 사용할 수 있습니다.</font><font papago-translate="translated"> 이렇게 생성된 문자열은 각각 문법 규칙에서<em> 파생</em>되기 때문에<strong> 파생</strong>이라고 합니다.</font><font papago-translate="translated"> 게임의 각 단계에서 규칙을 선택하고 그 규칙이 지시하는 대로 따릅니다.</font><font papago-translate="translated"> 형식 문법 주변의 대부분의 용어는 이러한 방향으로 문법을 연주하는 데서 비롯됩니다.</font><font papago-translate="translated"> 규칙은 문법에서 문자열<em>을 생성</em>하기 때문에<strong> 프로덕션</strong>이라고 불립니다.</font></p>
+<p><font papago-translate="translated">문맥 없는 문법의 각 작품에는<strong> 머리</strong>와<span name="name"> 이름</span>,<strong> 그리고 그것</strong>이<span class="em"></span><span class="em"></span> 생성하는 내용을 설명<strong>하는 본문</strong>이 있습니다.</font><font papago-translate="translated"> 순수한 형태의 몸은 단순히 상징의 목록일 뿐입니다.</font><font papago-translate="translated"> 기호는 두 가지 맛있는 맛으로 나옵니다:</font></p>
+<aside name="name" style="top: 2650px;">
+<p><font papago-translate="translated">머리를 하나의 기호로 제한하는 것은 문맥 없는 문법의 정의적인 특징입니다.</font><font papago-translate="translated"> <strong><a href="https://en.wikipedia.org/wiki/Unrestricted_grammar">제한 없는 문법</a></strong>과 같은 더 강력한 형식은 머리뿐만 아니라 몸에서도 일련의 기호를 허용합니다.</font></p>
 </aside>
 <ul>
 <li>
-<p>A <strong>terminal</strong> is a letter from the grammar’s alphabet. You can think of it
-like a literal value. In the syntactic grammar we’re defining, the terminals
-are individual lexemes<span class="em">—</span>tokens coming from the scanner like <code translate="no">if</code> or
-<code translate="no">1234</code>.</p>
-<p>These are called “terminals”, in the sense of an “end point” because they
-don’t lead to any further “moves” in the game. You simply produce that one
-symbol.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><strong>터미널은</strong> 문법의 알파벳에서 온 글자입니다.</font><font papago-translate="translated"> 문자 그대로의 가치라고 생각하시면 됩니다.</font><font papago-translate="translated"> 우리가 정의하는 구문 문법에서 터미널은 개별 어휘로, 스캐너에서 나오는 토큰<span class="em"></span>은 다음과 같습니다 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 </font></font><code translate="no">1234</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="translated">이것들은 게임에서 더 이상의 "움직임"으로 이어지지 않기 때문에 "종착점"이라는 의미에서 "터미널"이라고 불립니다.</font><font papago-translate="translated"> 그 하나의 기호만 만들면 됩니다.</font></p>
 </li>
 <li>
-<p>A <strong>nonterminal</strong> is a named reference to another rule in the grammar. It
-means “play that rule and insert whatever it produces here”. In this way,
-the grammar composes.</p>
+<p><font papago-translate="translated"><strong>비터미널은</strong> 문법에서 다른 규칙에 대한 명명된 참조입니다.</font><font papago-translate="translated"> 그것은 "그 규칙을 재생하고 여기서 생성되는 모든 것을 삽입하라"는 의미입니다.</font><font papago-translate="translated"> 이와 같이 문법이 구성됩니다.</font></p>
 </li>
 </ul>
-<p>There is one last refinement: you may have multiple rules with the same name.
-When you reach a nonterminal with that name, you are allowed to pick any of the
-rules for it, whichever floats your boat.</p>
-<p>To make this concrete, we need a <span name="turtles">way</span> to write down
-these production rules. People have been trying to crystallize grammar all the
-way back to Pāṇini’s <em>Ashtadhyayi</em>, which codified Sanskrit grammar a mere
-couple thousand years ago. Not much progress happened until John Backus and
-company needed a notation for specifying ALGOL 58 and came up with
-<a href="https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form"><strong>Backus-Naur form</strong></a> (<strong>BNF</strong>). Since then, nearly everyone uses some
-flavor of BNF, tweaked to their own tastes.</p>
-<p>I tried to come up with something clean. Each rule is a name, followed by an
-arrow (<code translate="no">→</code>), followed by a sequence of symbols, and finally ending with a
-semicolon (<code translate="no">;</code>). Terminals are quoted strings, and nonterminals are lowercase
-words.</p>
-<aside name="turtles">
-<p>Yes, we need to define a syntax to use for the rules that define our syntax.
-Should we specify that <em>metasyntax</em> too? What notation do we use for <em>it?</em> It’s
-languages all the way down!</p>
+<p><font papago-translate="translated">마지막으로 한 가지 개선 사항이 있습니다: 동일한 이름을 가진 여러 규칙이 있을 수 있습니다.</font><font papago-translate="translated"> 그 이름을 가진 비터미널에 도착하면, 배를 띄우는 규칙 중 어느 것이든 선택할 수 있습니다.</font></p>
+<p><font papago-translate="translated">이를 구체화하기 위해서는 이러한 생산 규칙을 적<span name="turtles">을 수 있는 방법</span>이 필요합니다.</font><font papago-translate="translated"> 사람들은 불과 몇 천 년 전 산스크리트어 문법을 성문화한 파 ṇ리니의 아쉬<em>타디아</em>이로 거슬러 올라가 문법을 결정화하려고 노력해 왔습니다.</font><font papago-translate="translated"> 존 백커스와 회사가 ALGOL 58을 지정하기 위한 표기법을 필요로 하고 백<a href="https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form"><strong>커스-</strong></a>나우<a href="https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form"><strong>어 형식</strong></a>(<strong>B</strong>NF)을 고안하기 전까지는 별다른 진전이 없었습니다.</font><font papago-translate="translated"> 그 이후로 거의 모든 사람이 자신의 취향에 맞게 조정된 BNF의 맛을 사용합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">깨끗한 것을 생각해내려고 노력했습니다.</font><font papago-translate="translated"> 각 규칙은 이름 다음에 화살표가 붙습니다 (</font></font><code translate="no">→</code><font papago-translate="splitted"><font papago-translate="translated">), 기호 순서에 이어 세미콜론으로 끝납니다 ()</font></font><code translate="no">;</code><font papago-translate="splitted"><font papago-translate="translated">). 터미널은 따옴표 문자열이고, 비터미널은 소문자입니다.</font></font></p>
+<aside name="turtles" style="top: 3130px;">
+<p><font papago-translate="translated">예, 구문을 정의하는 규칙에 사용할 구문을 정의해야 합니다.</font><font papago-translate="translated"> <em>메타신세</em>도 명시해야 하나요?</font><font papago-translate="translated"> 어떤 표기법<em></em>을 사용하나요?</font><font papago-translate="translated"> 언어들이 쭉 내려오고 있어요!</font></p>
 </aside>
-<p>Using that, here’s a grammar for <span name="breakfast">breakfast</span> menus:</p>
-<aside name="breakfast">
-<p>Yes, I really am going to be using breakfast examples throughout this entire
-book. Sorry.</p>
+<p><font papago-translate="translated"><span name="breakfast">이</span>를 사용하여<span name="breakfast"> 아침</span> 메뉴에 대한 문법을 소개합니다:</font></p>
+<aside name="breakfast" style="top: 3418px;">
+<p><font papago-translate="translated">네, 저는 이 책 전체에서 아침 식사 예시를 정말로 사용할 예정입니다.</font><font papago-translate="translated"> 미안하다.</font></p>
 </aside>
 <div class="codehilite"><pre translate="no"><span class="i">breakfast</span>  → <span class="i">protein</span> <span class="s">"with"</span> <span class="i">breakfast</span> <span class="s">"on the side"</span> ;
 <span class="i">breakfast</span>  → <span class="i">protein</span> ;
@@ -256,98 +168,58 @@ book. Sorry.</p>
 <span class="i">bread</span>      → <span class="s">"biscuits"</span> ;
 <span class="i">bread</span>      → <span class="s">"English muffin"</span> ;
 </pre></div>
-<p>We can use this grammar to generate random breakfasts. Let’s play a round and
-see how it works. By age-old convention, the game starts with the first rule in
-the grammar, here <code translate="no">breakfast</code>. There are three productions for that, and we
-randomly pick the first one. Our resulting string looks like:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 문법을 사용하여 무작위 아침 식사를 생성할 수 있습니다.</font><font papago-translate="translated"> 한 판 해보고 어떻게 작동하는지 확인해 보겠습니다.</font><font papago-translate="translated"> 오래된 관습에 따라 게임은 문법의 첫 번째 규칙으로 시작됩니다 </font></font><code translate="no">breakfast</code><font papago-translate="splitted"><font papago-translate="translated">. 이를 위한 세 가지 작품이 있으며, 첫 번째 작품을 무작위로 선택합니다.</font><font papago-translate="translated"> 결과 문자열은 다음과 같습니다:</font></font></p>
 <div class="codehilite"><pre translate="no">protein "with" breakfast "on the side"
 </pre></div>
-<p>We need to expand that first nonterminal, <code translate="no">protein</code>, so we pick a production for
-that. Let’s pick:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 첫 번째 비터미널을 확장해야 합니다, </font></font><code translate="no">protein</code><font papago-translate="splitted"><font papago-translate="translated">, 그래서 우리는 그것을 위한 작품을 선택합니다.</font><font papago-translate="translated"> 선택해 보겠습니다:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="i">protein</span> → <span class="i">cooked</span> <span class="s">"eggs"</span> ;
 </pre></div>
-<p>Next, we need a production for <code translate="no">cooked</code>, and so we pick <code translate="no">"poached"</code>. That’s a
-terminal, so we add that. Now our string looks like:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다음으로, 우리는 다음을 위한 제작이 필요합니다 </font></font><code translate="no">cooked</code><font papago-translate="splitted"><font papago-translate="translated">, 그래서 우리는 선택합니다 </font></font><code translate="no">"poached"</code><font papago-translate="splitted"><font papago-translate="translated">. 저것은 터미널이므로 추가합니다.</font><font papago-translate="translated"> 이제 우리의 문자열은 다음과 같습니다:</font></font></p>
 <div class="codehilite"><pre translate="no">"poached" "eggs" "with" breakfast "on the side"
 </pre></div>
-<p>The next non-terminal is <code translate="no">breakfast</code> again. The first <code translate="no">breakfast</code> production we
-chose recursively refers back to the <code translate="no">breakfast</code> rule. Recursion in the grammar
-is a good sign that the language being defined is context-free instead of
-regular. In particular, recursion where the recursive nonterminal has
-productions on <span name="nest">both</span> sides implies that the language is
-not regular.</p>
-<aside name="nest">
-<p>Imagine that we’ve recursively expanded the <code translate="no">breakfast</code> rule here several times,
-like “bacon with bacon with bacon with<span class="ellipse"> . . . </span>” In order to complete the string
-correctly, we need to add an <em>equal</em> number of “on the side” bits to the end.
-Tracking the number of required trailing parts is beyond the capabilities of a
-regular grammar. Regular grammars can express <em>repetition</em>, but they can’t <em>keep
-count</em> of how many repetitions there are, which is necessary to ensure that the
-string has the same number of <code translate="no">with</code> and <code translate="no">on the side</code> parts.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다음 비터미널은 </font></font><code translate="no">breakfast</code><font papago-translate="splitted"><font papago-translate="translated"> 다시.</font><font papago-translate="translated"> 첫 번째 </font></font><code translate="no">breakfast</code><font papago-translate="splitted"><font papago-translate="translated"> 우리가 선택한 프로덕션은 재귀적으로 다음을 참조합니다 </font></font><code translate="no">breakfast</code><font papago-translate="splitted"><font papago-translate="translated"> 규칙. 문법에서의 재귀는 정의되는 언어가 정규 언어가 아닌 문맥이 없다는 좋은 신호입니다.</font><font papago-translate="translated"> 특히, 재귀적 비말단이<span name="nest"> 양쪽</span>에서 생성되는 재귀는 언어가 정규적이지 않다는 것을 의미합니다.</font></font></p>
+<aside name="nest" style="top: 4342px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">우리가 다음을 재귀적으로 확장했다고 상상해 보세요 </font></font><code translate="no">breakfast</code><font papago-translate="splitted"><font papago-translate="translated"> 여기서 여러 번 규칙을 정합니다. 예를 들어 "베이컨 위에 베이컨을 얹고<span class="ellipse"> . .</span> ." 문자열을 올바르게 완성하려면 끝에<em> 동일</em>한 수의 "측면에" 비트를 추가해야 합니다.</font><font papago-translate="translated"> 필요한 후행 부분의 수를 추적하는 것은 일반 문법의 능력을 넘어서는 것입니다.</font><font papago-translate="translated"> 일반 문법은<em> 반복</em>을 표현할 수는 있지만 반복 횟수<em>를 셀</em> 수 없기 때문에 문자열의 수가 동일한지 확인하는 데 필요합니다 </font></font><code translate="no">with</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">on the side</code><font papago-translate="splitted"><font papago-translate="translated"> 부품.</font></font></p>
 </aside>
-<p>We could keep picking the first production for <code translate="no">breakfast</code> over and over again
-yielding all manner of breakfasts like “bacon with sausage with scrambled eggs
-with bacon<span class="ellipse"> . . . </span>” We won’t though. This time we’ll pick <code translate="no">bread</code>. There are three
-rules for that, each of which contains only a terminal. We’ll pick “English
-muffin”.</p>
-<p>With that, every nonterminal in the string has been expanded until it finally
-contains only terminals and we’re left with:</p><img alt='"Playing" the grammar to generate a string.' src="image/representing-code/breakfast.png">
-<p>Throw in some ham and Hollandaise, and you’ve got eggs Benedict.</p>
-<p>Any time we hit a rule that had multiple productions, we just picked one
-arbitrarily. It is this flexibility that allows a short number of grammar rules
-to encode a combinatorially larger set of strings. The fact that a rule can
-refer to itself<span class="em">—</span>directly or indirectly<span class="em">—</span>kicks it up even more, letting us
-pack an infinite number of strings into a finite grammar.</p>
-<h3><a href="#enhancing-our-notation" id="enhancing-our-notation"><small>5 . 1 . 2</small>Enhancing our notation</a></h3>
-<p>Stuffing an infinite set of strings in a handful of rules is pretty fantastic,
-but let’s take it further. Our notation works, but it’s tedious. So, like any
-good language designer, we’ll sprinkle a little syntactic sugar on top<span class="em">—</span>some
-extra convenience notation. In addition to terminals and nonterminals, we’ll
-allow a few other kinds of expressions in the body of a rule:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">첫 번째 프로덕션을 계속 선택할 수 있습니다 </font></font><code translate="no">breakfast</code><font papago-translate="splitted"><font papago-translate="translated"> "소시지와 스크램블 에그를 곁들인 베이컨<span class="ellipse">,</span> 베이컨과 같은 모든 종류의 아침 식사를 반복해서 제공합니다<span class="ellipse">. .</span> ." 하지만 그렇게 하지 않겠습니다.</font><font papago-translate="translated"> 이번에는 우리가 선택하겠습니다 </font></font><code translate="no">bread</code><font papago-translate="splitted"><font papago-translate="translated">. 이를 위한 세 가지 규칙이 있으며, 각 규칙에는 터미널만 포함되어 있습니다.</font><font papago-translate="translated"> "영어 머핀"을 선택하겠습니다.</font></font></p>
+<p><font papago-translate="translated">이로써 문자열의 모든 비터미널이 확장되어 마침내 터미널만 포함될 때까지 남게 되었습니다:</font></p><img alt="&quot;Playing&quot; the grammar to generate a string." src="https://youhogeon-meritz.github.io/image/representing-code/breakfast.png">
+<p><font papago-translate="translated">햄과 홀란다이즈를 넣으면 베네딕트 달걀이 나옵니다.</font></p>
+<p><font papago-translate="translated">여러 번의 프로덕션이 있는 규칙을 맞출 때마다 임의로 하나를 선택했습니다.</font><font papago-translate="translated"> 이러한 유연성 덕분에 짧은 수의 문법 규칙이 조합적으로 더 큰 문자열 집합을 인코딩할 수 있습니다.</font><font papago-translate="translated"> 규칙이 직접적이든 간접적이든 스스로를 지칭할 수 있다는 사실은 규칙을 더욱 자극하여 무한한 수의 문자열을 유한<span class="em"></span><span class="em"></span>한 문법으로 포장할 수 있게 해줍니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/representing-code.html#enhancing-our-notation" id="enhancing-our-notation"><small><font papago-translate="translated">5 . 1 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">표기법 강화</font></font></a></h3>
+<p><font papago-translate="translated">몇 가지 규칙에 무한한 문자열 집합을 채우는 것은 꽤 환상적이지만, 더 나아가 보겠습니다.</font><font papago-translate="translated"> 우리의 표기법은 효과가 있지만, 지루합니다.</font><font papago-translate="translated"> 그래서 다른 훌륭한 언어 디자이너들처럼, 우리는 약간의 구문 설탕을 뿌릴 것입니다. 추가<span class="em"></span>적인 편의 표기법입니다.</font><font papago-translate="translated"> 터미널과 비터미널 외에도 규칙 본문에서 몇 가지 다른 종류의 표현을 허용합니다:</font></p>
 <ul>
 <li>
-<p>Instead of repeating the rule name each time we want to add another
-production for it, we’ll allow a series of productions separated by a pipe
-(<code translate="no">|</code>).</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">규칙 이름을 반복하여 다른 프로덕션을 추가할 때마다 반복하는 대신, 파이프로 분리된 일련의 프로덕션을 허용할 것입니다</font></font><code translate="no">|</code><font papago-translate="splitted"><font papago-translate="translated">).</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="i">bread</span> → <span class="s">"toast"</span> | <span class="s">"biscuits"</span> | <span class="s">"English muffin"</span> ;
 </pre></div>
 </li>
 <li>
-<p>Further, we’ll allow parentheses for grouping and then allow <code translate="no">|</code> within that
-to select one from a series of options within the middle of a production.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">또한 그룹화를 위해 괄호를 허용한 다음 허용합니다 </font></font><code translate="no">|</code><font papago-translate="splitted"><font papago-translate="translated"> 그 안에서 프로덕션 중간에 있는 일련의 옵션 중 하나를 선택합니다.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="i">protein</span> → ( <span class="s">"scrambled"</span> | <span class="s">"poached"</span> | <span class="s">"fried"</span> ) <span class="s">"eggs"</span> ;
 </pre></div>
 </li>
 <li>
-<p>Using recursion to support repeated sequences of symbols has a certain
-appealing <span name="purity">purity</span>, but it’s kind of a chore to
-make a separate named sub-rule each time we want to loop. So, we also use a
-postfix <code translate="no">*</code> to allow the previous symbol or group to be repeated zero or
-more times.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">반복되는 기호 시퀀스를 지원하기 위해 재귀를 사용하는 것은 어느 정도 매력<span name="purity">적인 순수성</span>을 가지고 있지만, 루프를 원할 때마다 별도의 명명된 하위 규칙을 만드는 것은 다소 번거롭습니다.</font><font papago-translate="translated"> 그래서 우리는 또한 후처리를 사용합니다 </font></font><code translate="no">*</code><font papago-translate="splitted"><font papago-translate="translated"> 이전 기호나 그룹을 0번 이상 반복할 수 있도록 합니다.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="i">crispiness</span> → <span class="s">"really"</span> <span class="s">"really"</span>* ;
 </pre></div>
 </li>
 </ul>
-<aside name="purity">
-<p>This is how the Scheme programming language works. It has no built-in looping
-functionality at all. Instead, <em>all</em> repetition is expressed in terms of
-recursion.</p>
+<aside name="purity" style="top: 5493.5px;">
+<p><font papago-translate="translated">이것이 스킴 프로그래밍 언어의 작동 방식입니다.</font><font papago-translate="translated"> 내장된 루프 기능이 전혀 없습니다.</font><font papago-translate="translated"> 대신<em> 모든</em> 반복은 재귀로 표현됩니다.</font></p>
 </aside>
 <ul>
 <li>
-<p>A postfix <code translate="no">+</code> is similar, but requires the preceding production to appear
-at least once.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">수정 사항 </font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated"> 비슷하지만, 이전 작품이 최소한 한 번은 등장해야 합니다.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="i">crispiness</span> → <span class="s">"really"</span>+ ;
 </pre></div>
 </li>
 <li>
-<p>A postfix <code translate="no">?</code> is for an optional production. The thing before it can appear
-zero or one time, but not more.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">수정 사항 </font></font><code translate="no">?</code><font papago-translate="splitted"><font papago-translate="translated"> 는 선택적 제작을 위한 것입니다.</font><font papago-translate="translated"> 이전에는 0으로 표시되거나 한 번만 표시될 수 있지만 그 이상은 표시되지 않습니다.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="i">breakfast</span> → <span class="i">protein</span> ( <span class="s">"with"</span> <span class="i">breakfast</span> <span class="s">"on the side"</span> )? ;
 </pre></div>
 </li>
 </ul>
-<p>With all of those syntactic niceties, our breakfast grammar condenses down to:</p>
+<p><font papago-translate="translated">이러한 모든 구문적인 친절함 덕분에 아침 식사 문법은 다음과 같이 압축됩니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">breakfast</span> → <span class="i">protein</span> ( <span class="s">"with"</span> <span class="i">breakfast</span> <span class="s">"on the side"</span> )?
           | <span class="i">bread</span> ;
 
@@ -357,48 +229,30 @@ zero or one time, but not more.</p>
 
 <span class="i">bread</span>     → <span class="s">"toast"</span> | <span class="s">"biscuits"</span> | <span class="s">"English muffin"</span> ;
 </pre></div>
-<p>Not too bad, I hope. If you’re used to grep or using <a href="https://en.wikipedia.org/wiki/Regular_expression#Standards">regular
-expressions</a> in your text editor, most of the punctuation should be
-familiar. The main difference is that symbols here represent entire tokens, not
-single characters.</p>
-<p>We’ll use this notation throughout the rest of the book to precisely describe
-Lox’s grammar. As you work on programming languages, you’ll find that
-context-free grammars (using this or <a href="https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form">EBNF</a> or some other notation) help you
-crystallize your informal syntax design ideas. They are also a handy medium for
-communicating with other language hackers about syntax.</p>
-<p>The rules and productions we define for Lox are also our guide to the tree data
-structure we’re going to implement to represent code in memory. Before we can do
-that, we need an actual grammar for Lox, or at least enough of one for us to get
-started.</p>
-<h3><a href="#a-grammar-for-lox-expressions" id="a-grammar-for-lox-expressions"><small>5 . 1 . 3</small>A Grammar for Lox expressions</a></h3>
-<p>In the previous chapter, we did Lox’s entire lexical grammar in one fell swoop.
-Every keyword and bit of punctuation is there. The syntactic grammar is larger,
-and it would be a real bore to grind through the entire thing before we actually
-get our interpreter up and running.</p>
-<p>Instead, we’ll crank through a subset of the language in the next couple of
-chapters. Once we have that mini-language represented, parsed, and interpreted,
-then later chapters will progressively add new features to it, including the new
-syntax. For now, we are going to worry about only a handful of expressions:</p>
+<p><font papago-translate="translated">나쁘지 않기를 바랍니다.</font><font papago-translate="translated"> 텍스트 편집기에서 grep이나<a href="https://en.wikipedia.org/wiki/Regular_expression#Standards"> 정규 표현</a>식을 사용하는 데 익숙하다면 대부분의 구두점은 익숙해야 합니다.</font><font papago-translate="translated"> 여기서 가장 큰 차이점은 기호가 단일 문자가 아닌 전체 토큰을 나타낸다는 것입니다.</font></p>
+<p><font papago-translate="translated">책의 나머지 부분에서는 이 표기법을 사용하여 Lox의 문법을 정확하게 설명하겠습니다.</font><font papago-translate="translated"> 프로그래밍 언어 작업을 하다 보면 문맥이 없는 문법(이 문법이나 EB<a href="https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form">N</a>F 또는 기타 표기법을 사용하여)이 비공식 구문 설계 아이디어를 결정하는 데 도움이 된다는 것을 알게 될 것입니다.</font><font papago-translate="translated"> 그들은 또한 구문에 대해 다른 언어 해커들과 소통하는 데 유용한 매체입니다.</font></p>
+<p><font papago-translate="translated">Lox에 대해 정의하는 규칙과 프로덕션은 메모리에서 코드를 표현하기 위해 구현할 트리 데이터 구조에 대한 가이드이기도 합니다.</font><font papago-translate="translated"> 이를 시작하기 전에 Lox를 위한 실제 문법이나 최소한 시작하기에 충분한 문법이 필요합니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/representing-code.html#a-grammar-for-lox-expressions" id="a-grammar-for-lox-expressions"><small><font papago-translate="translated">5 . 1 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">록스 표현을 위한 문법</font></font></a></h3>
+<p><font papago-translate="translated">이전 장에서는 Lox의 전체 어휘 문법을 한 번에 풀었습니다.</font><font papago-translate="translated"> 모든 키워드와 구두점이 있습니다.</font><font papago-translate="translated"> 구문 문법이 더 커서 실제로 통역사를 가동하기 전에 전체를 꼼꼼히 살펴보는 것은 정말 지루한 일입니다.</font></p>
+<p><font papago-translate="translated">대신, 다음 몇 장에서 언어의 일부를 살펴보겠습니다.</font><font papago-translate="translated"> 미니 언어가 표현, 구문 분석, 해석되면, 이후 장들은 새로운 구문을 포함하여 점진적으로 새로운 기능을 추가할 것입니다.</font><font papago-translate="translated"> 지금은 몇 가지 표현에 대해서만 걱정하겠습니다:</font></p>
 <ul>
 <li>
-<p><strong>Literals.</strong> Numbers, strings, Booleans, and <code translate="no">nil</code>.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><strong>리터럴.</strong></font><font papago-translate="translated"> 숫자, 문자열, 부울, 그리고 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
 </li>
 <li>
-<p><strong>Unary expressions.</strong> A prefix <code translate="no">!</code> to perform a logical not, and <code translate="no">-</code> to
-negate a number.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><strong>단항식.</strong></font><font papago-translate="translated"> 접두사 </font></font><code translate="no">!</code><font papago-translate="splitted"><font papago-translate="translated"> 논리적으로 하지 않기 위해, 그리고 </font></font><code translate="no">-</code><font papago-translate="splitted"><font papago-translate="translated"> 숫자를 부정합니다.</font></font></p>
 </li>
 <li>
-<p><strong>Binary expressions.</strong> The infix arithmetic (<code translate="no">+</code>, <code translate="no">-</code>, <code translate="no">*</code>, <code translate="no">/</code>) and logic
-operators (<code translate="no">==</code>, <code translate="no">!=</code>, <code translate="no">&lt;</code>, <code translate="no">&lt;=</code>, <code translate="no">&gt;</code>, <code translate="no">&gt;=</code>) we know and love.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><strong>이진 표현식.</strong></font><font papago-translate="translated"> 인픽스 산술 (</font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">-</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">*</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">/</code><font papago-translate="splitted"><font papago-translate="translated">) 및 논리 연산자 (</font></font><code translate="no">==</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">!=</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">&lt;</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">&lt;=</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">&gt;</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">&gt;=</code><font papago-translate="splitted"><font papago-translate="translated">) 우리는 알고 사랑합니다.</font></font></p>
 </li>
 <li>
-<p><strong>Parentheses.</strong> A pair of <code translate="no">(</code> and <code translate="no">)</code> wrapped around an expression.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><strong>괄호.</strong></font><font papago-translate="translated"> 한 켤레 </font></font><code translate="no">(</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">)</code><font papago-translate="splitted"><font papago-translate="translated"> 표정에 감겨 있습니다.</font></font></p>
 </li>
 </ul>
-<p>That gives us enough syntax for expressions like:</p>
+<p><font papago-translate="translated">이는 다음과 같은 표현을 위한 충분한 구문을 제공합니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="n">1</span> - (<span class="n">2</span> * <span class="n">3</span>) &lt; <span class="n">4</span> == <span class="k">false</span>
 </pre></div>
-<p>Using our handy dandy new notation, here’s a grammar for those:</p>
+<p><font papago-translate="translated">우리의 편리한 댄디한 새로운 표기법을 사용하여, 이를 위한 문법은 다음과 같습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">expression</span>     → <span class="i">literal</span>
                | <span class="i">unary</span>
                | <span class="i">binary</span>
@@ -411,46 +265,22 @@ operators (<code translate="no">==</code>, <code translate="no">!=</code>, <code
 <span class="i">operator</span>       → <span class="s">"=="</span> | <span class="s">"!="</span> | <span class="s">"&lt;"</span> | <span class="s">"&lt;="</span> | <span class="s">"&gt;"</span> | <span class="s">"&gt;="</span>
                | <span class="s">"+"</span>  | <span class="s">"-"</span>  | <span class="s">"*"</span> | <span class="s">"/"</span> ;
 </pre></div>
-<p>There’s one bit of extra <span name="play">metasyntax</span> here. In addition
-to quoted strings for terminals that match exact lexemes, we <code translate="no">CAPITALIZE</code>
-terminals that are a single lexeme whose text representation may vary. <code translate="no">NUMBER</code>
-is any number literal, and <code translate="no">STRING</code> is any string literal. Later, we’ll do the
-same for <code translate="no">IDENTIFIER</code>.</p>
-<p>This grammar is actually ambiguous, which we’ll see when we get to parsing it.
-But it’s good enough for now.</p>
-<aside name="play">
-<p>If you’re so inclined, try using this grammar to generate a few expressions like
-we did with the breakfast grammar before. Do the resulting expressions look
-right to you? Can you make it generate anything wrong like <code translate="no">1 + / 3</code>?</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><span name="play">여기에 메타신세</span>가 하나 더 있습니다.</font><font papago-translate="translated"> 정확한 어휘와 일치하는 터미널의 인용 문자열 외에도, 우리는 </font></font><code translate="no">CAPITALIZE</code><font papago-translate="splitted"><font papago-translate="translated"> 텍스트 표현이 다를 수 있는 단일 어휘인 터미널. </font></font><code translate="no">NUMBER</code><font papago-translate="splitted"><font papago-translate="translated"> 는 문자 그대로의 임의의 숫자입니다 </font></font><code translate="no">STRING</code><font papago-translate="splitted"><font papago-translate="translated"> 는 임의의 문자열 리터럴입니다.</font><font papago-translate="translated"> 나중에 우리도 똑같이 할 것입니다 </font></font><code translate="no">IDENTIFIER</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="translated">이 문법은 사실 모호해서 파싱해보면 알 수 있을 것입니다.</font><font papago-translate="translated"> 하지만 지금은 충분합니다.</font></p>
+<aside name="play" style="top: 7417.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">만약 당신이 그렇게 마음에 든다면, 이 문법을 사용하여 이전 아침 식사 문법처럼 몇 가지 표현을 만들어 보세요.</font><font papago-translate="translated"> 결과적인 표현들이 당신에게 잘 어울리나요?</font><font papago-translate="translated"> 다음과 같은 잘못된 것을 생성할 수 있습니까 </font></font><code translate="no">1 + / 3</code><font papago-translate="splitted"><font papago-translate="translated">?</font></font></p>
 </aside>
-<h2><a href="#implementing-syntax-trees" id="implementing-syntax-trees"><small>5 . 2</small>Implementing Syntax Trees</a></h2>
-<p>Finally, we get to write some code. That little expression grammar is our
-skeleton. Since the grammar is recursive<span class="em">—</span>note how <code translate="no">grouping</code>, <code translate="no">unary</code>, and
-<code translate="no">binary</code> all refer back to <code translate="no">expression</code><span class="em">—</span>our data structure will form a tree.
-Since this structure represents the syntax of our language, it’s called a <span name="ast"><strong>syntax tree</strong></span>.</p>
-<aside name="ast">
-<p>In particular, we’re defining an <strong>abstract syntax tree</strong> (<strong>AST</strong>). In a
-<strong>parse tree</strong>, every single grammar production becomes a node in the tree. An
-AST elides productions that aren’t needed by later phases.</p>
+<h2><a href="https://youhogeon-meritz.github.io/representing-code.html#implementing-syntax-trees" id="implementing-syntax-trees"><small><font papago-translate="translated">5 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">구문 트리 구현</font></font></a></h2>
+<p><font papago-translate="splitted"><font papago-translate="translated">마침내 우리는 몇 가지 코드를 작성할 수 있게 되었습니다.</font><font papago-translate="translated"> 그 작은 표현 문법이 우리의 골격입니다.</font><font papago-translate="translated"> 문법이 재귀적이므로<span class="em"></span> 주의하세요 </font></font><code translate="no">grouping</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">unary</code><font papago-translate="splitted"><font papago-translate="translated">,그리고. </font></font><code translate="no">binary</code><font papago-translate="splitted"><font papago-translate="translated"> 모두 다시 참조 </font></font><code translate="no">expression</code><font papago-translate="splitted"><font papago-translate="translated"><span class="em">-</span>우리의 데이터 구조는 트리를 형성할 것입니다<span class="em">.</span></font><font papago-translate="translated"> 이 구조는 우리 언어의 구문을 나타내기 때문에<span name="ast"><strong> 구문 트리</strong></span>라고 불립니다.</font></font></p>
+<aside name="ast" style="top: 7777.5px;">
+<p><font papago-translate="translated">특히<strong>, 우리</strong>는<strong> 추상 구문 트리</strong>(<strong>AS</strong>T)를 정의하고 있습니다.</font><font papago-translate="translated"> <strong>구문 분석 트리</strong>에서는 모든 문법 생성이 트리의 노드가 됩니다.</font><font papago-translate="translated"> AST는 이후 단계에서는 필요하지 않은 프로덕션을 지원합니다.</font></p>
 </aside>
-<p>Our scanner used a single Token class to represent all kinds of lexemes. To
-distinguish the different kinds<span class="em">—</span>think the number <code translate="no">123</code> versus the string
-<code translate="no">"123"</code><span class="em">—</span>we included a simple TokenType enum. Syntax trees are not so <span name="token-data">homogeneous</span>. Unary expressions have a single operand,
-binary expressions have two, and literals have none.</p>
-<p>We <em>could</em> mush that all together into a single Expression class with an
-arbitrary list of children. Some compilers do. But I like getting the most out
-of Java’s type system. So we’ll define a base class for expressions. Then, for
-each kind of expression<span class="em">—</span>each production under <code translate="no">expression</code><span class="em">—</span>we create a
-subclass that has fields for the nonterminals specific to that rule. This way,
-we get a compile error if we, say, try to access the second operand of a unary
-expression.</p>
-<aside name="token-data">
-<p>Tokens aren’t entirely homogeneous either. Tokens for literals store the value,
-but other kinds of lexemes don’t need that state. I have seen scanners that use
-different classes for literals and other kinds of lexemes, but I figured I’d
-keep things simpler.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리 스캐너는 모든 종류의 어휘를 나타내기 위해 단일 토큰 클래스를 사용했습니다.</font><font papago-translate="translated"> 다양한 종류를 구별하려면<span class="em"></span>—숫자를 생각해 보세요 </font></font><code translate="no">123</code><font papago-translate="splitted"><font papago-translate="translated"> 문자열과 비교하여 </font></font><code translate="no">"123"</code><font papago-translate="splitted"><font papago-translate="translated">-단순<span class="em">한</span> 토큰타입 열거형을 포함했습니다<span class="em">.</span></font><font papago-translate="translated"> 구문 트리는 그다지<span name="token-data"> 동질</span>적이지 않습니다.</font><font papago-translate="translated"> 단항식에는 단일 피연산자가 있고, 이진식에는 두 개가 있으며, 리터럴에는 아무것도 없습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 이 모든 것을 임의의 아이들 목록과 함께 하나의 표현식 클래스로 통합<em>할 수 있습니다</em>.</font><font papago-translate="translated"> 일부 컴파일러는 그렇게 합니다.</font><font papago-translate="translated"> 하지만 저는 Java의 타입 시스템을 최대한 활용하는 것을 좋아합니다.</font><font papago-translate="translated"> 그래서 우리는 표현식에 대한 기본 클래스를 정의할 것입니다.</font><font papago-translate="translated"> 그런 다음 각 유형의 표현에 대해 각 프로덕션<span class="em"></span>은 다음과 같습니다 </font></font><code translate="no">expression</code><font papago-translate="splitted"><font papago-translate="translated"><span class="em">-</span>우리는 해당 규칙에 특정한 비터미널 필드를 가진 하위 클래스를 만듭니다<span class="em">.</span></font><font papago-translate="translated"> 이렇게 하면 단항식의 두 번째 피연산자에 접근하려고 하면 컴파일 오류가 발생합니다.</font></font></p>
+<aside name="token-data" style="top: 7873.5px;">
+<p><font papago-translate="translated">토큰도 완전히 동질적이지는 않습니다.</font><font papago-translate="translated"> 리터럴용 토큰은 그 가치를 저장하지만, 다른 종류의 어휘는 그 상태가 필요하지 않습니다.</font><font papago-translate="translated"> 리터럴과 다른 종류의 어휘에 대해 다양한 클래스를 사용하는 스캐너를 본 적이 있지만, 더 간단하게 유지할 수 있을 것이라고 생각했습니다.</font></p>
 </aside>
-<p>Something like this:</p>
+<p><font papago-translate="translated">이런 식으로:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">package</span> <span class="i">com.craftinginterpreters.lox</span>;
 
 <span class="k">abstract</span> <span class="k">class</span> <span class="t">Expr</span> {<span name="expr"> </span>
@@ -469,61 +299,29 @@ keep things simpler.</p>
   <span class="c">// Other expressions...</span>
 }
 </pre></div>
-<aside name="expr">
-<p>I avoid abbreviations in my code because they trip up a reader who doesn’t know
-what they stand for. But in compilers I’ve looked at, “Expr” and “Stmt” are so
-ubiquitous that I may as well start getting you used to them now.</p>
+<aside name="expr" style="top: 8248.5px;">
+<p><font papago-translate="translated">저는 제 코드의 약어를 피합니다. 왜냐하면 그 약어들이 자신이 무엇을 의미하는지 모르는 독자를 속이기 때문입니다.</font><font papago-translate="translated"> 하지만 제가 살펴본 컴파일러에서는 "Expr"과 "Stmt"가 너무 보편적이어서 이제 여러분도 익숙해지실 수 있을 것 같습니다.</font></p>
 </aside>
-<p>Expr is the base class that all expression classes inherit from. As you can see
-from <code translate="no">Binary</code>, the subclasses are nested inside of it. There’s no technical need
-for this, but it lets us cram all of the classes into a single Java file.</p>
-<h3><a href="#disoriented-objects" id="disoriented-objects"><small>5 . 2 . 1</small>Disoriented objects</a></h3>
-<p>You’ll note that, much like the Token class, there aren’t any methods here. It’s
-a dumb structure. Nicely typed, but merely a bag of data. This feels strange in
-an object-oriented language like Java. Shouldn’t the class <em>do stuff</em>?</p>
-<p>The problem is that these tree classes aren’t owned by any single domain. Should
-they have methods for parsing since that’s where the trees are created? Or
-interpreting since that’s where they are consumed? Trees span the border between
-those territories, which means they are really owned by <em>neither</em>.</p>
-<p>In fact, these types exist to enable the parser and interpreter to
-<em>communicate</em>. That lends itself to types that are simply data with no
-associated behavior. This style is very natural in functional languages like
-Lisp and ML where <em>all</em> data is separate from behavior, but it feels odd in
-Java.</p>
-<p>Functional programming aficionados right now are jumping up to exclaim “See!
-Object-oriented languages are a bad fit for an interpreter!” I won’t go that
-far. You’ll recall that the scanner itself was admirably suited to
-object-orientation. It had all of the mutable state to keep track of where it
-was in the source code, a well-defined set of public methods, and a handful of
-private helpers.</p>
-<p>My feeling is that each phase or part of the interpreter works fine in an
-object-oriented style. It is the data structures that flow between them that are
-stripped of behavior.</p>
-<h3><a href="#metaprogramming-the-trees" id="metaprogramming-the-trees"><small>5 . 2 . 2</small>Metaprogramming the trees</a></h3>
-<p>Java can express behavior-less classes, but I wouldn’t say that it’s
-particularly great at it. Eleven lines of code to stuff three fields in an
-object is pretty tedious, and when we’re all done, we’re going to have 21 of
-these classes.</p>
-<p>I don’t want to waste your time or my ink writing all that down. Really, what is
-the essence of each subclass? A name, and a list of typed fields. That’s it.
-We’re smart language hackers, right? Let’s <span name="automate">automate</span>.</p>
-<aside name="automate">
-<p>Picture me doing an awkward robot dance when you read that. “AU-TO-MATE.”</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">Expr은 모든 표현식 클래스가 상속받는 기본 클래스입니다.</font><font papago-translate="translated"> 보시다시피 </font></font><code translate="no">Binary</code><font papago-translate="splitted"><font papago-translate="translated">, 하위 클래스는 그 안에 중첩되어 있습니다.</font><font papago-translate="translated"> 기술적인 필요는 없지만, 모든 클래스를 하나의 Java 파일에 입력할 수 있습니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/representing-code.html#disoriented-objects" id="disoriented-objects"><small><font papago-translate="translated">5 . 2 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">방향 감각이 없는 물체</font></font></a></h3>
+<p><font papago-translate="translated">토큰 클래스와 마찬가지로 여기에는 방법이 없습니다.</font><font papago-translate="translated"> 어리석은 구조입니다.</font><font papago-translate="translated"> 잘 타이핑했지만 데이터 한 봉지에 불과합니다.</font><font papago-translate="translated"> 자바와 같은 객체 지향 언어에서는 이상하게 느껴집니다.</font><font papago-translate="translated"> 수업<em>이 해야 할 일이</em> 있지 않나요?</font></p>
+<p><font papago-translate="translated">문제는 이러한 트리 클래스가 단일 도메인에 의해 소유되지 않는다는 것입니다.</font><font papago-translate="translated"> 나무가 만들어지는 곳인데 파싱 방법이 있어야 하나요?</font><font papago-translate="translated"> 아니면 그곳에서 소비되기 때문에 해석하는 건가요?</font><font papago-translate="translated"> 나무들은 그 지역들 사이의 경계를 가로지르며, 이는 나무들이 실제로 둘<em> 다</em> 소유하고 있지 않다는 것을 의미합니다.</font></p>
+<p><font papago-translate="translated">사실, 이러한 유형들은 파서와 통역사가<em> 소통</em>할 수 있도록 하기 위해 존재합니다.</font><font papago-translate="translated"> 이는 단순히 관련된 동작이 없는 데이터 유형에 적합합니다.</font><font papago-translate="translated"> 이 스타일은<em> 모든</em> 데이터가 동작과 분리되어 있는 Lisp나 ML과 같은 함수형 언어에서는 매우 자연스럽지만, Java에서는 이상하게 느껴집니다.</font></p>
+<p><font papago-translate="translated">현재 기능 프로그래밍 애호가들은 "봐!"라고 외치려고 뛰어오르고 있습니다!</font><font papago-translate="translated"> 객체 지향 언어는 통역사에게 적합하지 않습니다!"</font><font papago-translate="translated"> 그렇게까지 하지 않겠습니다.</font><font papago-translate="translated"> 스캐너 자체가 물체의 방향 설정에 훌륭하게 적합했다는 것을 기억하실 것입니다.</font><font papago-translate="translated"> 소스 코드에서 자신이 어디에 있는지 추적할 수 있는 모든 돌연변이 상태, 잘 정의된 공개 방법 세트, 그리고 소수의 개인 도우미가 있었습니다.</font></p>
+<p><font papago-translate="translated">제 생각에는 통역사의 각 단계나 일부가 객체 지향적인 스타일로 잘 작동하는 것 같습니다.</font><font papago-translate="translated"> 그들 사이를 흐르는 데이터 구조가 행동을 박탈당합니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/representing-code.html#metaprogramming-the-trees" id="metaprogramming-the-trees"><small><font papago-translate="translated">5 . 2 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">트리 메타프로그래밍</font></font></a></h3>
+<p><font papago-translate="translated">자바는 행동 없는 클래스를 표현할 수 있지만, 특별히 뛰어나다고는 할 수 없습니다.</font><font papago-translate="translated"> 객체에 세 개의 필드를 채우기 위해 열한 줄의 코드를 입력하는 것은 꽤 지루하며, 우리가 모두 끝나면 21개의 클래스가 생깁니다.</font></p>
+<p><font papago-translate="translated">시간을 낭비하거나 잉크로 모든 것을 적고 싶지 않습니다.</font><font papago-translate="translated"> 정말로, 각 하위 클래스의 본질은 무엇인가요?</font><font papago-translate="translated"> 이름과 입력된 필드 목록.</font><font papago-translate="translated"> 그게 다입니다.</font><font papago-translate="translated"> 우리는 똑똑한 언어 해커 맞죠?</font><font papago-translate="translated"> <span name="automate">자동화합시다</span>.</font></p>
+<aside name="automate" style="top: 9581.5px;">
+<p><font papago-translate="translated">그 글을 읽을 때 어색한 로봇 댄스를 추는 제 모습을 상상해 보세요.</font><font papago-translate="translated"> "AU-to-MATE."</font></p>
 </aside>
-<p>Instead of tediously handwriting each class definition, field declaration,
-constructor, and initializer, we’ll hack together a <span name="python">script</span> that does it for us. It has a description of each
-tree type<span class="em">—</span>its name and fields<span class="em">—</span>and it prints out the Java code needed to
-define a class with that name and state.</p>
-<p>This script is a tiny Java command-line app that generates a file named
-“Expr.java”:</p>
-<aside name="python">
-<p>I got the idea of scripting the syntax tree classes from Jim Hugunin, creator of
-Jython and IronPython.</p>
-<p>An actual scripting language would be a better fit for this than Java, but I’m
-trying not to throw too many languages at you.</p>
+<p><font papago-translate="translated">각 클래스 정의, 필드 선언, 생성자, 초기화자를 지루하게 손글씨로 작성하는 대신<span name="python">, 우리</span>를 위해<span name="python"> 이</span>를 수행<span name="python">하는 스크립트</span>를 함께 해킹할 것입니다.</font><font papago-translate="translated"> 각 트리 유형(이름과 필드)에 대한 설명이 있으며, 해당 이름과<span class="em"></span><span class="em"></span> 상태로 클래스를 정의하는 데 필요한 Java 코드를 출력합니다.</font></p>
+<p><font papago-translate="translated">이 스크립트는 "Expr.java"라는 이름의 파일을 생성하는 작은 Java 명령줄 앱입니다:</font></p>
+<aside name="python" style="top: 9653.5px;">
+<p><font papago-translate="translated">저는 Jython과 IronPython의 창작자인 Jim Hugunin으로부터 구문 트리 클래스를 스크립팅하는 아이디어를 얻었습니다.</font></p>
+<p><font papago-translate="translated">자바보다 실제 스크립트 언어가 더 적합할 것 같지만, 너무 많은 언어를 사용하지 않으려고 노력하고 있습니다.</font></p>
 </aside>
-<div class="codehilite"><div class="source-file"><em>tool/GenerateAst.java</em><br/>
-create new file</div>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">도구/GenerateAst.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 새 파일 만들기</font></font></div>
 <pre translate="no"><span class="k">package</span> <span class="i">com.craftinginterpreters.tool</span>;
 
 <span class="k">import</span> <span class="i">java.io.IOException</span>;
@@ -542,16 +340,10 @@ create new file</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>tool/GenerateAst.java</em>, create new file</div>
-<p>Note that this file is in a different package, <code translate="no">.tool</code> instead of <code translate="no">.lox</code>. This
-script isn’t part of the interpreter itself. It’s a tool <em>we</em>, the people
-hacking on the interpreter, run ourselves to generate the syntax tree classes.
-When it’s done, we treat “Expr.java” like any other file in the implementation.
-We are merely automating how that file gets authored.</p>
-<p>To generate the classes, it needs to have some description of each type and its
-fields.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 파일은 다른 패키지에 포함되어 있습니다, </font></font><code translate="no">.tool</code><font papago-translate="splitted"><font papago-translate="translated"> 대신 </font></font><code translate="no">.lox</code><font papago-translate="splitted"><font papago-translate="translated">. 이 스크립트는 통역사 자체의 일부가 아닙니다.</font><font papago-translate="translated"> 우리<em>가</em> 직접 실행하여 구문 트리 클래스를 생성하는 도구입니다.</font><font papago-translate="translated"> 완료되면 구현의 다른 파일과 마찬가지로 "Expr.java"를 처리합니다.</font><font papago-translate="translated"> 우리는 단지 그 파일이 작성되는 방식을 자동화하고 있을 뿐입니다.</font></font></p>
+<p><font papago-translate="translated">클래스를 생성하려면 각 유형과 필드에 대한 설명이 필요합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    String outputDir = args[0];
-</pre><div class="source-file"><em>tool/GenerateAst.java</em><br/>
-in <em>main</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">도구/GenerateAst.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>메인</em> ()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="i">defineAst</span>(<span class="i">outputDir</span>, <span class="s">"Expr"</span>, <span class="t">Arrays</span>.<span class="i">asList</span>(
       <span class="s">"Binary   : Expr left, Token operator, Expr right"</span>,
       <span class="s">"Grouping : Expr expression"</span>,
@@ -561,12 +353,9 @@ in <em>main</em>()</div>
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>tool/GenerateAst.java</em>, in <em>main</em>()</div>
-<p>For brevity’s sake, I jammed the descriptions of the expression types into
-strings. Each is the name of the class followed by <code translate="no">:</code> and the list of fields,
-separated by commas. Each field has a type and a name.</p>
-<p>The first thing <code translate="no">defineAst()</code> needs to do is output the base Expr class.</p>
-<div class="codehilite"><div class="source-file"><em>tool/GenerateAst.java</em><br/>
-add after <em>main</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">간결함을 위해 표현 유형에 대한 설명을 문자열로 채웠습니다.</font><font papago-translate="translated"> 각각 다음에 오는 클래스의 이름입니다 </font></font><code translate="no">:</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 쉼표로 구분된 필드 목록.</font><font papago-translate="translated"> 각 필드에는 유형과 이름이 있습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">첫 번째는 </font></font><code translate="no">defineAst()</code><font papago-translate="splitted"><font papago-translate="translated"> 기본 Expr 클래스를 출력해야 합니다.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">도구/GenerateAst.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>메인</em> () 뒤에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="k">static</span> <span class="t">void</span> <span class="i">defineAst</span>(
       <span class="t">String</span> <span class="i">outputDir</span>, <span class="t">String</span> <span class="i">baseName</span>, <span class="t">List</span>&lt;<span class="t">String</span>&gt; <span class="i">types</span>)
       <span class="k">throws</span> <span class="t">IOException</span> {
@@ -584,15 +373,11 @@ add after <em>main</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>tool/GenerateAst.java</em>, add after <em>main</em>()</div>
-<p>When we call this, <code translate="no">baseName</code> is “Expr”, which is both the name of the class and
-the name of the file it outputs. We pass this as an argument instead of
-hardcoding the name because we’ll add a separate family of classes later for
-statements.</p>
-<p>Inside the base class, we define each subclass.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리가 이것을 부를 때, </font></font><code translate="no">baseName</code><font papago-translate="splitted"><font papago-translate="translated"> "Expr"은 클래스의 이름이자 출력하는 파일의 이름입니다.</font><font papago-translate="translated"> 나중에 명제를 위해 별도의 클래스 패밀리를 추가할 예정이므로 이름을 하드코딩하는 대신 인수로 전달합니다.</font></font></p>
+<p><font papago-translate="translated">기본 클래스 내에서 각 하위 클래스를 정의합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    writer.println("abstract class " + baseName + " {");
 
-</pre><div class="source-file"><em>tool/GenerateAst.java</em><br/>
-in <em>defineAst</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">도구/GenerateAst.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>정의</em>A<em>st</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="c">// The AST classes.</span>
     <span class="k">for</span> (<span class="t">String</span> <span class="i">type</span> : <span class="i">types</span>) {
       <span class="t">String</span> <span class="i">className</span> = <span class="i">type</span>.<span class="i">split</span>(<span class="s">":"</span>)[<span class="n">0</span>].<span class="i">trim</span>();
@@ -602,14 +387,11 @@ in <em>defineAst</em>()</div>
 </pre><pre class="insert-after" translate="no">    writer.println("}");
 </pre></div>
 <div class="source-file-narrow"><em>tool/GenerateAst.java</em>, in <em>defineAst</em>()</div>
-<aside name="robust">
-<p>This isn’t the world’s most elegant string manipulation code, but that’s fine.
-It only runs on the exact set of class definitions we give it. Robustness ain’t
-a priority.</p>
+<aside name="robust" style="top: 11252.5px;">
+<p><font papago-translate="translated">이것은 세계에서 가장 우아한 문자열 조작 코드는 아니지만 괜찮습니다.</font><font papago-translate="translated"> 그것은 우리가 제공하는 정확한 클래스 정의 세트에서만 실행됩니다.</font><font papago-translate="translated"> 견고함은 우선순위가 아닙니다.</font></p>
 </aside>
-<p>That code, in turn, calls:</p>
-<div class="codehilite"><div class="source-file"><em>tool/GenerateAst.java</em><br/>
-add after <em>defineAst</em>()</div>
+<p><font papago-translate="translated">그 코드는 차례로 호출됩니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">도구/GenerateAst.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>definite</em>A<em>st</em>() 후에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="k">static</span> <span class="t">void</span> <span class="i">defineType</span>(
       <span class="t">PrintWriter</span> <span class="i">writer</span>, <span class="t">String</span> <span class="i">baseName</span>,
       <span class="t">String</span> <span class="i">className</span>, <span class="t">String</span> <span class="i">fieldList</span>) {
@@ -638,131 +420,54 @@ add after <em>defineAst</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>tool/GenerateAst.java</em>, add after <em>defineAst</em>()</div>
-<p>There we go. All of that glorious Java boilerplate is done. It declares each
-field in the class body. It defines a constructor for the class with parameters
-for each field and initializes them in the body.</p>
-<p>Compile and run this Java program now and it <span name="longer">blasts</span>
-out a new “.java” file containing a few dozen lines of code. That file’s
-about to get even longer.</p>
-<aside name="longer">
-<p><a href="appendix-ii.html">Appendix II</a> contains the code generated by this script once we’ve finished
-implementing jlox and defined all of its syntax tree nodes.</p>
+<p><font papago-translate="translated">또 시작이군.</font><font papago-translate="translated"> 그 영광스러운 자바 보일러플레이트가 모두 완성되었습니다.</font><font papago-translate="translated"> 클래스 본문의 각 필드를 선언합니다.</font><font papago-translate="translated"> 각 필드에 대한 매개변수를 가진 클래스의 생성자를 정의하고 본문에서 이를 초기화합니다.</font></p>
+<p><font papago-translate="translated">지금 이 Java 프로그램을 컴파일하고 실행하면 수십 줄의 코드가 포함된 새로운 .java" 파일<span name="longer">이 실행됩니다</span>.</font><font papago-translate="translated"> 그 파일은 곧 더 길어질 것입니다.</font></p>
+<aside name="longer" style="top: 12045.5px;">
+<p><font papago-translate="translated"><a href="https://youhogeon-meritz.github.io/appendix-ii.html">부록 II에는</a> Jlox 구현을 완료하고 모든 구문 트리 노드를 정의한 후 이 스크립트에서 생성된 코드가 포함되어 있습니다<a href="https://youhogeon-meritz.github.io/appendix-ii.html">.</a></font></p>
 </aside>
-<h2><a href="#working-with-trees" id="working-with-trees"><small>5 . 3</small>Working with Trees</a></h2>
-<p>Put on your imagination hat for a moment. Even though we aren’t there yet,
-consider what the interpreter will do with the syntax trees. Each kind of
-expression in Lox behaves differently at runtime. That means the interpreter
-needs to select a different chunk of code to handle each expression type. With
-tokens, we can simply switch on the TokenType. But we don’t have a “type” enum
-for the syntax trees, just a separate Java class for each one.</p>
-<p>We could write a long chain of type tests:</p>
+<h2><a href="https://youhogeon-meritz.github.io/representing-code.html#working-with-trees" id="working-with-trees"><small><font papago-translate="translated">5 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">나무 작업</font></font></a></h2>
+<p><font papago-translate="translated">잠시 상상 모자를 써보세요.</font><font papago-translate="translated"> 비록 아직 도착하지 않았지만, 통역사가 구문 트리를 어떻게 처리할지 고려해 보세요.</font><font papago-translate="translated"> Lox의 각 표현식은 런타임 시 다르게 작동합니다.</font><font papago-translate="translated"> 즉, 통역사는 각 표현 유형을 처리할 다른 코드 조각을 선택해야 합니다.</font><font papago-translate="translated"> 토큰을 사용하면 간단히 토큰타입을 켤 수 있습니다.</font><font papago-translate="translated"> 하지만 구문 트리에 대한 "유형" 열거는 없으며, 각 트리마다 별도의 Java 클래스만 있습니다.</font></p>
+<p><font papago-translate="translated">우리는 긴 유형 테스트 체인을 작성할 수 있습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">if</span> (<span class="i">expr</span> <span class="k">instanceof</span> <span class="t">Expr</span>.<span class="t">Binary</span>) {
   <span class="c">// ...</span>
 } <span class="k">else</span> <span class="k">if</span> (<span class="i">expr</span> <span class="k">instanceof</span> <span class="t">Expr</span>.<span class="t">Grouping</span>) {
   <span class="c">// ...</span>
 } <span class="k">else</span> <span class="c">// ...</span>
 </pre></div>
-<p>But all of those sequential type tests are slow. Expression types whose names
-are alphabetically later would take longer to execute because they’d fall
-through more <code translate="no">if</code> cases before finding the right type. That’s not my idea of an
-elegant solution.</p>
-<p>We have a family of classes and we need to associate a chunk of behavior with
-each one. The natural solution in an object-oriented language like Java is to
-put those behaviors into methods on the classes themselves. We could add an
-abstract <span name="interpreter-pattern"><code translate="no">interpret()</code></span> method on Expr
-which each subclass would then implement to interpret itself.</p>
-<aside name="interpreter-pattern">
-<p>This exact thing is literally called the <a href="https://en.wikipedia.org/wiki/Interpreter_pattern">“Interpreter pattern”</a> in
-<em>Design Patterns: Elements of Reusable Object-Oriented Software</em>, by Erich
-Gamma, et al.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">하지만 모든 순차적 유형 테스트는 느립니다.</font><font papago-translate="translated"> 이름이 알파벳순으로 나중에 나오는 표현형은 더 많은 항목을 통과하기 때문에 실행하는 데 시간이 더 오래 걸립니다 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 올바른 유형을 찾기 전의 사례들.</font><font papago-translate="translated"> 그것은 우아한 해결책에 대한 제 생각이 아닙니다.</font></font></p>
+<p><font papago-translate="translated">우리는 여러 계층의 가족이 있으며, 각각의 계층과 행동의 일부를 연관시켜야 합니다.</font><font papago-translate="translated"> Java와 같은 객체 지향 언어의 자연스러운 해결책은 이러한 행동을 클래스 자체의 방법에 적용하는 것입니다.</font><font papago-translate="translated"> 각 하위 클래스가 스스로 해석할 수 있도록 Expr에 추상<span name="interpreter-pattern">적인 방법</span>을 추가할 수 있습니다.</font></p>
+<aside name="interpreter-pattern" style="top: 12745.5px;">
+<p><font papago-translate="translated">이 정확한 것은 디자인<em> 패턴</em>에서 문자 그대로<a href="https://en.wikipedia.org/wiki/Interpreter_pattern"> "인터프리터 패턴"</a>이라고 불립니다:</font><font papago-translate="translated"><em> 재사용 가능한 객체 지향 소프트웨어의 요소</em>들, Erich Gamma 등.</font></p>
 </aside>
-<p>This works alright for tiny projects, but it scales poorly. Like I noted before,
-these tree classes span a few domains. At the very least, both the parser and
-interpreter will mess with them. As <a href="resolving-and-binding.html">you’ll see later</a>, we need to
-do name resolution on them. If our language was statically typed, we’d have a
-type checking pass.</p>
-<p>If we added instance methods to the expression classes for every one of those
-operations, that would smush a bunch of different domains together. That
-violates <a href="https://en.wikipedia.org/wiki/Separation_of_concerns">separation of concerns</a> and leads to hard-to-maintain code.</p>
-<h3><a href="#the-expression-problem" id="the-expression-problem"><small>5 . 3 . 1</small>The expression problem</a></h3>
-<p>This problem is more fundamental than it may seem at first. We have a handful of
-types, and a handful of high-level operations like “interpret”. For each pair of
-type and operation, we need a specific implementation. Picture a table:</p><img alt="A table where rows are labeled with expression classes, and columns are function names." src="image/representing-code/table.png">
-<p>Rows are types, and columns are operations. Each cell represents the unique
-piece of code to implement that operation on that type.</p>
-<p>An object-oriented language like Java assumes that all of the code in one row
-naturally hangs together. It figures all the things you do with a type are
-likely related to each other, and the language makes it easy to define them
-together as methods inside the same class.</p><img alt="The table split into rows for each class." src="image/representing-code/rows.png"/>
-<p>This makes it easy to extend the table by adding new rows. Simply define a new
-class. No existing code has to be touched. But imagine if you want to add a new
-<em>operation</em><span class="em">—</span>a new column. In Java, that means cracking open each of those
-existing classes and adding a method to it.</p>
-<p>Functional paradigm languages in the <span name="ml">ML</span> family flip that
-around. There, you don’t have classes with methods. Types and functions are
-totally distinct. To implement an operation for a number of different types, you
-define a single function. In the body of that function, you use <em>pattern
-matching</em><span class="em">—</span>sort of a type-based switch on steroids<span class="em">—</span>to implement the
-operation for each type all in one place.</p>
-<aside name="ml">
-<p>ML, short for “metalanguage” was created by Robin Milner and friends and forms
-one of the main branches in the great programming language family tree. Its
-children include SML, Caml, OCaml, Haskell, and F#. Even Scala, Rust, and Swift
-bear a strong resemblance.</p>
-<p>Much like Lisp, it is one of those languages that is so full of good ideas that
-language designers today are still rediscovering them over forty years later.</p>
+<p><font papago-translate="translated">이것은 작은 프로젝트에서는 잘 작동하지만, 확장성이 떨어집니다.</font><font papago-translate="translated"> 앞서 언급했듯이 이러한 트리 클래스는 몇 가지 도메인에 걸쳐 있습니다.</font><font papago-translate="translated"> 적어도 파서와 통역사 모두 그들을 건드릴 것입니다.</font><font papago-translate="translated"> <a href="https://youhogeon-meritz.github.io/resolving-and-binding.html">나중에 보시</a>겠지만, 이름을 확인해야 합니다.</font><font papago-translate="translated"> 우리 언어가 정적으로 타이핑되었다면, 우리는 타이핑 체크 패스를 받았을 것입니다.</font></p>
+<p><font papago-translate="translated">각 작업에 대해 표현 클래스에 인스턴스 메서드를 추가하면 여러 도메인이 함께 스매시될 것입니다.</font><font papago-translate="translated"> <a href="https://en.wikipedia.org/wiki/Separation_of_concerns">이</a>는<a href="https://en.wikipedia.org/wiki/Separation_of_concerns"> 우려 사항의 분리</a>를 위반하고 유지 관리하기 어려운 코드로 이어집니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/representing-code.html#the-expression-problem" id="the-expression-problem"><small><font papago-translate="translated">5 . 3 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">표현 문제</font></font></a></h3>
+<p><font papago-translate="translated">이 문제는 처음에 생각했던 것보다 더 근본적입니다.</font><font papago-translate="translated"> 우리는 몇 가지 유형과 "해석"과 같은 고급 연산을 가지고 있습니다.</font><font papago-translate="translated"> 각 유형과 작업 쌍에 대해 특정 구현이 필요합니다.</font><font papago-translate="translated"> 테이블을 상상해 보세요:</font></p><img alt="A table where rows are labeled with expression classes, and columns are function names." src="https://youhogeon-meritz.github.io/image/representing-code/table.png">
+<p><font papago-translate="translated">행은 유형이고 열은 연산입니다.</font><font papago-translate="translated"> 각 셀은 해당 유형에서 해당 작업을 구현하기 위한 고유한 코드 조각을 나타냅니다.</font></p>
+<p><font papago-translate="translated">Java와 같은 객체 지향 언어는 한 행의 모든 코드가 자연스럽게 서로 연결된다고 가정합니다.</font><font papago-translate="translated"> 타입으로 하는 모든 작업이 서로 관련이 있을 가능성이 높으며, 언어를 사용하면 동일한 클래스 내의 메서드로 함께 정의하기 쉽습니다.</font></p><img alt="The table split into rows for each class." src="https://youhogeon-meritz.github.io/image/representing-code/rows.png">
+<p><font papago-translate="translated">이렇게 하면 새 행을 추가하여 테이블을 쉽게 확장할 수 있습니다.</font><font papago-translate="translated"> 새 클래스를 정의하기만 하면 됩니다.</font><font papago-translate="translated"> 기존 코드를 터치할 필요가 없습니다.</font><font papago-translate="translated"> 하지만 새로운<em> 작업</em>, 즉<span class="em"></span> 새로운 열을 추가하고 싶다고 상상해 보세요.</font><font papago-translate="translated"> Java에서 이는 기존 클래스를 각각 열어서 메서드를 추가하는 것을 의미합니다.</font></p>
+<p><font papago-translate="translated">ML 계열의 기능적 패러다임 언어는<span name="ml"></span> 이를 뒤집습니다.</font><font papago-translate="translated"> 거기에는 방법이 있는 수업이 없습니다.</font><font papago-translate="translated"> 유형과 기능은 완전히 다릅니다.</font><font papago-translate="translated"> 다양한 유형에 대한 연산을 구현하려면 단일 함수를 정의해야 합니다.</font><font papago-translate="translated"> 그 기능의 본문에서는<em> 패턴 매칭</em>(스테로이드의 일종의 유형 기반 스위치)을 사용하여 각 유형에 대한 작업을 한<span class="em"></span><span class="em"></span> 곳에서 모두 구현합니다.</font></p>
+<aside name="ml" style="top: 13950.5px;">
+<p><font papago-translate="translated">ML은 "금속 언어"의 줄임말로 로빈 밀너와 친구들에 의해 만들어졌으며, 위대한 프로그래밍 언어 패밀리 트리의 주요 분기 중 하나를 형성합니다.</font><font papago-translate="translated"> 자녀로는 SML, Caml, OCaml, Haskell, 그리고 F#이 있습니다.</font><font papago-translate="translated"> 스칼라, 러스트, 스위프트조차도 강한 유사성을 가지고 있습니다.</font></p>
+<p><font papago-translate="translated">리스프와 마찬가지로, 오늘날 언어 디자이너들이 40년이 지난 지금도 여전히 이를 재발견하고 있을 정도로 좋은 아이디어가 가득한 언어 중 하나입니다.</font></p>
 </aside>
-<p>This makes it trivial to add new operations<span class="em">—</span>simply define another function
-that pattern matches on all of the types.</p><img alt="The table split into columns for each function." src="image/representing-code/columns.png"/>
-<p>But, conversely, adding a new type is hard. You have to go back and add a new
-case to all of the pattern matches in all of the existing functions.</p>
-<p>Each style has a certain “grain” to it. That’s what the paradigm name literally
-says<span class="em">—</span>an object-oriented language wants you to <em>orient</em> your code along the
-rows of types. A functional language instead encourages you to lump each
-column’s worth of code together into a <em>function</em>.</p>
-<p>A bunch of smart language nerds noticed that neither style made it easy to add
-<em>both</em> rows and columns to the <span name="multi">table</span>. They called this
-difficulty the “expression problem” because<span class="em">—</span>like we are now<span class="em">—</span>they first ran
-into it when they were trying to figure out the best way to model expression
-syntax tree nodes in a compiler.</p>
-<aside name="multi">
-<p>Languages with <em>multimethods</em>, like Common Lisp’s CLOS, Dylan, and Julia do
-support adding both new types and operations easily. What they typically
-sacrifice is either static type checking, or separate compilation.</p>
+<p><font papago-translate="translated">따라서 모든<span class="em"></span> 유형에서 패턴이 일치하는 다른 함수를 정의하기만 하면 새 연산을 추가하는 것이 간단해집니다.</font></p><img alt="The table split into columns for each function." src="https://youhogeon-meritz.github.io/image/representing-code/columns.png">
+<p><font papago-translate="translated">하지만 반대로 새로운 유형을 추가하는 것은 어렵습니다.</font><font papago-translate="translated"> 돌아가서 모든 기존 함수의 모든 패턴 일치에 새로운 케이스를 추가해야 합니다.</font></p>
+<p><font papago-translate="translated">각 스타일에는 특정한 "곡물"이 있습니다.</font><font papago-translate="translated"> 그것이 바로 패러다임 이름에서 말하는 것입니다—객체 지향 언어는<span class="em"></span> 당신이 코드를 여러 유형의 행을 따라<em> 정렬</em>하기를 원합니다.</font><font papago-translate="translated"> 기능 언어는 대신 각 열의 코드를<em> 하나의 함수</em>로 묶는 것을 권장합니다.</font></p>
+<p><font papago-translate="translated">많은 똑똑한 언어 덕후들이 두 가지 스타일 모두 테이블<span name="multi"></span><em></em>에 행과 열을 추가하는 것이 쉽지 않다는 것을 알아차렸습니다.</font><font papago-translate="translated"> 그들은 이 난이도를 "표현 문제"라고 불렀습니다. 왜냐하면 지금 우리처럼<span class="em"></span><span class="em"></span> 컴파일러에서 표현 구문 트리 노드를 모델링하는 가장 좋은 방법을 찾으려 할 때 처음 부딪혔기 때문입니다.</font></p>
+<aside name="multi" style="top: 14605.5px;">
+<p><font papago-translate="translated"><em>Comm</em>on Lisp의 CLOS, Dylan, Julia와 같은<em> 다중 메서드</em>를 사용하는 언어들은 새로운 유형과 연산을 쉽게 추가할 수 있도록 지원합니다.</font><font papago-translate="translated"> 그들이 일반적으로 희생하는 것은 정적 유형 검사 또는 별도의 컴파일입니다.</font></p>
 </aside>
-<p>People have thrown all sorts of language features, design patterns, and
-programming tricks to try to knock that problem down but no perfect language has
-finished it off yet. In the meantime, the best we can do is try to pick a
-language whose orientation matches the natural architectural seams in the
-program we’re writing.</p>
-<p>Object-orientation works fine for many parts of our interpreter, but these tree
-classes rub against the grain of Java. Fortunately, there’s a design pattern we
-can bring to bear on it.</p>
-<h3><a href="#the-visitor-pattern" id="the-visitor-pattern"><small>5 . 3 . 2</small>The Visitor pattern</a></h3>
-<p>The <strong>Visitor pattern</strong> is the most widely misunderstood pattern in all of
-<em>Design Patterns</em>, which is really saying something when you look at the
-software architecture excesses of the past couple of decades.</p>
-<p>The trouble starts with terminology. The pattern isn’t about “visiting”, and the
-“accept” method in it doesn’t conjure up any helpful imagery either. Many think
-the pattern has to do with traversing trees, which isn’t the case at all. We
-<em>are</em> going to use it on a set of classes that are tree-like, but that’s a
-coincidence. As you’ll see, the pattern works as well on a single object.</p>
-<p>The Visitor pattern is really about approximating the functional style within an
-OOP language. It lets us add new columns to that table easily. We can define all
-of the behavior for a new operation on a set of types in one place, without
-having to touch the types themselves. It does this the same way we solve almost
-every problem in computer science: by adding a layer of indirection.</p>
-<p>Before we apply it to our auto-generated Expr classes, let’s walk through a
-simpler example. Say we have two kinds of pastries: <span name="beignet">beignets</span> and crullers.</p>
-<aside name="beignet">
-<p>A beignet (pronounced “ben-yay”, with equal emphasis on both syllables) is a
-deep-fried pastry in the same family as doughnuts. When the French colonized
-North America in the 1700s, they brought beignets with them. Today, in the US,
-they are most strongly associated with the cuisine of New Orleans.</p>
-<p>My preferred way to consume them is fresh out of the fryer at Café du Monde,
-piled high in powdered sugar, and washed down with a cup of café au lait while I
-watch tourists staggering around trying to shake off their hangover from the
-previous night’s revelry.</p>
+<p><font papago-translate="translated">사람들은 그 문제를 해결하기 위해 온갖 언어 특징, 디자인 패턴, 프로그래밍 요령을 쏟아냈지만, 아직 완벽한 언어가 완성되지 않았습니다.</font><font papago-translate="translated"> 그동안 우리가 할 수 있는 최선의 방법은 우리가 작성하고 있는 프로그램에서 자연스러운 건축적 이음새와 일치하는 언어를 선택하는 것입니다.</font></p>
+<p><font papago-translate="translated">객체 지향은 우리 통역사의 많은 부분에서 잘 작동하지만, 이러한 트리 클래스는 Java의 알갱이와 마찰을 일으킵니다.</font><font papago-translate="translated"> 다행히도, 우리가 그것에 담을 수 있는 디자인 패턴이 있습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/representing-code.html#the-visitor-pattern" id="the-visitor-pattern"><small><font papago-translate="translated">5 . 3 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">방문자 패턴</font></font></a></h3>
+<p><font papago-translate="translated"><strong>방문자 패턴은</strong> 모든 디자인<em> 패턴</em>에서 가장 널리 오해되는 패턴으로, 지난 몇십 년 동안의 소프트웨어 아키텍처 과잉을 보면 정말로 중요한 의미를 지니고 있습니다.</font></p>
+<p><font papago-translate="translated">문제는 용어에서 시작됩니다.</font><font papago-translate="translated"> 패턴은 "방문"에 관한 것이 아니며, 그 안의 "수용" 방법도 유용한 이미지를 떠오르지 않습니다.</font><font papago-translate="translated"> 많은 사람들이 이 패턴이 나무를 가로지르는 것과 관련이 있다고 생각하지만, 전혀 그렇지 않습니다.</font><font papago-translate="translated"> 우리는 그것을 나무와 같은 클래스 세트에 사용할<em> 예정</em>이지만, 그것은 우연의 일치입니다.</font><font papago-translate="translated"> 보시다시피, 이 패턴은 단일 객체에서도 잘 작동합니다.</font></p>
+<p><font papago-translate="translated">방문자 패턴은 OOP 언어 내에서 기능적 스타일을 근사하는 것에 관한 것입니다.</font><font papago-translate="translated"> 이를 통해 해당 테이블에 새 열을 쉽게 추가할 수 있습니다.</font><font papago-translate="translated"> 우리는 유형을 직접 만질 필요 없이 한 곳에서 새로운 유형 집합에 대한 모든 동작을 정의할 수 있습니다.</font><font papago-translate="translated"> 컴퓨터 과학의 거의 모든 문제를 해결하는 것과 같은 방식으로 이 작업을 수행합니다: 간접적인 층을 추가함으로써 말이죠.</font></p>
+<p><font papago-translate="translated">자동 생성된 Expr 클래스에 적용하기 전에 더 간단한 예제를 살펴보겠습니다.</font><font papago-translate="translated"> 두 가지 종류의 페이스트리<span name="beignet">가</span> 있다고 가정해 보겠습니다<span name="beignet">: 비그넷</span>과 크롤러입니다.</font></p>
+<aside name="beignet" style="top: 15469.5px;">
+<p><font papago-translate="translated">베그넷(두 음절 모두를 동일하게 강조하는 "벤야이"로 발음)은 도넛과 같은 과에 속하는 튀긴 페이스트리입니다.</font><font papago-translate="translated"> 1700년대에 프랑스가 북미를 식민지로 삼았을 때, 그들은 비그넷을 가져왔습니다.</font><font papago-translate="translated"> 오늘날 미국에서는 뉴올리언스 요리와 가장 밀접한 관련이 있습니다.</font></p>
+<p><font papago-translate="translated">제가 선호하는 소비 방법은 카페 뒤 몽드의 튀김기에서 갓 꺼내 가루 설탕을 듬뿍 넣고 카페 오트 한 잔으로 씻어내는 것입니다. 전날 밤의 즐거움으로 숙취를 털어내려는 관광객들을 보며 비틀거리는 모습을 볼 수 있습니다.</font></p>
 </aside>
 <div class="codehilite"><pre translate="no">  <span class="k">abstract</span> <span class="k">class</span> <span class="t">Pastry</span> {
   }
@@ -773,33 +478,23 @@ previous night’s revelry.</p>
   <span class="k">class</span> <span class="t">Cruller</span> <span class="k">extends</span> <span class="t">Pastry</span> {
   }
 </pre></div>
-<p>We want to be able to define new pastry operations<span class="em">—</span>cooking them, eating them,
-decorating them, etc.<span class="em">—</span>without having to add a new method to each class every
-time. Here’s how we do it. First, we define a separate interface.</p>
+<p><font papago-translate="translated">요리, 먹기, 꾸미기<span class="em"></span> 등 새로운 페이스트리 작업을 정의할 수 있기를 원합니다.</font><font papago-translate="translated"><span class="em">-</span>매번 각 클래스에 새로운 메서드를 추가할 필요 없이<span class="em">.</span></font><font papago-translate="translated"> 이렇게 합니다.</font><font papago-translate="translated"> 먼저, 별도의 인터페이스를 정의합니다.</font></p>
 <div class="codehilite"><pre translate="no">  <span class="k">interface</span> <span class="t">PastryVisitor</span> {
     <span class="t">void</span> <span class="i">visitBeignet</span>(<span class="t">Beignet</span> <span class="i">beignet</span>);<span name="overload"> </span>
     <span class="t">void</span> <span class="i">visitCruller</span>(<span class="t">Cruller</span> <span class="i">cruller</span>);
   }
 </pre></div>
-<aside name="overload">
-<p>In <em>Design Patterns</em>, both of these methods are confusingly named <code translate="no">visit()</code>, and
-they rely on overloading to distinguish them. This leads some readers to think
-that the correct visit method is chosen <em>at runtime</em> based on its parameter
-type. That isn’t the case. Unlike over<em>riding</em>, over<em>loading</em> is statically
-dispatched at compile time.</p>
-<p>Using distinct names for each method makes the dispatch more obvious, and also
-shows you how to apply this pattern in languages that don’t support overloading.</p>
+<aside name="overload" style="top: 15816.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated"><em>디자인 패턴</em>에서는 이 두 가지 방법이 혼동되어 명명됩니다 </font></font><code translate="no">visit()</code><font papago-translate="splitted"><font papago-translate="translated">, 그리고 그들은 그것들을 구별하기 위해 과부하에 의존합니다.</font><font papago-translate="translated"> 이로 인해 일부 독자들은<em> 매개</em>변수 유형에 따라<em> 런타임에</em> 올바른 방문 방법을 선택한다고 생각하게 됩니다.</font><font papago-translate="translated"> 그렇지 않습니다.</font><font papago-translate="translated"> 오버<em>라이드</em>와 달리 오버로드<em>는</em> 컴파일 시 정적으로 처리됩니다.</font></font></p>
+<p><font papago-translate="translated">각 메서드에 대해 고유한 이름을 사용하면 디스패치가 더 명확해지고 과부하를 지원하지 않는 언어에 이 패턴을 적용하는 방법도 보여줍니다.</font></p>
 </aside>
-<p>Each operation that can be performed on pastries is a new class that implements
-that interface. It has a concrete method for each type of pastry. That keeps the
-code for the operation on both types all nestled snugly together in one class.</p>
-<p>Given some pastry, how do we route it to the correct method on the visitor based
-on its type? Polymorphism to the rescue! We add this method to Pastry:</p>
+<p><font papago-translate="translated">페이스트리에서 수행할 수 있는 각 작업은 해당 인터페이스를 구현하는 새로운 클래스입니다.</font><font papago-translate="translated"> 각 종류의 페이스트리에 대한 구체적인 방법이 있습니다.</font><font papago-translate="translated"> 이는 두 유형의 작업 코드를 하나의 클래스에 완벽하게 묶어 유지합니다.</font></p>
+<p><font papago-translate="translated">페이스트리가 주어졌을 때, 방문자의 유형에 따라 올바른 방법으로 전달하려면 어떻게 해야 하나요?</font><font papago-translate="translated"> 구조에 대한 다형성!</font><font papago-translate="translated"> 이 방법을 페이스트리에 추가합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  abstract class Pastry {
 </pre><pre class="insert" translate="no">    <span class="k">abstract</span> <span class="t">void</span> <span class="i">accept</span>(<span class="t">PastryVisitor</span> <span class="i">visitor</span>);
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
-<p>Each subclass implements it.</p>
+<p><font papago-translate="translated">각 하위 클래스가 이를 구현합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  class Beignet extends Pastry {
 </pre><pre class="insert" translate="no">    <span class="a">@Override</span>
     <span class="t">void</span> <span class="i">accept</span>(<span class="t">PastryVisitor</span> <span class="i">visitor</span>) {
@@ -807,7 +502,7 @@ on its type? Polymorphism to the rescue! We add this method to Pastry:</p>
     }
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
-<p>And:</p>
+<p><font papago-translate="translated">그리고:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  class Cruller extends Pastry {
 </pre><pre class="insert" translate="no">    <span class="a">@Override</span>
     <span class="t">void</span> <span class="i">accept</span>(<span class="t">PastryVisitor</span> <span class="i">visitor</span>) {
@@ -815,43 +510,25 @@ on its type? Polymorphism to the rescue! We add this method to Pastry:</p>
     }
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
-<p>To perform an operation on a pastry, we call its <code translate="no">accept()</code> method and pass in
-the visitor for the operation we want to execute. The pastry<span class="em">—</span>the specific
-subclass’s overriding implementation of <code translate="no">accept()</code><span class="em">—</span>turns around and calls the
-appropriate visit method on the visitor and passes <em>itself</em> to it.</p>
-<p>That’s the heart of the trick right there. It lets us use polymorphic dispatch
-on the <em>pastry</em> classes to select the appropriate method on the <em>visitor</em> class.
-In the table, each pastry class is a row, but if you look at all of the methods
-for a single visitor, they form a <em>column</em>.</p><img alt="Now all of the cells for one operation are part of the same class, the visitor." src="image/representing-code/visitor.png"/>
-<p>We added one <code translate="no">accept()</code> method to each class, and we can use it for as many
-visitors as we want without ever having to touch the pastry classes again. It’s
-a clever pattern.</p>
-<h3><a href="#visitors-for-expressions" id="visitors-for-expressions"><small>5 . 3 . 3</small>Visitors for expressions</a></h3>
-<p>OK, let’s weave it into our expression classes. We’ll also <span name="context">refine</span> the pattern a little. In the pastry example, the
-visit and <code translate="no">accept()</code> methods don’t return anything. In practice, visitors often
-want to define operations that produce values. But what return type should
-<code translate="no">accept()</code> have? We can’t assume every visitor class wants to produce the same
-type, so we’ll use generics to let each implementation fill in a return type.</p>
-<aside name="context">
-<p>Another common refinement is an additional “context” parameter that is passed to
-the visit methods and then sent back through as a parameter to <code translate="no">accept()</code>. That
-lets operations take an additional parameter. The visitors we’ll define in the
-book don’t need that, so I omitted it.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">페이스트리에 작업을 수행하려면 다음과 같이 부릅니다 </font></font><code translate="no">accept()</code><font papago-translate="splitted"><font papago-translate="translated"> 우리가 실행하고자 하는 작업에 대해 방문자에게 방법을 제시하고 전달합니다.</font><font papago-translate="translated"> 페이스트리—특정 하위 클래스의 최우선<span class="em"></span> 구현 </font></font><code translate="no">accept()</code><font papago-translate="splitted"><font papago-translate="translated"><span class="em">-</span>turns를 통해 방문자에게 적절한 방문 방법을 호출하고<em> 자신에게</em> 전달<span class="em">합니다.</span></font></font></p>
+<p><font papago-translate="translated">바로 그것이 요령의 핵심입니다.</font><font papago-translate="translated"> <em>이</em>를 통해<em> 페이스트리</em> 클래스에서 다형성 디스패치를 사용하여<em> 방문자</em> 클래스에서 적절한 방법을 선택할 수 있습니다.</font><font papago-translate="translated"> 표에서 각 페이스트리 클래스는 한 줄로 되어 있지만, 한 명의 방문자를 위한 모든 방법을 살펴보면<em> 열을</em> 형성합니다.</font></p><img alt="Now all of the cells for one operation are part of the same class, the visitor." src="https://youhogeon-meritz.github.io/image/representing-code/visitor.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">하나 추가했습니다 </font></font><code translate="no">accept()</code><font papago-translate="splitted"><font papago-translate="translated"> 각 클래스에 방법을 적용하면 페이스트리 클래스를 다시 만질 필요 없이 원하는 만큼 많은 방문객이 사용할 수 있습니다.</font><font papago-translate="translated"> 영리한 패턴입니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/representing-code.html#visitors-for-expressions" id="visitors-for-expressions"><small><font papago-translate="translated">5 . 3 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">표현을 위한 방문객</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">좋아요, 이제 그것을 우리의 표현 수업에 포함시켜 보겠습니다.</font><font papago-translate="translated"> 패턴<span name="context">도 조금 더 다듬</span>어 보겠습니다.</font><font papago-translate="translated"> 페이스트리 예시에서 방문과 </font></font><code translate="no">accept()</code><font papago-translate="splitted"><font papago-translate="translated"> 방법은 아무것도 반환하지 않습니다.</font><font papago-translate="translated"> 실제로 방문객들은 종종 가치를 창출하는 작업을 정의하고자 합니다.</font><font papago-translate="translated"> 하지만 어떤 반품 유형이 필요합니까 </font></font><code translate="no">accept()</code><font papago-translate="splitted"><font papago-translate="translated"> 그래요? 모든 방문자 클래스가 동일한 유형을 만들고 싶어한다고 가정할 수는 없으므로, 제네릭을 사용하여 각 구현이 반환 유형을 채우도록 하겠습니다.</font></font></p>
+<aside name="context" style="top: 17120.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">또 다른 일반적인 개선 사항은 방문 방법에 전달된 후 매개변수로 다시 전송되는 추가적인 "맥락" 매개변수입니다 </font></font><code translate="no">accept()</code><font papago-translate="splitted"><font papago-translate="translated">. 이를 통해 작업에 추가 매개변수를 사용할 수 있습니다.</font><font papago-translate="translated"> 책에서 정의할 방문자들은 그것이 필요하지 않아서 생략했습니다.</font></font></p>
 </aside>
-<p>First, we define the visitor interface. Again, we nest it inside the base class
-so that we can keep everything in one file.</p>
+<p><font papago-translate="translated">먼저 방문자 인터페이스를 정의합니다.</font><font papago-translate="translated"> 다시 말해서, 우리는 모든 것을 하나의 파일에 보관할 수 있도록 기본 클래스 안에 그것을 배치합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    writer.println("abstract class " + baseName + " {");
 
-</pre><div class="source-file"><em>tool/GenerateAst.java</em><br/>
-in <em>defineAst</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">도구/GenerateAst.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>정의</em>A<em>st</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="i">defineVisitor</span>(<span class="i">writer</span>, <span class="i">baseName</span>, <span class="i">types</span>);
 
 </pre><pre class="insert-after" translate="no">    // The AST classes.
 </pre></div>
 <div class="source-file-narrow"><em>tool/GenerateAst.java</em>, in <em>defineAst</em>()</div>
-<p>That function generates the visitor interface.</p>
-<div class="codehilite"><div class="source-file"><em>tool/GenerateAst.java</em><br/>
-add after <em>defineAst</em>()</div>
+<p><font papago-translate="translated">그 기능은 방문자 인터페이스를 생성합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">도구/GenerateAst.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>definite</em>A<em>st</em>() 후에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="k">static</span> <span class="t">void</span> <span class="i">defineVisitor</span>(
       <span class="t">PrintWriter</span> <span class="i">writer</span>, <span class="t">String</span> <span class="i">baseName</span>, <span class="t">List</span>&lt;<span class="t">String</span>&gt; <span class="i">types</span>) {
     <span class="i">writer</span>.<span class="i">println</span>(<span class="s">"  interface Visitor&lt;R&gt; {"</span>);
@@ -866,16 +543,12 @@ add after <em>defineAst</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>tool/GenerateAst.java</em>, add after <em>defineAst</em>()</div>
-<p>Here, we iterate through all of the subclasses and declare a visit method for
-each one. When we define new expression types later, this will automatically
-include them.</p>
-<p>Inside the base class, we define the abstract <code translate="no">accept()</code> method.</p>
+<p><font papago-translate="translated">여기에서는 모든 하위 클래스를 반복하고 각 하위 클래스에 대한 방문 방법을 선언합니다.</font><font papago-translate="translated"> 나중에 새로운 표현 유형을 정의할 때, 여기에는 자동으로 포함될 것입니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">기본 클래스 내에서 우리는 추상화를 정의합니다 </font></font><code translate="no">accept()</code><font papago-translate="splitted"><font papago-translate="translated"> 방법.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      defineType(writer, baseName, className, fields);
     }
-</pre><div class="source-file"><em>tool/GenerateAst.java</em><br/>
-in <em>defineAst</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">도구/GenerateAst.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>정의</em>A<em>st</em>()에서</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="c">// The base accept() method.</span>
     <span class="i">writer</span>.<span class="i">println</span>();
     <span class="i">writer</span>.<span class="i">println</span>(<span class="s">"  abstract &lt;R&gt; R accept(Visitor&lt;R&gt; visitor);"</span>);
@@ -883,13 +556,10 @@ in <em>defineAst</em>()</div>
 </pre><pre class="insert-after" translate="no">    writer.println("}");
 </pre></div>
 <div class="source-file-narrow"><em>tool/GenerateAst.java</em>, in <em>defineAst</em>()</div>
-<p>Finally, each subclass implements that and calls the right visit method for its
-own type.</p>
+<p><font papago-translate="translated">마지막으로 각 하위 클래스는 이를 구현하고 자신의 유형에 맞는 올바른 방문 방법을 호출합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    writer.println("    }");
-</pre><div class="source-file"><em>tool/GenerateAst.java</em><br/>
-in <em>defineType</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">도구/GenerateAst.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>definiteType</em>()에서</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="c">// Visitor pattern.</span>
     <span class="i">writer</span>.<span class="i">println</span>();
     <span class="i">writer</span>.<span class="i">println</span>(<span class="s">"    @Override"</span>);
@@ -898,40 +568,22 @@ in <em>defineType</em>()</div>
         <span class="i">className</span> + <span class="i">baseName</span> + <span class="s">"(this);"</span>);
     <span class="i">writer</span>.<span class="i">println</span>(<span class="s">"    }"</span>);
 </pre><pre class="insert-after" translate="no">
-
     // Fields.
 </pre></div>
 <div class="source-file-narrow"><em>tool/GenerateAst.java</em>, in <em>defineType</em>()</div>
-<p>There we go. Now we can define operations on expressions without having to muck
-with the classes or our generator script. Compile and run this generator script
-to output an updated “Expr.java” file. It contains a generated Visitor
-interface and a set of expression node classes that support the Visitor pattern
-using it.</p>
-<p>Before we end this rambling chapter, let’s implement that Visitor interface and
-see the pattern in action.</p>
-<h2><a href="#a-not-very-pretty-printer" id="a-not-very-pretty-printer"><small>5 . 4</small>A (Not Very) Pretty Printer</a></h2>
-<p>When we debug our parser and interpreter, it’s often useful to look at a parsed
-syntax tree and make sure it has the structure we expect. We could inspect it in
-the debugger, but that can be a chore.</p>
-<p>Instead, we’d like some code that, given a syntax tree, produces an unambiguous
-string representation of it. Converting a tree to a string is sort of the
-opposite of a parser, and is often called “pretty printing” when the goal is to
-produce a string of text that is valid syntax in the source language.</p>
-<p>That’s not our goal here. We want the string to very explicitly show the nesting
-structure of the tree. A printer that returned <code translate="no">1 + 2 * 3</code> isn’t super helpful
-if what we’re trying to debug is whether operator precedence is handled
-correctly. We want to know if the <code translate="no">+</code> or <code translate="no">*</code> is at the top of the tree.</p>
-<p>To that end, the string representation we produce isn’t going to be Lox syntax.
-Instead, it will look a lot like, well, Lisp. Each expression is explicitly
-parenthesized, and all of its subexpressions and tokens are contained in that.</p>
-<p>Given a syntax tree like:</p><img alt="An example syntax tree." src="image/representing-code/expression.png"/>
-<p>It produces:</p>
+<p><font papago-translate="translated">또 시작이군.</font><font papago-translate="translated"> 이제 클래스나 생성기 스크립트를 조작할 필요 없이 표현식에 대한 연산을 정의할 수 있습니다.</font><font papago-translate="translated"> 이 생성기 스크립트를 컴파일하고 실행하여 업데이트된 "Expr.java" 파일을 출력합니다.</font><font papago-translate="translated"> 생성된 방문자 인터페이스와 이를 사용하는 방문자 패턴을 지원하는 표현 노드 클래스 세트가 포함되어 있습니다.</font></p>
+<p><font papago-translate="translated">이 장을 끝내기 전에 방문자 인터페이스를 구현하고 패턴이 실제로 작동하는지 살펴보겠습니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/representing-code.html#a-not-very-pretty-printer" id="a-not-very-pretty-printer"><small><font papago-translate="translated">5 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">A (별로) 예쁜 프린터</font></font></a></h2>
+<p><font papago-translate="translated">우리가 파서와 인터프리터를 디버깅할 때, 종종 파싱된 구문 트리를 살펴보고 우리가 기대하는 구조를 가지고 있는지 확인하는 것이 유용합니다.</font><font papago-translate="translated"> 디버거에서 검사할 수는 있지만 번거로울 수 있습니다.</font></p>
+<p><font papago-translate="translated">대신 구문 트리가 주어지면 명확한 문자열 표현을 생성하는 코드를 원합니다.</font><font papago-translate="translated"> 트리를 문자열로 변환하는 것은 파서의 일종으로, 소스 언어에서 유효한 구문을 가진 문자열을 생성하는 것이 목표일 때 종종 "프리티 프린팅"이라고 불립니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">여기서는 그게 우리의 목표가 아닙니다.</font><font papago-translate="translated"> 우리는 문자열이 나무의 둥지 구조를 매우 명확하게 보여주기를 원합니다.</font><font papago-translate="translated"> 반환된 프린터 </font></font><code translate="no">1 + 2 * 3</code><font papago-translate="splitted"><font papago-translate="translated"> 우리가 디버깅하려는 것이 연산자 우선순위가 올바르게 처리되었는지 여부라면 그다지 도움이 되지 않습니다.</font><font papago-translate="translated"> 우리는 그것이 </font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 </font></font><code translate="no">*</code><font papago-translate="splitted"><font papago-translate="translated"> 나무 꼭대기에 있습니다.</font></font></p>
+<p><font papago-translate="translated">이를 위해 우리가 생성하는 문자열 표현은 Lox 구문이 아닙니다.</font><font papago-translate="translated"> 대신 리스프처럼 보일 것입니다.</font><font papago-translate="translated"> 각 표현식은 명시적으로 괄호로 묶이며, 모든 하위 표현식과 토큰이 그 안에 포함되어 있습니다.</font></p>
+<p><font papago-translate="translated">주어진 구문 트리는 다음과 같습니다:</font></p><img alt="An example syntax tree." src="https://youhogeon-meritz.github.io/image/representing-code/expression.png">
+<p><font papago-translate="translated">다음을 생성합니다:</font></p>
 <div class="codehilite"><pre translate="no">(* (- 123) (group 45.67))
 </pre></div>
-<p>Not exactly “pretty”, but it does show the nesting and grouping explicitly. To
-implement this, we define a new class.</p>
-<div class="codehilite"><div class="source-file"><em>lox/AstPrinter.java</em><br/>
-create new file</div>
+<p><font papago-translate="translated">"예쁘지는 않지만, 둥지를 틀고 그룹을 명확하게 보여줍니다."</font><font papago-translate="translated"> 이를 구현하기 위해 새로운 클래스를 정의합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/AstPrinter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 새 파일 만들기</font></font></div>
 <pre translate="no"><span class="k">package</span> <span class="i">com.craftinginterpreters.lox</span>;
 
 <span class="k">class</span> <span class="t">AstPrinter</span> <span class="k">implements</span> <span class="t">Expr</span>.<span class="t">Visitor</span>&lt;<span class="t">String</span>&gt; {
@@ -941,14 +593,11 @@ create new file</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>lox/AstPrinter.java</em>, create new file</div>
-<p>As you can see, it implements the visitor interface. That means we need visit
-methods for each of the expression types we have so far.</p>
+<p><font papago-translate="translated">보시다시피 방문자 인터페이스를 구현합니다.</font><font papago-translate="translated"> 즉, 지금까지 우리가 가진 각 표현 유형에 대한 방문 방법이 필요합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    return expr.accept(this);
   }
-</pre><div class="source-file"><em>lox/AstPrinter.java</em><br/>
-add after <em>print</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/AstPrinter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>인쇄</em> 후 () 추가</font></font></div>
 <pre class="insert" translate="no">
-
   <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">String</span> <span class="i">visitBinaryExpr</span>(<span class="t">Expr</span>.<span class="t">Binary</span> <span class="i">expr</span>) {
     <span class="k">return</span> <span class="i">parenthesize</span>(<span class="i">expr</span>.<span class="i">operator</span>.<span class="i">lexeme</span>,
@@ -973,11 +622,8 @@ add after <em>print</em>()</div>
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>lox/AstPrinter.java</em>, add after <em>print</em>()</div>
-<p>Literal expressions are easy<span class="em">—</span>they convert the value to a string with a little
-check to handle Java’s <code translate="no">null</code> standing in for Lox’s <code translate="no">nil</code>. The other expressions
-have subexpressions, so they use this <code translate="no">parenthesize()</code> helper method:</p>
-<div class="codehilite"><div class="source-file"><em>lox/AstPrinter.java</em><br/>
-add after <em>visitUnaryExpr</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">문자 그대로의 표현은 쉽습니다. Java<span class="em"></span>를 처리하기 위해 값을 약간의 체크가 있는 문자열로 변환합니다 </font></font><code translate="no">null</code><font papago-translate="splitted"><font papago-translate="translated"> 록스를 지지하기 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">. 다른 표현식에는 부분 표현식이 있으므로 다음과 같이 사용합니다 </font></font><code translate="no">parenthesize()</code><font papago-translate="splitted"><font papago-translate="translated"> 도우미 방법:</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/AstPrinter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가</font><font papago-translate="translated"><em>유니리익스프</em>레스(<em>)</em></font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">String</span> <span class="i">parenthesize</span>(<span class="t">String</span> <span class="i">name</span>, <span class="t">Expr</span>... <span class="i">exprs</span>) {
     <span class="t">StringBuilder</span> <span class="i">builder</span> = <span class="k">new</span> <span class="t">StringBuilder</span>();
 
@@ -992,22 +638,15 @@ add after <em>visitUnaryExpr</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/AstPrinter.java</em>, add after <em>visitUnaryExpr</em>()</div>
-<p>It takes a name and a list of subexpressions and wraps them all up in
-parentheses, yielding a string like:</p>
+<p><font papago-translate="translated">이름과 하위 표현식 목록을 가져와서 모두 괄호 안에 감싸서 다음과 같은 문자열을 생성합니다:</font></p>
 <div class="codehilite"><pre translate="no">(+ 1 2)
 </pre></div>
-<p>Note that it calls <code translate="no">accept()</code> on each subexpression and passes in itself. This
-is the <span name="tree">recursive</span> step that lets us print an entire
-tree.</p>
-<aside name="tree">
-<p>This recursion is also why people think the Visitor pattern itself has to do
-with trees.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다음을 참조하십시오 </font></font><code translate="no">accept()</code><font papago-translate="splitted"><font papago-translate="translated"> 각 하위 표현식에서 그리고 그 자체로 전달됩니다.</font><font papago-translate="translated"> <span name="tree">이것</span>은 전체 트리를 인쇄할 수 있게 해<span name="tree">주는 재귀</span>적 단계입니다.</font></font></p>
+<aside name="tree" style="top: 20816.5px;">
+<p><font papago-translate="translated">이 재귀 현상이 사람들이 방문자 패턴 자체가 나무와 관련이 있다고 생각하는 이유이기도 합니다.</font></p>
 </aside>
-<p>We don’t have a parser yet, so it’s hard to see this in action. For now, we’ll
-hack together a little <code translate="no">main()</code> method that manually instantiates a tree and
-prints it.</p>
-<div class="codehilite"><div class="source-file"><em>lox/AstPrinter.java</em><br/>
-add after <em>parenthesize</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">아직 파서가 없어서 실제로 보기 어렵습니다.</font><font papago-translate="translated"> 지금은 조금 함께 해킹해 보겠습니다 </font></font><code translate="no">main()</code><font papago-translate="splitted"><font papago-translate="translated"> 트리를 수동으로 인스턴스화하고 인쇄하는 방법.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/AstPrinter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>괄호 크기</em> 후에 () 추가</font></font></div>
 <pre translate="no">  <span class="k">public</span> <span class="k">static</span> <span class="t">void</span> <span class="i">main</span>(<span class="t">String</span>[] <span class="i">args</span>) {
     <span class="t">Expr</span> <span class="i">expression</span> = <span class="k">new</span> <span class="t">Expr</span>.<span class="t">Binary</span>(
         <span class="k">new</span> <span class="t">Expr</span>.<span class="t">Unary</span>(
@@ -1021,60 +660,46 @@ add after <em>parenthesize</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/AstPrinter.java</em>, add after <em>parenthesize</em>()</div>
-<p>If we did everything right, it prints:</p>
+<p><font papago-translate="translated">모든 것을 제대로 수행하면 인쇄됩니다:</font></p>
 <div class="codehilite"><pre translate="no">(* (- 123) (group 45.67))
 </pre></div>
-<p>You can go ahead and delete this method. We won’t need it. Also, as we add new
-syntax tree types, I won’t bother showing the necessary visit methods for them
-in AstPrinter. If you want to (and you want the Java compiler to not yell at
-you), go ahead and add them yourself. It will come in handy in the next chapter
-when we start parsing Lox code into syntax trees. Or, if you don’t care to
-maintain AstPrinter, feel free to delete it. We won’t need it again.</p>
+<p><font papago-translate="translated">이 메서드를 삭제할 수 있습니다.</font><font papago-translate="translated"> 우리는 그것이 필요하지 않을 것입니다.</font><font papago-translate="translated"> 또한, 새로운 구문 트리 유형을 추가함에 따라 AstPrinter에서 필요한 방문 방법을 보여드리지 않겠습니다.</font><font papago-translate="translated"> Java 컴파일러가 소리를 지르지 않기를 원한다면(그리고 Java 컴파일러가 소리를 지르지 않기를 원한다면) 직접 추가하세요.</font><font papago-translate="translated"> 다음 장에서 Lox 코드를 구문 트리로 구문 분석하기 시작할 때 유용할 것입니다.</font><font papago-translate="translated"> 또는 AstPrinter를 유지 관리하고 싶지 않다면 언제든지 삭제하세요.</font><font papago-translate="translated"> 다시는 필요하지 않을 것입니다.</font></p>
 <div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+<h2><a href="https://youhogeon-meritz.github.io/representing-code.html#challenges" id="challenges"><font papago-translate="translated">과제들</font></a></h2>
 <ol>
 <li>
-<p>Earlier, I said that the <code translate="no">|</code>, <code translate="no">*</code>, and <code translate="no">+</code> forms we added to our grammar
-metasyntax were just syntactic sugar. Take this grammar:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">아까 말씀드렸듯이 </font></font><code translate="no">|</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">*</code><font papago-translate="splitted"><font papago-translate="translated">,그리고. </font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated"> 문법 메타신택스에 추가한 형태는 구문 설탕에 불과했습니다.</font><font papago-translate="translated"> 이 문법을 보세요:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="i">expr</span> → <span class="i">expr</span> ( <span class="s">"("</span> ( <span class="i">expr</span> ( <span class="s">","</span> <span class="i">expr</span> )* )? <span class="s">")"</span> | <span class="s">"."</span> <span class="t">IDENTIFIER</span> )+
      | <span class="t">IDENTIFIER</span>
      | <span class="t">NUMBER</span>
 </pre></div>
-<p>Produce a grammar that matches the same language but does not use any of
-that notational sugar.</p>
-<p><em>Bonus:</em> What kind of expression does this bit of grammar encode?</p>
+<p><font papago-translate="translated">동일한 언어와 일치하지만 그 표기법 중 어느 것도 사용하지 않는 문법을 만들어냅니다.</font></p>
+<p><font papago-translate="translated"><em>보너스</em>: 이 문법 조각은 어떤 표현을 인코딩하나<em>요?</em></font></p>
 </li>
 <li>
-<p>The Visitor pattern lets you emulate the functional style in an
-object-oriented language. Devise a complementary pattern for a functional
-language. It should let you bundle all of the operations on one type
-together and let you define new types easily.</p>
-<p>(SML or Haskell would be ideal for this exercise, but Scheme or another Lisp
-works as well.)</p>
+<p><font papago-translate="translated" class="papago-selected">방문자 패턴을 사용하면 객체 지향 언어로 기능 스타일을 모방할 수 있습니다.</font><font papago-translate="translated" class=""> 기능 언어에 대한 보완적인 패턴을 고안합니다.</font><font papago-translate="translated" class=""> 모든 작업을 하나의 유형으로 묶을 수 있고 새로운 유형을 쉽게 정의할 수 있어야 합니다.</font></p>
+<p><font papago-translate="translated" class="">(SML이나 해스켈이 이 연습에 이상적일 수 있지만, 스킴이나 다른 리스프도 효과가 있습니다.)</font></p>
 </li>
 <li>
-<p>In <a href="https://en.wikipedia.org/wiki/Reverse_Polish_notation">reverse Polish notation</a> (RPN), the operands to an arithmetic
-operator are both placed before the operator, so <code translate="no">1 + 2</code> becomes <code translate="no">1 2 +</code>.
-Evaluation proceeds from left to right. Numbers are pushed onto an implicit
-stack. An arithmetic operator pops the top two numbers, performs the
-operation, and pushes the result. Thus, this:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><a href="https://en.wikipedia.org/wiki/Reverse_Polish_notation">역폴란드 표기법</a>(RPN)에서는 산술 연산자의 피연산자가 모두 연산자 앞에 배치되므로 다음과 같습니다 </font></font><code translate="no">1 + 2</code><font papago-translate="splitted"><font papago-translate="translated"> 된다 </font></font><code translate="no">1 2 +</code><font papago-translate="splitted"><font papago-translate="translated" class="">. 평가가 왼쪽에서 오른쪽으로 진행됩니다.</font><font papago-translate="translated" class=""> 숫자들이 암묵적인 스택으로 밀려납니다.</font><font papago-translate="translated" class=""> 산술 연산자가 상위 두 숫자를 터뜨리고 연산을 수행한 다음 결과를 푸시합니다.</font><font papago-translate="translated" class=""> 따라서, 이것은:</font></font></p>
 <div class="codehilite"><pre translate="no">(<span class="n">1</span> + <span class="n">2</span>) * (<span class="n">4</span> - <span class="n">3</span>)
 </pre></div>
-<p>in RPN becomes:</p>
+<p><font papago-translate="translated">RPN에서는 다음과 같이 됩니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="n">1</span> <span class="n">2</span> + <span class="n">4</span> <span class="n">3</span> - *
 </pre></div>
-<p>Define a visitor class for our syntax tree classes that takes an expression,
-converts it to RPN, and returns the resulting string.</p>
+<p><font papago-translate="translated">구문 트리 클래스에 대한 방문자 클래스를 정의합니다. 이 클래스는 표현식을 가져와서 RPN으로 변환한 후 결과 문자열을 반환합니다.</font></p>
 </li>
 </ol>
 </div>
 <footer>
-<a class="next" href="parsing-expressions.html">
-  Next Chapter: “Parsing Expressions” →
-</a>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+<a class="next" href="https://youhogeon-meritz.github.io/parsing-expressions.html"><font papago-translate="translated"> 다음 장: "Parsing Expressions" → </font></a><font papago-translate="splitted"><font papago-translate="translated"> 로버트 니스트롬이 수작업으로 제작한 -<a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE"> © 2015 ~ 2021</a></font></font>
 </footer>
-</img></img></img></article>
+</article>
 </div>
-</body>
-</html>
+
+
+<div id="papagoTooltip" margin="5" style="display: none;">
+        <h1 id="tooltipTitle">원문</h1>
+        <p id="tooltipText"></p>
+      </div>
+      </body></html>

@@ -1,104 +1,79 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>Superclasses · Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/style.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
-<script src="jquery-3.4.1.min.js"></script>
-<script src="script.js"></script>
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+
+<!-- Google analytics -->
+
+</head>
 <body id="top">
 <!-- <div class="scrim"></div> -->
 <nav class="wide">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="contents">
-<h3><a href="#top">Superclasses<small>29</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/superclasses.html#top"><font papago-translate="splitted"><font papago-translate="translated">슈퍼클래스</font></font><small>29</small></a></h3>
 <ul>
-<li><a href="#inheriting-methods"><small>29.1</small> Inheriting Methods</a></li>
-<li><a href="#storing-superclasses"><small>29.2</small> Storing Superclasses</a></li>
-<li><a href="#super-calls"><small>29.3</small> Super Calls</a></li>
-<li><a href="#a-complete-virtual-machine"><small>29.4</small> A Complete Virtual Machine</a></li>
+<li><a href="https://youhogeon-meritz.github.io/superclasses.html#inheriting-methods"><small>29.1</small><font papago-translate="splitted"><font papago-translate="translated"> 메서드 상속</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/superclasses.html#storing-superclasses"><small>29.2</small><font papago-translate="splitted"><font papago-translate="translated"> 슈퍼클래스 저장</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/superclasses.html#super-calls"><small>29.3</small><font papago-translate="splitted"><font papago-translate="translated"> 슈퍼 콜</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/superclasses.html#a-complete-virtual-machine"><small>29.4</small><font papago-translate="splitted"><font papago-translate="translated"> 완전한 가상 머신</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/superclasses.html#challenges"><font papago-translate="translated">과제들</font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="methods-and-initializers.html" title="Methods and Initializers">← Previous</a>
-<a href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑ Up</a>
-<a class="right" href="optimization.html" title="Optimization">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/methods-and-initializers.html" title="메서드 및 초기화" papago-attr-id="1"><font papago-translate="translated">← 이전</font></a>
+<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="바이트코드 가상 머신" papago-attr-id="2"><font papago-translate="translated">↑ 위로</font></a>
+<a class="right" href="https://youhogeon-meritz.github.io/optimization.html" title="최적화" papago-attr-id="3"><font papago-translate="translated">다음 →</font></a>
 </div> </div>
 </nav>
 <nav class="narrow">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
-<a class="prev" href="methods-and-initializers.html" title="Methods and Initializers">←</a>
-<a class="next" href="optimization.html" title="Optimization">→</a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
+<a class="prev" href="https://youhogeon-meritz.github.io/methods-and-initializers.html" title="Methods and Initializers">←</a>
+<a class="next" href="https://youhogeon-meritz.github.io/optimization.html" title="Optimization">→</a>
 </nav>
 <div class="page">
 <div class="nav-wrapper">
-<nav class="floating">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<nav class="floating pinned">
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="expandable">
-<h3><a href="#top">Superclasses<small>29</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/superclasses.html#top"><font papago-translate="splitted"><font papago-translate="translated">슈퍼클래스</font></font><small>29</small></a></h3>
 <ul>
-<li><a href="#inheriting-methods"><small>29.1</small> Inheriting Methods</a></li>
-<li><a href="#storing-superclasses"><small>29.2</small> Storing Superclasses</a></li>
-<li><a href="#super-calls"><small>29.3</small> Super Calls</a></li>
-<li><a href="#a-complete-virtual-machine"><small>29.4</small> A Complete Virtual Machine</a></li>
+<li><a href="https://youhogeon-meritz.github.io/superclasses.html#inheriting-methods"><small>29.1</small><font papago-translate="splitted"><font papago-translate="translated"> 메서드 상속</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/superclasses.html#storing-superclasses"><small>29.2</small><font papago-translate="splitted"><font papago-translate="translated"> 슈퍼클래스 저장</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/superclasses.html#super-calls"><small>29.3</small><font papago-translate="splitted"><font papago-translate="translated"> 슈퍼 콜</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/superclasses.html#a-complete-virtual-machine"><small>29.4</small><font papago-translate="splitted"><font papago-translate="translated"> 완전한 가상 머신</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/superclasses.html#challenges">Challenges</a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="methods-and-initializers.html" title="Methods and Initializers">← Previous</a>
-<a href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑ Up</a>
-<a class="right" href="optimization.html" title="Optimization">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/methods-and-initializers.html" title="Methods and Initializers">←&nbsp;Previous</a>
+<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑&nbsp;Up</a>
+<a class="right" href="https://youhogeon-meritz.github.io/optimization.html" title="Optimization">Next&nbsp;→</a>
 </div> </div>
 <a id="expand-nav">≡</a>
 </nav>
 </div>
 <article class="chapter">
 <div class="number">29</div>
-<h1>Superclasses</h1>
+<h1><font papago-translate="translated">슈퍼클래스</font></h1>
 <blockquote>
-<p>You can choose your friends but you sho’ can’t choose your family, an’ they’re
-still kin to you no matter whether you acknowledge ’em or not, and it
-makes you look right silly when you don’t.</p>
+<p><font papago-translate="translated">친구를 선택할 수는 있지만 가족을 선택할 수는 없습니다. 가족은 인정하든 인정하지 않든 여전히 여러분에게 친절하며, 인정하지 않을 때는 어리석게 보일 수 있습니다.</font></p>
 <p><cite>Harper Lee, <em>To Kill a Mockingbird</em></cite></p>
 </blockquote>
-<p>This is the very last chapter where we add new functionality to our VM. We’ve
-packed almost the entire Lox language in there already. All that remains is
-inheriting methods and calling superclass methods. We have <a href="optimization.html">another
-chapter</a> after this one, but it introduces no new behavior. It
-<span name="faster">only</span> makes existing stuff faster. Make it to the end
-of this one, and you’ll have a complete Lox implementation.</p>
-<aside name="faster">
-<p>That “only” should not imply that making stuff faster isn’t important! After
-all, the whole purpose of our entire second virtual machine is better
-performance over jlox. You could argue that <em>all</em> of the past fifteen chapters
-are “optimization”.</p>
+<p><font papago-translate="translated">이것은 우리가 VM에 새로운 기능을 추가하는 마지막 장입니다.</font><font papago-translate="translated"> 우리는 이미 거의 모든 Lox 언어를 그곳에 포장했습니다.</font><font papago-translate="translated"> 남은 것은 메서드를 상속하고 슈퍼클래스 메서드를 호출하는 것뿐입니다.</font><font papago-translate="translated"> 이<a href="https://youhogeon-meritz.github.io/optimization.html"> 챕터</a> 다음에<a href="https://youhogeon-meritz.github.io/optimization.html"> 또 다른 챕터</a>가 있지만 새로운 행동은 도입되지 않습니다.</font><font papago-translate="translated"> 기존의 것들을 더 빠르게 만들<span name="faster"> 뿐</span>입니다.</font><font papago-translate="translated"> 이 작업을 끝까지 완료하면 완벽한 Lox 구현이 가능합니다.</font></p>
+<aside name="faster" style="top: 484px;">
+<p><font papago-translate="translated">그것이 "오직"이라고 해서 물건을 더 빨리 만드는 것이 중요하지 않다는 것을 의미해서는 안 됩니다!</font><font papago-translate="translated"> 결국, 두 번째 가상 머신 전체의 목적은 jlox보다 더 나은 성능입니다.</font><font papago-translate="translated"> 지난 15개의 챕터가<em> 모두</em> "최적화"라고 주장할 수 있습니다.</font></p>
 </aside>
-<p>Some of the material in this chapter will remind you of jlox. The way we resolve
-super calls is pretty much the same, though viewed through clox’s more complex
-mechanism for storing state on the stack. But we have an entirely different,
-much faster, way of handling inherited method calls this time around.</p>
-<h2><a href="#inheriting-methods" id="inheriting-methods"><small>29 . 1</small>Inheriting Methods</a></h2>
-<p>We’ll kick things off with method inheritance since it’s the simpler piece. To
-refresh your memory, Lox inheritance syntax looks like this:</p>
+<p><font papago-translate="translated">이 장의 일부 자료는 Jlox를 떠올리게 할 것입니다.</font><font papago-translate="translated"> 슈퍼 콜을 해결하는 방법은 거의 동일하지만, 스택에 상태를 저장하는 clox의 더 복잡한 메커니즘을 통해 볼 수 있습니다.</font><font papago-translate="translated"> 하지만 이번에는 상속된 메서드 호출을 처리하는 완전히 다른 훨씬 더 빠른 방법이 있습니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/superclasses.html#inheriting-methods" id="inheriting-methods"><small><font papago-translate="translated">29 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">메서드 상속</font></font></a></h2>
+<p><font papago-translate="translated">메서드 상속이 더 간단하기 때문에 메서드 상속으로 시작하겠습니다.</font><font papago-translate="translated"> 메모리를 새로 고침하기 위해 Lox 상속 구문은 다음과 같습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Doughnut</span> {
   <span class="i">cook</span>() {
     <span class="k">print</span> <span class="s">"Dunk in the fryer."</span>;
@@ -111,13 +86,10 @@ refresh your memory, Lox inheritance syntax looks like this:</p>
   }
 }
 </pre></div>
-<p>Here, the Cruller class inherits from Doughnut and thus, instances of Cruller
-inherit the <code translate="no">cook()</code> method. I don’t know why I’m belaboring this. You know how
-inheritance works. Let’s start compiling the new syntax.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">여기서 크롤러 클래스는 도넛에서 상속되므로 크롤러의 인스턴스는 다음을 상속합니다 </font></font><code translate="no">cook()</code><font papago-translate="splitted"><font papago-translate="translated"> 방법.</font><font papago-translate="translated"> 제가 왜 이것을 싫어하는지 모르겠습니다.</font><font papago-translate="translated"> 당신은 상속이 어떻게 작동하는지 알고 있습니다.</font><font papago-translate="translated"> 새로운 구문을 컴파일하기 시작하겠습니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  currentClass = &amp;classCompiler;
 
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>classDeclaration</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>class</em>D<em>eclaration</em>에서 ()</font></font></div>
 <pre class="insert" translate="no">  <span class="k">if</span> (<span class="i">match</span>(<span class="a">TOKEN_LESS</span>)) {
     <span class="i">consume</span>(<span class="a">TOKEN_IDENTIFIER</span>, <span class="s">"Expect superclass name."</span>);
     <span class="i">variable</span>(<span class="k">false</span>);
@@ -128,28 +100,16 @@ in <em>classDeclaration</em>()</div>
 </pre><pre class="insert-after" translate="no">  namedVariable(className, false);
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>classDeclaration</em>()</div>
-<p>After we compile the class name, if the next token is a <code translate="no">&lt;</code>, then we found a
-superclass clause. We consume the superclass’s identifier token, then call
-<code translate="no">variable()</code>. That function takes the previously consumed token, treats it as a
-variable reference, and emits code to load the variable’s value. In other words,
-it looks up the superclass by name and pushes it onto the stack.</p>
-<p>After that, we call <code translate="no">namedVariable()</code> to load the subclass doing the inheriting
-onto the stack, followed by an <code translate="no">OP_INHERIT</code> instruction. That instruction
-wires up the superclass to the new subclass. In the last chapter, we defined an
-<code translate="no">OP_METHOD</code> instruction to mutate an existing class object by adding a method to
-its method table. This is similar<span class="em">—</span>the <code translate="no">OP_INHERIT</code> instruction takes an
-existing class and applies the effect of inheritance to it.</p>
-<p>In the previous example, when the compiler works through this bit of syntax:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">클래스 이름을 컴파일한 후 다음 토큰이 a인 경우 </font></font><code translate="no">&lt;</code><font papago-translate="splitted"><font papago-translate="translated">, 그리고 나서 우리는 초급 조항을 발견했습니다.</font><font papago-translate="translated"> 우리는 슈퍼클래스의 식별자 토큰을 소비한 다음 호출합니다 </font></font><code translate="no">variable()</code><font papago-translate="splitted"><font papago-translate="translated">. 이 함수는 이전에 사용된 토큰을 가져와 변수 참조로 취급하고 코드를 방출하여 변수 값을 로드합니다.</font><font papago-translate="translated"> 즉, 슈퍼클래스를 이름으로 찾아 스택으로 밀어 넣습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그 후에, 우리는 전화합니다 </font></font><code translate="no">namedVariable()</code><font papago-translate="splitted"><font papago-translate="translated"> 상속을 수행하는 하위 클래스를 스택에 로드한 다음 </font></font><code translate="no">OP_INHERIT</code><font papago-translate="splitted"><font papago-translate="translated"> 설명.</font><font papago-translate="translated"> 그 지침은 슈퍼클래스를 새로운 하위 클래스로 연결합니다.</font><font papago-translate="translated"> 마지막 장에서 우리는 다음을 정의했습니다 </font></font><code translate="no">OP_METHOD</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드 테이블에 메서드를 추가하여 기존 클래스 객체를 변경하는 지침.</font><font papago-translate="translated"> 이것은 비슷합니다<span class="em"></span>— </font></font><code translate="no">OP_INHERIT</code><font papago-translate="splitted"><font papago-translate="translated"> 교육은 기존 클래스를 사용하여 상속의 효과를 적용합니다.</font></font></p>
+<p><font papago-translate="translated">이전 예제에서 컴파일러가 이 구문 비트를 통해 작업할 때:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Cruller</span> &lt; <span class="t">Doughnut</span> {
 </pre></div>
-<p>The result is this bytecode:</p><img alt="The series of bytecode instructions for a Cruller class inheriting from Doughnut." src="image/superclasses/inherit-stack.png">
-<p>Before we implement the new <code translate="no">OP_INHERIT</code> instruction, we have an edge case to
-detect.</p>
+<p><font papago-translate="translated">그 결과 이 바이트코드가 탄생했습니다:</font></p><img alt="The series of bytecode instructions for a Cruller class inheriting from Doughnut." src="https://youhogeon-meritz.github.io/image/superclasses/inherit-stack.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">새로운 기능을 구현하기 전에 </font></font><code translate="no">OP_INHERIT</code><font papago-translate="splitted"><font papago-translate="translated"> 지침에 따르면, 우리는 감지할 엣지 케이스가 있습니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    variable(false);
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>classDeclaration</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>class</em>D<em>eclaration</em>에서 ()</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="k">if</span> (<span class="i">identifiersEqual</span>(&amp;<span class="i">className</span>, &amp;<span class="i">parser</span>.<span class="i">previous</span>)) {
       <span class="i">error</span>(<span class="s">"A class can't inherit from itself."</span>);
     }
@@ -157,37 +117,29 @@ in <em>classDeclaration</em>()</div>
 </pre><pre class="insert-after" translate="no">    namedVariable(className, false);
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>classDeclaration</em>()</div>
-<p><span name="cycle">A</span> class cannot be its own superclass. Unless you have
-access to a deranged nuclear physicist and a very heavily modified DeLorean, you
-cannot inherit from yourself.</p>
-<aside name="cycle">
-<p>Interestingly, with the way we implement method inheritance, I don’t think
-allowing cycles would actually cause any problems in clox. It wouldn’t do
-anything <em>useful</em>, but I don’t think it would cause a crash or infinite loop.</p>
+<p><font papago-translate="translated">클래스는 자체 슈퍼클래스가 될 수 없습니다<span name="cycle">.</span></font><font papago-translate="translated"> 정신 나간 핵물리학자와 매우 심하게 수정된 드로리안에 접근할 수 없다면, 당신은 자신으로부터 물려받을 수 없습니다.</font></p>
+<aside name="cycle" style="top: 2398px;">
+<p><font papago-translate="translated">흥미롭게도, 우리가 메서드 상속을 구현하는 방식에서는 사이클을 허용하는 것이 실제로 클록스에 문제를 일으킬 것이라고 생각하지 않습니다.</font><font papago-translate="translated"> <em>유용한</em> 기능은 없지만 충돌이나 무한 루프를 일으키지는 않을 것 같습니다.</font></p>
 </aside>
-<h3><a href="#executing-inheritance" id="executing-inheritance"><small>29 . 1 . 1</small>Executing inheritance</a></h3>
-<p>Now onto the new instruction.</p>
+<h3><a href="https://youhogeon-meritz.github.io/superclasses.html#executing-inheritance" id="executing-inheritance"><small><font papago-translate="translated">29 . 1 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">상속 실행</font></font></a></h3>
+<p><font papago-translate="translated">이제 새로운 지침으로 넘어가겠습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  OP_CLASS,
-</pre><div class="source-file"><em>chunk.h</em><br/>
-in enum <em>OpCode</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">청크.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum O<em>pCode</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="a">OP_INHERIT</span>,
 </pre><pre class="insert-after" translate="no">  OP_METHOD
 </pre></div>
 <div class="source-file-narrow"><em>chunk.h</em>, in enum <em>OpCode</em></div>
-<p>There are no operands to worry about. The two values we need<span class="em">—</span>superclass and
-subclass<span class="em">—</span>are both found on the stack. That means disassembling is easy.</p>
+<p><font papago-translate="translated">걱정할 필요가 없습니다.</font><font papago-translate="translated"> 우리가 필요로 하는 두 가지 가치, 즉 슈퍼클래스와 서브클래스는<span class="em"></span><span class="em"></span> 모두 스택에서 찾을 수 있습니다.</font><font papago-translate="translated"> 즉, 분해가 쉽다는 뜻입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      return constantInstruction("OP_CLASS", chunk, offset);
-</pre><div class="source-file"><em>debug.c</em><br/>
-in <em>disassembleInstruction</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">debug.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>분해</em> 중 지침()</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OP_INHERIT</span>:
       <span class="k">return</span> <span class="i">simpleInstruction</span>(<span class="s">"OP_INHERIT"</span>, <span class="i">offset</span>);
 </pre><pre class="insert-after" translate="no">    case OP_METHOD:
 </pre></div>
 <div class="source-file-narrow"><em>debug.c</em>, in <em>disassembleInstruction</em>()</div>
-<p>The interpreter is where the action happens.</p>
+<p><font papago-translate="translated">통역사가 행동이 일어나는 곳입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">        break;
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OP_INHERIT</span>: {
         <span class="t">Value</span> <span class="i">superclass</span> = <span class="i">peek</span>(<span class="n">1</span>);
         <span class="t">ObjClass</span>* <span class="i">subclass</span> = <span class="a">AS_CLASS</span>(<span class="i">peek</span>(<span class="n">0</span>));
@@ -199,68 +151,29 @@ in <em>run</em>()</div>
 </pre><pre class="insert-after" translate="no">      case OP_METHOD:
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>()</div>
-<p>From the top of the stack down, we have the subclass then the superclass. We
-grab both of those and then do the inherit-y bit. This is where clox takes a
-different path than jlox. In our first interpreter, each subclass stored a
-reference to its superclass. On method access, if we didn’t find the method in
-the subclass’s method table, we recursed through the inheritance chain looking
-at each ancestor’s method table until we found it.</p>
-<p>For example, calling <code translate="no">cook()</code> on an instance of Cruller sends jlox on this
-journey:</p><img alt="Resolving a call to cook() in an instance of Cruller means walking the superclass chain." src="image/superclasses/jlox-resolve.png">
-<p>That’s a lot of work to perform during method <em>invocation</em> time. It’s slow, and
-worse, the farther an inherited method is up the ancestor chain, the slower it
-gets. Not a great performance story.</p>
-<p>The new approach is much faster. When the subclass is declared, we copy all of
-the inherited class’s methods down into the subclass’s own method table. Later,
-when <em>calling</em> a method, any method inherited from a superclass will be found
-right in the subclass’s own method table. There is no extra runtime work needed
-for inheritance at all. By the time the class is declared, the work is done.
-This means inherited method calls are exactly as fast as normal method calls<span class="em">—</span>a <span name="two">single</span> hash table lookup.</p><img alt="Resolving a call to cook() in an instance of Cruller which has the method in its own method table." src="image/superclasses/clox-resolve.png">
-<aside name="two">
-<p>Well, two hash table lookups, I guess. Because first we have to make sure a
-field on the instance doesn’t shadow the method.</p>
+<p><font papago-translate="translated">스택의 맨 위에서 아래로 내려가면 서브클래스와 슈퍼클래스가 있습니다.</font><font papago-translate="translated"> 우리는 두 가지를 모두 잡은 다음 상속 비트를 수행합니다.</font><font papago-translate="translated"> 여기서 clox는 jlox와는 다른 길을 걷습니다.</font><font papago-translate="translated"> 첫 번째 인터프리터에서는 각 하위 클래스가 상위 클래스에 대한 참조를 저장했습니다.</font><font papago-translate="translated"> 방법 접근에서 하위 클래스의 방법 표에서 방법을 찾지 못하면 상속 체인을 통해 각 조상의 방법 표를 찾을 때까지 재귀했습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">예를 들어, 전화하기 </font></font><code translate="no">cook()</code><font papago-translate="splitted"><font papago-translate="translated"> 크롤러가 이 여정에 질록스를 보내는 사례가 있습니다:</font></font></p><img alt="Resolving a call to cook() in an instance of Cruller means walking the superclass chain." src="https://youhogeon-meritz.github.io/image/superclasses/jlox-resolve.png">
+<p><font papago-translate="translated">메서드<em> 호출</em> 시간 동안 수행해야 하는 작업이 많습니다.</font><font papago-translate="translated"> 그것은 느리고, 더 나쁜 것은 상속된 방법이 조상 사슬 위에 있을수록 느려진다는 것입니다.</font><font papago-translate="translated"> 훌륭한 공연 이야기는 아닙니다.</font></p>
+<p><font papago-translate="translated">새로운 접근 방식이 훨씬 빠릅니다.</font><font papago-translate="translated"> 하위 클래스가 선언되면 상속된 클래스의 모든 메서드를 하위 클래스의 메서드 테이블로 복사합니다.</font><font papago-translate="translated"> 나중에 메서드<em>를 호출</em>할 때 슈퍼클래스에서 상속받은 메서드는 서브클래스 자체 메서드 테이블에서 바로 찾을 수 있습니다.</font><font papago-translate="translated"> 상속을 위해 추가 런타임 작업이 전혀 필요하지 않습니다.</font><font papago-translate="translated"> 수업이 선언될 때쯤이면 작업이 완료됩니다.</font><font papago-translate="translated"> 이는 상속된 메서드 호출이 일반 메서드 호출만큼 빠르다는 것을 의미합니다—<span name="two">단일</span> 해시 테이블<span class="em"></span> 조회입니다.</font></p><img alt="Resolving a call to cook() in an instance of Cruller which has the method in its own method table." src="https://youhogeon-meritz.github.io/image/superclasses/clox-resolve.png">
+<aside name="two" style="top: 3942.5px;">
+<p><font papago-translate="translated">두 개의 해시 테이블 조회가 있는 것 같습니다.</font><font papago-translate="translated"> 먼저 인스턴스의 필드가 메서드를 흐리지 않도록 해야 합니다.</font></p>
 </aside>
-<p>I’ve sometimes heard this technique called “copy-down inheritance”. It’s simple
-and fast, but, like most optimizations, you get to use it only under certain
-constraints. It works in Lox because Lox classes are <em>closed</em>. Once a class
-declaration is finished executing, the set of methods for that class can never
-change.</p>
-<p>In languages like Ruby, Python, and JavaScript, it’s possible to <span name="monkey">crack</span> open an existing class and jam some new methods into
-it or even remove them. That would break our optimization because if those
-modifications happened to a superclass <em>after</em> the subclass declaration
-executed, the subclass would not pick up those changes. That breaks a user’s
-expectation that inheritance always reflects the current state of the
-superclass.</p>
-<aside name="monkey">
-<p>As you can imagine, changing the set of methods a class defines imperatively at
-runtime can make it hard to reason about a program. It is a very powerful tool,
-but also a dangerous tool.</p>
-<p>Those who find this tool maybe a little <em>too</em> dangerous gave it the unbecoming
-name “monkey patching”, or the even less decorous “duck punching”.</p><img alt="A monkey with an eyepatch, naturally." src="image/superclasses/monkey.png"/>
+<p><font papago-translate="translated">저는 가끔 "복사-다운 상속"이라는 기술을 들어본 적이 있습니다.</font><font papago-translate="translated"> 간단하고 빠르지만 대부분의 최적화와 마찬가지로 특정 제약 조건에서만 사용할 수 있습니다.</font><font papago-translate="translated"> Lox 클래스가<em> 닫혀</em> 있기 때문에 Lox에서 작동합니다.</font><font papago-translate="translated"> 클래스 선언 실행이 완료되면 해당 클래스의 메서드 집합은 절대 변경할 수 없습니다.</font></p>
+<p><font papago-translate="translated">Ruby, Python, JavaScript와 같은 언어에서는 기존 클래스를<span name="monkey"> 열</span>어서 새로운 메서드를 방해하거나 제거할 수도 있습니다.</font><font papago-translate="translated"> 그것은 우리의 최적화를 깨뜨릴 것입니다. 왜냐하면 서브클래스 선언이 실행<em>된 후</em>에 슈퍼클래스에 이러한 수정이 발생하면 서브클래스가 그 변경 사항을 받아들이지 않기 때문입니다.</font><font papago-translate="translated"> 이는 상속이 항상 슈퍼클래스의 현재 상태를 반영한다는 사용자의 기대를 깨뜨리는 것입니다.</font></p>
+<aside name="monkey" style="top: 4328px;">
+<p><font papago-translate="translated">상상할 수 있듯이, 실행 시 클래스가 필수적으로 정의하는 메서드 세트를 변경하면 프로그램에 대해 추론하기가 어려울 수 있습니다.</font><font papago-translate="translated"> 그것은 매우 강력한 도구일 뿐만 아니라 위험한 도구이기도 합니다.</font></p>
+<p><font papago-translate="translated">이 도구<em></em>가 너무 위험하다고 생각하는 사람들은 이 도구를 "원숭이 패치" 또는 덜 장식적인 "오리 펀칭"이라는 어울리지 않는 이름으로 만들었습니다.</font></p><img alt="A monkey with an eyepatch, naturally." src="https://youhogeon-meritz.github.io/image/superclasses/monkey.png">
 </aside>
-<p>Fortunately for us (but not for users who like the feature, I guess), Lox
-doesn’t let you patch monkeys or punch ducks, so we can safely apply this
-optimization.</p>
-<p>What about method overrides? Won’t copying the superclass’s methods into the
-subclass’s method table clash with the subclass’s own methods? Fortunately, no.
-We emit the <code translate="no">OP_INHERIT</code> after the <code translate="no">OP_CLASS</code> instruction that creates the
-subclass but before any method declarations and <code translate="no">OP_METHOD</code> instructions have
-been compiled. At the point that we copy the superclass’s methods down, the
-subclass’s method table is empty. Any methods the subclass overrides will
-overwrite those inherited entries in the table.</p>
-<h3><a href="#invalid-superclasses" id="invalid-superclasses"><small>29 . 1 . 2</small>Invalid superclasses</a></h3>
-<p>Our implementation is simple and fast, which is just the way I like my VM code.
-But it’s not robust. Nothing prevents a user from inheriting from an object that
-isn’t a class at all:</p>
+<p><font papago-translate="translated">다행히도 Lox는 원숭이를 패치하거나 오리를 펀치할 수 없으므로 이 최적화를 안전하게 적용할 수 있습니다(하지만 이 기능을 좋아하는 사용자에게는 그렇지 않은 것 같습니다).</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">메서드 오버라이드는 어떻게 되나요?</font><font papago-translate="translated"> 슈퍼클래스의 메서드를 서브클래스의 메서드 테이블에 복사하면 서브클래스의 메서드와 충돌하지 않을까요?</font><font papago-translate="translated"> 다행히도, 아니요.</font><font papago-translate="translated"> 우리는 다음을 방출합니다 </font></font><code translate="no">OP_INHERIT</code><font papago-translate="splitted"><font papago-translate="translated"> 그 후에 </font></font><code translate="no">OP_CLASS</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드 선언 이전에 하위 클래스를 생성하는 명령어와 </font></font><code translate="no">OP_METHOD</code><font papago-translate="splitted"><font papago-translate="translated"> 지침이 정리되었습니다.</font><font papago-translate="translated"> 슈퍼클래스의 메서드를 복사하는 시점에서 서브클래스의 메서드 테이블이 비어 있습니다.</font><font papago-translate="translated"> 서브클래스가 재정의하는 모든 메서드는 테이블의 상속된 항목을 덮어씁니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/superclasses.html#invalid-superclasses" id="invalid-superclasses"><small><font papago-translate="translated">29 . 1 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">잘못된 슈퍼클래스</font></font></a></h3>
+<p><font papago-translate="translated">우리의 구현은 간단하고 빠르기 때문에 VM 코드가 마음에 듭니다.</font><font papago-translate="translated"> 하지만 견고하지는 않습니다.</font><font papago-translate="translated"> 사용자가 전혀 클래스가 아닌 객체를 상속받는 것을 막을 수 있는 것은 없습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="t">NotClass</span> = <span class="s">"So not a class"</span>;
 <span class="k">class</span> <span class="t">OhNo</span> &lt; <span class="t">NotClass</span> {}
 </pre></div>
-<p>Obviously, no self-respecting programmer would write that, but we have to guard
-against potential Lox users who have no self respect. A simple runtime check
-fixes that.</p>
+<p><font papago-translate="translated">물론 자존심 강한 프로그래머는 그렇게 쓰지 않겠지만, 자존심이 없는 잠재적인 Lox 사용자들을 경계해야 합니다.</font><font papago-translate="translated"> 간단한 실행 시간 확인으로 이를 해결할 수 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">        Value superclass = peek(1);
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">        <span class="k">if</span> (!<span class="a">IS_CLASS</span>(<span class="i">superclass</span>)) {
           <span class="i">runtimeError</span>(<span class="s">"Superclass must be a class."</span>);
           <span class="k">return</span> <span class="a">INTERPRET_RUNTIME_ERROR</span>;
@@ -269,24 +182,14 @@ in <em>run</em>()</div>
 </pre><pre class="insert-after" translate="no">        ObjClass* subclass = AS_CLASS(peek(0));
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>()</div>
-<p>If the value we loaded from the identifier in the superclass clause isn’t an
-ObjClass, we report a runtime error to let the user know what we think of them
-and their code.</p>
-<h2><a href="#storing-superclasses" id="storing-superclasses"><small>29 . 2</small>Storing Superclasses</a></h2>
-<p>Did you notice that when we added method inheritance, we didn’t actually add any
-reference from a subclass to its superclass? After we copy the inherited methods
-over, we forget the superclass entirely. We don’t need to keep a handle on the
-superclass, so we don’t.</p>
-<p>That won’t be sufficient to support super calls. Since a subclass <span name="may">may</span> override the superclass method, we need to be able to get
-our hands on superclass method tables. Before we get to that mechanism, I want 
-to refresh your memory on how super calls are statically resolved.</p>
-<aside name="may">
-<p>“May” might not be a strong enough word. Presumably the method <em>has</em> been
-overridden. Otherwise, why are you bothering to use <code translate="no">super</code> instead of just
-calling it directly?</p>
+<p><font papago-translate="translated">슈퍼클래스 절에서 식별자에서 로드한 값이 ObjClass가 아닌 경우 런타임 오류를 보고하여 사용자가 이에 대해 어떻게 생각하는지와 코드를 알 수 있도록 합니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/superclasses.html#storing-superclasses" id="storing-superclasses"><small><font papago-translate="translated">29 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">슈퍼클래스 저장</font></font></a></h2>
+<p><font papago-translate="translated">메서드 상속을 추가할 때 하위 클래스의 참조를 슈퍼클래스에 실제로 추가하지 않았다는 사실을 눈치채셨나요?</font><font papago-translate="translated"> 상속받은 메서드를 복사한 후에는 슈퍼클래스를 완전히 잊어버립니다.</font><font papago-translate="translated"> 우리는 슈퍼클래스를 관리할 필요가 없기 때문에 그렇게 하지 않습니다.</font></p>
+<p><font papago-translate="translated">슈퍼 통화를 지원하기에는 충분하지 않습니다.</font><font papago-translate="translated"> 서브클래스가 슈퍼클래스 메서드를 무시<span name="may">할 수</span> 있으므로 슈퍼클래스 메서드 테이블을 손에 넣을 수 있어야 합니다.</font><font papago-translate="translated"> 그 메커니즘에 도달하기 전에 슈퍼콜이 어떻게 정적으로 해결되는지에 대한 기억을 새롭게 하고 싶습니다.</font></p>
+<aside name="may" style="top: 5564px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">"May"는 충분히 강한 단어가 아닐 수도 있습니다.</font><font papago-translate="translated"> 아마도 메서드가 재정의<em>되었을</em> 것입니다.</font><font papago-translate="translated"> 그렇지 않으면 왜 귀찮게 사용하나요 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 직접 부르는 대신에?</font></font></p>
 </aside>
-<p>Back in the halcyon days of jlox, I showed you <a href="inheritance.html#semantics">this tricky example</a> to
-explain the way super calls are dispatched:</p>
+<p><font papago-translate="translated">Jlox 시절에는 슈퍼 콜이 전송되는 방식을 설명하기<a href="https://youhogeon-meritz.github.io/inheritance.html#semantics"> 위해 다음과 같은 까다로운 예제</a>를 보여드렸습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">A</span> {
   <span class="i">method</span>() {
     <span class="k">print</span> <span class="s">"A method"</span>;
@@ -307,18 +210,8 @@ explain the way super calls are dispatched:</p>
 
 <span class="t">C</span>().<span class="i">test</span>();
 </pre></div>
-<p>Inside the body of the <code translate="no">test()</code> method, <code translate="no">this</code> is an instance of C. If super
-calls were resolved relative to the superclass of the <em>receiver</em>, then we would
-look in C’s superclass, B. But super calls are resolved relative to the
-superclass of the <em>surrounding class where the super call occurs</em>. In this case,
-we are in B’s <code translate="no">test()</code> method, so the superclass is A, and the program should
-print “A method”.</p>
-<p>This means that super calls are not resolved dynamically based on the runtime
-instance. The superclass used to look up the method is a static<span class="em">—</span>practically
-lexical<span class="em">—</span>property of where the call occurs. When we added inheritance to jlox,
-we took advantage of that static aspect by storing the superclass in the same
-Environment structure we used for all lexical scopes. Almost as if the
-interpreter saw the above program like this:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">본문 내부 </font></font><code translate="no">test()</code><font papago-translate="splitted"><font papago-translate="translated"> 방법, </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 는 C의 한 예입니다.</font><font papago-translate="translated"> 수신<em>기</em>의 슈퍼클래스를 기준으로 슈퍼콜이 해결되었다면, 우리는 C의 슈퍼클래스인 B를 살펴볼 것입니다.</font><font papago-translate="translated"> 하지만 슈퍼 콜이<em> 발생하는 주변 클래스</em>의 슈퍼 클래스에 따라 슈퍼 콜이 해결됩니다.</font><font papago-translate="translated"> 이 경우, 우리는 B's에 있습니다 </font></font><code translate="no">test()</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드, 즉 슈퍼클래스는 A이며 프로그램은 "A 메서드"를 출력해야 합니다.</font></font></p>
+<p><font papago-translate="translated">즉, 슈퍼 콜은 런타임 인스턴스를 기반으로 동적으로 해결되지 않습니다.</font><font papago-translate="translated"> 메서드를 조회하는 데 사용되는 슈퍼클래스는 호출<span class="em"></span><span class="em"></span>이 발생하는 위치의 정적(사실상 어휘적) 속성입니다.</font><font papago-translate="translated"> jlox에 상속을 추가할 때, 모든 어휘 범위에 사용했던 것과 동일한 환경 구조에 슈퍼클래스를 저장함으로써 정적인 측면을 활용했습니다.</font><font papago-translate="translated"> 마치 통역사가 위의 프로그램을 이렇게 본 것처럼:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">A</span> {
   <span class="i">method</span>() {
     <span class="k">print</span> <span class="s">"A method"</span>;
@@ -341,21 +234,13 @@ interpreter saw the above program like this:</p>
 
 <span class="t">C</span>().<span class="i">test</span>();
 </pre></div>
-<p>Each subclass has a hidden variable storing a reference to its superclass.
-Whenever we need to perform a super call, we access the superclass from that
-variable and tell the runtime to start looking for methods there.</p>
-<p>We’ll take the same path with clox. The difference is that instead of jlox’s
-heap-allocated Environment class, we have the bytecode VM’s value stack and
-upvalue system. The machinery is a little different, but the overall effect is
-the same.</p>
-<h3><a href="#a-superclass-local-variable" id="a-superclass-local-variable"><small>29 . 2 . 1</small>A superclass local variable</a></h3>
-<p>Our compiler already emits code to load the superclass onto the stack. Instead
-of leaving that slot as a temporary, we create a new scope and make it a local
-variable.</p>
+<p><font papago-translate="translated">각 하위 클래스에는 슈퍼클래스에 대한 참조를 저장하는 숨겨진 변수가 있습니다.</font><font papago-translate="translated"> 슈퍼콜을 수행해야 할 때마다 해당 변수에서 슈퍼클래스에 접속하여 런타임에 메서드를 찾기 시작하라고 지시합니다.</font></p>
+<p><font papago-translate="translated">우리는 clox와 같은 길을 갈 것입니다.</font><font papago-translate="translated"> 차이점은 jlox의 힙 할당 환경 클래스 대신 바이트코드 VM의 가치 스택과 업밸류 시스템이 있다는 것입니다.</font><font papago-translate="translated"> 기계는 조금 다르지만 전체적인 효과는 동일합니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/superclasses.html#a-superclass-local-variable" id="a-superclass-local-variable"><small><font papago-translate="translated">29 . 2 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">초급 지역 변수</font></font></a></h3>
+<p><font papago-translate="translated">우리 컴파일러는 이미 슈퍼클래스를 스택에 로드하기 위해 코드를 방출하고 있습니다.</font><font papago-translate="translated"> 그 슬롯을 임시로 두는 대신, 우리는 새로운 범위를 만들어 지역 변수로 만듭니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    }
 
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>classDeclaration</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>class</em>D<em>eclaration</em>에서 ()</font></font></div>
 <pre class="insert" translate="no">    <span class="i">beginScope</span>();
     <span class="i">addLocal</span>(<span class="i">syntheticToken</span>(<span class="s">"super"</span>));
     <span class="i">defineVariable</span>(<span class="n">0</span>);
@@ -364,19 +249,10 @@ in <em>classDeclaration</em>()</div>
     emitByte(OP_INHERIT);
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>classDeclaration</em>()</div>
-<p>Creating a new lexical scope ensures that if we declare two classes in the same
-scope, each has a different local slot to store its superclass. Since we always
-name this variable “super”, if we didn’t make a scope for each subclass, the
-variables would collide.</p>
-<p>We name the variable “super” for the same reason we use “this” as the name of
-the hidden local variable that <code translate="no">this</code> expressions resolve to: “super” is a
-reserved word, which guarantees the compiler’s hidden variable won’t collide
-with a user-defined one.</p>
-<p>The difference is that when compiling <code translate="no">this</code> expressions, we conveniently have a
-token sitting around whose lexeme is “this”. We aren’t so lucky here. Instead,
-we add a little helper function to create a synthetic token for the given <span name="constant">constant</span> string.</p>
-<div class="codehilite"><div class="source-file"><em>compiler.c</em><br/>
-add after <em>variable</em>()</div>
+<p><font papago-translate="translated">새로운 어휘 범위를 만들면 두 클래스를 동일한 범위로 선언하면 각 클래스가 슈퍼클래스를 저장할 수 있는 서로 다른 로컬 슬롯을 갖게 됩니다.</font><font papago-translate="translated"> 우리는 항상 이 변수를 "슈퍼"라고 명명하기 때문에, 각 하위 클래스에 대한 범위를 정하지 않으면 변수들이 충돌할 것입니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">숨겨진 로컬 변수의 이름으로 "이것"을 사용하는 것과 같은 이유로 변수를 "슈퍼"라고 명명합니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> "super"는 예약된 단어로, 컴파일러의 숨겨진 변수가 사용자 정의 변수와 충돌하지 않도록 보장합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">차이점은 컴파일할 때 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 표현식에는 "이것"이라는 어휘를 가진 토큰이 편리하게 배치되어 있습니다.</font><font papago-translate="translated"> 여기서는 운이 좋지 않습니다.</font><font papago-translate="translated"> 대신, 주어진<span name="constant"> 상수</span> 문자열에 대한 합성 토큰을 만들기 위해 작은 도우미 함수를 추가합니다.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>변수</em> () 뒤에 더하기</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">Token</span> <span class="i">syntheticToken</span>(<span class="k">const</span> <span class="t">char</span>* <span class="i">text</span>) {
   <span class="t">Token</span> <span class="i">token</span>;
   <span class="i">token</span>.<span class="i">start</span> = <span class="i">text</span>;
@@ -385,83 +261,57 @@ add after <em>variable</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after <em>variable</em>()</div>
-<aside class="bottom" name="constant">
-<p>I say “constant string” because tokens don’t do any memory management of their
-lexeme. If we tried to use a heap-allocated string for this, we’d end up leaking
-memory because it never gets freed. But the memory for C string literals lives
-in the executable’s constant data section and never needs to be freed, so we’re
-fine.</p>
+<aside class="bottom" name="constant" style="top: 7609px;">
+<p><font papago-translate="translated">저는 토큰이 어휘소의 메모리 관리를 전혀 하지 않기 때문에 "상수 문자열"이라고 말합니다.</font><font papago-translate="translated"> 이를 위해 힙 할당 문자열을 사용하려고 하면 메모리가 절대 해방되지 않기 때문에 메모리가 유출될 수 있습니다.</font><font papago-translate="translated"> 하지만 C 문자열 리터럴의 메모리는 실행 파일의 상수 데이터 섹션에 저장되므로 자유로울 필요가 없으므로 괜찮습니다.</font></p>
 </aside>
-<p>Since we opened a local scope for the superclass variable, we need to close it.</p>
+<p><font papago-translate="translated">슈퍼클래스 변수에 대한 로컬 범위를 열었으므로 이를 닫아야 합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  emitByte(OP_POP);
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>classDeclaration</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>class</em>D<em>eclaration</em>에서 ()</font></font></div>
 <pre class="insert" translate="no">
-
   <span class="k">if</span> (<span class="i">classCompiler</span>.<span class="i">hasSuperclass</span>) {
     <span class="i">endScope</span>();
   }
 </pre><pre class="insert-after" translate="no">
-
   currentClass = currentClass-&gt;enclosing;
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>classDeclaration</em>()</div>
-<p>We pop the scope and discard the “super” variable after compiling the class body
-and its methods. That way, the variable is accessible in all of the methods of
-the subclass. It’s a somewhat pointless optimization, but we create the scope
-only if there <em>is</em> a superclass clause. Thus we need to close the scope only if
-there is one.</p>
-<p>To track that, we could declare a little local variable in <code translate="no">classDeclaration()</code>.
-But soon, other functions in the compiler will need to know whether the
-surrounding class is a subclass or not. So we may as well give our future selves
-a hand and store this fact as a field in the ClassCompiler now.</p>
+<p><font papago-translate="translated">우리는 클래스 본문과 그 방법들을 컴파일한 후에 범위를 열고 "슈퍼" 변수를 버립니다.</font><font papago-translate="translated"> 그렇게 하면, 변수는 하위 클래스의 모든 방법에서 접근할 수 있습니다.</font><font papago-translate="translated"> 다소 무의미한 최적화이지만, 초급<em></em> 조항이 있을 때만 범위를 만듭니다.</font><font papago-translate="translated"> 따라서 범위가 있는 경우에만 범위를 닫아야 합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이를 추적하기 위해 작은 지역 변수를 다음과 같이 선언할 수 있습니다 </font></font><code translate="no">classDeclaration()</code><font papago-translate="splitted"><font papago-translate="translated">. 하지만 곧 컴파일러의 다른 함수들도 주변 클래스가 하위 클래스인지 아닌지 알아야 할 것입니다.</font><font papago-translate="translated"> 그래서 우리는 미래의 자신에게 도움을 주고 이 사실을 지금 ClassCompiler에 필드로 저장하는 것이 좋습니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">typedef struct ClassCompiler {
   struct ClassCompiler* enclosing;
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in struct <em>ClassCompiler</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> struct<em>ClassCompiler</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="t">bool</span> <span class="i">hasSuperclass</span>;
 </pre><pre class="insert-after" translate="no">} ClassCompiler;
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in struct <em>ClassCompiler</em></div>
-<p>When we first initialize a ClassCompiler, we assume it is not a subclass.</p>
+<p><font papago-translate="translated">클래스 컴파일러를 처음 초기화할 때는 서브클래스가 아니라고 가정합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  ClassCompiler classCompiler;
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>classDeclaration</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>class</em>D<em>eclaration</em>에서 ()</font></font></div>
 <pre class="insert" translate="no">  <span class="i">classCompiler</span>.<span class="i">hasSuperclass</span> = <span class="k">false</span>;
 </pre><pre class="insert-after" translate="no">  classCompiler.enclosing = currentClass;
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>classDeclaration</em>()</div>
-<p>Then, if we see a superclass clause, we know we are compiling a subclass.</p>
+<p><font papago-translate="translated">그런 다음 슈퍼클래스 절을 보면 하위 클래스를 컴파일하고 있다는 것을 알 수 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    emitByte(OP_INHERIT);
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>classDeclaration</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>class</em>D<em>eclaration</em>에서 ()</font></font></div>
 <pre class="insert" translate="no">    <span class="i">classCompiler</span>.<span class="i">hasSuperclass</span> = <span class="k">true</span>;
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>classDeclaration</em>()</div>
-<p>This machinery gives us a mechanism at runtime to access the superclass object
-of the surrounding subclass from within any of the subclass’s methods<span class="em">—</span>simply
-emit code to load the variable named “super”. That variable is a local outside
-of the method body, but our existing upvalue support enables the VM to capture
-that local inside the body of the method or even in functions nested inside that
-method.</p>
-<h2><a href="#super-calls" id="super-calls"><small>29 . 3</small>Super Calls</a></h2>
-<p>With that runtime support in place, we are ready to implement super calls. As
-usual, we go front to back, starting with the new syntax. A super call <span name="last">begins</span>, naturally enough, with the <code translate="no">super</code> keyword.</p>
-<aside name="last">
-<p>This is it, friend. The very last entry you’ll add to the parsing table.</p>
+<p><font papago-translate="translated">이 기계<span class="em"></span>는 런타임 시 서브클래스의 메서드 내에서 주변 서브클래스의 슈퍼클래스 객체에 접근할 수 있는 메커니즘을 제공합니다. 단순히 코드를 방출하여 "슈퍼"라는 변수를 로드하기만 하면 됩니다.</font><font papago-translate="translated"> 해당 변수는 메서드 본문 외부의 로컬 변수이지만, 기존의 업밸류 지원을 통해 VM은 메서드 본문 내부 또는 해당 메서드 내부에 중첩된 함수에서도 해당 로컬을 캡처할 수 있습니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/superclasses.html#super-calls" id="super-calls"><small><font papago-translate="translated">29 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">슈퍼 콜</font></font></a></h2>
+<p><font papago-translate="splitted"><font papago-translate="translated">런타임 지원이 제공되므로 슈퍼 콜을 구현할 준비가 되었습니다.</font><font papago-translate="translated"> 평소처럼, 우리는 새로운 구문부터 시작하여 앞뒤로 나아갑니다.</font><font papago-translate="translated"> 슈퍼 콜<span name="last">은</span> 자연스럽게 다음과 함께<span name="last"> 시작됩니다</span> </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드.</font></font></p>
+<aside name="last" style="top: 9072px;">
+<p><font papago-translate="translated">이거야, 친구.</font><font papago-translate="translated"> 구문 분석 테이블에 마지막으로 추가할 항목입니다.</font></p>
 </aside>
 <div class="codehilite"><pre class="insert-before" translate="no">  [TOKEN_RETURN]        = {NULL,     NULL,   PREC_NONE},
-</pre><div class="source-file"><em>compiler.c</em><br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  [<span class="a">TOKEN_SUPER</span>]         = {<span class="i">super_</span>,   <span class="a">NULL</span>,   <span class="a">PREC_NONE</span>},
 </pre><pre class="insert-after" translate="no">  [TOKEN_THIS]          = {this_,    NULL,   PREC_NONE},
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, replace 1 line</div>
-<p>When the expression parser lands on a <code translate="no">super</code> token, control jumps to a new
-parsing function which starts off like so:</p>
-<div class="codehilite"><div class="source-file"><em>compiler.c</em><br/>
-add after <em>syntheticToken</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">표현식 파서가 다음과 같은 조건에 도달할 때 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 토큰, 제어는 다음과 같이 시작하는 새로운 구문 분석 기능으로 이동합니다:</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>syntheticToken</em>() 다음에 추가</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">super_</span>(<span class="t">bool</span> <span class="i">canAssign</span>) {
   <span class="i">consume</span>(<span class="a">TOKEN_DOT</span>, <span class="s">"Expect '.' after 'super'."</span>);
   <span class="i">consume</span>(<span class="a">TOKEN_IDENTIFIER</span>, <span class="s">"Expect superclass method name."</span>);
@@ -469,15 +319,9 @@ add after <em>syntheticToken</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after <em>syntheticToken</em>()</div>
-<p>This is pretty different from how we compiled <code translate="no">this</code> expressions. Unlike <code translate="no">this</code>,
-a <code translate="no">super</code> <span name="token">token</span> is not a standalone expression.
-Instead, the dot and method name following it are inseparable parts of the
-syntax. However, the parenthesized argument list is separate. As with normal
-method access, Lox supports getting a reference to a superclass method as a
-closure without invoking it:</p>
-<aside name="token">
-<p>Hypothetical question: If a bare <code translate="no">super</code> token <em>was</em> an expression, what kind of
-object would it evaluate to?</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 우리가 작성한 방식과 상당히 다릅니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 표현.</font><font papago-translate="translated"> 와는 달리 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated">,a </font></font><code translate="no">super</code> <font papago-translate="splitted"><font papago-translate="translated"><span name="token">토큰은</span> 독립적인 표현이 아닙니다<span name="token">.</span></font><font papago-translate="translated"> 대신, 그 뒤에 오는 점과 메서드 이름은 구문에서 떼려야 뗄 수 없는 부분입니다.</font><font papago-translate="translated"> 그러나 괄호로 묶은 인수 목록은 별도입니다.</font><font papago-translate="translated"> 일반 메서드 액세스와 마찬가지로 Lox는 슈퍼클래스 메서드를 호출하지 않고 참조를 클로저로 가져오는 것을 지원합니다:</font></font></p>
+<aside name="token" style="top: 9448px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">가설적 질문:</font><font papago-translate="translated"> 만약 맨 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 토큰<em>은</em> 표현<em>이었는데</em>, 어떤 객체를 평가할까요?</font></font></p>
 </aside>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">A</span> {
   <span class="i">method</span>() {
@@ -492,33 +336,19 @@ object would it evaluate to?</p>
   }
 }
 </pre></div>
-<p>In other words, Lox doesn’t really have super <em>call</em> expressions, it has super
-<em>access</em> expressions, which you can choose to immediately invoke if you want. So
-when the compiler hits a <code translate="no">super</code> token, we consume the subsequent <code translate="no">.</code> token and
-then look for a method name. Methods are looked up dynamically, so we use
-<code translate="no">identifierConstant()</code> to take the lexeme of the method name token and store it
-in the constant table just like we do for property access expressions.</p>
-<p>Here is what the compiler does after consuming those tokens:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">즉, Lox는 실제로 슈퍼<em> 콜</em> 표현식이 아니라 슈퍼<em> 액세스</em> 표현식을 가지고 있어 원하는 경우 즉시 호출하도록 선택할 수 있습니다.</font><font papago-translate="translated"> 그래서 컴파일러가 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 토큰, 우리는 다음을 소비합니다 </font></font><code translate="no">.</code><font papago-translate="splitted"><font papago-translate="translated"> 토큰을 사용한 다음 메서드 이름을 찾습니다.</font><font papago-translate="translated"> 메서드는 동적으로 조회되므로 다음을 사용합니다 </font></font><code translate="no">identifierConstant()</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드 이름 토큰의 어휘를 가져와 속성 접근 표현식처럼 상수 테이블에 저장합니다.</font></font></p>
+<p><font papago-translate="translated">다음은 컴파일러가 이러한 토큰을 소비한 후 수행하는 작업입니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  uint8_t name = identifierConstant(&amp;parser.previous);
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>super_</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>슈퍼</em>_()에서</font></font></div>
 <pre class="insert" translate="no">
-
   <span class="i">namedVariable</span>(<span class="i">syntheticToken</span>(<span class="s">"this"</span>), <span class="k">false</span>);
   <span class="i">namedVariable</span>(<span class="i">syntheticToken</span>(<span class="s">"super"</span>), <span class="k">false</span>);
   <span class="i">emitBytes</span>(<span class="a">OP_GET_SUPER</span>, <span class="i">name</span>);
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>super_</em>()</div>
-<p>In order to access a <em>superclass method</em> on <em>the current instance</em>, the runtime
-needs both the receiver <em>and</em> the superclass of the surrounding method’s class.
-The first <code translate="no">namedVariable()</code> call generates code to look up the current receiver
-stored in the hidden variable “this” and push it onto the stack. The second
-<code translate="no">namedVariable()</code> call emits code to look up the superclass from its “super”
-variable and push that on top.</p>
-<p>Finally, we emit a new <code translate="no">OP_GET_SUPER</code> instruction with an operand for the
-constant table index of the method name. That’s a lot to hold in your head. To
-make it tangible, consider this example program:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><em>현재 인스턴스</em>에서<em> 슈퍼클래스 메서드</em>에 액세스하려면 런타임에 수신기<em>와</em> 주변 메서드 클래스의 슈퍼클래스가 모두 필요합니다.</font><font papago-translate="translated"> 첫 번째 </font></font><code translate="no">namedVariable()</code><font papago-translate="splitted"><font papago-translate="translated"> 호출은 숨겨진 변수 "이것"에 저장된 현재 수신기를 찾아 스택으로 밀어 넣는 코드를 생성합니다.</font><font papago-translate="translated"> 두 번째 </font></font><code translate="no">namedVariable()</code><font papago-translate="splitted"><font papago-translate="translated"> 호출은 "슈퍼" 변수에서 슈퍼클래스를 찾아 그 위에 올려놓기 위한 코드를 방출합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">마침내, 우리는 새로운 것을 방출합니다 </font></font><code translate="no">OP_GET_SUPER</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드 이름의 상수 테이블 인덱스에 대한 피연산자가 포함된 명령어.</font><font papago-translate="translated"> 머릿속에 담을 수 있는 양이 많습니다.</font><font papago-translate="translated"> 구체적으로 만들기 위해 이 예제 프로그램을 고려해 보세요:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Doughnut</span> {
   <span class="i">cook</span>() {
     <span class="k">print</span> <span class="s">"Dunk in the fryer."</span>;
@@ -537,31 +367,23 @@ make it tangible, consider this example program:</p>
   }
 }
 </pre></div>
-<p>The bytecode emitted for the <code translate="no">super.finish("icing")</code> expression looks and works
-like this:</p><img alt="The series of bytecode instructions for calling super.finish()." src="image/superclasses/super-instructions.png"/>
-<p>The first three instructions give the runtime access to the three pieces of
-information it needs to perform the super access:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다음을 위해 방출된 바이트코드 </font></font><code translate="no">super.finish("icing")</code><font papago-translate="splitted"><font papago-translate="translated"> 표현은 다음과 같이 보이고 작동합니다:</font></font></p><img alt="The series of bytecode instructions for calling super.finish()." src="https://youhogeon-meritz.github.io/image/superclasses/super-instructions.png">
+<p><font papago-translate="translated">처음 세 가지 지침은 런타임에 슈퍼 액세스를 수행하는 데 필요한 세 가지 정보에 대한 액세스 권한을 제공합니다:</font></p>
 <ol>
 <li>
-<p>The first instruction loads <strong>the instance</strong> onto the stack.</p>
+<p><font papago-translate="translated">첫 번째 명령어는<strong> 인스턴스</strong>를 스택에 로드합니다.</font></p>
 </li>
 <li>
-<p>The second instruction loads <strong>the superclass where the method is
-resolved</strong>.</p>
+<p><font papago-translate="translated">두 번째 명령어는<strong> 메서드가 해결된 슈퍼클래스</strong>를 로드합니다.</font></p>
 </li>
 <li>
-<p>Then the new <code translate="no">OP_GET_SUPER</code> instuction encodes <strong>the name of the method to
-access</strong> as an operand.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그러면 새로운 </font></font><code translate="no">OP_GET_SUPER</code><font papago-translate="splitted"><font papago-translate="translated"> instuction은 피연산자로서<strong> 접근할 메서드의 이름</strong>을 인코딩합니다.</font></font></p>
 </li>
 </ol>
-<p>The remaining instructions are the normal bytecode for evaluating an argument
-list and calling a function.</p>
-<p>We’re almost ready to implement the new <code translate="no">OP_GET_SUPER</code> instruction in the
-interpreter. But before we do, the compiler has some errors it is responsible
-for reporting.</p>
+<p><font papago-translate="translated">나머지 지침은 인수 목록을 평가하고 함수를 호출하는 일반적인 바이트코드입니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 거의 새로운 것을 구현할 준비가 되었습니다 </font></font><code translate="no">OP_GET_SUPER</code><font papago-translate="splitted"><font papago-translate="translated"> 통역사의 지시.</font><font papago-translate="translated"> 하지만 그 전에 컴파일러가 보고해야 할 몇 가지 오류가 있습니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">static void super_(bool canAssign) {
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>super_</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>슈퍼</em>_()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="k">if</span> (<span class="i">currentClass</span> == <span class="a">NULL</span>) {
     <span class="i">error</span>(<span class="s">"Can't use 'super' outside of a class."</span>);
   } <span class="k">else</span> <span class="k">if</span> (!<span class="i">currentClass</span>-&gt;<span class="i">hasSuperclass</span>) {
@@ -571,35 +393,26 @@ in <em>super_</em>()</div>
 </pre><pre class="insert-after" translate="no">  consume(TOKEN_DOT, "Expect '.' after 'super'.");
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>super_</em>()</div>
-<p>A super call is meaningful only inside the body of a method (or in a function
-nested inside a method), and only inside the method of a class that has a
-superclass. We detect both of these cases using the value of <code translate="no">currentClass</code>. If
-that’s <code translate="no">NULL</code> or points to a class with no superclass, we report those errors.</p>
-<h3><a href="#executing-super-accesses" id="executing-super-accesses"><small>29 . 3 . 1</small>Executing super accesses</a></h3>
-<p>Assuming the user didn’t put a <code translate="no">super</code> expression where it’s not allowed, their
-code passes from the compiler over to the runtime. We’ve got ourselves a new
-instruction.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">슈퍼 콜은 메서드의 본문(또는 메서드 내부에 중첩된 함수) 내부에서만 의미가 있으며, 슈퍼 클래스가 있는 클래스의 메서드 내부에서만 의미가 있습니다.</font><font papago-translate="translated"> 우리는 다음 값을 사용하여 이 두 가지 경우를 모두 감지합니다 </font></font><code translate="no">currentClass</code><font papago-translate="splitted"><font papago-translate="translated">. 그렇다면 </font></font><code translate="no">NULL</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 슈퍼클래스가 없는 클래스를 가리키면, 우리는 이러한 오류를 보고합니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/superclasses.html#executing-super-accesses" id="executing-super-accesses"><small><font papago-translate="translated">29 . 3 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">슈퍼 액세스 실행</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">사용자가 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 허용되지 않는 표현식은 컴파일러에서 런타임으로 코드가 전달됩니다.</font><font papago-translate="translated"> 새로운 지침이 생겼습니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  OP_SET_PROPERTY,
-</pre><div class="source-file"><em>chunk.h</em><br/>
-in enum <em>OpCode</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">청크.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum O<em>pCode</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="a">OP_GET_SUPER</span>,
 </pre><pre class="insert-after" translate="no">  OP_EQUAL,
 </pre></div>
 <div class="source-file-narrow"><em>chunk.h</em>, in enum <em>OpCode</em></div>
-<p>We disassemble it like other opcodes that take a constant table index operand.</p>
+<p><font papago-translate="translated">우리는 일정한 테이블 인덱스 연산자를 사용하는 다른 연산 코드들처럼 그것을 분해합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      return constantInstruction("OP_SET_PROPERTY", chunk, offset);
-</pre><div class="source-file"><em>debug.c</em><br/>
-in <em>disassembleInstruction</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">debug.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>분해</em> 중 지침()</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OP_GET_SUPER</span>:
       <span class="k">return</span> <span class="i">constantInstruction</span>(<span class="s">"OP_GET_SUPER"</span>, <span class="i">chunk</span>, <span class="i">offset</span>);
 </pre><pre class="insert-after" translate="no">    case OP_EQUAL:
 </pre></div>
 <div class="source-file-narrow"><em>debug.c</em>, in <em>disassembleInstruction</em>()</div>
-<p>You might anticipate something harder, but interpreting the new instruction is
-similar to executing a normal property access.</p>
+<p><font papago-translate="translated">더 어려운 것을 예상할 수도 있지만, 새로운 명령어를 해석하는 것은 일반적인 속성 접근을 실행하는 것과 비슷합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      }
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OP_GET_SUPER</span>: {
         <span class="t">ObjString</span>* <span class="i">name</span> = <span class="a">READ_STRING</span>();
         <span class="t">ObjClass</span>* <span class="i">superclass</span> = <span class="a">AS_CLASS</span>(<span class="i">pop</span>());
@@ -612,54 +425,20 @@ in <em>run</em>()</div>
 </pre><pre class="insert-after" translate="no">      case OP_EQUAL: {
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>()</div>
-<p>As with properties, we read the method name from the
-constant table. Then we pass that to <code translate="no">bindMethod()</code> which looks up the method in
-the given class’s method table and creates an ObjBoundMethod to bundle the
-resulting closure to the current instance.</p>
-<p>The key <span name="field">difference</span> is <em>which</em> class we pass to
-<code translate="no">bindMethod()</code>. With a normal property access, we use the ObjInstances’s own
-class, which gives us the dynamic dispatch we want. For a super call, we don’t
-use the instance’s class. Instead, we use the statically resolved superclass of
-the containing class, which the compiler has conveniently ensured is sitting on
-top of the stack waiting for us.</p>
-<p>We pop that superclass and pass it to <code translate="no">bindMethod()</code>, which correctly skips over
-any overriding methods in any of the subclasses between that superclass and the
-instance’s own class. It also correctly includes any methods inherited by the
-superclass from any of <em>its</em> superclasses.</p>
-<p>The rest of the behavior is the same. Popping the superclass leaves the instance
-at the top of the stack. When <code translate="no">bindMethod()</code> succeeds, it pops the instance and
-pushes the new bound method. Otherwise, it reports a runtime error and returns
-<code translate="no">false</code>. In that case, we abort the interpreter.</p>
-<aside name="field">
-<p>Another difference compared to <code translate="no">OP_GET_PROPERTY</code> is that we don’t try to look
-for a shadowing field first. Fields are not inherited, so <code translate="no">super</code> expressions
-always resolve to methods.</p>
-<p>If Lox were a prototype-based language that used <em>delegation</em> instead of
-<em>inheritance</em>, then instead of one <em>class</em> inheriting from another <em>class</em>,
-instances would inherit from (“delegate to”) other instances. In that case,
-fields <em>could</em> be inherited, and we would need to check for them here.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">속성과 마찬가지로 상수 테이블에서 메서드 이름을 읽습니다.</font><font papago-translate="translated"> 그런 다음 이를 전달합니다 </font></font><code translate="no">bindMethod()</code><font papago-translate="splitted"><font papago-translate="translated"> 주어진 클래스의 메서드 테이블에서 메서드를 조회하고 결과적인 클로저를 현재 인스턴스에 번들링하기 위해 ObjBoundMethod를 생성합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">주요<span name="field"> 차이점</span>은<em> 어떤</em> 클래스로 전달하느냐입니다 </font></font><code translate="no">bindMethod()</code><font papago-translate="splitted"><font papago-translate="translated">. 일반적인 부동산 접근 방식에서는 ObjInstance 자체 클래스를 사용하여 원하는 동적 디스패치를 제공합니다.</font><font papago-translate="translated"> 슈퍼 콜의 경우 인스턴스의 클래스를 사용하지 않습니다.</font><font papago-translate="translated"> 대신, 우리는 정적으로 분해된 포함 클래스의 슈퍼클래스를 사용합니다. 이는 컴파일러가 편리하게 스택 위에 앉아서 우리를 기다리고 있는지 확인해 주었습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 그 슈퍼클래스를 다음과 같이 전달합니다 </font></font><code translate="no">bindMethod()</code><font papago-translate="splitted"><font papago-translate="translated">, 해당 슈퍼클래스와 인스턴스 자체 클래스 사이의 하위 클래스에서 모든 우선 메서드를 올바르게 건너뛸 수 있습니다.</font><font papago-translate="translated"> 또한 슈퍼클래스가 슈퍼<em></em>클래스로부터 물려받은 모든 메서드를 올바르게 포함합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">나머지 행동은 동일합니다.</font><font papago-translate="translated"> 슈퍼클래스를 열면 인스턴스가 스택의 맨 위에 남습니다.</font><font papago-translate="translated"> 언제 </font></font><code translate="no">bindMethod()</code><font papago-translate="splitted"><font papago-translate="translated"> 성공하면 인스턴스를 팝업하고 새로운 바인딩 메서드를 푸시합니다.</font><font papago-translate="translated"> 그렇지 않으면 런타임 오류를 보고하고 반환합니다 </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated">. 이 경우, 우리는 통역사를 중단합니다.</font></font></p>
+<aside name="field" style="top: 12652px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">와 비교한 또 다른 차이점 </font></font><code translate="no">OP_GET_PROPERTY</code><font papago-translate="splitted"><font papago-translate="translated"> 우리가 먼저 그림자 필드를 찾으려고 하지 않는다는 것입니다.</font><font papago-translate="translated"> 필드는 상속되지 않으므로 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 표현은 항상 방법으로 해결됩니다.</font></font></p>
+<p><font papago-translate="translated">Lox가 상속 대신<em> 위임</em>을 사용하는 프로토타입 기반 언어라면, 한<em> 클래스가</em> 다른<em> 클래스</em>에서 상속되는 대신 다른<em></em> 인스턴스("위임")로부터 인스턴스를 상속받게 됩니다.</font><font papago-translate="translated"> 이 경우 필드가 상속<em>될 수 있으므로</em> 여기에서 필드를 확인해야 합니다.</font></p>
 </aside>
-<h3><a href="#faster-super-calls" id="faster-super-calls"><small>29 . 3 . 2</small>Faster super calls</a></h3>
-<p>We have superclass method accesses working now. And since the returned object is
-an ObjBoundMethod that you can then invoke, we’ve got super <em>calls</em> working too.
-Just like last chapter, we’ve reached a point where our VM has the complete,
-correct semantics.</p>
-<p>But, also like last chapter, it’s pretty slow. Again, we’re heap allocating an
-ObjBoundMethod for each super call even though most of the time the very next
-instruction is an <code translate="no">OP_CALL</code> that immediately unpacks that bound method, invokes
-it, and then discards it. In fact, this is even more likely to be true for
-super calls than for regular method calls. At least with method calls there is
-a chance that the user is actually invoking a function stored in a field. With
-super calls, you’re <em>always</em> looking up a method. The only question is whether
-you invoke it immediately or not.</p>
-<p>The compiler can certainly answer that question for itself if it sees a left
-parenthesis after the superclass method name, so we’ll go ahead and perform the
-same optimization we did for method calls. Take out the two lines of code that
-load the superclass and emit <code translate="no">OP_GET_SUPER</code>, and replace them with this:</p>
+<h3><a href="https://youhogeon-meritz.github.io/superclasses.html#faster-super-calls" id="faster-super-calls"><small><font papago-translate="translated">29 . 3 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">더 빠른 슈퍼 콜</font></font></a></h3>
+<p><font papago-translate="translated">현재 슈퍼클래스 메서드 액세스가 작동 중입니다.</font><font papago-translate="translated"> 반환된 객체가 ObjBoundMethod이기 때문에 호출할 수 있는 슈퍼<em> 콜</em>도 작동합니다.</font><font papago-translate="translated"> 지난 장과 마찬가지로, 우리는 VM이 완전하고 올바른 의미를 가지고 있는 지점에 도달했습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">하지만 지난 장과 마찬가지로 꽤 느립니다.</font><font papago-translate="translated"> 다시 말하지만, 대부분의 경우 다음 명령어가 다음 명령어임에도 불구하고 각 슈퍼콜에 대해 ObjBoundMethod를 힙 할당하고 있습니다 </font></font><code translate="no">OP_CALL</code><font papago-translate="splitted"><font papago-translate="translated"> 즉, 해당 바인딩 메서드를 즉시 풀고 호출한 다음 폐기합니다.</font><font papago-translate="translated"> 사실, 이것은 일반적인 메서드 호출보다 슈퍼 호출에 더 해당될 가능성이 높습니다.</font><font papago-translate="translated"> 적어도 메서드 호출에서는 사용자가 실제로 필드에 저장된 함수를 호출할 가능성이 있습니다.</font><font papago-translate="translated"> 슈퍼 콜에서는<em> 항상</em> 방법을 찾고 있습니다.</font><font papago-translate="translated"> 유일한 질문은 즉시 호출하는지 여부입니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">컴파일러는 슈퍼클래스 메서드 이름 뒤에 왼쪽 괄호가 보이면 해당 질문에 스스로 답할 수 있으므로 메서드 호출에 대해 수행한 것과 동일한 최적화를 수행합니다.</font><font papago-translate="translated"> 슈퍼클래스를 로드하고 방출하는 두 줄의 코드를 꺼냅니다 </font></font><code translate="no">OP_GET_SUPER</code><font papago-translate="splitted"><font papago-translate="translated">, 그리고 그들을 이것으로 대체합니다:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  namedVariable(syntheticToken("this"), false);
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>super_</em>()<br/>
-replace 2 lines</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>슈퍼</em>_()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 두 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  <span class="k">if</span> (<span class="i">match</span>(<span class="a">TOKEN_LEFT_PAREN</span>)) {
     <span class="t">uint8_t</span> <span class="i">argCount</span> = <span class="i">argumentList</span>();
     <span class="i">namedVariable</span>(<span class="i">syntheticToken</span>(<span class="s">"super"</span>), <span class="k">false</span>);
@@ -672,41 +451,30 @@ replace 2 lines</div>
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>super_</em>(), replace 2 lines</div>
-<p>Now before we emit anything, we look for a parenthesized argument list. If we
-find one, we compile that. Then we load the superclass. After that, we emit a
-new <code translate="no">OP_SUPER_INVOKE</code> instruction. This <span name="superinstruction">superinstruction</span> combines the behavior of
-<code translate="no">OP_GET_SUPER</code> and <code translate="no">OP_CALL</code>, so it takes two operands: the constant table index
-of the method name to look up and the number of arguments to pass to it.</p>
-<aside name="superinstruction">
-<p>This is a particularly <em>super</em> superinstruction, if you get what I’m saying.
-I<span class="ellipse"> . . . </span>I’m sorry for this terrible joke.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이제 무언가를 발표하기 전에 괄호로 묶은 인수 목록을 찾습니다.</font><font papago-translate="translated"> 하나를 찾으면, 그것을 컴파일합니다.</font><font papago-translate="translated"> 그런 다음 슈퍼클래스를 로드합니다.</font><font papago-translate="translated"> 그 후, 우리는 새로운 것을 방출합니다 </font></font><code translate="no">OP_SUPER_INVOKE</code><font papago-translate="splitted"><font papago-translate="translated"> 설명.</font><font papago-translate="translated"> <span name="superinstruction">이 슈퍼 명령</span>어는 다음과 같은 동작을 결합합니다 </font></font><code translate="no">OP_GET_SUPER</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">OP_CALL</code><font papago-translate="splitted"><font papago-translate="translated">, 그래서 두 개의 피연산자가 필요합니다: 조회할 메서드 이름의 상수 테이블 인덱스와 전달할 인수의 수.</font></font></p>
+<aside name="superinstruction" style="top: 13856px;">
+<p><font papago-translate="translated">제 말을 이해하셨다면, 이것은<em> 특히 매우 훌륭한</em> 지도입니다.</font><font papago-translate="translated"> 저<span class="ellipse">는...</span> 이런 끔찍한 농담을 해서 죄송합니다.</font></p>
 </aside>
-<p>Otherwise, if we don’t find a <code translate="no">(</code>, we continue to compile the expression as a
-super access like we did before and emit an <code translate="no">OP_GET_SUPER</code>.</p>
-<p>Drifting down the compilation pipeline, our first stop is a new instruction.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그렇지 않으면 </font></font><code translate="no">(</code><font papago-translate="splitted"><font papago-translate="translated">, 우리는 이전에 했던 것처럼 슈퍼 액세스라는 표현을 계속해서 컴파일하고 다음을 방출합니다 </font></font><code translate="no">OP_GET_SUPER</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="translated">컴파일 파이프라인을 따라 내려가다 보면, 첫 번째 목적지는 새로운 지침입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  OP_INVOKE,
-</pre><div class="source-file"><em>chunk.h</em><br/>
-in enum <em>OpCode</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">청크.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum O<em>pCode</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="a">OP_SUPER_INVOKE</span>,
 </pre><pre class="insert-after" translate="no">  OP_CLOSURE,
 </pre></div>
 <div class="source-file-narrow"><em>chunk.h</em>, in enum <em>OpCode</em></div>
-<p>And just past that, its disassembler support.</p>
+<p><font papago-translate="translated">그리고 바로 그 너머에는 분해기 지지대가 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      return invokeInstruction("OP_INVOKE", chunk, offset);
-</pre><div class="source-file"><em>debug.c</em><br/>
-in <em>disassembleInstruction</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">debug.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>분해</em> 중 지침()</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OP_SUPER_INVOKE</span>:
       <span class="k">return</span> <span class="i">invokeInstruction</span>(<span class="s">"OP_SUPER_INVOKE"</span>, <span class="i">chunk</span>, <span class="i">offset</span>);
 </pre><pre class="insert-after" translate="no">    case OP_CLOSURE: {
 </pre></div>
 <div class="source-file-narrow"><em>debug.c</em>, in <em>disassembleInstruction</em>()</div>
-<p>A super invocation instruction has the same set of operands as <code translate="no">OP_INVOKE</code>, so
-we reuse the same helper to disassemble it. Finally, the pipeline dumps us into
-the interpreter.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">슈퍼 호출 명령어는 다음과 같은 피연산자 집합을 갖습니다 </font></font><code translate="no">OP_INVOKE</code><font papago-translate="splitted"><font papago-translate="translated">, 그래서 우리는 동일한 도우미를 재사용하여 분해합니다.</font><font papago-translate="translated"> 마침내 파이프라인이 우리를 통역사에게 버립니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">        break;
       }
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OP_SUPER_INVOKE</span>: {
         <span class="t">ObjString</span>* <span class="i">method</span> = <span class="a">READ_STRING</span>();
         <span class="t">int</span> <span class="i">argCount</span> = <span class="a">READ_BYTE</span>();
@@ -720,112 +488,43 @@ in <em>run</em>()</div>
 </pre><pre class="insert-after" translate="no">      case OP_CLOSURE: {
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>()</div>
-<p>This handful of code is basically our implementation of <code translate="no">OP_INVOKE</code> mixed
-together with a dash of <code translate="no">OP_GET_SUPER</code>. There are some differences in how the
-stack is organized, though. With an unoptimized super call, the superclass is
-popped and replaced by the ObjBoundMethod for the resolved function <em>before</em> the
-arguments to the call are executed. This ensures that by the time the <code translate="no">OP_CALL</code>
-is executed, the bound method is <em>under</em> the argument list, where the runtime
-expects it to be for a closure call.</p>
-<p>With our optimized instructions, things are shuffled a bit:</p><img alt="The series of bytecode instructions for calling super.finish() using OP_SUPER_INVOKE." class="wide" src="image/superclasses/super-invoke.png"/>
-<p>Now resolving the superclass method is part of the <em>invocation</em>, so the
-arguments need to already be on the stack at the point that we look up the
-method. This means the superclass object is on top of the arguments.</p>
-<p>Aside from that, the behavior is roughly the same as an <code translate="no">OP_GET_SUPER</code> followed
-by an <code translate="no">OP_CALL</code>. First, we pull out the method name and argument count operands.
-Then we pop the superclass off the top of the stack so that we can look up the
-method in its method table. This conveniently leaves the stack set up just right
-for a method call.</p>
-<p>We pass the superclass, method name, and argument count to our existing
-<code translate="no">invokeFromClass()</code> function. That function looks up the given method on the
-given class and attempts to create a call to it with the given arity. If a
-method could not be found, it returns <code translate="no">false</code>, and we bail out of the
-interpreter. Otherwise, <code translate="no">invokeFromClass()</code> pushes a new CallFrame onto the call
-stack for the method’s closure. That invalidates the interpreter’s cached
-CallFrame pointer, so we refresh <code translate="no">frame</code>.</p>
-<h2><a href="#a-complete-virtual-machine" id="a-complete-virtual-machine"><small>29 . 4</small>A Complete Virtual Machine</a></h2>
-<p>Take a look back at what we’ve created. By my count, we wrote around 2,500 lines
-of fairly clean, straightforward C. That little program contains a complete
-implementation of the<span class="em">—</span>quite high-level!<span class="em">—</span>Lox language, with a whole
-precedence table full of expression types and a suite of control flow
-statements. We implemented variables, functions, closures, classes, fields,
-methods, and inheritance.</p>
-<p>Even more impressive, our implementation is portable to any platform with a C
-compiler, and is fast enough for real-world production use. We have a
-single-pass bytecode compiler, a tight virtual machine interpreter for our
-internal instruction set, compact object representations, a stack for storing
-variables without heap allocation, and a precise garbage collector.</p>
-<p>If you go out and start poking around in the implementations of Lua, Python, or
-Ruby, you will be surprised by how much of it now looks familiar to you. You
-have seriously leveled up your knowledge of how programming languages work,
-which in turn gives you a deeper understanding of programming itself. It’s like
-you used to be a race car driver, and now you can pop the hood and repair the
-engine too.</p>
-<p>You can stop here if you like. The two implementations of Lox you have are
-complete and full featured. You built the car and can drive it wherever you want
-now. But if you are looking to have more fun tuning and tweaking for even
-greater performance out on the track, there is one more chapter. We don’t add
-any new capabilities, but we roll in a couple of classic optimizations to
-squeeze even more perf out. If that sounds fun, <a href="optimization.html">keep reading</a><span class="ellipse"> . . . </span></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 소수의 코드는 기본적으로 다음과 같은 구현입니다 </font></font><code translate="no">OP_INVOKE</code><font papago-translate="splitted"><font papago-translate="translated"> 약간의 혼합물 </font></font><code translate="no">OP_GET_SUPER</code><font papago-translate="splitted"><font papago-translate="translated">. 하지만 스택 구성 방식에는 몇 가지 차이점이 있습니다.</font><font papago-translate="translated"> 최적화되지 않은 슈퍼 호출을 사용하면 호출에 대한 인수가 실행<em>되기 전</em>에 해결된 함수에 대해 슈퍼클래스가 팝업되고 ObjBoundMethod로 대체됩니다.</font><font papago-translate="translated"> 이것은 다음을 보장합니다 </font></font><code translate="no">OP_CALL</code><font papago-translate="splitted"><font papago-translate="translated"> 실행 중이며, 바인딩 메서드는 인수 목록<em> 아래에</em> 있으며, 런타임에서 클로저 호출을 위한 메서드일 것으로 예상됩니다.</font></font></p>
+<p><font papago-translate="translated">최적화된 지침을 사용하면 상황이 조금씩 달라질 수 있습니다:</font></p><img alt="The series of bytecode instructions for calling super.finish() using OP_SUPER_INVOKE." class="wide" src="https://youhogeon-meritz.github.io/image/superclasses/super-invoke.png">
+<p><font papago-translate="translated">이제 슈퍼클래스 메서드를 해결하는 것은<em> 호출</em>의 일부이므로 메서드를 찾는 지점에서 인수가 이미 스택에 있어야 합니다.</font><font papago-translate="translated"> 이는 슈퍼클래스 객체가 인수 위에 있다는 것을 의미합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그 외에도 동작은 대략 다음과 같습니다 </font></font><code translate="no">OP_GET_SUPER</code><font papago-translate="splitted"><font papago-translate="translated"> 그 다음에 </font></font><code translate="no">OP_CALL</code><font papago-translate="splitted"><font papago-translate="translated">. 먼저 메서드 이름과 인수 개수 피연산자를 추출합니다.</font><font papago-translate="translated"> 그런 다음 슈퍼클래스를 스택 상단에서 분리하여 메서드 테이블에서 메서드를 찾을 수 있습니다.</font><font papago-translate="translated"> 이렇게 하면 메서드 호출에 적합하게 스택을 설정할 수 있습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">슈퍼클래스, 메서드 이름, 인수 개수를 기존에 전달합니다 </font></font><code translate="no">invokeFromClass()</code><font papago-translate="splitted"><font papago-translate="translated"> 기능.</font><font papago-translate="translated"> 그 함수는 주어진 클래스에서 주어진 메서드를 찾아내고 주어진 arity로 호출을 시도합니다.</font><font papago-translate="translated"> 방법을 찾을 수 없는 경우 반환됩니다 </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated">, 그리고 우리는 통역사를 탈출합니다.</font><font papago-translate="translated"> 그렇지않으면, </font></font><code translate="no">invokeFromClass()</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드를 종료하기 위해 새로운 콜프레임을 콜 스택에 푸시합니다.</font><font papago-translate="translated"> 이는 인터프리터의 캐시된 콜프레임 포인터를 무효화하므로 새로 고침합니다 </font></font><code translate="no">frame</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/superclasses.html#a-complete-virtual-machine" id="a-complete-virtual-machine"><small><font papago-translate="translated">29 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">완전한 가상 머신</font></font></a></h2>
+<p><font papago-translate="translated">우리가 만든 것을 되돌아보세요.</font><font papago-translate="translated"> 제 계산에 따르면, 우리는 약 2,500줄의 꽤 깨끗하고 간단한 C를 썼습니다.</font><font papago-translate="translated"> 그 작은 프로그램에는 꽤 높은<span class="em"></span> 수준의 완전한 구현이 포함되어 있습니다!</font><font papago-translate="translated"><span class="em">-</span>표현 유형으로 가득 찬 전체 우선순위 테이블과 일련의 제어 흐름 문이 있는 Lox 언어<span class="em">.</span></font><font papago-translate="translated"> 변수, 함수, 폐쇄, 클래스, 필드, 메서드 및 상속을 구현했습니다.</font></p>
+<p><font papago-translate="translated">더욱 인상적인 점은 우리의 구현이 C 컴파일러를 사용하는 모든 플랫폼에 이식 가능하며, 실제 프로덕션에서 사용하기에 충분히 빠릅니다.</font><font papago-translate="translated"> 저희는 단일 패스 바이트코드 컴파일러, 내부 명령어 세트를 위한 타이트한 가상 머신 인터프리터, 컴팩트한 객체 표현, 힙 할당 없이 변수를 저장할 수 있는 스택, 그리고 정밀한 가비지 컬렉터를 보유하고 있습니다.</font></p>
+<p><font papago-translate="translated">Lua, Python, 또는 Ruby의 구현을 통해 주변을 들여다보기 시작하면, 이제 그 중 많은 부분이 당신에게 익숙해진 것처럼 보인다는 사실에 놀랄 것입니다.</font><font papago-translate="translated"> 프로그래밍 언어가 어떻게 작동하는지에 대한 지식이 진지하게 향상되어 프로그래밍 자체에 대한 깊은 이해를 얻게 되었습니다.</font><font papago-translate="translated"> 마치 예전에 경주용 자동차 운전사였던 것처럼 이제 후드를 열고 엔진도 수리할 수 있게 되었습니다.</font></p>
+<p><font papago-translate="translated">원하시면 여기서 멈추셔도 됩니다.</font><font papago-translate="translated"> Lox의 두 가지 구현은 완전하고 완전한 기능을 갖추고 있습니다.</font><font papago-translate="translated"> 당신은 그 차를 만들었고 지금 원하는 곳 어디든지 운전할 수 있습니다.</font><font papago-translate="translated"> 하지만 트랙에서 더 나은 성능을 위해 더 재미있는 튜닝과 조정을 원하신다면, 한 장이 더 있습니다.</font><font papago-translate="translated"> 새로운 기능을 추가하지는 않지만, 몇 가지 고전적인 최적화를 적용하여 더욱 뛰어난 성능을 발휘합니다.</font><font papago-translate="translated"> 재미있을 것 같으면<a href="https://youhogeon-meritz.github.io/optimization.html"> 계속 읽어보세요</a><span class="ellipse">.</span></font></p>
 <div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+<h2><a href="https://youhogeon-meritz.github.io/superclasses.html#challenges" id="challenges"><font papago-translate="translated">과제들</font></a></h2>
 <ol>
 <li>
-<p>A tenet of object-oriented programming is that a class should ensure new
-objects are in a valid state. In Lox, that means defining an initializer
-that populates the instance’s fields. Inheritance complicates invariants
-because the instance must be in a valid state according to all of the
-classes in the object’s inheritance chain.</p>
-<p>The easy part is remembering to call <code translate="no">super.init()</code> in each subclass’s
-<code translate="no">init()</code> method. The harder part is fields. There is nothing preventing two
-classes in the inheritance chain from accidentally claiming the same field
-name. When this happens, they will step on each other’s fields and possibly
-leave you with an instance in a broken state.</p>
-<p>If Lox was your language, how would you address this, if at all? If you
-would change the language, implement your change.</p>
+<p><font papago-translate="translated">객체 지향 프로그래밍의 원칙 중 하나는 클래스가 새로운 객체가 유효한 상태인지 확인해야 한다는 것입니다.</font><font papago-translate="translated"> Lox에서 이는 인스턴스의 필드를 채우는 초기화자를 정의하는 것을 의미합니다.</font><font papago-translate="translated"> 상속은 객체의 상속 체인에 있는 모든 클래스에 따라 인스턴스가 유효한 상태여야 하므로 불변량을 복잡하게 만듭니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">쉬운 부분은 전화하는 것을 기억하는 것입니다 </font></font><code translate="no">super.init()</code><font papago-translate="splitted"><font papago-translate="translated"> 각 하위 클래스의 </font></font><code translate="no">init()</code><font papago-translate="splitted"><font papago-translate="translated"> 방법.</font><font papago-translate="translated"> 더 어려운 부분은 들판입니다.</font><font papago-translate="translated"> 상속 체인에서 두 클래스가 실수로 같은 필드 이름을 주장하는 것을 막을 수 있는 것은 없습니다.</font><font papago-translate="translated"> 이런 일이 발생하면, 그들은 서로의 영역을 밟게 되고, 아마도 당신에게 깨진 상태의 사례를 남길 것입니다.</font></font></p>
+<p><font papago-translate="translated">Lox가 당신의 언어라면, 이 문제를 어떻게 해결하시겠습니까?</font><font papago-translate="translated"> 언어를 변경하려면 변경 사항을 실행하세요.</font></p>
 </li>
 <li>
-<p>Our copy-down inheritance optimization is valid only because Lox does not
-permit you to modify a class’s methods after its declaration. This means we
-don’t have to worry about the copied methods in the subclass getting out of
-sync with later changes to the superclass.</p>
-<p>Other languages, like Ruby, <em>do</em> allow classes to be modified after the
-fact. How do implementations of languages like that support class
-modification while keeping method resolution efficient?</p>
+<p><font papago-translate="translated">우리의 복사-다운 상속 최적화는 Lox가 클래스가 선언된 후 메서드를 수정하는 것을 허용하지 않기 때문에 유효합니다.</font><font papago-translate="translated"> 즉, 서브클래스에서 복사된 메서드가 나중에 슈퍼클래스로 변경될 때 동기화되지 않을까 걱정할 필요가 없습니다.</font></p>
+<p><font papago-translate="translated">루비와 같은 다른 언어들은 수업이 끝난 후에도 수정될 수 있도록 허용<em>합니다</em>.</font><font papago-translate="translated"> 이러한 언어의 구현은 메서드 해상도를 효율적으로 유지하면서 클래스 수정을 어떻게 지원합니까?</font></p>
 </li>
 <li>
-<p>In the <a href="inheritance.html">jlox chapter on inheritance</a>, we had a challenge to
-implement the BETA language’s approach to method overriding. Solve the
-challenge again, but this time in clox. Here’s the description of the
-previous challenge:</p>
-<p>In Lox, as in most other object-oriented languages, when looking up a
-method, we start at the bottom of the class hierarchy and work our way up<span class="em">—</span>a subclass’s method is preferred over a superclass’s. In order to get to the
-superclass method from within an overriding method, you use <code translate="no">super</code>.</p>
-<p>The language <a href="https://beta.cs.au.dk/">BETA</a> takes the <a href="http://journal.stuffwithstuff.com/2012/12/19/the-impoliteness-of-overriding-methods/">opposite approach</a>. When you call a
-method, it starts at the <em>top</em> of the class hierarchy and works <em>down</em>. A
-superclass method wins over a subclass method. In order to get to the
-subclass method, the superclass method can call <code translate="no">inner</code>, which is sort of
-like the inverse of <code translate="no">super</code>. It chains to the next method down the
-hierarchy.</p>
-<p>The superclass method controls when and where the subclass is allowed to
-refine its behavior. If the superclass method doesn’t call <code translate="no">inner</code> at all,
-then the subclass has no way of overriding or modifying the superclass’s
-behavior.</p>
-<p>Take out Lox’s current overriding and <code translate="no">super</code> behavior, and replace it with
-BETA’s semantics. In short:</p>
+<p><font papago-translate="translated"><a href="https://youhogeon-meritz.github.io/inheritance.html">상속에 관한 Jlox 장에서</a> 우리는 방법 우선순위에 대한 베타 언어의 접근 방식을 구현하는 데 어려움을 겪었습니다.</font><font papago-translate="translated"> 다시 도전 과제를 해결하되, 이번에는 클록스에서 해결하세요.</font><font papago-translate="translated"> 이전 도전 과제에 대한 설명은 다음과 같습니다:</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">Lox에서는 대부분의 다른 객체 지향 언어와 마찬가지로 메서드를 찾을 때 클래스 계층의 맨 아래에서 시작하여 상위 클래스로 이동합니다. 이는 슈퍼<span class="em"></span> 클래스보다 하위 클래스의 메서드가 더 선호됩니다.</font><font papago-translate="translated"> 상위 메서드 내에서 슈퍼클래스 메서드로 이동하려면 다음을 사용합니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">BE<a href="https://beta.cs.au.dk/">TA</a>라는 언어<a href="http://journal.stuffwithstuff.com/2012/12/19/the-impoliteness-of-overriding-methods/">는 반대의 접근 방식</a>을 취합니다.</font><font papago-translate="translated"> 메서드를 호출하면 클래스 계층의<em> 최상위</em>에서 시작하여<em> 아래</em>로 작동합니다.</font><font papago-translate="translated"> 슈퍼클래스 방법이 서브클래스 방법보다 승리합니다.</font><font papago-translate="translated"> 서브클래스 메서드에 도달하려면 슈퍼클래스 메서드는 다음과 같이 할 수 있습니다 </font></font><code translate="no">inner</code><font papago-translate="splitted"><font papago-translate="translated">, 그것은 일종의 역수와 같습니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated">. 계층 구조를 따라 다음 방법으로 연결됩니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">슈퍼클래스 메서드는 하위 클래스가 언제 어디서 동작을 개선할 수 있는지를 제어합니다.</font><font papago-translate="translated"> 슈퍼클래스 메서드가 호출되지 않는 경우 </font></font><code translate="no">inner</code><font papago-translate="splitted"><font papago-translate="translated"> 그러면 하위 클래스는 상위 클래스의 동작을 재정의하거나 수정할 방법이 없습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">Lox의 현재 오버라이딩을 제거합니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 행동을 베타의 의미론으로 대체합니다.</font><font papago-translate="translated"> 간단히 말해서:</font></font></p>
 <ul>
 <li>
-<p>When calling a method on a class, the method <em>highest</em> on the
-class’s inheritance chain takes precedence.</p>
+<p><font papago-translate="translated">클래스에서 메서드를 호출할 때 클래스의 상속 체인<em>에서 가장 높은</em> 메서드가 우선합니다.</font></p>
 </li>
 <li>
-<p>Inside the body of a method, a call to <code translate="no">inner</code> looks for a method with
-the same name in the nearest subclass along the inheritance chain
-between the class containing the <code translate="no">inner</code> and the class of <code translate="no">this</code>. If
-there is no matching method, the <code translate="no">inner</code> call does nothing.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">메서드 본문 내부에서 다음과 같은 요청이 있습니다 </font></font><code translate="no">inner</code><font papago-translate="splitted"><font papago-translate="translated"> 클래스 간 상속 체인을 따라 가장 가까운 하위 클래스에서 동일한 이름을 가진 메서드를 찾습니다 </font></font><code translate="no">inner</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated">. 매칭 방법이 없는 경우 </font></font><code translate="no">inner</code><font papago-translate="splitted"><font papago-translate="translated"> 호출은 아무 소용이 없습니다.</font></font></p>
 </li>
 </ul>
-<p>For example:</p>
+<p><font papago-translate="translated">예를 들어:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Doughnut</span> {
   <span class="i">cook</span>() {
     <span class="k">print</span> <span class="s">"Fry until golden brown."</span>;
@@ -842,24 +541,20 @@ there is no matching method, the <code translate="no">inner</code> call does not
 
 <span class="t">BostonCream</span>().<span class="i">cook</span>();
 </pre></div>
-<p>This should print:</p>
+<p><font papago-translate="translated">인쇄해야 합니다:</font></p>
 <div class="codehilite"><pre translate="no">Fry until golden brown.
 Pipe full of custard and coat with chocolate.
 Place in a nice box.
 </pre></div>
-<p>Since clox is about not just implementing Lox, but doing so with good
-performance, this time around try to solve the challenge with an eye towards
-efficiency.</p>
+<p><font papago-translate="translated">clox는 단순히 Lox를 구현하는 것이 아니라 좋은 성능으로 구현하는 것이기 때문에 이번에는 효율성을 염두에 두고 문제를 해결하려고 합니다.</font></p>
 </li>
 </ol>
 </div>
 <footer>
-<a class="next" href="optimization.html">
-  Next Chapter: “Optimization” →
-</a>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+<a class="next" href="https://youhogeon-meritz.github.io/optimization.html"><font papago-translate="translated"> 다음 장: "최적화" → </font></a><font papago-translate="splitted"><font papago-translate="translated"> 로버트 니스트롬이 수작업으로 제작한 -<a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE"> © 2015 ~ 2021</a></font></font>
 </footer>
-</img></img></img></article>
+</article>
 </div>
-</body>
-</html>
+
+
+</body></html>

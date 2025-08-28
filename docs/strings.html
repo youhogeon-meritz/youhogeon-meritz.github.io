@@ -1,207 +1,145 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-04586465-b5e4-4787-9a81-0beeb599eb86@mhtml.blink" />
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>Strings · Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/style.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
-<script src="jquery-3.4.1.min.js"></script>
-<script src="script.js"></script>
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+
+<!-- Google analytics -->
+
+</head>
 <body id="top">
 <!-- <div class="scrim"></div> -->
 <nav class="wide">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="contents">
-<h3><a href="#top">Strings<small>19</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/strings.html#top"><font papago-translate="splitted"><font papago-translate="translated">줄들</font></font><small>19</small></a></h3>
 <ul>
-<li><a href="#values-and-objects"><small>19.1</small> Values and Objects</a></li>
-<li><a href="#struct-inheritance"><small>19.2</small> Struct Inheritance</a></li>
-<li><a href="#strings"><small>19.3</small> Strings</a></li>
-<li><a href="#operations-on-strings"><small>19.4</small> Operations on Strings</a></li>
-<li><a href="#freeing-objects"><small>19.5</small> Freeing Objects</a></li>
+<li><a href="https://youhogeon-meritz.github.io/strings.html#values-and-objects"><small>19.1</small><font papago-translate="splitted"><font papago-translate="translated"> 가치와 객체</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/strings.html#struct-inheritance"><small>19.2</small><font papago-translate="splitted"><font papago-translate="translated"> 구조 상속</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/strings.html#strings"><small>19.3</small><font papago-translate="splitted"><font papago-translate="translated"> 줄들</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/strings.html#operations-on-strings"><small>19.4</small><font papago-translate="splitted"><font papago-translate="translated"> 문자열 작업</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/strings.html#freeing-objects"><small>19.5</small><font papago-translate="splitted"><font papago-translate="translated"> 객체 해방</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
-<li class="end-part"><a href="#design-note"><small>note</small>String Encoding</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/strings.html#challenges"><font papago-translate="translated">과제들</font></a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/strings.html#design-note"><small><font papago-translate="translated">메모</font></small><font papago-translate="splitted"><font papago-translate="translated">문자열 인코딩</font></font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="types-of-values.html" title="Types of Values">← Previous</a>
-<a href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑ Up</a>
-<a class="right" href="hash-tables.html" title="Hash Tables">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/types-of-values.html" title="가치 유형" papago-attr-id="1"><font papago-translate="translated">← 이전</font></a>
+<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="바이트코드 가상 머신" papago-attr-id="2"><font papago-translate="translated">↑ 위로</font></a>
+<a class="right" href="https://youhogeon-meritz.github.io/hash-tables.html" title="해시 테이블" papago-attr-id="3"><font papago-translate="translated">다음 →</font></a>
 </div> </div>
 </nav>
 <nav class="narrow">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
-<a class="prev" href="types-of-values.html" title="Types of Values">←</a>
-<a class="next" href="hash-tables.html" title="Hash Tables">→</a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
+<a class="prev" href="https://youhogeon-meritz.github.io/types-of-values.html" title="Types of Values">←</a>
+<a class="next" href="https://youhogeon-meritz.github.io/hash-tables.html" title="Hash Tables">→</a>
 </nav>
 <div class="page">
 <div class="nav-wrapper">
-<nav class="floating">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<nav class="floating pinned">
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="expandable">
-<h3><a href="#top">Strings<small>19</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/strings.html#top"><font papago-translate="splitted"><font papago-translate="translated">줄들</font></font><small>19</small></a></h3>
 <ul>
-<li><a href="#values-and-objects"><small>19.1</small> Values and Objects</a></li>
-<li><a href="#struct-inheritance"><small>19.2</small> Struct Inheritance</a></li>
-<li><a href="#strings"><small>19.3</small> Strings</a></li>
-<li><a href="#operations-on-strings"><small>19.4</small> Operations on Strings</a></li>
-<li><a href="#freeing-objects"><small>19.5</small> Freeing Objects</a></li>
+<li><a href="https://youhogeon-meritz.github.io/strings.html#values-and-objects"><small>19.1</small><font papago-translate="splitted"><font papago-translate="translated"> 가치와 객체</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/strings.html#struct-inheritance"><small>19.2</small><font papago-translate="splitted"><font papago-translate="translated"> 구조 상속</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/strings.html#strings"><small>19.3</small><font papago-translate="splitted"><font papago-translate="translated"> 줄들</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/strings.html#operations-on-strings"><small>19.4</small><font papago-translate="splitted"><font papago-translate="translated"> 문자열 작업</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/strings.html#freeing-objects"><small>19.5</small><font papago-translate="splitted"><font papago-translate="translated"> 객체 해방</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
-<li class="end-part"><a href="#design-note"><small>note</small>String Encoding</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/strings.html#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/strings.html#design-note"><small>note</small><font papago-translate="splitted"><font papago-translate="translated">문자열 인코딩</font></font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="types-of-values.html" title="Types of Values">← Previous</a>
-<a href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑ Up</a>
-<a class="right" href="hash-tables.html" title="Hash Tables">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/types-of-values.html" title="Types of Values">←&nbsp;Previous</a>
+<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑&nbsp;Up</a>
+<a class="right" href="https://youhogeon-meritz.github.io/hash-tables.html" title="Hash Tables">Next&nbsp;→</a>
 </div> </div>
 <a id="expand-nav">≡</a>
 </nav>
 </div>
 <article class="chapter">
 <div class="number">19</div>
-<h1>Strings</h1>
+<h1><font papago-translate="translated">줄들</font></h1>
 <blockquote>
-<p>“Ah? A small aversion to menial labor?” The doctor cocked an eyebrow.
-“Understandable, but misplaced. One should treasure those hum-drum
-tasks that keep the body occupied but leave the mind and heart unfettered.”</p>
+<p><font papago-translate="translated">"아? 육체 노동에 대한 작은 혐오?"</font><font papago-translate="translated"> 의사는 눈썹을 찡그렸습니다.</font><font papago-translate="translated"> 이해할 수 있지만 잘못 배치되었습니다.</font><font papago-translate="translated"> 몸은 바쁘게 유지하면서도 마음과 마음은 자유롭게 해주는 허름한 일들을 소중히 여겨야 합니다."</font></p>
 <p><cite>Tad Williams, <em>The Dragonbone Chair</em></cite></p>
 </blockquote>
-<p>Our little VM can represent three types of values right now: numbers, Booleans,
-and <code translate="no">nil</code>. Those types have two important things in common: they’re immutable
-and they’re small. Numbers are the largest, and they still fit into two 64-bit
-words. That’s a small enough price that we can afford to pay it for all values,
-even Booleans and nils which don’t need that much space.</p>
-<p>Strings, unfortunately, are not so petite. There’s no maximum length for a
-string. Even if we were to artificially cap it at some contrived limit like
-<span name="pascal">255</span> characters, that’s still too much memory to spend
-on every single value.</p>
-<aside name="pascal">
-<p>UCSD Pascal, one of the first implementations of Pascal, had this exact limit.
-Instead of using a terminating null byte to indicate the end of the string like
-C, Pascal strings started with a length value. Since UCSD used only a single
-byte to store the length, strings couldn’t be any longer than 255 characters.</p><img alt="The Pascal string 'hello' with a length byte of 5 preceding it." src="image/strings/pstring.png">
-</img></aside>
-<p>We need a way to support values whose sizes vary, sometimes greatly. This is
-exactly what dynamic allocation on the heap is designed for. We can allocate as
-many bytes as we need. We get back a pointer that we’ll use to keep track of the
-value as it flows through the VM.</p>
-<h2><a href="#values-and-objects" id="values-and-objects"><small>19 . 1</small>Values and Objects</a></h2>
-<p>Using the heap for larger, variable-sized values and the stack for smaller,
-atomic ones leads to a two-level representation. Every Lox value that you can
-store in a variable or return from an expression will be a Value. For small,
-fixed-size types like numbers, the payload is stored directly inside the Value
-struct itself.</p>
-<p>If the object is larger, its data lives on the heap. Then the Value’s payload is
-a <em>pointer</em> to that blob of memory. We’ll eventually have a handful of
-heap-allocated types in clox: strings, instances, functions, you get the idea.
-Each type has its own unique data, but there is also state they all share that
-<a href="garbage-collection.html">our future garbage collector</a> will use to manage their memory.</p><img alt="Field layout of number and obj values." class="wide" src="image/strings/value.png">
-<p>We’ll call this common representation <span name="short">“Obj”</span>. Each Lox
-value whose state lives on the heap is an Obj. We can thus use a single new
-ValueType case to refer to all heap-allocated types.</p>
-<aside name="short">
-<p>“Obj” is short for “object”, natch.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리의 작은 VM은 현재 세 가지 유형의 값을 나타낼 수 있습니다: 숫자, 부울, 그리고 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">. 그 유형들은 두 가지 중요한 공통점을 가지고 있습니다: 그것들은 불변이고 작습니다.</font><font papago-translate="translated"> 숫자가 가장 크며, 여전히 두 개의 64비트 단어에 맞습니다.</font><font papago-translate="translated"> 그것은 우리가 모든 가치, 심지어 그렇게 많은 공간이 필요 없는 부울리언과 닐스에 대해 지불할 수 있을 만큼 충분히 작은 가격입니다.</font></font></p>
+<p><font papago-translate="translated">안타깝게도 현은 그다지 작지 않습니다.</font><font papago-translate="translated"> 문자열에는 최대 길이가 없습니다.</font><font papago-translate="translated"> 인위적으로 25<span name="pascal">5</span>자와 같은 인위적인 제한을 설정하더라도, 이는 여전히 모든 값에 쓰기에는 너무 많은 메모리입니다.</font></p>
+<aside name="pascal" style="top: 616px;">
+<p><font papago-translate="translated">파스칼의 첫 번째 구현 중 하나인 UCSD 파스칼은 이 정확한 한계를 가지고 있었습니다.</font><font papago-translate="translated"> 파스칼 문자열은 문자열의 끝을 나타내기 위해 C와 같은 끝이 없는 널 바이트를 사용하는 대신 길이 값으로 시작했습니다.</font><font papago-translate="translated"> UCSD는 길이를 저장하는 데 단일 바이트만 사용했기 때문에 문자열은 255자를 초과할 수 없었습니다.</font></p><img alt="The Pascal string 'hello' with a length byte of 5 preceding it." src="https://youhogeon-meritz.github.io/image/strings/pstring.png">
+</aside>
+<p><font papago-translate="translated">크기가 때로는 크게 달라지는 가치를 지원할 수 있는 방법이 필요합니다.</font><font papago-translate="translated"> 이것이 바로 힙의 동적 할당을 위해 설계된 것입니다.</font><font papago-translate="translated"> 필요한 만큼 바이트를 할당할 수 있습니다.</font><font papago-translate="translated"> 포인터가 VM을 통과할 때 값을 추적하는 데 사용할 포인터를 다시 가져옵니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/strings.html#values-and-objects" id="values-and-objects"><small><font papago-translate="translated">19 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">가치와 객체</font></font></a></h2>
+<p><font papago-translate="translated">더 큰 가변 크기 값에는 힙을, 더 작은 원자 값에는 스택을 사용하면 2단계 표현이 가능합니다.</font><font papago-translate="translated"> 변수에 저장하거나 식에서 반환할 수 있는 모든 Lox 값은 값이 됩니다.</font><font papago-translate="translated"> 숫자와 같은 작은 고정 크기 유형의 경우 페이로드는 Value 구조 자체 내부에 직접 저장됩니다.</font></p>
+<p><font papago-translate="translated">객체가 더 크면 데이터가 힙에 저장됩니다.</font><font papago-translate="translated"> 그러면 Value의 페이로드는 해당 메모리 덩어리를<em> 가리키는 포인터</em>가 됩니다.</font><font papago-translate="translated"> 결국 클록스에는 문자열, 인스턴스, 함수 등 힙에 할당된 몇 가지 유형이 있을 것입니다.</font><font papago-translate="translated"> 각 유형에는 고유한 데이터가 있지만<a href="https://youhogeon-meritz.github.io/garbage-collection.html">, 미래의 쓰레기 수집가</a>가 메모리를 관리하는 데 사용할 수 있는 공유 상태도 있습니다.</font></p><img alt="Field layout of number and obj values." class="wide" src="https://youhogeon-meritz.github.io/image/strings/value.png">
+<p><font papago-translate="translated">이 일반적인 표현을<span name="short"> "Obj</span>"라고 부릅니다.</font><font papago-translate="translated"> 힙에 상태가 있는 각 Lox 값은 Obj입니다.</font><font papago-translate="translated"> 따라서 단일 새로운 ValueType 케이스를 사용하여 힙에 할당된 모든 유형을 참조할 수 있습니다.</font></p>
+<aside name="short" style="top: 1433px;">
+<p><font papago-translate="translated">"Obj"는 "객체"의 줄임말로, natch입니다.</font></p>
 </aside>
 <div class="codehilite"><pre class="insert-before" translate="no">  VAL_NUMBER,
-</pre><div class="source-file"><em>value.h</em><br/>
-in enum <em>ValueType</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum<em> ValueType</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="a">VAL_OBJ</span>
 </pre><pre class="insert-after" translate="no">} ValueType;
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em>, in enum <em>ValueType</em></div>
-<p>When a Value’s type is <code translate="no">VAL_OBJ</code>, the payload is a pointer to the heap memory,
-so we add another case to the union for that.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">가치 유형이 다음과 같은 경우 </font></font><code translate="no">VAL_OBJ</code><font papago-translate="splitted"><font papago-translate="translated">, 페이로드는 힙 메모리로 가는 포인터이므로 이를 위해 유니언에 다른 케이스를 추가합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    double number;
-</pre><div class="source-file"><em>value.h</em><br/>
-in struct <em>Value</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 구조<em>적 가치</em>에서</font></font></div>
 <pre class="insert" translate="no">    <span class="t">Obj</span>* <span class="i">obj</span>;
 </pre><pre class="insert-after" translate="no">  } as;<span name="as"> </span>
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em>, in struct <em>Value</em></div>
-<p>As we did with the other value types, we crank out a couple of helpful macros
-for working with Obj values.</p>
+<p><font papago-translate="translated">다른 값 유형들과 마찬가지로, 우리는 Obj 값을 다루는 데 유용한 몇 가지 매크로를 실행합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define IS_NUMBER(value)  ((value).type == VAL_NUMBER)
-</pre><div class="source-file"><em>value.h</em><br/>
-add after struct <em>Value</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em></em>구조 값 뒤에 추가</font></font></div>
 <pre class="insert" translate="no"><span class="a">#define IS_OBJ(value)     ((value).type == VAL_OBJ)</span>
 </pre><pre class="insert-after" translate="no">
-
 #define AS_BOOL(value)    ((value).as.boolean)
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em>, add after struct <em>Value</em></div>
-<p>This evaluates to <code translate="no">true</code> if the given Value is an Obj. If so, we can use this:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 다음과 같이 평가됩니다 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated"> 주어진 값이 Obj인 경우.</font><font papago-translate="translated"> 그렇다면, 우리는 이것을 사용할 수 있습니다:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define IS_OBJ(value)     ((value).type == VAL_OBJ)
 
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define AS_OBJ(value)     ((value).as.obj)</span>
 </pre><pre class="insert-after" translate="no">#define AS_BOOL(value)    ((value).as.boolean)
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>It extracts the Obj pointer from the value. We can also go the other way.</p>
+<p><font papago-translate="translated">값에서 Obj 포인터를 추출합니다.</font><font papago-translate="translated"> 우리는 반대 방향으로도 갈 수 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define NUMBER_VAL(value) ((Value){VAL_NUMBER, {.number = value}})
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define OBJ_VAL(object)   ((Value){VAL_OBJ, {.obj = (Obj*)object}})</span>
 </pre><pre class="insert-after" translate="no">
-
 typedef struct {
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>This takes a bare Obj pointer and wraps it in a full Value.</p>
-<h2><a href="#struct-inheritance" id="struct-inheritance"><small>19 . 2</small>Struct Inheritance</a></h2>
-<p>Every heap-allocated value is an Obj, but <span name="objs">Objs</span> are
-not all the same. For strings, we need the array of characters. When we get to
-instances, they will need their data fields. A function object will need its
-chunk of bytecode. How do we handle different payloads and sizes? We can’t use
-another union like we did for Value since the sizes are all over the place.</p>
-<aside name="objs">
-<p>No, I don’t know how to pronounce “objs” either. Feels like there should be a
-vowel in there somewhere.</p>
+<p><font papago-translate="translated">이것은 맨 오브제 포인터를 가져와서 전체 값으로 감쌉니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/strings.html#struct-inheritance" id="struct-inheritance"><small><font papago-translate="translated">19 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">구조 상속</font></font></a></h2>
+<p><font papago-translate="translated">힙에 할당된 모든 값은 Obj이지만 Ob<span name="objs">j는</span> 모두 동일하지 않습니다.</font><font papago-translate="translated"> 문자열의 경우 문자 배열이 필요합니다.</font><font papago-translate="translated"> 인스턴스에 도달하면 데이터 필드가 필요합니다.</font><font papago-translate="translated"> 함수 객체는 바이트코드 덩어리가 필요합니다.</font><font papago-translate="translated"> 다양한 페이로드와 크기는 어떻게 처리하나요?</font><font papago-translate="translated"> 우리가 Value에 사용했던 것처럼 다른 조합을 사용할 수는 없습니다. 왜냐하면 크기가 여기저기 흩어져 있기 때문입니다.</font></p>
+<aside name="objs" style="top: 2417px;">
+<p><font papago-translate="translated">아니요, 저도 "objs"를 어떻게 발음해야 할지 모르겠어요.</font><font papago-translate="translated"> 어딘가에 모음이 있어야 할 것 같은 느낌이 듭니다.</font></p>
 </aside>
-<p>Instead, we’ll use another technique. It’s been around for ages, to the point
-that the C specification carves out specific support for it, but I don’t know
-that it has a canonical name. It’s an example of <a href="https://en.wikipedia.org/wiki/Type_punning"><em>type punning</em></a>, but that
-term is too broad. In the absence of any better ideas, I’ll call it <strong>struct
-inheritance</strong>, because it relies on structs and roughly follows how
-single-inheritance of state works in object-oriented languages.</p>
-<p>Like a tagged union, each Obj starts with a tag field that identifies what kind
-of object it is<span class="em">—</span>string, instance, etc. Following that are the payload fields.
-Instead of a union with cases for each type, each type is its own separate
-struct. The tricky part is how to treat these structs uniformly since C has no
-concept of inheritance or polymorphism. I’ll explain that soon, but first lets
-get the preliminary stuff out of the way.</p>
-<p>The name “Obj” itself refers to a struct that contains the state shared across
-all object types. It’s sort of like the “base class” for objects. Because of
-some cyclic dependencies between values and objects, we forward-declare it in
-the “value” module.</p>
+<p><font papago-translate="translated">대신 다른 기법을 사용하겠습니다.</font><font papago-translate="translated"> C 사양이 이에 대한 구체적인 지원을 제공할 정도로 오래전부터 사용되어 왔지만, 정식 명칭이 있는지는 모르겠습니다.</font><font papago-translate="translated"> <a href="https://en.wikipedia.org/wiki/Type_punning"><em>그것</em></a>은<a href="https://en.wikipedia.org/wiki/Type_punning"><em> 타입 펀닝</em></a>의 예시이지만, 그 용어는 너무 광범위합니다.</font><font papago-translate="translated"> 더 나은 아이디어가 없다면<strong> 구조 상속</strong>이라고 부르겠습니다. 구조에 의존하고 객체 지향 언어에서 단일 국가 상속이 작동하는 방식을 대략적으로 따르기 때문입니다.</font></p>
+<p><font papago-translate="translated">태그된 결합처럼 각 Obj는 문자열, 인스턴스<span class="em"></span> 등 어떤 종류의 객체인지 식별하는 태그 필드로 시작합니다.</font><font papago-translate="translated"> 다음은 페이로드 필드입니다.</font><font papago-translate="translated"> 각 유형별 사례가 있는 연합 대신, 각 유형은 고유한 구조입니다.</font><font papago-translate="translated"> 까다로운 부분은 C가 유전이나 다형성의 개념이 없기 때문에 이러한 구조를 균일하게 처리하는 방법입니다.</font><font papago-translate="translated"> 곧 설명하겠지만, 먼저 예비 자료를 정리해 보겠습니다.</font></p>
+<p><font papago-translate="translated">"Obj"라는 이름 자체는 모든 객체 유형에 걸쳐 공유되는 상태를 포함하는 구조를 의미합니다.</font><font papago-translate="translated"> 물체에 대한 "기본 클래스"와 비슷합니다.</font><font papago-translate="translated"> 값과 객체 간의 주기적인 의존성 때문에, 우리는 그것을 "값" 모듈에서 앞으로 선언합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include "common.h"
 
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no"><span class="k">typedef</span> <span class="k">struct</span> <span class="t">Obj</span> <span class="t">Obj</span>;
 
 </pre><pre class="insert-after" translate="no">typedef enum {
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>And the actual definition is in a new module.</p>
-<div class="codehilite"><div class="source-file"><em>object.h</em><br/>
-create new file</div>
+<p><font papago-translate="translated">그리고 실제 정의는 새로운 모듈에 있습니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 새 파일 만들기</font></font></div>
 <pre translate="no"><span class="a">#ifndef clox_object_h</span>
 <span class="a">#define clox_object_h</span>
 
@@ -215,113 +153,72 @@ create new file</div>
 <span class="a">#endif</span>
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em>, create new file</div>
-<p>Right now, it contains only the type tag. Shortly, we’ll add some other
-bookkeeping information for memory management. The type enum is this:</p>
+<p><font papago-translate="translated">지금은 타입 태그만 포함되어 있습니다.</font><font papago-translate="translated"> 곧 메모리 관리를 위한 다른 부기 정보를 추가할 예정입니다.</font><font papago-translate="translated"> 유형 열거는 다음과 같습니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include "value.h"
-</pre><div class="source-file"><em>object.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">객체.h</font></em></div>
 <pre class="insert" translate="no">
-
 <span class="k">typedef</span> <span class="k">enum</span> {
   <span class="a">OBJ_STRING</span>,
 } <span class="t">ObjType</span>;
 </pre><pre class="insert-after" translate="no">
-
 struct Obj {
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em></div>
-<p>Obviously, that will be more useful in later chapters after we add more
-heap-allocated types. Since we’ll be accessing these tag types frequently, it’s
-worth making a little macro that extracts the object type tag from a given
-Value.</p>
+<p><font papago-translate="translated">물론 힙 할당 유형을 더 추가한 후 나중 장에서 더 유용할 것입니다.</font><font papago-translate="translated"> 이러한 태그 유형에 자주 액세스할 예정이므로 주어진 값에서 객체 유형 태그를 추출하는 작은 매크로를 만드는 것이 좋습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include "value.h"
-</pre><div class="source-file"><em>object.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">객체.h</font></em></div>
 <pre class="insert" translate="no">
-
 <span class="a">#define OBJ_TYPE(value)        (AS_OBJ(value)-&gt;type)</span>
 </pre><pre class="insert-after" translate="no">
-
 typedef enum {
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em></div>
-<p>That’s our foundation.</p>
-<p>Now, let’s build strings on top of it. The payload for strings is defined in a
-separate struct. Again, we need to forward-declare it.</p>
+<p><font papago-translate="translated">그것이 우리의 기초입니다.</font></p>
+<p><font papago-translate="translated">이제 그 위에 줄을 만들어 보겠습니다.</font><font papago-translate="translated"> 문자열의 페이로드는 별도의 구조로 정의됩니다.</font><font papago-translate="translated"> 다시 한 번, 우리는 그것을 발표해야 합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">typedef struct Obj Obj;
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no"><span class="k">typedef</span> <span class="k">struct</span> <span class="t">ObjString</span> <span class="t">ObjString</span>;
 </pre><pre class="insert-after" translate="no">
-
 typedef enum {
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>The definition lives alongside Obj.</p>
+<p><font papago-translate="translated">그 정의는 Obj와 함께 존재합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">};
-</pre><div class="source-file"><em>object.h</em><br/>
-add after struct <em>Obj</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em></em>구조 Obj 뒤에 추가</font></font></div>
 <pre class="insert" translate="no">
-
 <span class="k">struct</span> <span class="t">ObjString</span> {
   <span class="t">Obj</span> <span class="i">obj</span>;
   <span class="t">int</span> <span class="i">length</span>;
   <span class="t">char</span>* <span class="i">chars</span>;
 };
 </pre><pre class="insert-after" translate="no">
-
 #endif
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em>, add after struct <em>Obj</em></div>
-<p>A string object contains an array of characters. Those are stored in a separate,
-heap-allocated array so that we set aside only as much room as needed for each
-string. We also store the number of bytes in the array. This isn’t strictly
-necessary but lets us tell how much memory is allocated for the string without
-walking the character array to find the null terminator.</p>
-<p>Because ObjString is an Obj, it also needs the state all Objs share. It
-accomplishes that by having its first field be an Obj. C specifies that struct
-fields are arranged in memory in the order that they are declared. Also, when
-you nest structs, the inner struct’s fields are expanded right in place. So the
-memory for Obj and for ObjString looks like this:</p><img alt="The memory layout for the fields in Obj and ObjString." src="image/strings/obj.png">
-<p>Note how the first bytes of ObjString exactly line up with Obj. This is not a
-coincidence<span class="em">—</span>C <span name="spec">mandates</span> it. This is designed to
-enable a clever pattern: You can take a pointer to a struct and safely convert
-it to a pointer to its first field and back.</p>
-<aside name="spec">
-<p>The key part of the spec is:</p>
+<p><font papago-translate="translated">문자열 객체에는 문자 배열이 포함되어 있습니다.</font><font papago-translate="translated"> 그것들은 각 문자열에 필요한 만큼의 공간만 확보할 수 있도록 별도의 힙 할당 배열에 저장됩니다.</font><font papago-translate="translated"> 배열에 바이트 수도 저장합니다.</font><font papago-translate="translated"> 이것이 꼭 필요한 것은 아니지만, 문자 배열을 사용하여 널 터미네이터를 찾지 않고 문자열에 할당된 메모리의 양을 알려드리겠습니다.</font></p>
+<p><font papago-translate="translated">ObjString은 Obj이기 때문에 모든 Objs가 공유하는 상태도 필요합니다.</font><font papago-translate="translated"> 첫 번째 필드가 Obj가 됨으로써 이를 달성합니다.</font><font papago-translate="translated"> C는 구조 필드가 선언된 순서대로 메모리에 배열되도록 지정합니다.</font><font papago-translate="translated"> 또한 구조물을 둥지를 틀면 내부 구조물의 필드가 제자리에 확장됩니다.</font><font papago-translate="translated"> 따라서 Obj와 ObjString의 메모리는 다음과 같습니다:</font></p><img alt="The memory layout for the fields in Obj and ObjString." src="https://youhogeon-meritz.github.io/image/strings/obj.png">
+<p><font papago-translate="translated">ObjString의 첫 번째 바이트가 Obj와 정확히 어떻게 일치하는지 주목하세요.</font><font papago-translate="translated"> 이것은 우연이 아닙니다—<span name="spec">C</span><span class="em"></span><span name="spec">가 명령합니다.</span></font><font papago-translate="translated"> 이것은 영리한 패턴을 가능하게 하도록 설계되었습니다:</font><font papago-translate="translated"> 구조물의 포인터를 가져와서 안전하게 첫 번째 필드의 포인터로 변환하고 되돌릴 수 있습니다.</font></p>
+<aside name="spec" style="top: 4940px;">
+<p><font papago-translate="translated">사양의 핵심 부분은 다음과 같습니다:</font></p>
 <blockquote>
-<p>§ 6.7.2.1 13</p>
-<p>Within a structure object, the non-bit-field members and the units in which
-bit-fields reside have addresses that increase in the order in which they
-are declared. A pointer to a structure object, suitably converted, points to
-its initial member (or if that member is a bit-field, then to the unit in
-which it resides), and vice versa. There may be unnamed padding within a
-structure object, but not at its beginning.</p>
+<p><font papago-translate="translated">§ 6.7.2.1 13</font></p>
+<p><font papago-translate="translated">구조 객체 내에서 비트 필드가 아닌 멤버와 비트 필드가 위치한 유닛은 선언된 순서대로 주소가 증가합니다.</font><font papago-translate="translated"> 구조 객체에 대한 포인터는 적절하게 변환되어 초기 멤버(또는 해당 멤버가 비트 필드인 경우 해당 멤버가 있는 유닛을 가리킴)를 가리키며, 그 반대의 경우도 마찬가지입니다.</font><font papago-translate="translated"> 구조 객체 내에 이름 없는 패딩이 있을 수 있지만, 처음에는 그렇지 않습니다.</font></p>
 </blockquote>
 </aside>
-<p>Given an <code translate="no">ObjString*</code>, you can safely cast it to <code translate="no">Obj*</code> and then access the
-<code translate="no">type</code> field from it. Every ObjString “is” an Obj in the OOP sense of “is”. When
-we later add other object types, each struct will have an Obj as its first
-field. Any code that wants to work with all objects can treat them as base
-<code translate="no">Obj*</code> and ignore any other fields that may happen to follow.</p>
-<p>You can go in the other direction too. Given an <code translate="no">Obj*</code>, you can “downcast” it to
-an <code translate="no">ObjString*</code>. Of course, you need to ensure that the <code translate="no">Obj*</code> pointer you have
-does point to the <code translate="no">obj</code> field of an actual ObjString. Otherwise, you are
-unsafely reinterpreting random bits of memory. To detect that such a cast is
-safe, we add another macro.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">주어진 </font></font><code translate="no">ObjString*</code><font papago-translate="splitted"><font papago-translate="translated">, 안전하게 캐스팅할 수 있습니다 </font></font><code translate="no">Obj*</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 나서 접근하기 </font></font><code translate="no">type</code><font papago-translate="splitted"><font papago-translate="translated"> 그로부터 필드.</font><font papago-translate="translated"> 모든 ObjString은 OOP 의미에서 Obj입니다.</font><font papago-translate="translated"> 나중에 다른 객체 유형을 추가하면 각 구조는 첫 번째 필드로 Obj를 갖게 됩니다.</font><font papago-translate="translated"> 모든 객체와 함께 작동하고자 하는 모든 코드는 이를 기본으로 취급할 수 있습니다 </font></font><code translate="no">Obj*</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 뒤따를 수 있는 다른 필드는 무시하세요.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다른 방향으로도 갈 수 있습니다.</font><font papago-translate="translated"> 주어진 </font></font><code translate="no">Obj*</code><font papago-translate="splitted"><font papago-translate="translated">, 다운캐스트할 수 있습니다 </font></font><code translate="no">ObjString*</code><font papago-translate="splitted"><font papago-translate="translated">. 물론, 당신은 다음을 보장해야 합니다 </font></font><code translate="no">Obj*</code><font papago-translate="splitted"><font papago-translate="translated"> 포인터는 다음을 가리킵니다 </font></font><code translate="no">obj</code><font papago-translate="splitted"><font papago-translate="translated"> 실제 ObjString 필드.</font><font papago-translate="translated"> 그렇지 않으면, 당신은 무작위 메모리 조각들을 안전하지 않게 재해석하고 있는 것입니다.</font><font papago-translate="translated"> 이러한 캐스트가 안전하다는 것을 감지하기 위해 다른 매크로를 추가합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define OBJ_TYPE(value)        (AS_OBJ(value)-&gt;type)
-</pre><div class="source-file"><em>object.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">객체.h</font></em></div>
 <pre class="insert" translate="no">
-
 <span class="a">#define IS_STRING(value)       isObjType(value, OBJ_STRING)</span>
 </pre><pre class="insert-after" translate="no">
-
 typedef enum {
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em></div>
-<p>It takes a Value, not a raw <code translate="no">Obj*</code> because most code in the VM works with
-Values. It relies on this inline function:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">원시가 아닌 가치가 필요합니다 </font></font><code translate="no">Obj*</code><font papago-translate="splitted"><font papago-translate="translated"> 왜냐하면 VM의 대부분의 코드는 Values와 함께 작동하기 때문입니다.</font><font papago-translate="translated"> 이 인라인 함수에 의존합니다:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">};
 
-</pre><div class="source-file"><em>object.h</em><br/>
-add after struct <em>ObjString</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 구조 Ob<em>jString</em> 뒤에 추가</font></font></div>
 <pre class="insert" translate="no"><span class="k">static</span> <span class="k">inline</span> <span class="t">bool</span> <span class="i">isObjType</span>(<span class="t">Value</span> <span class="i">value</span>, <span class="t">ObjType</span> <span class="i">type</span>) {
   <span class="k">return</span> <span class="a">IS_OBJ</span>(<span class="i">value</span>) &amp;&amp; <span class="a">AS_OBJ</span>(<span class="i">value</span>)-&gt;<span class="i">type</span> == <span class="i">type</span>;
 }
@@ -329,84 +226,61 @@ add after struct <em>ObjString</em></div>
 </pre><pre class="insert-after" translate="no">#endif
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em>, add after struct <em>ObjString</em></div>
-<p>Pop quiz: Why not just put the body of this function right in the macro? What’s
-different about this one compared to the others? Right, it’s because the body
-uses <code translate="no">value</code> twice. A macro is expanded by inserting the argument <em>expression</em>
-every place the parameter name appears in the body. If a macro uses a parameter
-more than once, that expression gets evaluated multiple times.</p>
-<p>That’s bad if the expression has side effects. If we put the body of
-<code translate="no">isObjType()</code> into the macro definition and then you did, say,</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">팝 퀴즈:</font><font papago-translate="translated"> 왜 이 함수의 본문을 바로 매크로에 배치하지 않나요?</font><font papago-translate="translated"> 이것은 다른 것들과 무엇이 다른가요?</font><font papago-translate="translated"> 맞아요, 그것은 몸이 다음을 사용하기 때문입니다 </font></font><code translate="no">value</code><font papago-translate="splitted"><font papago-translate="translated"> 두번이라.</font><font papago-translate="translated"> 매크로는 매개변수 이름이 본문에 나타나는 모든 위치에 인수<em> 표현식</em>을 삽입하여 확장됩니다.</font><font papago-translate="translated"> 매크로가 매개변수를 두 번 이상 사용하면 해당 표현식이 여러 번 평가됩니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그 표현에 부작용이 있다면 그건 나쁜 일입니다.</font><font papago-translate="translated"> 본문을 다음과 같이 표현하면 </font></font><code translate="no">isObjType()</code><font papago-translate="splitted"><font papago-translate="translated"> 거시적 정의로 들어가서, 당신은 이렇게 말했습니다,</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="a">IS_STRING</span>(<span class="a">POP</span>())
 </pre></div>
-<p>then it would pop two values off the stack! Using a function fixes that.</p>
-<p>As long as we ensure that we set the type tag correctly whenever we create an
-Obj of some type, this macro will tell us when it’s safe to cast a value to a
-specific object type. We can do that using these:</p>
+<p><font papago-translate="translated">그러면 스택에서 두 개의 값이 나올 것입니다!</font><font papago-translate="translated"> 함수를 사용하면 이를 해결할 수 있습니다.</font></p>
+<p><font papago-translate="translated">우리가 특정 유형의 Obj를 만들 때마다 타입 태그를 올바르게 설정하는 한, 이 매크로는 특정 객체 유형에 값을 입력하는 것이 안전한 시기를 알려줄 것입니다.</font><font papago-translate="translated"> 우리는 이것들을 사용하여 그것을 할 수 있습니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define IS_STRING(value)       isObjType(value, OBJ_STRING)
-</pre><div class="source-file"><em>object.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">객체.h</font></em></div>
 <pre class="insert" translate="no">
-
 <span class="a">#define AS_STRING(value)       ((ObjString*)AS_OBJ(value))</span>
 <span class="a">#define AS_CSTRING(value)      (((ObjString*)AS_OBJ(value))-&gt;chars)</span>
 </pre><pre class="insert-after" translate="no">
-
 typedef enum {
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em></div>
-<p>These two macros take a Value that is expected to contain a pointer to a valid
-ObjString on the heap. The first one returns the <code translate="no">ObjString*</code> pointer. The
-second one steps through that to return the character array itself, since that’s
-often what we’ll end up needing.</p>
-<h2><a href="#strings" id="strings"><small>19 . 3</small>Strings</a></h2>
-<p>OK, our VM can now represent string values. It’s time to add strings to the
-language itself. As usual, we begin in the front end. The lexer already
-tokenizes string literals, so it’s the parser’s turn.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 두 매크로는 힙의 유효한 ObjString 포인터를 포함할 것으로 예상되는 값을 취합니다.</font><font papago-translate="translated"> 첫 번째 것은 다음을 반환합니다 </font></font><code translate="no">ObjString*</code><font papago-translate="splitted"><font papago-translate="translated"> 포인터.</font><font papago-translate="translated"> 두 번째 단계는 문자 배열 자체를 반환하는 단계입니다. 왜냐하면 그것이 종종 우리가 필요하게 될 것이기 때문입니다.</font></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/strings.html#strings" id="strings"><small><font papago-translate="translated">19 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">줄들</font></font></a></h2>
+<p><font papago-translate="translated">이제 VM이 문자열 값을 나타낼 수 있습니다.</font><font papago-translate="translated"> 이제 언어 자체에 문자열을 추가할 때입니다.</font><font papago-translate="translated"> 평소처럼, 우리는 앞쪽 끝에서 시작합니다.</font><font papago-translate="translated"> 렉서는 이미 문자열 리터럴을 토큰화하므로 파서의 차례입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  [TOKEN_IDENTIFIER]    = {NULL,     NULL,   PREC_NONE},
-</pre><div class="source-file"><em>compiler.c</em><br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  [<span class="a">TOKEN_STRING</span>]        = {<span class="i">string</span>,   <span class="a">NULL</span>,   <span class="a">PREC_NONE</span>},
 </pre><pre class="insert-after" translate="no">  [TOKEN_NUMBER]        = {number,   NULL,   PREC_NONE},
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, replace 1 line</div>
-<p>When the parser hits a string token, it calls this parse function:</p>
-<div class="codehilite"><div class="source-file"><em>compiler.c</em><br/>
-add after <em>number</em>()</div>
+<p><font papago-translate="translated">구문 분석기가 문자열 토큰을 누르면 이 구문 분석 함수를 호출합니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>숫자</em> () 뒤에 추가하기</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">string</span>() {
   <span class="i">emitConstant</span>(<span class="a">OBJ_VAL</span>(<span class="i">copyString</span>(<span class="i">parser</span>.<span class="i">previous</span>.<span class="i">start</span> + <span class="n">1</span>,
                                   <span class="i">parser</span>.<span class="i">previous</span>.<span class="i">length</span> - <span class="n">2</span>)));
 }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after <em>number</em>()</div>
-<p>This takes the string’s characters <span name="escape">directly</span> from the
-lexeme. The <code translate="no">+ 1</code> and <code translate="no">- 2</code> parts trim the leading and trailing quotation marks.
-It then creates a string object, wraps it in a Value, and stuffs it into the
-constant table.</p>
-<aside name="escape">
-<p>If Lox supported string escape sequences like <code translate="no">\n</code>, we’d translate those here.
-Since it doesn’t, we can take the characters as they are.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 문자열의 문자를 어휘에서<span name="escape"> 직접</span> 가져옵니다.</font><font papago-translate="translated"> 그 </font></font><code translate="no">+ 1</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">- 2</code><font papago-translate="splitted"><font papago-translate="translated"> 부품은 선행 및 후행 따옴표를 다듬습니다.</font><font papago-translate="translated"> 그런 다음 문자열 객체를 생성하고 이를 값으로 감싸 상수 테이블에 넣습니다.</font></font></p>
+<aside name="escape" style="top: 6780px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">Lox가 다음과 같은 문자열 이스케이프 시퀀스를 지원하는 경우 </font></font><code translate="no">\n</code><font papago-translate="splitted"><font papago-translate="translated">, 우리는 그것들을 여기서 번역할 것입니다.</font><font papago-translate="translated"> 그렇지 않기 때문에 캐릭터를 그대로 가져갈 수 있습니다.</font></font></p>
 </aside>
-<p>To create the string, we use <code translate="no">copyString()</code>, which is declared in <code translate="no">object.h</code>.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">문자열을 만들려면 다음을 사용합니다 </font></font><code translate="no">copyString()</code><font papago-translate="splitted"><font papago-translate="translated">, 다음에서 선언됩니다 </font></font><code translate="no">object.h</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">};
 
-</pre><div class="source-file"><em>object.h</em><br/>
-add after struct <em>ObjString</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 구조 Ob<em>jString</em> 뒤에 추가</font></font></div>
 <pre class="insert" translate="no"><span class="t">ObjString</span>* <span class="i">copyString</span>(<span class="k">const</span> <span class="t">char</span>* <span class="i">chars</span>, <span class="t">int</span> <span class="i">length</span>);
 
 </pre><pre class="insert-after" translate="no">static inline bool isObjType(Value value, ObjType type) {
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em>, add after struct <em>ObjString</em></div>
-<p>The compiler module needs to include that.</p>
+<p><font papago-translate="translated">컴파일러 모듈에는 그것이 포함되어야 합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define clox_compiler_h
 
-</pre><div class="source-file"><em>compiler.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">컴파일러.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#include "object.h"</span>
 </pre><pre class="insert-after" translate="no">#include "vm.h"
 </pre></div>
 <div class="source-file-narrow"><em>compiler.h</em></div>
-<p>Our “object” module gets an implementation file where we define the new
-function.</p>
-<div class="codehilite"><div class="source-file"><em>object.c</em><br/>
-create new file</div>
+<p><font papago-translate="translated">우리의 "객체" 모듈은 새로운 함수를 정의하는 구현 파일을 가져옵니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 새 파일 만들기</font></font></div>
 <pre translate="no"><span class="a">#include &lt;stdio.h&gt;</span>
 <span class="a">#include &lt;string.h&gt;</span>
 
@@ -423,42 +297,27 @@ create new file</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, create new file</div>
-<p>First, we allocate a new array on the heap, just big enough for the string’s
-characters and the trailing <span name="terminator">terminator</span>, using
-this low-level macro that allocates an array with a given element type and
-count:</p>
+<p><font papago-translate="translated">먼저, 주어진 요소 유형과 개수로 배열을 할당하는 저수준 매크로를 사용하여 문자열의 문자와 후행<span name="terminator"> 종단기</span>에 충분히 큰 새 배열을 힙에 할당합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include "common.h"
 
-</pre><div class="source-file"><em>memory.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">기억.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define ALLOCATE(type, count) \</span>
 <span class="a">    (type*)reallocate(NULL, 0, sizeof(type) * (count))</span>
 
 </pre><pre class="insert-after" translate="no">#define GROW_CAPACITY(capacity) \
 </pre></div>
 <div class="source-file-narrow"><em>memory.h</em></div>
-<p>Once we have the array, we copy over the characters from the lexeme and
-terminate it.</p>
-<aside class="bottom" name="terminator">
-<p>We need to terminate the string ourselves because the lexeme points at a range
-of characters inside the monolithic source string and isn’t terminated.</p>
-<p>Since ObjString stores the length explicitly, we <em>could</em> leave the character
-array unterminated, but slapping a terminator on the end costs us only a byte
-and lets us pass the character array to C standard library functions that expect
-a terminated string.</p>
+<p><font papago-translate="translated">배열을 확보한 후 어휘에서 문자를 복사하여 종료합니다.</font></p>
+<aside class="bottom" name="terminator" style="top: 7425px;">
+<p><font papago-translate="translated">어휘소가 단일 소스 문자열 내부의 다양한 문자를 가리키고 종료되지 않기 때문에 문자열을 직접 종료해야 합니다.</font></p>
+<p><font papago-translate="translated">ObjString은 길이를 명시적으로 저장하기 때문에 문자 배열을 종료하지 않은 상태로 둘<em> 수</em> 있지만, 끝에 종단기를 두드리는 것은 단 1바이트의 비용이 들고 종료된 문자열을 기대하는 C 표준 라이브러리 함수에 문자 배열을 전달할 수 있게 해줍니다.</font></p>
 </aside>
-<p>You might wonder why the ObjString can’t just point back to the original
-characters in the source string. Some ObjStrings will be created dynamically at
-runtime as a result of string operations like concatenation. Those strings
-obviously need to dynamically allocate memory for the characters, which means
-the string needs to <em>free</em> that memory when it’s no longer needed.</p>
-<p>If we had an ObjString for a string literal, and tried to free its character
-array that pointed into the original source code string, bad things would
-happen. So, for literals, we preemptively copy the characters over to the heap.
-This way, every ObjString reliably owns its character array and can free it.</p>
-<p>The real work of creating a string object happens in this function:</p>
+<p><font papago-translate="translated">왜 ObjString이 원본 문자열의 원래 문자를 다시 가리킬 수 없는지 궁금할 수 있습니다.</font><font papago-translate="translated"> 일부 ObjStrings는 연결과 같은 문자열 작업의 결과로 런타임 시 동적으로 생성됩니다.</font><font papago-translate="translated"> 그 문자열들은 분명히 문자에 대해 동적으로 메모리를 할당해야 합니다. 이는 문자열이 더 이상 필요하지 않을 때<em> 그</em> 메모리<em>를 확보해야</em> 한다는 것을 의미합니다.</font></p>
+<p><font papago-translate="translated">문자열 리터럴에 ObjString을 사용하고 원본 소스 코드 문자열을 가리키는 문자 배열을 해제하려고 하면 나쁜 일이 발생할 수 있습니다.</font><font papago-translate="translated"> 그래서 리터럴의 경우, 우리는 사전에 문자를 힙에 복사합니다.</font><font papago-translate="translated"> 이렇게 하면 모든 ObjString이 자신의 문자 배열을 신뢰성 있게 소유하고 자유롭게 할 수 있습니다.</font></p>
+<p><font papago-translate="translated">문자열 객체를 만드는 실제 작업은 이 함수에서 이루어집니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include "vm.h"
 
-</pre><div class="source-file"><em>object.c</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">객체.c</font></em></div>
 <pre class="insert" translate="no"><span class="k">static</span> <span class="t">ObjString</span>* <span class="i">allocateString</span>(<span class="t">char</span>* <span class="i">chars</span>, <span class="t">int</span> <span class="i">length</span>) {
   <span class="t">ObjString</span>* <span class="i">string</span> = <span class="a">ALLOCATE_OBJ</span>(<span class="t">ObjString</span>, <span class="a">OBJ_STRING</span>);
   <span class="i">string</span>-&gt;<span class="i">length</span> = <span class="i">length</span>;
@@ -467,80 +326,56 @@ This way, every ObjString reliably owns its character array and can free it.</p>
 }
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em></div>
-<p>It creates a new ObjString on the heap and then initializes its fields. It’s
-sort of like a constructor in an OOP language. As such, it first calls the “base
-class” constructor to initialize the Obj state, using a new macro.</p>
+<p><font papago-translate="translated">힙에 새로운 ObjString을 생성한 다음 필드를 초기화합니다.</font><font papago-translate="translated"> OOP 언어의 생성자와 비슷합니다.</font><font papago-translate="translated"> 따라서 먼저 "기본 클래스" 생성자를 호출하여 새로운 매크로를 사용하여 Obj 상태를 초기화합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include "vm.h"
-</pre><div class="source-file"><em>object.c</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">객체.c</font></em></div>
 <pre class="insert" translate="no">
-
 <span class="a">#define ALLOCATE_OBJ(type, objectType) \</span>
 <span class="a">    (type*)allocateObject(sizeof(type), objectType)</span>
 </pre><pre class="insert-after" translate="no">
-
 static ObjString* allocateString(char* chars, int length) {
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em></div>
-<p><span name="factored">Like</span> the previous macro, this exists mainly to
-avoid the need to redundantly cast a <code translate="no">void*</code> back to the desired type. The
-actual functionality is here:</p>
-<aside name="factored">
-<p>I admit this chapter has a sea of helper functions and macros to wade through. I
-try to keep the code nicely factored, but that leads to a scattering of tiny
-functions. They will pay off when we reuse them later.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이전 매크로<span name="factored">와 마찬가지로</span>, 이것은 주로 중복 캐스트할 필요를 피하기 위해 존재합니다 </font></font><code translate="no">void*</code><font papago-translate="splitted"><font papago-translate="translated"> 원하는 유형으로 돌아갑니다.</font><font papago-translate="translated"> 실제 기능은 다음과 같습니다:</font></font></p>
+<aside name="factored" style="top: 8648px;">
+<p><font papago-translate="translated">이 장에는 도우미 기능과 매크로가 가득하다는 것을 인정합니다.</font><font papago-translate="translated"> 코드를 잘 인수분해하려고 노력하지만, 이는 작은 함수들의 분산으로 이어집니다.</font><font papago-translate="translated"> 나중에 재사용하면 성과가 있을 것입니다.</font></p>
 </aside>
 <div class="codehilite"><pre class="insert-before" translate="no">#define ALLOCATE_OBJ(type, objectType) \
     (type*)allocateObject(sizeof(type), objectType)
-</pre><div class="source-file"><em>object.c</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">객체.c</font></em></div>
 <pre class="insert" translate="no">
-
 <span class="k">static</span> <span class="t">Obj</span>* <span class="i">allocateObject</span>(<span class="t">size_t</span> <span class="i">size</span>, <span class="t">ObjType</span> <span class="i">type</span>) {
   <span class="t">Obj</span>* <span class="i">object</span> = (<span class="t">Obj</span>*)<span class="i">reallocate</span>(<span class="a">NULL</span>, <span class="n">0</span>, <span class="i">size</span>);
   <span class="i">object</span>-&gt;<span class="i">type</span> = <span class="i">type</span>;
   <span class="k">return</span> <span class="i">object</span>;
 }
 </pre><pre class="insert-after" translate="no">
-
 static ObjString* allocateString(char* chars, int length) {
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em></div>
-<p>It allocates an object of the given size on the heap. Note that the size is
-<em>not</em> just the size of Obj itself. The caller passes in the number of bytes so
-that there is room for the extra payload fields needed by the specific object
-type being created.</p>
-<p>Then it initializes the Obj state<span class="em">—</span>right now, that’s just the type tag. This
-function returns to <code translate="no">allocateString()</code>, which finishes initializing the ObjString
-fields. <span name="viola"><em>Voilà</em></span>, we can compile and execute string
-literals.</p>
-<aside name="viola"><img alt="A viola." class="above" src="image/strings/viola.png"/>
-<p>Don’t get “voilà” confused with “viola”. One means “there it is” and the other
-is a string instrument, the middle child between a violin and a cello. Yes, I
-did spend two hours drawing a viola just to mention that.</p>
+<p><font papago-translate="translated">주어진 크기의 객체를 힙에 할당합니다.</font><font papago-translate="translated"> 크기는 단순히 Obj 자체의 크기<em>가 아닙니다</em>.</font><font papago-translate="translated"> 호출자는 바이트 수를 전달하여 생성되는 특정 객체 유형에 필요한 추가 페이로드 필드의 공간을 확보합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그런 다음 Obj 상태를 초기화합니다—지금은 그냥 타입<span class="em"></span> 태그입니다.</font><font papago-translate="translated"> 이 함수는 다음으로 돌아갑니다 </font></font><code translate="no">allocateString()</code><font papago-translate="splitted"><font papago-translate="translated">, ObjString 필드의 초기화를 완료합니다.</font><font papago-translate="translated"> <span name="viola"><em>보일라</em></span>, 우리는 문자열 리터럴을 컴파일하고 실행할 수 있습니다<span name="viola"><em>.</em></span></font></font></p>
+<aside name="viola" style="top: 9112px;"><img alt="A viola." class="above" src="https://youhogeon-meritz.github.io/image/strings/viola.png">
+<p><font papago-translate="translated">"voilà"와 "viola"를 혼동하지 마세요.</font><font papago-translate="translated"> 하나는 "저기 있다"라는 뜻이고, 다른 하나는 바이올린과 첼로의 중간 아이인 현악기입니다.</font><font papago-translate="translated"> 네, 그 점을 언급하기 위해 두 시간 동안 비올라를 그렸습니다.</font></p>
 </aside>
-<h2><a href="#operations-on-strings" id="operations-on-strings"><small>19 . 4</small>Operations on Strings</a></h2>
-<p>Our fancy strings are there, but they don’t do much of anything yet. A good
-first step is to make the existing print code not barf on the new value type.</p>
+<h2><a href="https://youhogeon-meritz.github.io/strings.html#operations-on-strings" id="operations-on-strings"><small><font papago-translate="translated">19 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">문자열 작업</font></font></a></h2>
+<p><font papago-translate="translated">우리의 화려한 현악기들은 거기에 있지만, 아직 별다른 효과가 없습니다.</font><font papago-translate="translated"> 좋은 첫 번째 단계는 기존 인쇄 코드를 새로운 값 유형에서 바프하지 않도록 하는 것입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    case VAL_NUMBER: printf("%g", AS_NUMBER(value)); break;
-</pre><div class="source-file"><em>value.c</em><br/>
-in <em>printValue</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>printValue</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">VAL_OBJ</span>: <span class="i">printObject</span>(<span class="i">value</span>); <span class="k">break</span>;
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>value.c</em>, in <em>printValue</em>()</div>
-<p>If the value is a heap-allocated object, it defers to a helper function over in
-the “object” module.</p>
+<p><font papago-translate="translated">값이 힙 할당된 객체인 경우, "객체" 모듈에서 도우미 함수로 전환됩니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">ObjString* copyString(const char* chars, int length);
-</pre><div class="source-file"><em>object.h</em><br/>
-add after <em>copyString</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>copy</em>St<em>ring</em>() 다음에 추가</font></font></div>
 <pre class="insert" translate="no"><span class="t">void</span> <span class="i">printObject</span>(<span class="t">Value</span> <span class="i">value</span>);
 </pre><pre class="insert-after" translate="no">
-
 static inline bool isObjType(Value value, ObjType type) {
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em>, add after <em>copyString</em>()</div>
-<p>The implementation looks like this:</p>
-<div class="codehilite"><div class="source-file"><em>object.c</em><br/>
-add after <em>copyString</em>()</div>
+<p><font papago-translate="translated">구현은 다음과 같습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>copy</em>St<em>ring</em>() 다음에 추가</font></font></div>
 <pre translate="no"><span class="t">void</span> <span class="i">printObject</span>(<span class="t">Value</span> <span class="i">value</span>) {
   <span class="k">switch</span> (<span class="a">OBJ_TYPE</span>(<span class="i">value</span>)) {
     <span class="k">case</span> <span class="a">OBJ_STRING</span>:
@@ -550,22 +385,16 @@ add after <em>copyString</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, add after <em>copyString</em>()</div>
-<p>We have only a single object type now, but this function will sprout additional
-switch cases in later chapters. For string objects, it simply <span name="term-2">prints</span> the character array as a C string.</p>
-<aside name="term-2">
-<p>I told you terminating the string would come in handy.</p>
+<p><font papago-translate="translated">현재는 단일 객체 유형만 있지만, 이 기능은 이후 장에서 추가적인 스위치 케이스를 생성할 것입니다.</font><font papago-translate="translated"> 문자열 객체의 경우 문자 배열을 단순히 C 문자열로<span name="term-2"> 출력</span>합니다.</font></p>
+<aside name="term-2" style="top: 9824px;">
+<p><font papago-translate="translated">줄을 끊는 것이 도움이 될 것이라고 말씀드렸습니다.</font></p>
 </aside>
-<p>The equality operators also need to gracefully handle strings. Consider:</p>
+<p><font papago-translate="translated">평등 연산자들은 또한 문자열을 우아하게 처리해야 합니다.</font><font papago-translate="translated"> 고려:</font></p>
 <div class="codehilite"><pre translate="no"><span class="s">"string"</span> == <span class="s">"string"</span>
 </pre></div>
-<p>These are two separate string literals. The compiler will make two separate
-calls to <code translate="no">copyString()</code>, create two distinct ObjString objects and store them as
-two constants in the chunk. They are different objects in the heap. But our
-users (and thus we) expect strings to have value equality. The above expression
-should evaluate to <code translate="no">true</code>. That requires a little special support.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것들은 두 개의 별도 문자열 리터럴입니다.</font><font papago-translate="translated"> 컴파일러는 다음과 같은 두 가지 개별 호출을 수행합니다 </font></font><code translate="no">copyString()</code><font papago-translate="splitted"><font papago-translate="translated">, 두 개의 서로 다른 ObjString 객체를 생성하고 이를 청크에 두 개의 상수로 저장합니다.</font><font papago-translate="translated"> 그것들은 더미 속의 다른 물체들입니다.</font><font papago-translate="translated"> 그러나 우리의 사용자들은 (따라서) 문자열이 가치 평등을 가질 것이라고 기대합니다.</font><font papago-translate="translated"> 위의 표현은 다음과 같이 평가해야 합니다 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated">. 그것은 약간의 특별한 지원이 필요합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    case VAL_NUMBER: return AS_NUMBER(a) == AS_NUMBER(b);
-</pre><div class="source-file"><em>value.c</em><br/>
-in <em>valuesEqual</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>값</em>이 같습니다()</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">VAL_OBJ</span>: {
       <span class="t">ObjString</span>* <span class="i">aString</span> = <span class="a">AS_STRING</span>(<span class="i">a</span>);
       <span class="t">ObjString</span>* <span class="i">bString</span> = <span class="a">AS_STRING</span>(<span class="i">b</span>);
@@ -576,43 +405,28 @@ in <em>valuesEqual</em>()</div>
 </pre><pre class="insert-after" translate="no">    default:         return false; // Unreachable.
 </pre></div>
 <div class="source-file-narrow"><em>value.c</em>, in <em>valuesEqual</em>()</div>
-<p>If the two values are both strings, then they are equal if their character
-arrays contain the same characters, regardless of whether they are two separate
-objects or the exact same one. This does mean that string equality is slower
-than equality on other types since it has to walk the whole string. We’ll revise
-that <a href="hash-tables.html">later</a>, but this gives us the right semantics for now.</p>
-<p>Finally, in order to use <code translate="no">memcmp()</code> and the new stuff in the “object” module, we
-need a couple of includes. Here:</p>
+<p><font papago-translate="translated">두 값이 모두 문자열인 경우, 두 개의 개별 객체인지 정확히 동일한 객체인지에 관계없이 문자 배열이 동일한 문자를 포함하는 경우 동일합니다.</font><font papago-translate="translated"> 이는 문자열 평등이 전체 문자열을 걸어야 하기 때문에 다른 유형의 평등보다 느리다는 것을 의미합니다.</font><font papago-translate="translated"> 나중<a href="https://youhogeon-meritz.github.io/hash-tables.html">에</a> 수정하겠지만, 지금은 올바른 의미론을 제시합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">마지막으로 </font></font><code translate="no">memcmp()</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 "객체" 모듈의 새로운 내용에는 몇 가지 포함 항목이 필요합니다.</font><font papago-translate="translated"> 여기:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include &lt;stdio.h&gt;
-</pre><div class="source-file"><em>value.c</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.c</font></em></div>
 <pre class="insert" translate="no"><span class="a">#include &lt;string.h&gt;</span>
 </pre><pre class="insert-after" translate="no">
-
 #include "memory.h"
 </pre></div>
 <div class="source-file-narrow"><em>value.c</em></div>
-<p>And here:</p>
+<p><font papago-translate="translated">그리고 여기:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include &lt;string.h&gt;
 
-</pre><div class="source-file"><em>value.c</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.c</font></em></div>
 <pre class="insert" translate="no"><span class="a">#include "object.h"</span>
 </pre><pre class="insert-after" translate="no">#include "memory.h"
 </pre></div>
 <div class="source-file-narrow"><em>value.c</em></div>
-<h3><a href="#concatenation" id="concatenation"><small>19 . 4 . 1</small>Concatenation</a></h3>
-<p>Full-grown languages provide lots of operations for working with strings<span class="em">—</span>access to individual characters, the string’s length, changing case, splitting,
-joining, searching, etc. When you implement your language, you’ll likely want
-all that. But for this book, we keep things <em>very</em> minimal.</p>
-<p>The only interesting operation we support on strings is <code translate="no">+</code>. If you use that
-operator on two string objects, it produces a new string that’s a concatenation
-of the two operands. Since Lox is dynamically typed, we can’t tell which
-behavior is needed at compile time because we don’t know the types of the
-operands until runtime. Thus, the <code translate="no">OP_ADD</code> instruction dynamically inspects the
-operands and chooses the right operation.</p>
+<h3><a href="https://youhogeon-meritz.github.io/strings.html#concatenation" id="concatenation"><small><font papago-translate="translated">19 . 4 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">연결</font></font></a></h3>
+<p><font papago-translate="translated">완전히 성장한 언어는 문자열 작업을 위한 다양한 작업을 제공합니다. 개별 문자에 대한 접근, 문자열의 길이, 대문자 변경, 분할, 조인, 검색<span class="em"></span> 등이 그것입니다.</font><font papago-translate="translated"> 언어를 구현하면 모든 것을 원할 가능성이 높습니다.</font><font papago-translate="translated"> 하지만 이 책의 경우, 우리는 사물을<em></em> 매우 최소한으로 유지합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">문자열에서 지원하는 유일한 흥미로운 작업은 다음과 같습니다 </font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated">. 그 연산자를 두 개의 문자열 객체에 사용하면, 두 피연산자가 연결된 새로운 문자열이 생성됩니다.</font><font papago-translate="translated"> Lox는 동적으로 타이핑되기 때문에 컴파일 시 어떤 동작이 필요한지 알 수 없습니다. 왜냐하면 런타임이 되어서야 피연산자의 종류를 알 수 있기 때문입니다.</font><font papago-translate="translated"> 따라서 </font></font><code translate="no">OP_ADD</code><font papago-translate="splitted"><font papago-translate="translated"> 명령어는 피연산자를 동적으로 검사하고 올바른 작업을 선택합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      case OP_LESS:     BINARY_OP(BOOL_VAL, &lt;); break;
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OP_ADD</span>: {
         <span class="k">if</span> (<span class="a">IS_STRING</span>(<span class="i">peek</span>(<span class="n">0</span>)) &amp;&amp; <span class="a">IS_STRING</span>(<span class="i">peek</span>(<span class="n">1</span>))) {
           <span class="i">concatenate</span>();
@@ -630,19 +444,13 @@ replace 1 line</div>
 </pre><pre class="insert-after" translate="no">      case OP_SUBTRACT: BINARY_OP(NUMBER_VAL, -); break;
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>(), replace 1 line</div>
-<p>If both operands are strings, it concatenates. If they’re both numbers, it adds
-them. Any other <span name="convert">combination</span> of operand types is a
-runtime error.</p>
-<aside class="bottom" name="convert">
-<p>This is more conservative than most languages. In other languages, if one
-operand is a string, the other can be any type and it will be implicitly
-converted to a string before concatenating the two.</p>
-<p>I think that’s a fine feature, but would require writing tedious “convert to
-string” code for each type, so I left it out of Lox.</p>
+<p><font papago-translate="translated">두 피연산자가 모두 문자열인 경우 연결됩니다.</font><font papago-translate="translated"> 둘 다 숫자라면, 그것들을 더합니다.</font><font papago-translate="translated"> 피연산자 유형의 다른<span name="convert"> 조합</span>은 런타임 오류입니다.</font></p>
+<aside class="bottom" name="convert" style="top: 11401px;">
+<p><font papago-translate="translated">이것은 대부분의 언어보다 더 보수적입니다.</font><font papago-translate="translated"> 다른 언어에서는 한 피연산자가 문자열인 경우 다른 피연산자는 어떤 유형이든 될 수 있으며, 두 피연산자를 연결하기 전에 암묵적으로 문자열로 변환됩니다.</font></p>
+<p><font papago-translate="translated">좋은 기능이라고 생각하지만 각 유형에 대해 지루한 "문자열 변환" 코드를 작성해야 하므로 Lox에서 제외했습니다.</font></p>
 </aside>
-<p>To concatenate strings, we define a new function.</p>
-<div class="codehilite"><div class="source-file"><em>vm.c</em><br/>
-add after <em>isFalsey</em>()</div>
+<p><font papago-translate="translated">문자열을 연결하기 위해 새로운 함수를 정의합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>isFalse</em>y() 뒤에 추가</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">concatenate</span>() {
   <span class="t">ObjString</span>* <span class="i">b</span> = <span class="a">AS_STRING</span>(<span class="i">pop</span>());
   <span class="t">ObjString</span>* <span class="i">a</span> = <span class="a">AS_STRING</span>(<span class="i">pop</span>());
@@ -658,47 +466,33 @@ add after <em>isFalsey</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, add after <em>isFalsey</em>()</div>
-<p>It’s pretty verbose, as C code that works with strings tends to be. First, we
-calculate the length of the result string based on the lengths of the operands.
-We allocate a character array for the result and then copy the two halves in. As
-always, we carefully ensure the string is terminated.</p>
-<p>In order to call <code translate="no">memcpy()</code>, the VM needs an include.</p>
+<p><font papago-translate="translated">문자열과 함께 작동하는 C 코드는 꽤 장황합니다.</font><font papago-translate="translated"> 먼저, 피연산자의 길이를 기준으로 결과 문자열의 길이를 계산합니다.</font><font papago-translate="translated"> 결과에 문자 배열을 할당한 다음 두 개의 절반을 복사합니다.</font><font papago-translate="translated"> 언제나 그렇듯이, 우리는 신중하게 문자열이 종료되도록 합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">전화하기 </font></font><code translate="no">memcpy()</code><font papago-translate="splitted"><font papago-translate="translated">, VM에 포함이 필요합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include &lt;stdio.h&gt;
 </pre><div class="source-file"><em>vm.c</em></div>
 <pre class="insert" translate="no"><span class="a">#include &lt;string.h&gt;</span>
 </pre><pre class="insert-after" translate="no">
-
 #include "common.h"
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em></div>
-<p>Finally, we produce an ObjString to contain those characters. This time we use a
-new function, <code translate="no">takeString()</code>.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">마지막으로, 이러한 문자를 담을 ObjString을 생성합니다.</font><font papago-translate="translated"> 이번에는 새로운 기능을 사용합니다, </font></font><code translate="no">takeString()</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">};
 
-</pre><div class="source-file"><em>object.h</em><br/>
-add after struct <em>ObjString</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 구조 Ob<em>jString</em> 뒤에 추가</font></font></div>
 <pre class="insert" translate="no"><span class="t">ObjString</span>* <span class="i">takeString</span>(<span class="t">char</span>* <span class="i">chars</span>, <span class="t">int</span> <span class="i">length</span>);
 </pre><pre class="insert-after" translate="no">ObjString* copyString(const char* chars, int length);
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em>, add after struct <em>ObjString</em></div>
-<p>The implementation looks like this:</p>
-<div class="codehilite"><div class="source-file"><em>object.c</em><br/>
-add after <em>allocateString</em>()</div>
+<p><font papago-translate="translated">구현은 다음과 같습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>allocate</em>St<em>ring</em>() 후 추가</font></font></div>
 <pre translate="no"><span class="t">ObjString</span>* <span class="i">takeString</span>(<span class="t">char</span>* <span class="i">chars</span>, <span class="t">int</span> <span class="i">length</span>) {
   <span class="k">return</span> <span class="i">allocateString</span>(<span class="i">chars</span>, <span class="i">length</span>);
 }
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, add after <em>allocateString</em>()</div>
-<p>The previous <code translate="no">copyString()</code> function assumes it <em>cannot</em> take ownership of the
-characters you pass in. Instead, it conservatively creates a copy of the
-characters on the heap that the ObjString can own. That’s the right thing for
-string literals where the passed-in characters are in the middle of the source
-string.</p>
-<p>But, for concatenation, we’ve already dynamically allocated a character array on
-the heap. Making another copy of that would be redundant (and would mean
-<code translate="no">concatenate()</code> has to remember to free its copy). Instead, this function claims
-ownership of the string you give it.</p>
-<p>As usual, stitching this functionality together requires a couple of includes.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이전 </font></font><code translate="no">copyString()</code><font papago-translate="splitted"><font papago-translate="translated"> 함수는 전달하는 문자의 소유권을 가질<em> 수</em> 없다고 가정합니다.</font><font papago-translate="translated"> 대신, ObjString이 소유할 수 있는 힙에 있는 문자의 복사본을 보수적으로 생성합니다.</font><font papago-translate="translated"> 전달된 문자가 소스 문자열의 중간에 있는 문자열 리터럴의 경우 이 점이 맞습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그러나 연결을 위해 우리는 이미 힙에 문자 배열을 동적으로 할당했습니다.</font><font papago-translate="translated"> 그것의 또 다른 복사본을 만드는 것은 불필요할 것입니다 (그리고 다음을 의미할 것입니다) </font></font><code translate="no">concatenate()</code><font papago-translate="splitted"><font papago-translate="translated"> 복사본을 공개하는 것을 기억해야 합니다).</font><font papago-translate="translated"> 대신, 이 함수는 당신이 제공한 문자열의 소유권을 주장합니다.</font></font></p>
+<p><font papago-translate="translated">평소처럼 이 기능을 함께 스티칭하려면 몇 가지 요소가 필요합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include "debug.h"
 </pre><div class="source-file"><em>vm.c</em></div>
 <pre class="insert" translate="no"><span class="a">#include "object.h"</span>
@@ -706,15 +500,13 @@ ownership of the string you give it.</p>
 </pre><pre class="insert-after" translate="no">#include "vm.h"
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em></div>
-<h2><a href="#freeing-objects" id="freeing-objects"><small>19 . 5</small>Freeing Objects</a></h2>
-<p>Behold this innocuous-seeming expression:</p>
+<h2><a href="https://youhogeon-meritz.github.io/strings.html#freeing-objects" id="freeing-objects"><small><font papago-translate="translated">19 . 5</font></small><font papago-translate="splitted"><font papago-translate="translated">객체 해방</font></font></a></h2>
+<p><font papago-translate="translated">이 무해해 보이는 표정을 보세요:</font></p>
 <div class="codehilite"><pre translate="no"><span class="s">"st"</span> + <span class="s">"ri"</span> + <span class="s">"ng"</span>
 </pre></div>
-<p>When the compiler chews through this, it allocates an ObjString for each of
-those three string literals and stores them in the chunk’s constant table and
-generates this <span name="stack">bytecode</span>:</p>
-<aside name="stack">
-<p>Here’s what the stack looks like after each instruction:</p><img alt="The state of the stack at each instruction." src="image/strings/stack.png"/>
+<p><font papago-translate="translated">컴파일러가 이를 검토할 때, 이 세 개의 문자열 리터럴 각각에 대해 ObjString을 할당하고 이를 청크의 상수 테이블에 저장하여 이<span name="stack"> 바이트코드</span>를 생성합니다:</font></p>
+<aside name="stack" style="top: 13148px;">
+<p><font papago-translate="translated">각 지침 후 스택은 다음과 같습니다:</font></p><img alt="The state of the stack at each instruction." src="https://youhogeon-meritz.github.io/image/strings/stack.png">
 </aside>
 <div class="codehilite"><pre translate="no">0000    OP_CONSTANT         0 "st"
 0002    OP_CONSTANT         1 "ri"
@@ -723,125 +515,76 @@ generates this <span name="stack">bytecode</span>:</p>
 0007    OP_ADD
 0008    OP_RETURN
 </pre></div>
-<p>The first two instructions push <code translate="no">"st"</code> and <code translate="no">"ri"</code> onto the stack. Then the
-<code translate="no">OP_ADD</code> pops those and concatenates them. That dynamically allocates a new
-<code translate="no">"stri"</code> string on the heap. The VM pushes that and then pushes the <code translate="no">"ng"</code>
-constant. The last <code translate="no">OP_ADD</code> pops <code translate="no">"stri"</code> and <code translate="no">"ng"</code>, concatenates them, and
-pushes the result: <code translate="no">"string"</code>. Great, that’s what we expect.</p>
-<p>But, wait. What happened to that <code translate="no">"stri"</code> string? We dynamically allocated it,
-then the VM discarded it after concatenating it with <code translate="no">"ng"</code>. We popped it from
-the stack and no longer have a reference to it, but we never freed its memory.
-We’ve got ourselves a classic memory leak.</p>
-<p>Of course, it’s perfectly fine for the <em>Lox program</em> to forget about
-intermediate strings and not worry about freeing them. Lox automatically manages
-memory on the user’s behalf. The responsibility to manage memory doesn’t
-<em>disappear</em>. Instead, it falls on our shoulders as VM implementers.</p>
-<p>The full <span name="borrowed">solution</span> is a <a href="garbage-collection.html">garbage collector</a> that
-reclaims unused memory while the program is running. We’ve got some other stuff
-to get in place before we’re ready to tackle that project. Until then, we are
-living on borrowed time. The longer we wait to add the collector, the harder it
-is to do.</p>
-<aside name="borrowed">
-<p>I’ve seen a number of people implement large swathes of their language before
-trying to start on the GC. For the kind of toy programs you typically run while
-a language is being developed, you actually don’t run out of memory before
-reaching the end of the program, so this gets you surprisingly far.</p>
-<p>But that underestimates how <em>hard</em> it is to add a garbage collector later. The
-collector <em>must</em> ensure it can find every bit of memory that <em>is</em> still being
-used so that it doesn’t collect live data. There are hundreds of places a
-language implementation can squirrel away a reference to some object. If you
-don’t find all of them, you get nightmarish bugs.</p>
-<p>I’ve seen language implementations die because it was too hard to get the GC in
-later. If your language needs GC, get it working as soon as you can. It’s a
-crosscutting concern that touches the entire codebase.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">처음 두 가지 지침 푸시 </font></font><code translate="no">"st"</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">"ri"</code><font papago-translate="splitted"><font papago-translate="translated"> 스택에.</font><font papago-translate="translated"> 그러면 </font></font><code translate="no">OP_ADD</code><font papago-translate="splitted"><font papago-translate="translated"> 그것들을 터뜨리고 연결합니다.</font><font papago-translate="translated"> 그것은 동적으로 새로운 것을 할당합니다 </font></font><code translate="no">"stri"</code><font papago-translate="splitted"><font papago-translate="translated"> 힙에 문자열을 입력합니다.</font><font papago-translate="translated"> VM은 이를 푸시한 다음 푸시합니다 </font></font><code translate="no">"ng"</code><font papago-translate="splitted"><font papago-translate="translated"> 일정한.</font><font papago-translate="translated"> 마지막 </font></font><code translate="no">OP_ADD</code><font papago-translate="splitted"><font papago-translate="translated"> 팝스 </font></font><code translate="no">"stri"</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">"ng"</code><font papago-translate="splitted"><font papago-translate="translated">, 그것들을 연결하고 결과를 밀어냅니다: </font></font><code translate="no">"string"</code><font papago-translate="splitted"><font papago-translate="translated">. 좋아요, 저희가 기대하는 바입니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">하지만, 잠깐만요.</font><font papago-translate="translated"> 무슨 일이 일어났나요 </font></font><code translate="no">"stri"</code><font papago-translate="splitted"><font papago-translate="translated"> 끈?</font><font papago-translate="translated"> 우리는 그것을 동적으로 할당한 다음, VM이 그것을 다음과 연결한 후 폐기했습니다 </font></font><code translate="no">"ng"</code><font papago-translate="splitted"><font papago-translate="translated">. 우리는 그것을 스택에서 꺼냈고 더 이상 참조할 수 없지만, 그 기억을 결코 해방시키지 못했습니다.</font><font papago-translate="translated"> 우리는 고전적인 기억 누출을 겪고 있습니다.</font></font></p>
+<p><font papago-translate="translated">물론, L<em>ox 프로그램이</em> 중간 문자열을 잊어버리고 자유롭게 하는 것에 대해 걱정하지 않아도 괜찮습니다.</font><font papago-translate="translated"> Lox는 사용자를 대신하여 메모리를 자동으로 관리합니다.</font><font papago-translate="translated"> 기억을 관리하는 책임<em>은 사라지지</em> 않습니다.</font><font papago-translate="translated"> 대신, 그것은 VM 구현자로서 우리의 어깨에 걸리게 됩니다.</font></p>
+<p><font papago-translate="translated">전체<span name="borrowed"> 솔루션</span>은 프로그램이 실행되는 동안 사용되지 않은 메모리를 회수하는<a href="https://youhogeon-meritz.github.io/garbage-collection.html"> 쓰레기 수집</a>기입니다.</font><font papago-translate="translated"> 그 프로젝트를 시작하기 전에 준비해야 할 다른 사항들이 있습니다.</font><font papago-translate="translated"> 그때까지 우리는 빌린 시간에 살고 있습니다.</font><font papago-translate="translated"> 수집기를 추가하는 데 오래 기다릴수록 더 어려워집니다.</font></p>
+<aside name="borrowed" style="top: 13724px;">
+<p><font papago-translate="translated">많은 사람들이 GC를 시작하기 전에 자신의 언어를 크게 구현하는 것을 보았습니다.</font><font papago-translate="translated"> 언어가 개발되는 동안 일반적으로 실행되는 장난감 프로그램의 경우, 프로그램이 끝나기 전에 메모리가 부족하지 않기 때문에 의외로 멀리 갈 수 있습니다.</font></p>
+<p><font papago-translate="translated">하지만 이는<em></em> 나중에 쓰레기 수거기를 추가하는 것이 얼마나 어려운지 과소평가하는 것입니다.</font><font papago-translate="translated"> 수집기는 실시간<em></em> 데이터를 수집하지 않도록 여전히 사용 중인 모든 메모리 비트를 찾을 수 있는지 확인<em>해야 합니다</em>.</font><font papago-translate="translated"> 언어 구현이 어떤 객체에 대한 참조를 제거할 수 있는 수백 개의 장소가 있습니다.</font><font papago-translate="translated"> 모두 찾지 못하면 악몽 같은 벌레가 생깁니다.</font></p>
+<p><font papago-translate="translated">나중에 GC를 도입하는 것이 너무 어려워서 언어 구현이 중단되는 것을 본 적이 있습니다.</font><font papago-translate="translated"> 언어에 GC가 필요한 경우 가능한 한 빨리 작동하도록 하세요.</font><font papago-translate="translated"> 그것은 코드베이스 전체에 영향을 미치는 교차 문제입니다.</font></p>
 </aside>
-<p>Today, we should at least do the bare minimum: avoid <em>leaking</em> memory by making
-sure the VM can still find every allocated object even if the Lox program itself
-no longer references them. There are many sophisticated techniques that advanced
-memory managers use to allocate and track memory for objects. We’re going to
-take the simplest practical approach.</p>
-<p>We’ll create a linked list that stores every Obj. The VM can traverse that
-list to find every single object that has been allocated on the heap, whether or
-not the user’s program or the VM’s stack still has a reference to it.</p>
-<p>We could define a separate linked list node struct but then we’d have to
-allocate those too. Instead, we’ll use an <strong>intrusive list</strong><span class="em">—</span>the Obj struct
-itself will be the linked list node. Each Obj gets a pointer to the next Obj in
-the chain.</p>
+<p><font papago-translate="translated">오늘날 우리는 최소한 최소한 메모리<em> 유출</em>을 피해야 합니다: Lox 프로그램 자체가 더 이상 모든 할당된 객체를 참조하지 않더라도 VM이 여전히 찾을 수 있도록 하여 메모리<em> 유출</em>을 방지해야 합니다.</font><font papago-translate="translated"> 고급 메모리 관리자들이 객체에 대한 메모리를 할당하고 추적하는 데 사용하는 많은 정교한 기술들이 있습니다.</font><font papago-translate="translated"> 우리는 가장 간단한 실용적인 접근 방식을 취할 것입니다.</font></p>
+<p><font papago-translate="translated">모든 Obj를 저장하는 링크 목록을 만들겠습니다.</font><font papago-translate="translated"> VM은 사용자의 프로그램이나 VM의 스택이 여전히 참조를 가지고 있는지 여부에 관계없이 해당 목록을 통과하여 힙에 할당된 모든 개체를 찾을 수 있습니다.</font></p>
+<p><font papago-translate="translated">별도의 링크 리스트 노드 구조를 정의할 수도 있지만, 그것들도 할당해야 합니다.</font><font papago-translate="translated"> 대신<strong>, 우리</strong>는<strong> 침입 리스트를</strong> 사용할 것입니다—Obj 구조 자체가 링크 리스트<span class="em"></span> 노드가 될 것입니다.</font><font papago-translate="translated"> 각 Obj는 체인에서 다음 Obj로 가는 포인터를 받습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">struct Obj {
   ObjType type;
-</pre><div class="source-file"><em>object.h</em><br/>
-in struct <em>Obj</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em></em>구조 Obj에서</font></font></div>
 <pre class="insert" translate="no">  <span class="k">struct</span> <span class="t">Obj</span>* <span class="i">next</span>;
 </pre><pre class="insert-after" translate="no">};
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em>, in struct <em>Obj</em></div>
-<p>The VM stores a pointer to the head of the list.</p>
+<p><font papago-translate="translated">VM은 목록의 맨 앞에 포인터를 저장합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  Value* stackTop;
-</pre><div class="source-file"><em>vm.h</em><br/>
-in struct <em>VM</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">VM.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em></em>구조 VM에서</font></font></div>
 <pre class="insert" translate="no">  <span class="t">Obj</span>* <span class="i">objects</span>;
 </pre><pre class="insert-after" translate="no">} VM;
 </pre></div>
 <div class="source-file-narrow"><em>vm.h</em>, in struct <em>VM</em></div>
-<p>When we first initialize the VM, there are no allocated objects.</p>
+<p><font papago-translate="translated">VM을 처음 초기화할 때 할당된 객체가 없습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  resetStack();
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>initVM</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>initVM</em>()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="i">vm</span>.<span class="i">objects</span> = <span class="a">NULL</span>;
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>initVM</em>()</div>
-<p>Every time we allocate an Obj, we insert it in the list.</p>
+<p><font papago-translate="translated">Obj를 할당할 때마다 목록에 삽입합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  object-&gt;type = type;
-</pre><div class="source-file"><em>object.c</em><br/>
-in <em>allocateObject</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>allocate</em>O<em>bject</em>()</font></font></div>
 <pre class="insert" translate="no">
-
   <span class="i">object</span>-&gt;<span class="i">next</span> = <span class="i">vm</span>.<span class="i">objects</span>;
   <span class="i">vm</span>.<span class="i">objects</span> = <span class="i">object</span>;
 </pre><pre class="insert-after" translate="no">  return object;
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, in <em>allocateObject</em>()</div>
-<p>Since this is a singly linked list, the easiest place to insert it is as the
-head. That way, we don’t need to also store a pointer to the tail and keep it
-updated.</p>
-<p>The “object” module is directly using the global <code translate="no">vm</code> variable from the “vm”
-module, so we need to expose that externally.</p>
+<p><font papago-translate="translated">이것은 단일 링크 목록이기 때문에, 가장 쉽게 삽입할 수 있는 곳은 머리입니다.</font><font papago-translate="translated"> 그렇게 하면, 우리는 또한 꼬리에 대한 포인터를 저장하고 계속 업데이트할 필요가 없습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">"객체" 모듈은 글로벌을 직접 사용하고 있습니다 </font></font><code translate="no">vm</code><font papago-translate="splitted"><font papago-translate="translated"> "vm" 모듈에서 변수가 있으므로 외부에 노출해야 합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">} InterpretResult;
 
-</pre><div class="source-file"><em>vm.h</em><br/>
-add after enum <em>InterpretResult</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">VM.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum<em> InterpretResult</em> 뒤에 추가</font></font></div>
 <pre class="insert" translate="no"><span class="k">extern</span> <span class="a">VM</span> <span class="i">vm</span>;
 
 </pre><pre class="insert-after" translate="no">void initVM();
 </pre></div>
 <div class="source-file-narrow"><em>vm.h</em>, add after enum <em>InterpretResult</em></div>
-<p>Eventually, the garbage collector will free memory while the VM is still
-running. But, even then, there will usually be unused objects still lingering in
-memory when the user’s program completes. The VM should free those too.</p>
-<p>There’s no sophisticated logic for that. Once the program is done, we can free
-<em>every</em> object. We can and should implement that now.</p>
+<p><font papago-translate="translated">결국, 쓰레기 수집기는 VM이 계속 실행되는 동안 메모리를 확보할 것입니다.</font><font papago-translate="translated"> 하지만 사용자의 프로그램이 완료되면 사용하지 않은 객체들이 여전히 기억에 남아 있는 경우가 많습니다.</font><font papago-translate="translated"> VM은 그것들도 해방시켜야 합니다.</font></p>
+<p><font papago-translate="translated">그것에 대한 정교한 논리는 없습니다.</font><font papago-translate="translated"> 프로그램이 완료되면<em> 모든</em> 물체를 자유롭게 할 수 있습니다.</font><font papago-translate="translated"> 우리는 지금 그것을 실행할 수 있고 실행해야 합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">void freeVM() {
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>freeVM</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>무료</em> VM()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="i">freeObjects</span>();
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>freeVM</em>()</div>
-<p>That empty function we defined <a href="a-virtual-machine.html#an-instruction-execution-machine">way back when</a> finally does something! It
-calls this:</p>
+<p><font papago-translate="translated">우리가 마침내 무언가를 할<a href="https://youhogeon-meritz.github.io/a-virtual-machine.html#an-instruction-execution-machine"> 때</a> 정의한 그 빈 함수는<a href="https://youhogeon-meritz.github.io/a-virtual-machine.html#an-instruction-execution-machine"> 오래 전에</a>!</font><font papago-translate="translated"> 이를 이렇게 부릅니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">void* reallocate(void* pointer, size_t oldSize, size_t newSize);
-</pre><div class="source-file"><em>memory.h</em><br/>
-add after <em>reallocate</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">기억.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> ()<em>를 재할당</em>한 후 추가</font></font></div>
 <pre class="insert" translate="no"><span class="t">void</span> <span class="i">freeObjects</span>();
 </pre><pre class="insert-after" translate="no">
-
 #endif
 </pre></div>
 <div class="source-file-narrow"><em>memory.h</em>, add after <em>reallocate</em>()</div>
-<p>Here’s how we free the objects:</p>
-<div class="codehilite"><div class="source-file"><em>memory.c</em><br/>
-add after <em>reallocate</em>()</div>
+<p><font papago-translate="translated">다음은 객체를 해제하는 방법입니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">메모리.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> ()<em>를 재할당</em>한 후 추가</font></font></div>
 <pre translate="no"><span class="t">void</span> <span class="i">freeObjects</span>() {
   <span class="t">Obj</span>* <span class="i">object</span> = <span class="i">vm</span>.<span class="i">objects</span>;
   <span class="k">while</span> (<span class="i">object</span> != <span class="a">NULL</span>) {
@@ -852,10 +595,8 @@ add after <em>reallocate</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>memory.c</em>, add after <em>reallocate</em>()</div>
-<p>This is a CS 101 textbook implementation of walking a linked list and freeing
-its nodes. For each node, we call:</p>
-<div class="codehilite"><div class="source-file"><em>memory.c</em><br/>
-add after <em>reallocate</em>()</div>
+<p><font papago-translate="translated">이것은 링크된 목록을 걷고 노드를 해제하는 CS 101 교과서 구현입니다.</font><font papago-translate="translated"> 각 노드에 대해 호출합니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">메모리.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> ()<em>를 재할당</em>한 후 추가</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">freeObject</span>(<span class="t">Obj</span>* <span class="i">object</span>) {
   <span class="k">switch</span> (<span class="i">object</span>-&gt;<span class="i">type</span>) {
     <span class="k">case</span> <span class="a">OBJ_STRING</span>: {
@@ -868,195 +609,103 @@ add after <em>reallocate</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>memory.c</em>, add after <em>reallocate</em>()</div>
-<p>We aren’t only freeing the Obj itself. Since some object types also allocate
-other memory that they own, we also need a little type-specific code to handle
-each object type’s special needs. Here, that means we free the character array
-and then free the ObjString. Those both use one last memory management macro.</p>
+<p><font papago-translate="translated">우리는 단지 오브제 자체만을 해방시키는 것이 아닙니다.</font><font papago-translate="translated"> 일부 객체 유형은 소유한 다른 메모리도 할당하기 때문에 각 객체 유형의 특수 요구 사항을 처리하기 위해 작은 유형별 코드도 필요합니다.</font><font papago-translate="translated"> 여기서 이는 문자 배열을 해제한 다음 ObjString을 해제한다는 것을 의미합니다.</font><font papago-translate="translated"> 둘 다 마지막 메모리 관리 매크로를 하나만 사용합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    (type*)reallocate(NULL, 0, sizeof(type) * (count))
-</pre><div class="source-file"><em>memory.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">기억.h</font></em></div>
 <pre class="insert" translate="no">
-
 <span class="a">#define FREE(type, pointer) reallocate(pointer, sizeof(type), 0)</span>
 </pre><pre class="insert-after" translate="no">
-
 #define GROW_CAPACITY(capacity) \
 </pre></div>
 <div class="source-file-narrow"><em>memory.h</em></div>
-<p>It’s a tiny <span name="free">wrapper</span> around <code translate="no">reallocate()</code> that
-“resizes” an allocation down to zero bytes.</p>
-<aside name="free">
-<p>Using <code translate="no">reallocate()</code> to free memory might seem pointless. Why not just call
-<code translate="no">free()</code>? Later, this will help the VM track how much memory is still being
-used. If all allocation and freeing goes through <code translate="no">reallocate()</code>, it’s easy to
-keep a running count of the number of bytes of allocated memory.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그것은 주변의 작은<span name="free"> 포장지</span>입니다 </font></font><code translate="no">reallocate()</code><font papago-translate="splitted"><font papago-translate="translated"> 할당을 0바이트로 "크기 조정"합니다.</font></font></p>
+<aside name="free" style="top: 16188px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">사용. </font></font><code translate="no">reallocate()</code><font papago-translate="splitted"><font papago-translate="translated"> 기억을 자유롭게 하는 것은 무의미해 보일 수 있습니다.</font><font papago-translate="translated"> 그냥 전화하는 게 어때요 </font></font><code translate="no">free()</code><font papago-translate="splitted"><font papago-translate="translated">? 나중에 이것은 VM이 여전히 사용 중인 메모리의 양을 추적하는 데 도움이 될 것입니다.</font><font papago-translate="translated"> 모든 할당 및 자유화가 완료되면 </font></font><code translate="no">reallocate()</code><font papago-translate="splitted"><font papago-translate="translated">, 할당된 메모리의 바이트 수를 실행 카운트하는 것은 쉽습니다.</font></font></p>
 </aside>
-<p>As usual, we need an include to wire everything together.</p>
+<p><font papago-translate="translated">평소처럼 모든 것을 연결하기 위해 포함물이 필요합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include "common.h"
-</pre><div class="source-file"><em>memory.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">기억.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#include "object.h"</span>
 </pre><pre class="insert-after" translate="no">
-
 #define ALLOCATE(type, count) \
 </pre></div>
 <div class="source-file-narrow"><em>memory.h</em></div>
-<p>Then in the implementation file:</p>
+<p><font papago-translate="translated">그런 다음 구현 파일에서:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include "memory.h"
-</pre><div class="source-file"><em>memory.c</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">메모리.c</font></em></div>
 <pre class="insert" translate="no"><span class="a">#include "vm.h"</span>
 </pre><pre class="insert-after" translate="no">
-
 void* reallocate(void* pointer, size_t oldSize, size_t newSize) {
 </pre></div>
 <div class="source-file-narrow"><em>memory.c</em></div>
-<p>With this, our VM no longer leaks memory. Like a good C program, it cleans up
-its mess before exiting. But it doesn’t free any objects while the VM is
-running. Later, when it’s possible to write longer-running Lox programs, the VM
-will eat more and more memory as it goes, not relinquishing a single byte until
-the entire program is done.</p>
-<p>We won’t address that until we’ve added <a href="garbage-collection.html">a real garbage collector</a>, but this
-is a big step. We now have the infrastructure to support a variety of different
-kinds of dynamically allocated objects. And we’ve used that to add strings to
-clox, one of the most used types in most programming languages. Strings in turn
-enable us to build another fundamental data type, especially in dynamic
-languages: the venerable <a href="hash-tables.html">hash table</a>. But that’s for the next chapter<span class="ellipse"> . . . </span></p>
+<p><font papago-translate="translated">이를 통해 우리의 VM은 더 이상 메모리를 유출하지 않습니다.</font><font papago-translate="translated"> 좋은 C 프로그램처럼, 종료하기 전에 엉망진창을 정리합니다.</font><font papago-translate="translated"> 하지만 VM이 실행되는 동안에는 어떤 객체도 자유롭게 해주지 않습니다.</font><font papago-translate="translated"> 나중에 더 오래 실행되는 Lox 프로그램을 작성할 수 있게 되면, VM은 전체 프로그램이 완료될 때까지 단 한 바이트도 포기하지 않고 점점 더 많은 메모리를 소모하게 됩니다.</font></p>
+<p><font papago-translate="translated"><a href="https://youhogeon-meritz.github.io/garbage-collection.html">실제 쓰레기 수거기</a>를 추가하기 전까지는 이 문제를 다루지 않겠지만, 이는 큰 진전입니다.</font><font papago-translate="translated"> 이제 다양한 종류의 동적으로 할당된 객체를 지원할 수 있는 인프라를 갖추게 되었습니다.</font><font papago-translate="translated"> 그리고 대부분의 프로그래밍 언어에서 가장 많이 사용되는 유형 중 하나인 clox에 문자열을 추가하는 데 사용했습니다.</font><font papago-translate="translated"> 문자열은 특히 동적 언어에서 또 다른 기본 데이터 유형인 존경<a href="https://youhogeon-meritz.github.io/hash-tables.html">받는 해시 테이블</a>을 구축할 수 있게 해줍니다.</font><font papago-translate="translated"> 하지만 그것은 다음 장을 위한 것<span class="ellipse">입니다.</span></font></p>
 <div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+<h2><a href="https://youhogeon-meritz.github.io/strings.html#challenges" id="challenges"><font papago-translate="translated">과제들</font></a></h2>
 <ol>
 <li>
-<p>Each string requires two separate dynamic allocations<span class="em">—</span>one for the
-ObjString and a second for the character array. Accessing the characters
-from a value requires two pointer indirections, which can be bad for
-performance. A more efficient solution relies on a technique called
-<strong><a href="https://en.wikipedia.org/wiki/Flexible_array_member">flexible array members</a></strong>. Use that to store the ObjString and its
-character array in a single contiguous allocation.</p>
+<p><font papago-translate="translated">각 문자열에는 두 개의 개별 동적 할당이 필요합니다. 하나는 ObjString이고 다른 하나는 문자<span class="em"></span> 배열입니다.</font><font papago-translate="translated"> 값에서 문자에 접근하려면 두 개의 포인터 방향이 필요하며, 이는 성능에 좋지 않을 수 있습니다.</font><font papago-translate="translated"> 더 효율적인 해결책은<strong><a href="https://en.wikipedia.org/wiki/Flexible_array_member"> 유연 배열 부재</a></strong>라는 기술에 의존합니다.</font><font papago-translate="translated"> 이를 사용하여 ObjString과 그 문자 배열을 하나의 연속된 할당으로 저장합니다.</font></p>
 </li>
 <li>
-<p>When we create the ObjString for each string literal, we copy the characters
-onto the heap. That way, when the string is later freed, we know it is safe
-to free the characters too.</p>
-<p>This is a simpler approach but wastes some memory, which might be a problem
-on very constrained devices. Instead, we could keep track of which
-ObjStrings own their character array and which are “constant strings” that
-just point back to the original source string or some other non-freeable
-location. Add support for this.</p>
+<p><font papago-translate="translated">각 문자열 리터럴에 대해 ObjString을 생성할 때, 문자를 힙에 복사합니다.</font><font papago-translate="translated"> 그렇게 하면 나중에 문자열이 해제될 때 문자도 해제하는 것이 안전하다는 것을 알 수 있습니다.</font></p>
+<p><font papago-translate="translated">이것은 더 간단한 접근 방식이지만 메모리를 낭비하여 매우 제한된 장치에서 문제가 될 수 있습니다.</font><font papago-translate="translated"> 대신, 어떤 ObjStrings가 자신의 문자 배열을 소유하고 있는지, 그리고 원래 소스 문자열이나 다른 비자유 위치를 가리키는 "상수 문자열"인지 추적할 수 있습니다.</font><font papago-translate="translated"> 이에 대한 지원을 추가합니다.</font></p>
 </li>
 <li>
-<p>If Lox was your language, what would you have it do when a user tries to use
-<code translate="no">+</code> with one string operand and the other some other type? Justify your
-choice. What do other languages do?</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">Lox가 사용자의 언어라면 사용자가 사용하려고 할 때 무엇을 하시겠습니까 </font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated"> 하나의 문자열 피연산자와 다른 유형의 피연산자?</font><font papago-translate="translated"> 당신의 선택을 정당화하세요.</font><font papago-translate="translated"> 다른 언어들은 무엇을 하나요?</font></font></p>
 </li>
 </ol>
 </div>
 <div class="design-note">
-<h2><a href="#design-note" id="design-note">Design Note: String Encoding</a></h2>
-<p>In this book, I try not to shy away from the gnarly problems you’ll run into in
-a real language implementation. We might not always use the most <em>sophisticated</em>
-solution<span class="em">—</span>it’s an intro book after all<span class="em">—</span>but I don’t think it’s honest to
-pretend the problem doesn’t exist at all. However, I did skirt around one really
-nasty conundrum: deciding how to represent strings.</p>
-<p>There are two facets to a string encoding:</p>
+<h2><a href="https://youhogeon-meritz.github.io/strings.html#design-note" id="design-note"><font papago-translate="translated">디자인 노트:</font><font papago-translate="translated"> 문자열 인코딩</font></a></h2>
+<p><font papago-translate="translated">이 책에서는 실제 언어 구현에서 겪게 될 사소한 문제들을 피하려고 노력합니다.</font><font papago-translate="translated"> 우리는 항상 가장<em> 정교한</em> 해결책을 사용하지 않을 수도 있지만, 결국 그것은 입문서입니다. 하지만 문제가<span class="em"></span><span class="em"></span> 전혀 존재하지 않는 척하는 것은 정직하지 않다고 생각합니다.</font><font papago-translate="translated"> 하지만 저는 문자열을 어떻게 표현할지 결정하는 정말 끔찍한 수수께끼를 피했습니다.</font></p>
+<p><font papago-translate="translated">문자열 인코딩에는 두 가지 측면이 있습니다:</font></p>
 <ul>
 <li>
-<p><strong>What is a single “character” in a string?</strong> How many different values are
-there and what do they represent? The first widely adopted standard answer
-to this was <a href="https://en.wikipedia.org/wiki/ASCII">ASCII</a>. It gave you 127 different character values and
-specified what they were. It was great<span class="ellipse"> . . . </span>if you only ever cared about
-English. While it has weird, mostly forgotten characters like “record
-separator” and “synchronous idle”, it doesn’t have a single umlaut, acute,
-or grave. It can’t represent “jalapeño”, “naïve”, <span name="gruyere">“Gruyère”</span>, or “Mötley Crüe”.</p>
-<aside name="gruyere">
-<p>It goes without saying that a language that does not let one discuss Gruyère
-or Mötley Crüe is a language not worth using.</p>
+<p><font papago-translate="translated"><strong>문자열의 단일 "문자"란 무엇인가요?</strong></font><font papago-translate="translated"> 얼마나 많은 다른 값들이 있으며, 그것들은 무엇을 나타내나요?</font><font papago-translate="translated"> 이에 대한 최초의 널리 채택된 표준 답변은 AS<a href="https://en.wikipedia.org/wiki/ASCII">CI</a>I였습니다.</font><font papago-translate="translated"> 127개의 다른 문자 값을 제공하고 그것들이 무엇인지 명시했습니다.</font><font papago-translate="translated"> 영어에만 관심이 있다면 정말 좋았습니다<span class="ellipse">.</span></font><font papago-translate="translated"> "기록 분리기"나 "동기 유휴"와 같은 이상하고 대부분 잊혀진 문자들이 있지만, 단 하나의 움라우트, 급성, 또는 무덤이 없습니다.</font><font papago-translate="translated"> 그것은 "할라피뇨", "네이 ï브",<span name="gruyere"> "그루예르</span>", 또는 "뫼틀리 크루"를 나타낼 수 없습니다.</font></p>
+<aside name="gruyere" style="top: 17750px;">
+<p><font papago-translate="translated">그루예르나 뫼틀리 크뤼에에 대해 이야기할 수 없는 언어는 사용할 가치가 없는 언어라는 것은 말할 필요도 없습니다.</font></p>
 </aside>
-<p>Next came <a href="https://en.wikipedia.org/wiki/Unicode">Unicode</a>. Initially, it supported 16,384 different characters
-(<strong>code points</strong>), which fit nicely in 16 bits with a couple of bits to
-spare. Later that grew and grew, and now there are well over 100,000
-different code points including such vital instruments of human
-communication as 💩 (Unicode Character ‘PILE OF POO’, <code translate="no">U+1F4A9</code>).</p>
-<p>Even that long list of code points is not enough to represent each possible
-visible glyph a language might support. To handle that, Unicode also has
-<strong>combining characters</strong> that modify a preceding code point. For example,
-“a” followed by the combining character “¨” gives you “ä”. (To make things
-more confusing Unicode <em>also</em> has a single code point that looks like “ä”.)</p>
-<p>If a user accesses the fourth “character” in “naïve”, do they expect to get
-back “v” or “¨”? The former means they are thinking of each code
-point and its combining character as a single unit<span class="em">—</span>what Unicode calls an
-<strong>extended grapheme cluster</strong><span class="em">—</span>the latter means they are thinking in
-individual code points. Which do your users expect?</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다음은<a href="https://en.wikipedia.org/wiki/Unicode"> 유니코드</a>였습니다.</font><font papago-translate="translated"> 처음에는 16,384개의 다양한 문자(<strong>코드 포인트</strong>)를 지원했으며, 이는 몇 비트 여유를 두고 16비트에 잘 맞습니다.</font><font papago-translate="translated"> 나중에 그것은 점점 더 커졌고, 이제 인간 소통의 중요한 도구인 💩(유니코드 캐릭터 'POILE OF POO')을 포함하여 10만 개가 넘는 다양한 코드 포인트가 생겼습니다, </font></font><code translate="no">U+1F4A9</code><font papago-translate="splitted"><font papago-translate="translated">).</font></font></p>
+<p><font papago-translate="translated">그 긴 코드 포인트 목록조차도 언어가 지원할 수 있는 각 가능한 가시적 글리프를 나타내기에는 충분하지 않습니다.</font><font papago-translate="translated"> 이를 처리하기 위해 유니코드에는 이전 코드 포인트를 수정하는<strong> 문자 조합</strong>도 있습니다.</font><font papago-translate="translated"> 예를 들어, "a" 뒤에 결합 문자 "¨"가 붙으면 "ä"가 됩니다. (더 혼란스럽게 만들기 위해 유니코드에는 "ä"처럼 보이는 단일 코드 포인트<em>도</em> 있습니다.)</font></p>
+<p><font papago-translate="translated">사용자가 "네이버 ï"의 네 번째 "캐릭터"에 액세스하면 "v" 또는 "¨"를 반환받을 것으로 예상합니까?</font><font papago-translate="translated"> 전자는 각 코드 포인트와 그 결합 문자를 유니코드가<strong> 확장된 자소 클러스터</strong>라고 부르는 단일 단위로 생각한다는 것을 의미합니다. 후자는 개별 코드<span class="em"></span><span class="em"></span> 포인트로 생각한다는 것을 의미합니다.</font><font papago-translate="translated"> 사용자들이 기대하는 것은 무엇입니까?</font></p>
 </li>
 <li>
-<p><strong>How is a single unit represented in memory?</strong> Most systems using ASCII
-gave a single byte to each character and left the high bit unused. Unicode
-has a handful of common encodings. UTF-16 packs most code points into 16
-bits. That was great when every code point fit in that size. When that
-overflowed, they added <em>surrogate pairs</em> that use multiple 16-bit code units
-to represent a single code point. UTF-32 is the next evolution of
-UTF-16<span class="em">—</span>it gives a full 32 bits to each and every code point.</p>
-<p>UTF-8 is more complex than either of those. It uses a variable number of
-bytes to encode a code point. Lower-valued code points fit in fewer bytes.
-Since each character may occupy a different number of bytes, you can’t
-directly index into the string to find a specific code point. If you want,
-say, the 10th code point, you don’t know how many bytes into the string that
-is without walking and decoding all of the preceding ones.</p>
+<p><font papago-translate="translated"><strong>메모리에서 단일 단위는 어떻게 표현되나요?</strong></font><font papago-translate="translated"> 대부분의 ASCII 시스템은 각 문자에 단일 바이트를 부여하고 높은 비트는 사용하지 않았습니다.</font><font papago-translate="translated"> 유니코드에는 몇 가지 일반적인 인코딩이 있습니다.</font><font papago-translate="translated"> UTF-16은 대부분의 코드 포인트를 16비트로 패키징합니다.</font><font papago-translate="translated"> 모든 코드 포인트가 그 크기에 맞았을 때 정말 좋았습니다.</font><font papago-translate="translated"> 오버플로우가 발생하면 여러 개의 16비트 코드 유닛을 사용하여 하나의 코드 포인트를 나타내는<em> 대리 쌍을</em> 추가했습니다.</font><font papago-translate="translated"> UTF-32는 UTF-16의 다음 진화로, 각 코드<span class="em"></span> 포인트에 32비트를 할당합니다.</font></p>
+<p><font papago-translate="translated">UTF-8은 그 중 어느 것보다 더 복잡합니다.</font><font papago-translate="translated"> 코드 포인트를 인코딩하기 위해 가변 바이트 수를 사용합니다.</font><font papago-translate="translated"> 낮은 값의 코드 포인트는 더 적은 바이트에 맞습니다.</font><font papago-translate="translated"> 각 문자가 서로 다른 바이트 수를 차지할 수 있기 때문에 문자열에 직접 인덱싱하여 특정 코드 포인트를 찾을 수 없습니다.</font><font papago-translate="translated"> 예를 들어, 10번째 코드 포인트를 원한다면, 이전 코드 포인트를 모두 해독하지 않고 문자열에 몇 바이트가 있는지 알 수 없습니다.</font></p>
 </li>
 </ul>
-<p>Choosing a character representation and encoding involves fundamental
-trade-offs. Like many things in engineering, there’s no <span name="python">perfect</span> solution:</p>
-<aside name="python">
-<p>An example of how difficult this problem is comes from Python. The achingly long
-transition from Python 2 to 3 is painful mostly because of its changes around
-string encoding.</p>
+<p><font papago-translate="translated">문자 표현과 인코딩을 선택하는 것은 기본적인 절충안을 포함합니다.</font><font papago-translate="translated"> 공학의 많은 것들처럼<span name="python">, 완벽</span>한 해결책은 없습니다:</font></p>
+<aside name="python" style="top: 18590px;">
+<p><font papago-translate="translated">이 문제가 얼마나 어려운지에 대한 예는 Python에서 찾을 수 있습니다.</font><font papago-translate="translated"> 파이썬 2에서 3으로의 매우 긴 전환은 주로 문자열 인코딩에 대한 변화 때문에 고통스럽습니다.</font></p>
 </aside>
 <ul>
 <li>
-<p>ASCII is memory efficient and fast, but it kicks non-Latin languages to the
-side.</p>
+<p><font papago-translate="translated">ASCII는 메모리 효율적이고 빠르지만 라틴어가 아닌 언어를 옆으로 밀어냅니다.</font></p>
 </li>
 <li>
-<p>UTF-32 is fast and supports the whole Unicode range, but wastes a lot of
-memory given that most code points do tend to be in the lower range of
-values, where a full 32 bits aren’t needed.</p>
+<p><font papago-translate="translated">UTF-32는 빠르고 전체 유니코드 범위를 지원하지만, 대부분의 코드 포인트가 32비트 전체가 필요 없는 낮은 값 범위에 있기 때문에 많은 메모리를 낭비합니다.</font></p>
 </li>
 <li>
-<p>UTF-8 is memory efficient and supports the whole Unicode range, but its
-variable-length encoding makes it slow to access arbitrary code points.</p>
+<p><font papago-translate="translated">UTF-8은 메모리 효율적이며 전체 유니코드 범위를 지원하지만, 가변 길이 인코딩으로 인해 임의의 코드 포인트에 접근하는 속도가 느립니다.</font></p>
 </li>
 <li>
-<p>UTF-16 is worse than all of them<span class="em">—</span>an ugly consequence of Unicode
-outgrowing its earlier 16-bit range. It’s less memory efficient than UTF-8
-but is still a variable-length encoding thanks to surrogate pairs. Avoid it
-if you can. Alas, if your language needs to run on or interoperate with the
-browser, the JVM, or the CLR, you might be stuck with it, since those all
-use UTF-16 for their strings and you don’t want to have to convert every
-time you pass a string to the underlying system.</p>
+<p><font papago-translate="translated">UTF-16은 모든 것보다 더 나쁩니다. 이는 유니코드가 이전의 16비트<span class="em"></span> 범위를 능가한 추악한 결과입니다.</font><font papago-translate="translated"> 메모리 효율성은 UTF-8보다 낮지만, 대체 쌍 덕분에 여전히 가변 길이 인코딩입니다.</font><font papago-translate="translated"> 가능하면 피하세요.</font><font papago-translate="translated"> 안타깝게도, 만약 당신의 언어가 브라우저, JVM, 또는 CLR에서 실행되거나 상호 운용되어야 한다면, 이를 고수할 수 있습니다. 왜냐하면 이 모든 언어들은 문자열에 UTF-16을 사용하기 때문에 문자열을 기본 시스템에 전달할 때마다 변환할 필요가 없기 때문입니다.</font></p>
 </li>
 </ul>
-<p>One option is to take the maximal approach and do the “rightest” thing. Support
-all the Unicode code points. Internally, select an encoding for each string
-based on its contents<span class="em">—</span>use ASCII if every code point fits in a byte, UTF-16 if
-there are no surrogate pairs, etc. Provide APIs to let users iterate over both
-code points and extended grapheme clusters.</p>
-<p>This covers all your bases but is really complex. It’s a lot to implement,
-debug, and optimize. When serializing strings or interoperating with other
-systems, you have to deal with all of the encodings. Users need to understand
-the two indexing APIs and know which to use when. This is the approach that
-newer, big languages tend to take<span class="em">—</span>like Raku and Swift.</p>
-<p>A simpler compromise is to always encode using UTF-8 and only expose an API that
-works with code points. For users that want to work with grapheme clusters, let
-them use a third-party library for that. This is less Latin-centric than ASCII
-but not much more complex. You lose fast direct indexing by code point, but you
-can usually live without that or afford to make it <em>O(n)</em> instead of <em>O(1)</em>.</p>
-<p>If I were designing a big workhorse language for people writing large
-applications, I’d probably go with the maximal approach. For my little embedded
-scripting language <a href="http://wren.io">Wren</a>, I went with UTF-8 and code points.</p>
+<p><font papago-translate="translated">한 가지 옵션은 최대한의 접근 방식을 취하고 "가장 올바른" 일을 하는 것입니다.</font><font papago-translate="translated"> 모든 유니코드 코드 포인트를 지원합니다.</font><font papago-translate="translated"> 내부적으로 각 문자열의 내용을 기준으로 인코딩을 선택합니다. 모든 코드 포인트가 바이트에 맞는 경우 ASCII를, 대체 쌍이 없는 경우 UTF-16<span class="em"></span>을 사용합니다.</font><font papago-translate="translated"> 사용자가 코드 포인트와 확장된 자소 클러스터 모두에서 반복할 수 있도록 API를 제공합니다.</font></p>
+<p><font papago-translate="translated">이것은 당신의 모든 기초를 포괄하지만 정말 복잡합니다.</font><font papago-translate="translated"> 구현하고, 디버깅하고, 최적화해야 할 것이 많습니다.</font><font papago-translate="translated" class=""> 문자열을 직렬화하거나 다른 시스템과 상호 운용할 때는 모든 인코딩을 처리해야 합니다.</font><font papago-translate="translated" class=""> 사용자는 두 가지 인덱싱 API를 이해하고 언제 사용해야 하는지 알아야 합니다.</font><font papago-translate="translated" class=""> 이것이 라쿠<span class="em"></span>나 스위프트와 같은 새로운 대형 언어들이 취하는 접근 방식입니다.</font></p>
+<p><font papago-translate="translated">더 간단한 타협안은 항상 UTF-8을 사용하여 인코딩하고 코드 포인트와 함께 작동하는 API만 노출하는 것입니다.</font><font papago-translate="translated"> 그래파이트 클러스터 작업을 원하는 사용자에게는 타사 라이브러리를 사용하도록 하세요.</font><font papago-translate="translated"> 이것은 ASCII보다 라틴 중심적이지는 않지만 훨씬 더 복잡하지는 않습니다.</font><font papago-translate="translated"> 코드 포인트별로 빠른 직접 인덱싱을 잃게 되지만, 보통 그것 없이 살 수도 있고 O<em>(1</em>) 대신 O<em>(n</em>)로 만들 수도 있습니다.</font></p>
+<p><font papago-translate="translated">만약 제가 큰 애플리케이션을 작성하는 사람들을 위해 큰 워크호스 언어를 설계한다면, 아마도 최대한의 접근 방식을 선택했을 것입니다.</font><font papago-translate="translated"> 작은 임베디드 스크립팅 언어인 W<a href="http://wren.io/">ren</a>을 위해 UTF-8과 코드 포인트를 사용했습니다.</font></p>
 </div>
 <footer>
-<a class="next" href="hash-tables.html">
-  Next Chapter: “Hash Tables” →
-</a>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+<a class="next" href="https://youhogeon-meritz.github.io/hash-tables.html"><font papago-translate="translated"> 다음 장: "해시 테이블" → </font></a><font papago-translate="splitted"><font papago-translate="translated"> 로버트 니스트롬이 수작업으로 제작한 -<a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE"> © 2015 ~ 2021</a></font></font>
 </footer>
-</img></img></article>
+</article>
 </div>
-</body>
-</html>
+
+
+<div id="papagoTooltip" margin="5" style="display: none;">
+        <h1 id="tooltipTitle">원문</h1>
+        <p id="tooltipText"></p>
+      </div>
+      </body></html>

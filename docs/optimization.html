@@ -1,215 +1,116 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-166889d2-ab87-4cf6-94ae-1fa9fb9fc5c7@mhtml.blink" />
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>Optimization · Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/style.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
-<script src="jquery-3.4.1.min.js"></script>
-<script src="script.js"></script>
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+
+<!-- Google analytics -->
+
+</head>
 <body id="top">
 <!-- <div class="scrim"></div> -->
 <nav class="wide">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="contents">
-<h3><a href="#top">Optimization<small>30</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/optimization.html#top"><font papago-translate="splitted"><font papago-translate="translated">최적화</font></font><small>30</small></a></h3>
 <ul>
-<li><a href="#measuring-performance"><small>30.1</small> Measuring Performance</a></li>
-<li><a href="#faster-hash-table-probing"><small>30.2</small> Faster Hash Table Probing</a></li>
-<li><a href="#nan-boxing"><small>30.3</small> NaN Boxing</a></li>
-<li><a href="#where-to-next"><small>30.4</small> Where to Next</a></li>
+<li><a href="https://youhogeon-meritz.github.io/optimization.html#measuring-performance"><small>30.1</small><font papago-translate="splitted"><font papago-translate="translated"> 성능 측정</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/optimization.html#faster-hash-table-probing"><small>30.2</small><font papago-translate="splitted"><font papago-translate="translated"> 더 빠른 해시 테이블 탐색</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/optimization.html#nan-boxing"><small>30.3</small><font papago-translate="splitted"><font papago-translate="translated"> NaN 복싱</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/optimization.html#where-to-next"><small>30.4</small><font papago-translate="splitted"><font papago-translate="translated"> 다음 단계</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/optimization.html#challenges"><font papago-translate="translated">과제들</font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="superclasses.html" title="Superclasses">← Previous</a>
-<a href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑ Up</a>
-<a class="right" href="backmatter.html" title="Backmatter">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/superclasses.html" title="슈퍼클래스" papago-attr-id="1"><font papago-translate="translated">← 이전</font></a>
+<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="바이트코드 가상 머신" papago-attr-id="2"><font papago-translate="translated">↑ 위로</font></a>
+<a class="right" href="https://youhogeon-meritz.github.io/backmatter.html" title="백매터" papago-attr-id="3"><font papago-translate="translated">다음 →</font></a>
 </div> </div>
 </nav>
 <nav class="narrow">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
-<a class="prev" href="superclasses.html" title="Superclasses">←</a>
-<a class="next" href="backmatter.html" title="Backmatter">→</a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
+<a class="prev" href="https://youhogeon-meritz.github.io/superclasses.html" title="Superclasses">←</a>
+<a class="next" href="https://youhogeon-meritz.github.io/backmatter.html" title="Backmatter">→</a>
 </nav>
 <div class="page">
 <div class="nav-wrapper">
-<nav class="floating">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<nav class="floating pinned">
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="expandable">
-<h3><a href="#top">Optimization<small>30</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/optimization.html#top"><font papago-translate="splitted"><font papago-translate="translated">최적화</font></font><small>30</small></a></h3>
 <ul>
-<li><a href="#measuring-performance"><small>30.1</small> Measuring Performance</a></li>
-<li><a href="#faster-hash-table-probing"><small>30.2</small> Faster Hash Table Probing</a></li>
-<li><a href="#nan-boxing"><small>30.3</small> NaN Boxing</a></li>
-<li><a href="#where-to-next"><small>30.4</small> Where to Next</a></li>
+<li><a href="https://youhogeon-meritz.github.io/optimization.html#measuring-performance"><small>30.1</small><font papago-translate="splitted"><font papago-translate="translated"> 성능 측정</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/optimization.html#faster-hash-table-probing"><small>30.2</small><font papago-translate="splitted"><font papago-translate="translated"> 더 빠른 해시 테이블 탐색</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/optimization.html#nan-boxing"><small>30.3</small><font papago-translate="splitted"><font papago-translate="translated"> NaN 복싱</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/optimization.html#where-to-next"><small>30.4</small><font papago-translate="splitted"><font papago-translate="translated"> 다음 단계</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/optimization.html#challenges">Challenges</a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="superclasses.html" title="Superclasses">← Previous</a>
-<a href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑ Up</a>
-<a class="right" href="backmatter.html" title="Backmatter">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/superclasses.html" title="Superclasses">←&nbsp;Previous</a>
+<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑&nbsp;Up</a>
+<a class="right" href="https://youhogeon-meritz.github.io/backmatter.html" title="Backmatter">Next&nbsp;→</a>
 </div> </div>
 <a id="expand-nav">≡</a>
 </nav>
 </div>
 <article class="chapter">
 <div class="number">30</div>
-<h1>Optimization</h1>
+<h1><font papago-translate="translated">최적화</font></h1>
 <blockquote>
-<p>The evening’s the best part of the day. You’ve done your day’s work. Now you
-can put your feet up and enjoy it.</p>
+<p><font papago-translate="translated">저녁은 하루 중 가장 좋은 시간입니다.</font><font papago-translate="translated"> 하루 일과를 마쳤습니다.</font><font papago-translate="translated"> 이제 발을 들고 즐길 수 있습니다.</font></p>
 <p><cite>Kazuo Ishiguro, <em>The Remains of the Day</em></cite></p>
 </blockquote>
-<p>If I still lived in New Orleans, I’d call this chapter a <em>lagniappe</em>, a little
-something extra given for free to a customer. You’ve got a whole book and a
-complete virtual machine already, but I want you to have some more fun hacking
-on clox. This time, we’re going for pure performance. We’ll apply two very
-different optimizations to our virtual machine.  In the process, you’ll get a
-feel for measuring and improving the performance of a language implementation<span class="em">—</span>or any program, really.</p>
-<h2><a href="#measuring-performance" id="measuring-performance"><small>30 . 1</small>Measuring Performance</a></h2>
-<p><strong>Optimization</strong> means taking a working application and improving its
-performance. An optimized program does the same thing, it just takes less
-resources to do so. The resource we usually think of when optimizing is runtime
-speed, but it can also be important to reduce memory usage, startup time,
-persistent storage size, or network bandwidth. All physical resources have some
-cost<span class="em">—</span>even if the cost is mostly in wasted human time<span class="em">—</span>so optimization work
-often pays off.</p>
-<p>There was a time in the early days of computing that a skilled programmer could
-hold the entire hardware architecture and compiler pipeline in their head and
-understand a program’s performance just by thinking real hard. Those days are
-long gone, separated from the present by microcode, cache lines, branch
-prediction, deep compiler pipelines, and mammoth instruction sets. We like to
-pretend C is a “low-level” language, but the stack of technology between</p>
+<p><font papago-translate="translated">만약 제가 여전히 뉴올리언스에 산다면, 이 장을<em> 라그니아페</em>라고 부르겠습니다. 고객에게 무료로 제공되는 추가적인 무언가입니다.</font><font papago-translate="translated"> 이미 책 한 권과 완전한 가상 머신이 있지만, 클록스 해킹을 좀 더 재미있게 해보시길 바랍니다.</font><font papago-translate="translated"> 이번에는 순수한 퍼포먼스를 추구합니다.</font><font papago-translate="translated"> 우리는 가상 머신에 두 가지 매우 다른 최적화를 적용할 것입니다.</font><font papago-translate="translated"> 그 과정에서 언어 구현 또는 모든 프로그램의 성능을 측정하고 개선하는 느낌을<span class="em"></span> 받을 수 있습니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/optimization.html#measuring-performance" id="measuring-performance"><small><font papago-translate="translated">30 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">성능 측정</font></font></a></h2>
+<p><font papago-translate="translated"><strong>최적화란</strong> 작업 애플리케이션을 사용하여 성능을 향상시키는 것을 의미<strong>합니다.</strong></font><font papago-translate="translated"> 최적화된 프로그램은 동일한 작업을 수행하지만, 그렇게 하려면 더 적은 자원이 필요합니다.</font><font papago-translate="translated"> 최적화할 때 일반적으로 생각하는 리소스는 런타임 속도이지만, 메모리 사용량, 시작 시간, 지속적인 스토리지 크기 또는 네트워크 대역폭을 줄이는 것도 중요할 수 있습니다.</font><font papago-translate="translated"> 모든 물리적 자원에는 약간의 비용이 들지만, 비용이 대부분 낭비되는 인간의 시간에 불과하기 때문에 최적화 작업이 종종<span class="em"></span><span class="em"></span> 성과를 거두기도 합니다.</font></p>
+<p><font papago-translate="translated">컴퓨팅 초기에는 숙련된 프로그래머가 하드웨어 아키텍처와 컴파일러 파이프라인 전체를 머릿속에 넣고 열심히 생각하는 것만으로도 프로그램의 성능을 이해할 수 있었던 시절이 있었습니다.</font><font papago-translate="translated"> 그 시절은 이미 오래 전에 사라졌으며, 마이크로코드, 캐시 라인, 분기 예측, 딥 컴파일러 파이프라인, 그리고 매머드 명령어 세트에 의해 현재와 분리되어 있습니다.</font><font papago-translate="translated"> 우리는 C가 "저수준" 언어인 척하고 싶지만, 그 사이에는 기술이 쌓여 있습니다</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">printf</span>(<span class="s">"Hello, world!"</span>);
 </pre></div>
-<p>and a greeting appearing on screen is now perilously tall.</p>
-<p>Optimization today is an empirical science. Our program is a border collie
-sprinting through the hardware’s obstacle course. If we want her to reach the
-end faster, we can’t just sit and ruminate on canine physiology until
-enlightenment strikes. Instead, we need to <em>observe</em> her performance, see where
-she stumbles, and then find faster paths for her to take.</p>
-<p>Much like agility training is particular to one dog and one obstacle course, we
-can’t assume that our virtual machine optimizations will make <em>all</em> Lox programs
-run faster on <em>all</em> hardware. Different Lox programs stress different areas of
-the VM, and different architectures have their own strengths and weaknesses.</p>
-<h3><a href="#benchmarks" id="benchmarks"><small>30 . 1 . 1</small>Benchmarks</a></h3>
-<p>When we add new functionality, we validate correctness by writing tests<span class="em">—</span>Lox
-programs that use a feature and validate the VM’s behavior. Tests pin down
-semantics and ensure we don’t break existing features when we add new ones. We
-have similar needs when it comes to performance:</p>
+<p><font papago-translate="translated">그리고 화면에 나타나는 인사말은 이제 위험할 정도로 높아졌습니다.</font></p>
+<p><font papago-translate="translated">오늘날 최적화는 경험적 과학입니다.</font><font papago-translate="translated"> 저희 프로그램은 하드웨어 장애물 코스를 질주하는 보더콜리입니다.</font><font papago-translate="translated"> 그녀가 더 빨리 끝에 도달하기를 원한다면, 우리는 깨달음이 올 때까지 개의 생리학을 가만히 앉아서 되새길 수 없습니다.</font><font papago-translate="translated"> 대신에, 우리는 그녀의 연기<em>를 관찰</em>하고, 그녀가 어디서 비틀거리는지 확인한 다음, 그녀가 가야 할 더 빠른 길을 찾아야 합니다.</font></p>
+<p><font papago-translate="translated">민첩성 훈련이 한 마리의 개와 한 마리의 장애물 코스에만 적용되는 것처럼, 우리의 가상 머신 최적화가<em> 모든</em><em></em> 하드웨어에서<em> 모든</em> Lox 프로그램을 더 빠르게 실행할 것이라고 가정할 수는 없습니다.</font><font papago-translate="translated"> Lox 프로그램마다 VM의 다양한 영역에 스트레스를 주고, 아키텍처마다 고유한 강점과 약점이 있습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/optimization.html#benchmarks" id="benchmarks"><small><font papago-translate="translated">30 . 1 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">벤치마크</font></font></a></h3>
+<p><font papago-translate="translated">새로운 기능을 추가할 때, 우리는 기능을 사용하고 VM<span class="em"></span>의 동작을 검증하는 Lox 프로그램을 작성하여 정확성을 검증합니다.</font><font papago-translate="translated"> 테스트는 의미론을 고정하고 새로운 기능을 추가할 때 기존 기능을 깨지 않도록 보장합니다.</font><font papago-translate="translated"> 성능에 관해서도 비슷한 요구 사항이 있습니다:</font></p>
 <ol>
 <li>
-<p>How do we validate that an optimization <em>does</em> improve performance, and by
-how much?</p>
+<p><font papago-translate="translated">최적화가 성능을 얼마나 향상<em>시키는지</em> 어떻게 검증할 수 있습니까?</font></p>
 </li>
 <li>
-<p>How do we ensure that other unrelated changes don’t <em>regress</em> performance?</p>
+<p><font papago-translate="translated">다른 관련 없는 변경 사항이 성능<em>을 저하시키지</em> 않도록 하려면 어떻게 해야 하나요?</font></p>
 </li>
 </ol>
-<p>The Lox programs we write to accomplish those goals are <strong>benchmarks</strong>. These
-are carefully crafted programs that stress some part of the language
-implementation. They measure not <em>what</em> the program does, but how <span name="much"><em>long</em></span> it takes to do it.</p>
-<aside name="much">
-<p>Most benchmarks measure running time. But, of course, you’ll eventually find
-yourself needing to write benchmarks that measure memory allocation, how much
-time is spent in the garbage collector, startup time, etc.</p>
+<p><font papago-translate="translated">이러한 목표를 달성하기 위해 작성하는 Lox 프로그램은<strong> 벤치마크</strong>입니다.</font><font papago-translate="translated"> 이것들은 언어 구현의 일부를 강조하는 신중하게 만들어진 프로그램들입니다.</font><font papago-translate="translated"> 그들은 프로그램이 무엇을 하는지가 아니라,<span name="much"><em></em></span><em></em> 프로그램을 수행하는 데 걸리는 시간을 측정합니다.</font></p>
+<aside name="much" style="top: 1740px;">
+<p><font papago-translate="translated">대부분의 벤치마크는 실행 시간을 측정합니다.</font><font papago-translate="translated"> 물론, 결국에는 메모리 할당, 쓰레기 수집기에 얼마나 많은 시간이 소요되는지, 시작 시간 등을 측정하는 벤치마크를 작성해야 하는 상황에 처하게 될 것입니다.</font></p>
 </aside>
-<p>By measuring the performance of a benchmark before and after a change, you can
-see what your change does. When you land an optimization, all of the tests
-should behave exactly the same as they did before, but hopefully the benchmarks
-run faster.</p>
-<p>Once you have an entire <span name="js"><em>suite</em></span> of benchmarks, you can
-measure not just <em>that</em> an optimization changes performance, but on which
-<em>kinds</em> of code. Often you’ll find that some benchmarks get faster while others
-get slower. Then you have to make hard decisions about what kinds of code your
-language implementation optimizes for.</p>
-<p>The suite of benchmarks you choose to write is a key part of that decision. In
-the same way that your tests encode your choices around what correct behavior
-looks like, your benchmarks are the embodiment of your priorities when it comes
-to performance. They will guide which optimizations you implement, so choose
-your benchmarks carefully, and don’t forget to periodically reflect on whether
-they are helping you reach your larger goals.</p>
-<aside name="js">
-<p>In the early proliferation of JavaScript VMs, the first widely used benchmark
-suite was SunSpider from WebKit. During the browser wars, marketing folks used
-SunSpider results to claim their browser was fastest. That highly incentivized
-VM hackers to optimize to those benchmarks.</p>
-<p>Unfortunately, SunSpider programs often didn’t match real-world JavaScript. They
-were mostly microbenchmarks<span class="em">—</span>tiny toy programs that completed quickly. Those
-benchmarks penalize complex just-in-time compilers that start off slower but get
-<em>much</em> faster once the JIT has had enough time to optimize and re-compile hot
-code paths. This put VM hackers in the unfortunate position of having to choose
-between making the SunSpider numbers get better, or actually optimizing the
-kinds of programs real users ran.</p>
-<p>Google’s V8 team responded by sharing their Octane benchmark suite, which was
-closer to real-world code at the time. Years later, as JavaScript use patterns
-continued to evolve, even Octane outlived its usefulness. Expect that your
-benchmarks will evolve as your language’s ecosystem does.</p>
-<p>Remember, the ultimate goal is to make <em>user programs</em> faster, and benchmarks
-are only a proxy for that.</p>
+<p><font papago-translate="translated">변경 전후의 벤치마크 성능을 측정하면 변경 사항이 무엇을 하는지 확인할 수 있습니다.</font><font papago-translate="translated"> 최적화를 달성하면 모든 테스트가 이전과 동일하게 작동하지만 벤치마크가 더 빨리 실행되기를 바랍니다.</font></p>
+<p><font papago-translate="translated">전체 벤치마크<span name="js"><em> 모음</em></span>을 확보하면 최적화가 성능을 변화시킬 뿐만 아니라 어떤<em></em><em></em> 종류의 코드에 따라 성능이 달라지는지 측정할 수 있습니다.</font><font papago-translate="translated"> 종종 어떤 벤치마크는 더 빨라지는 반면, 다른 벤치마크는 더 느려지는 것을 발견할 수 있습니다.</font><font papago-translate="translated"> 그런 다음 언어 구현이 최적화하는 코드의 종류에 대해 어려운 결정을 내려야 합니다.</font></p>
+<p><font papago-translate="translated">당신이 작성하기로 선택한 벤치마크 모음은 그 결정의 핵심 부분입니다.</font><font papago-translate="translated"> 테스트가 올바른 행동이 어떻게 보이는지에 따라 선택을 인코딩하는 것과 마찬가지로, 벤치마크는 성과 측면에서 우선순위의 구체화입니다.</font><font papago-translate="translated"> 어떤 최적화를 구현할지 안내해 줄 것이므로 벤치마크를 신중하게 선택하고, 더 큰 목표를 달성하는 데 도움이 되는지 주기적으로 반성하는 것을 잊지 마세요.</font></p>
+<aside name="js" style="top: 1908px;">
+<p><font papago-translate="translated">자바스크립트 VM의 초기 확산 시기에 가장 널리 사용된 벤치마크 제품군은 WebKit의 SunSpider였습니다.</font><font papago-translate="translated"> 브라우저 전쟁 동안 마케팅 담당자들은 SunSpider 결과를 사용하여 브라우저가 가장 빠르다고 주장했습니다.</font><font papago-translate="translated"> 이는 VM 해커들이 이러한 벤치마크에 최적화하도록 크게 동기를 부여했습니다.</font></p>
+<p><font papago-translate="translated">안타깝게도 SunSpider 프로그램은 종종 실제 JavaScript와 일치하지 않았습니다.</font><font papago-translate="translated"> 그것들은 대부분 마이크로벤치마크였는데<span class="em"></span>, 아주 작은 장난감 프로그램들이 빠르게 완성되었습니다.</font><font papago-translate="translated"> 이러한 벤치마크는 복잡한 Just-in-time 컴파일러가 느리게 시작하지만 JIT가 핫 코드 경로를 최적화하고 재컴파일할 충분한 시간을 확보하면<em> 훨씬</em> 더 빨라지는 것을 방지합니다.</font><font papago-translate="translated"> 이로 인해 VM 해커들은 SunSpider 숫자를 개선할지, 실제 사용자가 실행하는 프로그램의 종류를 최적화할지 선택해야 하는 불행한 상황에 처하게 되었습니다.</font></p>
+<p><font papago-translate="translated">구글의 V8 팀은 당시 실제 코드에 더 가까운 Octane 벤치마크 제품군을 공유하며 대응했습니다.</font><font papago-translate="translated"> 몇 년 후, 자바스크립트 사용 패턴이 계속 발전하면서 옥탄조차도 그 유용성을 초과하게 되었습니다.</font><font papago-translate="translated"> 당신의 벤치마크가 당신의 언어 생태계처럼 진화할 것이라고 기대하세요.</font></p>
+<p><font papago-translate="translated">기억하세요, 궁극적인 목표는<em> 사용자 프로그램</em>을 더 빠르게 만드는 것이며, 벤치마크는 이를 대신할 뿐입니다.</font></p>
 </aside>
-<p>Benchmarking is a subtle art. Like tests, you need to balance not overfitting to
-your implementation while ensuring that the benchmark does actually tickle the
-code paths that you care about. When you measure performance, you need to
-compensate for variance caused by CPU throttling, caching, and other weird
-hardware and operating system quirks. I won’t give you a whole sermon here,
-but treat benchmarking as its own skill that improves with practice.</p>
-<h3><a href="#profiling" id="profiling"><small>30 . 1 . 2</small>Profiling</a></h3>
-<p>OK, so you’ve got a few benchmarks now. You want to make them go faster. Now
-what? First of all, let’s assume you’ve done all the obvious, easy work. You are
-using the right algorithms and data structures<span class="em">—</span>or, at least, you aren’t using
-ones that are aggressively wrong. I don’t consider using a hash table instead of
-a linear search through a huge unsorted array “optimization” so much as “good
-software engineering”.</p>
-<p>Since the hardware is too complex to reason about our program’s performance from
-first principles, we have to go out into the field. That means <em>profiling</em>. A
-<strong>profiler</strong>, if you’ve never used one, is a tool that runs your <span name="program">program</span> and tracks hardware resource use as the code
-executes. Simple ones show you how much time was spent in each function in your
-program. Sophisticated ones log data cache misses, instruction cache misses,
-branch mispredictions, memory allocations, and all sorts of other metrics.</p>
-<aside name="program">
-<p>“Your program” here means the Lox VM itself running some <em>other</em> Lox program. We
-are trying to optimize clox, not the user’s Lox script. Of course, the choice of
-which Lox program to load into our VM will highly affect which parts of clox get
-stressed, which is why benchmarks are so important.</p>
-<p>A profiler <em>won’t</em> show us how much time is spent in each <em>Lox</em> function in the
-script being run. We’d have to write our own “Lox profiler” to do that, which is
-slightly out of scope for this book.</p>
+<p><font papago-translate="translated">벤치마킹은 미묘한 예술입니다.</font><font papago-translate="translated"> 테스트와 마찬가지로 벤치마크가 실제로 관심 있는 코드 경로를 간지럽히도록 하면서 구현에 과적합되지 않도록 균형을 맞춰야 합니다.</font><font papago-translate="translated"> 성능을 측정할 때는 CPU 스로틀링, 캐싱 및 기타 이상한 하드웨어 및 운영 체제 결함으로 인한 변동을 보상해야 합니다.</font><font papago-translate="translated"> 여기서 전체 설교는 하지 않겠지만, 벤치마킹은 연습을 통해 향상되는 그 자체의 기술로 취급하겠습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/optimization.html#profiling" id="profiling"><small><font papago-translate="translated">30 . 1 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">프로파일링</font></font></a></h3>
+<p><font papago-translate="translated">좋아요, 이제 몇 가지 벤치마크가 있습니다.</font><font papago-translate="translated"> 더 빨리 진행하도록 하고 싶습니다.</font><font papago-translate="translated"> 자 이제는 뭐죠?</font><font papago-translate="translated"> 우선, 당신이 모든 명백하고 쉬운 일을 해냈다고 가정해 보겠습니다.</font><font papago-translate="translated"> 올바른 알고리즘과 데이터 구조를 사용하고 있거나, 적어도 공격적<span class="em"></span>으로 잘못된 알고리즘을 사용하고 있지는 않습니다.</font><font papago-translate="translated"> 저는 정렬되지 않은 거대한 배열 "최적화"를 통한 선형 검색 대신 해시 테이블을 사용하는 것을 "좋은 소프트웨어 공학"이라고 생각하지 않습니다.</font></p>
+<p><font papago-translate="translated">하드웨어가 너무 복잡해서 우리 프로그램의 성능을 첫 번째 원칙에서 추론할 수 없기 때문에, 우리는 현장에 나가야 합니다.</font><font papago-translate="translated"> <em>그것</em>은<em> 프로파일링</em>을 의미합니다.</font><font papago-translate="translated"> <strong>프로파일러</strong>를 사용해 본 적이 없다면<span name="program">,</span><strong> 프로그램</strong>을 실행하고 코드가 실행될 때 하드웨어 자원 사용을 추적하는 도구입니다.</font><font papago-translate="translated"> 간단한 것들은 프로그램의 각 기능에서 얼마나 많은 시간이 소요되었는지를 보여줍니다.</font><font papago-translate="translated"> 정교한 것들은 데이터 캐시 누락, 명령 캐시 누락, 분기 예측 오류, 메모리 할당 및 기타 모든 종류의 지표를 기록합니다.</font></p>
+<aside name="program" style="top: 2628px;">
+<p><font papago-translate="translated">여기서 "당신의 프로그램"은<em> L</em>ox VM 자체가<em> 다른</em> Lox 프로그램을 실행하는 것을 의미합니다.</font><font papago-translate="translated"> 우리는 사용자의 Lox 스크립트가 아니라 clox를 최적화하려고 노력하고 있습니다.</font><font papago-translate="translated"> 물론 VM에 로드할 Lox 프로그램의 선택은 clox의 어느 부분이 스트레스를 받는지에 큰 영향을 미치므로 벤치마크가 매우 중요합니다.</font></p>
+<p><font papago-translate="translated">프로파일러는<em></em> 실행 중인 스크립트의 각 Lox 함수에 얼마나 많은 시간이 소요되는지 보여<em>주지 않습니다</em>.</font><font papago-translate="translated"> 그러기 위해서는 우리만의 "Lox 프로파일러"를 작성해야 하는데, 이 책의 범위를 약간 벗어났습니다.</font></p>
 </aside>
-<p>There are many profilers out there for various operating systems and languages.
-On whatever platform you program, it’s worth getting familiar with a decent
-profiler. You don’t need to be a master. I have learned things within minutes of
-throwing a program at a profiler that would have taken me <em>days</em> to discover on
-my own through trial and error. Profilers are wonderful, magical tools.</p>
-<h2><a href="#faster-hash-table-probing" id="faster-hash-table-probing"><small>30 . 2</small>Faster Hash Table Probing</a></h2>
-<p>Enough pontificating, let’s get some performance charts going up and to the
-right. The first optimization we’ll do, it turns out, is about the <em>tiniest</em>
-possible change we could make to our VM.</p>
-<p>When I first got the bytecode virtual machine that clox is descended from
-working, I did what any self-respecting VM hacker would do. I cobbled together a
-couple of benchmarks, fired up a profiler, and ran those scripts through my
-interpreter. In a dynamically typed language like Lox, a large fraction of user
-code is field accesses and method calls, so one of my benchmarks looked
-something like this:</p>
+<p><font papago-translate="translated">다양한 운영 체제와 언어를 위한 많은 프로파일러가 있습니다.</font><font papago-translate="translated"> 어떤 플랫폼에서 프로그래밍하든 괜찮은 프로파일러와 친숙해질 가치가 있습니다.</font><font papago-translate="translated"> 마스터가 될 필요는 없습니다.</font><font papago-translate="translated"> 저는 시행착오를 통해 스스로 발견<em>하는 데 며칠이</em> 걸렸을 프로그램을 프로파일러에게 던진 지 몇 분 만에 많은 것을 배웠습니다.</font><font papago-translate="translated"> 프로파일러는 멋지고 마법 같은 도구입니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/optimization.html#faster-hash-table-probing" id="faster-hash-table-probing"><small><font papago-translate="translated">30 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">더 빠른 해시 테이블 탐색</font></font></a></h2>
+<p><font papago-translate="translated">이제 본격적으로, 공연 차트를 올리고 오른쪽으로 올라가 보겠습니다.</font><font papago-translate="translated"> 우리가 처음으로 할 최적화는 VM에 대해 할 수 있는<em> 아주 작은</em> 변화에 관한 것입니다.</font></p>
+<p><font papago-translate="translated">제가 처음으로 clox가 작동하던 바이트코드 가상 머신을 받았을 때, 자존심 강한 VM 해커라면 누구나 할 수 있는 일을 했습니다.</font><font papago-translate="translated"> 저는 몇 가지 벤치마크를 작성하고 프로파일러를 실행한 다음 인터프리터를 통해 스크립트를 실행했습니다.</font><font papago-translate="translated"> Lox와 같이 동적으로 입력된 언어에서는 사용자 코드의 상당 부분이 필드 액세스와 메서드 호출이므로 벤치마크 중 하나는 다음과 같습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Zoo</span> {
   <span class="i">init</span>() {
     <span class="k">this</span>.<span class="i">aardvark</span> = <span class="n">1</span>;
@@ -242,54 +143,20 @@ something like this:</p>
 <span class="k">print</span> <span class="i">clock</span>() - <span class="i">start</span>;
 <span class="k">print</span> <span class="i">sum</span>;
 </pre></div>
-<aside class="bottom" name="sum">
-<p>Another thing this benchmark is careful to do is <em>use</em> the result of the code it
-executes. By calculating a rolling sum and printing the result, we ensure the VM
-<em>must</em> execute all that Lox code. This is an important habit. Unlike our simple
-Lox VM, many compilers do aggressive dead code elimination and are smart enough
-to discard a computation whose result is never used.</p>
-<p>Many a programming language hacker has been impressed by the blazing performance
-of a VM on some benchmark, only to realize that it’s because the compiler
-optimized the entire benchmark program away to nothing.</p>
+<aside class="bottom" name="sum" style="top: 3593px;">
+<p><font papago-translate="translated">이 벤치마크가 주의해야 할 또 다른 점은 실행되는 코드의 결과<em>를 사용하는</em> 것입니다.</font><font papago-translate="translated"> 롤링 합계를 계산하고 결과를 출력함으로써, 우리는 VM이 모든 Lox 코드를 실행<em>해야</em> 한다는 것을 보장합니다.</font><font papago-translate="translated"> 이것은 중요한 습관입니다.</font><font papago-translate="translated"> 우리의 단순한 Lox VM과 달리, 많은 컴파일러들은 공격적인 데드 코드 제거를 수행하며, 결과가 전혀 사용되지 않는 계산을 버릴 만큼 충분히 똑똑합니다.</font></p>
+<p><font papago-translate="translated">많은 프로그래밍 언어 해커가 일부 벤치마크에서 VM의 놀라운 성능에 깊은 인상을 받았지만, 컴파일러가 전체 벤치마크 프로그램을 거의 최적화하지 않았기 때문이라는 사실을 깨달았습니다.</font></p>
 </aside>
-<p>If you’ve never seen a benchmark before, this might seem ludicrous. <em>What</em> is
-going on here? The program itself doesn’t intend to <span name="sum">do</span>
-anything useful. What it does do is call a bunch of methods and access a bunch
-of fields since those are the parts of the language we’re interested in. Fields
-and methods live in hash tables, so it takes care to populate at least a <span name="more"><em>few</em></span> interesting keys in those tables. That is all wrapped
-in a big loop to ensure our profiler has enough execution time to dig in and see
-where the cycles are going.</p>
-<aside name="more">
-<p>If you really want to benchmark hash table performance, you should use many
-tables of different sizes. The six keys we add to each table here aren’t even
-enough to get over our hash table’s eight-element minimum threshold. But I
-didn’t want to throw an enormous benchmark script at you. Feel free to add more
-critters and treats if you like.</p>
+<p><font papago-translate="translated">이전에 벤치마크를 본 적이 없다면 터무니없어 보일 수 있습니다.</font><font papago-translate="translated"> 여기서<em> 무슨</em> 일이 일어나고<em> 있나요?</em></font><font papago-translate="translated"> 그 프로그램 자체는 유용한<span name="sum"> 일을 할</span> 의도가 없습니다.</font><font papago-translate="translated"> 그것이 하는 일은 우리가 관심 있는 언어의 일부이기 때문에 여러 가지 방법을 호출하고 여러 분야에 접근하는 것입니다.</font><font papago-translate="translated"> 필드와 메서드는 해시 테이블에 존재하므로 해당 테이블에 최소한<span name="more"><em> 몇</em></span> 개의 흥미로운 키를 채우는 데 주의가 필요합니다.</font><font papago-translate="translated"> 이 모든 것이 큰 루프로 감싸져 있어 프로파일러가 사이클이 어디로 가는지 파악할 수 있는 충분한 실행 시간을 확보할 수 있습니다.</font></p>
+<aside name="more" style="top: 3944px;">
+<p><font papago-translate="translated">해시 테이블 성능을 벤치마킹하려면 다양한 크기의 테이블을 많이 사용해야 합니다.</font><font papago-translate="translated"> 여기 각 테이블에 추가하는 6개의 키만으로는 해시 테이블의 8개 요소 최소 임계값을 초과할 수 없습니다.</font><font papago-translate="translated"> 하지만 저는 당신에게 거대한 벤치마크 스크립트를 던지고 싶지 않았습니다.</font><font papago-translate="translated"> 원하시면 더 많은 생물과 간식을 추가하셔도 됩니다.</font></p>
 </aside>
-<p>Before I tell you what my profiler showed me, spend a minute taking a few
-guesses. Where in clox’s codebase do you think the VM spent most of its time? Is
-there any code we’ve written in previous chapters that you suspect is
-particularly slow?</p>
-<p>Here’s what I found: Naturally, the function with the greatest inclusive time is
-<code translate="no">run()</code>. (<strong>Inclusive time</strong> means the total time spent in some function and all
-other functions it calls<span class="em">—</span>the total time between when you enter the function
-and when it returns.) Since <code translate="no">run()</code> is the main bytecode execution loop, it
-drives everything.</p>
-<p>Inside <code translate="no">run()</code>, there are small chunks of time sprinkled in various cases in the
-bytecode switch for common instructions like <code translate="no">OP_POP</code>, <code translate="no">OP_RETURN</code>, and
-<code translate="no">OP_ADD</code>. The big heavy instructions are <code translate="no">OP_GET_GLOBAL</code> with 17% of the
-execution time, <code translate="no">OP_GET_PROPERTY</code> at 12%, and <code translate="no">OP_INVOKE</code> which takes a whopping
-42% of the total running time.</p>
-<p>So we’ve got three hotspots to optimize? Actually, no. Because it turns out
-those three instructions spend almost all of their time inside calls to the same
-function: <code translate="no">tableGet()</code>. That function claims a whole 72% of the execution time
-(again, inclusive). Now, in a dynamically typed language, we expect to spend a
-fair bit of time looking stuff up in hash tables<span class="em">—</span>it’s sort of the price of
-dynamism. But, still, <em>wow.</em></p>
-<h3><a href="#slow-key-wrapping" id="slow-key-wrapping"><small>30 . 2 . 1</small>Slow key wrapping</a></h3>
-<p>If you take a look at <code translate="no">tableGet()</code>, you’ll see it’s mostly a wrapper around a
-call to <code translate="no">findEntry()</code> where the actual hash table lookup happens. To refresh
-your memory, here it is in full:</p>
+<p><font papago-translate="translated">제 프로파일러가 보여준 것을 말씀드리기 전에 잠시 시간을 내어 몇 가지 추측해 보세요.</font><font papago-translate="translated"> clox의 코드베이스에서 VM이 대부분의 시간을 보낸 곳은 어디라고 생각하십니까?</font><font papago-translate="translated"> 이전 장에서 작성한 코드 중 특히 느리다고 의심되는 코드가 있나요?</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">제가 발견한 것은 다음과 같습니다: 당연히 가장 큰 포용 시간을 가진 함수는 </font></font><code translate="no">run()</code><font papago-translate="splitted"><font papago-translate="translated">. <strong>포함 시간</strong>은 함수와 함수가 호출하는 모든 다른 함수에 소요된 총 시간을 의미합니다. 함수를 입력한 후<span class="em"></span> 반환할 때까지의 총 시간을 의미합니다</font><font papago-translate="translated"> 부터 </font></font><code translate="no">run()</code><font papago-translate="splitted"><font papago-translate="translated"> 는 주요 바이트코드 실행 루프로, 모든 것을 구동합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">안에서. </font></font><code translate="no">run()</code><font papago-translate="splitted"><font papago-translate="translated">, 바이트코드 스위치에는 다음과 같은 일반적인 지침을 위해 다양한 경우에 작은 시간 조각이 흩어져 있습니다 </font></font><code translate="no">OP_POP</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">OP_RETURN</code><font papago-translate="splitted"><font papago-translate="translated">,그리고. </font></font><code translate="no">OP_ADD</code><font papago-translate="splitted"><font papago-translate="translated">. 가장 중요한 지침은 다음과 같습니다 </font></font><code translate="no">OP_GET_GLOBAL</code><font papago-translate="splitted"><font papago-translate="translated"> 실행 시간의 17%로, </font></font><code translate="no">OP_GET_PROPERTY</code><font papago-translate="splitted"><font papago-translate="translated"> 12%로 </font></font><code translate="no">OP_INVOKE</code><font papago-translate="splitted"><font papago-translate="translated"> 총 실행 시간의 무려 42%가 소요됩니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">최적화할 핫스팟이 세 곳이나 있다는 말씀이신가요?</font><font papago-translate="translated"> 사실은 그렇지 않아요.</font><font papago-translate="translated"> 알고 보니 이 세 가지 명령어는 거의 모든 시간을 같은 함수로 호출하는 데 사용합니다: </font></font><code translate="no">tableGet()</code><font papago-translate="splitted"><font papago-translate="translated">. 그 함수는 실행 시간의 전체 72%를 차지합니다 (다시, 포함).</font><font papago-translate="translated"> 이제 동적으로 입력된 언어에서는 해시 테이블에서 무언가를 찾는 데 상당한 시간을 할애할 것으로 예상됩니다.<span class="em"></span> 이는 일종의 역동성의 대가입니다.</font><font papago-translate="translated"> 하지만 여전히<em> 와우.</em></font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/optimization.html#slow-key-wrapping" id="slow-key-wrapping"><small><font papago-translate="translated">30 . 2 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">느린 키 랩핑</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">자세히 살펴보면 </font></font><code translate="no">tableGet()</code><font papago-translate="splitted"><font papago-translate="translated">, 대부분 다음과 같은 호출 주변의 포장지라는 것을 알 수 있습니다 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated"> 실제 해시 테이블 조회가 이루어지는 곳.</font><font papago-translate="translated"> 기억을 되살리기 위해 여기 전체가 있습니다:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">static</span> <span class="t">Entry</span>* <span class="i">findEntry</span>(<span class="t">Entry</span>* <span class="i">entries</span>, <span class="t">int</span> <span class="i">capacity</span>,
                         <span class="t">ObjString</span>* <span class="i">key</span>) {
   <span class="t">uint32_t</span> <span class="i">index</span> = <span class="i">key</span>-&gt;<span class="i">hash</span> % <span class="i">capacity</span>;
@@ -314,305 +181,133 @@ your memory, here it is in full:</p>
   }
 }
 </pre></div>
-<p>When running that previous benchmark<span class="em">—</span>on my machine, at least<span class="em">—</span>the VM spends
-70% of the total execution time on <em>one line</em> in this function. Any guesses as
-to which one? No? It’s this:</p>
+<p><font papago-translate="translated">이전 벤치마크를 실행할 때, 적어도 제 컴퓨터에서는 VM이 이<span class="em"></span><span class="em"></span> 함수에서 전체 실행 시간의 70%를<em> 한 줄</em>에 소비합니다.</font><font papago-translate="translated"> 어느 것에 대해 추측할 수 있나요?</font><font papago-translate="translated"> 아니요? 이거예요:</font></p>
 <div class="codehilite"><pre translate="no">  <span class="t">uint32_t</span> <span class="i">index</span> = <span class="i">key</span>-&gt;<span class="i">hash</span> % <span class="i">capacity</span>;
 </pre></div>
-<p>That pointer dereference isn’t the problem. It’s the little <code translate="no">%</code>. It turns out
-the modulo operator is <em>really</em> slow. Much slower than other <span name="division">arithmetic</span> operators. Can we do something better?</p>
-<aside name="division">
-<p>Pipelining makes it hard to talk about the performance of an individual CPU
-instruction, but to give you a feel for things, division and modulo are about
-30-50 <em>times</em> slower than addition and subtraction on x86.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그 포인터 디레퍼런스가 문제가 아닙니다.</font><font papago-translate="translated"> 작은 것입니다 </font></font><code translate="no">%</code><font papago-translate="splitted"><font papago-translate="translated">. 알고 보니 모듈로 연산자가<em> 정말</em> 느립니다.</font><font papago-translate="translated"> 다른<span name="division"> 산술</span> 연산자보다 훨씬 느립니다.</font><font papago-translate="translated"> 더 나은 일을 할 수 있을까요?</font></font></p>
+<aside name="division" style="top: 5384px;">
+<p><font papago-translate="translated">파이프라이닝은 개별 CPU 명령어의 성능에 대해 이야기하기 어렵게 만들지만, 사물에 대한 느낌을 주기 위해 나눗셈과 모듈로는 x86에서 덧셈과 뺄셈보다 약 30-50<em>배</em> 느립니다.</font></p>
 </aside>
-<p>In the general case, it’s really hard to re-implement a fundamental arithmetic
-operator in user code in a way that’s faster than what the CPU itself can do.
-After all, our C code ultimately compiles down to the CPU’s own arithmetic
-operations. If there were tricks we could use to go faster, the chip would
-already be using them.</p>
-<p>However, we can take advantage of the fact that we know more about our problem
-than the CPU does. We use modulo here to take a key string’s hash code and
-wrap it to fit within the bounds of the table’s entry array. That array starts
-out at eight elements and grows by a factor of two each time. We know<span class="em">—</span>and the
-CPU and C compiler do not<span class="em">—</span>that our table’s size is always a power of two.</p>
-<p>Because we’re clever bit twiddlers, we know a faster way to calculate the
-remainder of a number modulo a power of two: <strong>bit masking</strong>. Let’s say we want
-to calculate 229 modulo 64. The answer is 37, which is not particularly apparent
-in decimal, but is clearer when you view those numbers in binary:</p><img alt="The bit patterns resulting from 229 % 64 = 37 and 229 &amp; 63 = 37." src="image/optimization/mask.png">
-<p>On the left side of the illustration, notice how the result (37) is simply the
-dividend (229) with the highest two bits shaved off? Those two highest bits are
-the bits at or to the left of the divisor’s single 1 bit.</p>
-<p>On the right side, we get the same result by taking 229 and bitwise <span class="small-caps">AND</span>-ing it with 63, which is one less than our
-original power of two divisor. Subtracting one from a power of two gives you a
-series of 1 bits. That is exactly the mask we need in order to strip out those
-two leftmost bits.</p>
-<p>In other words, you can calculate a number modulo any power of two by simply
-<span class="small-caps">AND</span>-ing it with that power of two minus one. I’m
-not enough of a mathematician to <em>prove</em> to you that this works, but if you
-think it through, it should make sense. We can replace that slow modulo operator
-with a very fast decrement and bitwise <span class="small-caps">AND</span>. We
-simply change the offending line of code to this:</p>
+<p><font papago-translate="translated">일반적인 경우, CPU 자체가 할 수 있는 것보다 더 빠른 방식으로 기본 산술 연산자를 사용자 코드에 다시 구현하는 것은 정말 어렵습니다.</font><font papago-translate="translated"> 결국, 우리의 C 코드는 결국 CPU 자체의 산술 연산으로 컴파일됩니다.</font><font papago-translate="translated"> 더 빠르게 진행할 수 있는 트릭이 있다면, 칩은 이미 그것들을 사용하고 있을 것입니다.</font></p>
+<p><font papago-translate="translated">그러나 우리는 CPU보다 우리의 문제에 대해 더 많이 알고 있다는 사실을 활용할 수 있습니다.</font><font papago-translate="translated"> 여기서 우리는 모듈로를 사용하여 키 문자열의 해시 코드를 가져와서 테이블의 항목 배열 범위 내에 맞도록 감습니다.</font><font papago-translate="translated"> 그 배열은 여덟 개의 요소에서 시작하여 매번 두 배씩 증가합니다.</font><font papago-translate="translated"> CPU와 C 컴파일러는 우리 테이블의 크기가 항상<span class="em"></span><span class="em"></span> 2의 거듭제곱이라는 것을 알고 있습니다.</font></p>
+<p><font papago-translate="translated">우리는 영리한 비트 트위들러이기 때문에 숫자 모듈의 나머지를 2의 거듭제곱으로 계산하는 더 빠른 방법<strong>을</strong> 알고<strong> 있습니다: 비트 마스킹.</strong></font><font papago-translate="translated"> 229 모듈로 64를 계산하고 싶다고 가정해 보겠습니다.</font><font papago-translate="translated"> 답은 37로, 소수점 이하에서는 특별히 드러나지 않지만 이진수로 보면 더 명확해집니다:</font></p><img alt="The bit patterns resulting from 229 % 64 = 37 and 229 &amp; 63 = 37." src="https://youhogeon-meritz.github.io/image/optimization/mask.png">
+<p><font papago-translate="translated">그림의 왼쪽에서 결과(37)가 단순히 배당금(229)에서 가장 높은 두 비트가 깎이는 것을 확인할 수 있습니까?</font><font papago-translate="translated"> 이 두 가장 높은 비트는 제수기의 단일 1비트 또는 그 왼쪽에 있는 비트입니다.</font></p>
+<p><font papago-translate="translated">오른쪽에서는 229를 가져와서 비트 단위<span class="small-caps">로 A</span>ND-ing하면 동일한 결과를 얻을 수 있는데, 이는 원래 두 약수의 거듭제곱보다 하나 적은 63입니다.</font><font papago-translate="translated"> 2의 거듭제곱에서 1을 빼면 1비트의 연속이 됩니다.</font><font papago-translate="translated"> 그것이 바로 우리가 가장 왼쪽에 있는 두 개의 비트를 제거하기 위해 필요한 마스크입니다.</font></p>
+<p><font papago-translate="translated">다시 말해, 숫자 모듈로를 단순히 2에서 1을 뺀 값으로<span class="small-caps"> AND</span>-ing하면 2의 거듭제곱을 계산할 수 있습니다.</font><font papago-translate="translated"> 수학자로서 이것이 효과가 있다는<em> 것을 증명</em>하기에는 충분하지 않지만, 깊이 생각해 보면 이해가 될 것입니다.</font><font papago-translate="translated"> 느린 모듈로 연산자를 매우 빠른 감소와 비트 단위<span class="small-caps"> AND</span>로 대체할 수 있습니다.</font><font papago-translate="translated"> 우리는 단순히 문제가 되는 코드 라인을 다음과 같이 변경합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">static Entry* findEntry(Entry* entries, int capacity,
                         ObjString* key) {
-</pre><div class="source-file"><em>table.c</em><br/>
-in <em>findEntry</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>findEntry</em>()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  <span class="t">uint32_t</span> <span class="i">index</span> = <span class="i">key</span>-&gt;<span class="i">hash</span> &amp; (<span class="i">capacity</span> - <span class="n">1</span>);
 </pre><pre class="insert-after" translate="no">  Entry* tombstone = NULL;
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, in <em>findEntry</em>(), replace 1 line</div>
-<p>CPUs love bitwise operators, so it’s hard to <span name="sub">improve</span> on that. </p>
-<aside name="sub">
-<p>Another potential improvement is to eliminate the decrement by storing the bit
-mask directly instead of the capacity. In my tests, that didn’t make a
-difference. Instruction pipelining makes some operations essentially free if the
-CPU is bottlenecked elsewhere.</p>
+<p><font papago-translate="translated">CPU는 비트 단위 연산자를 좋아하기 때문<span name="sub">에 이를 개선하기</span>가 어렵습니다. </font></p>
+<aside name="sub" style="top: 6516px;">
+<p><font papago-translate="translated">또 다른 잠재적인 개선 사항은 용량 대신 비트 마스크를 직접 저장하여 감소를 없애는 것입니다.</font><font papago-translate="translated"> 제 테스트에서는 차이가 없었습니다.</font><font papago-translate="translated"> 명령어 파이프라이닝은 CPU가 다른 곳에서 병목 현상이 발생할 경우 일부 작업을 사실상 무료로 제공합니다.</font></p>
 </aside>
-<p>Our linear probing search may need to wrap around the end of the array, so there
-is another modulo in <code translate="no">findEntry()</code> to update.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">선형 탐색 검색은 배열의 끝을 감싸야 할 수 있으므로 또 다른 모듈로가 있습니다 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated"> 업데이트하기 위해.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      // We found the key.
       return entry;
     }
 
-</pre><div class="source-file"><em>table.c</em><br/>
-in <em>findEntry</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>findEntry</em>()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">    <span class="i">index</span> = (<span class="i">index</span> + <span class="n">1</span>) &amp; (<span class="i">capacity</span> - <span class="n">1</span>);
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, in <em>findEntry</em>(), replace 1 line</div>
-<p>This line didn’t show up in the profiler since most searches don’t wrap.</p>
-<p>The <code translate="no">findEntry()</code> function has a sister function, <code translate="no">tableFindString()</code> that does
-a hash table lookup for interning strings. We may as well apply the same
-optimizations there too. This function is called only when interning strings,
-which wasn’t heavily stressed by our benchmark. But a Lox program that created
-lots of strings might noticeably benefit from this change.</p>
+<p><font papago-translate="translated">이 줄은 대부분의 검색이 랩핑되지 않기 때문에 프로파일러에 나타나지 않았습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그 </font></font><code translate="no">findEntry()</code><font papago-translate="splitted"><font papago-translate="translated"> 함수에는 자매 함수가 있습니다, </font></font><code translate="no">tableFindString()</code><font papago-translate="splitted"><font papago-translate="translated"> 는 인터닝 문자열에 대한 해시 테이블 조회를 수행합니다.</font><font papago-translate="translated"> 거기에도 동일한 최적화를 적용할 수 있습니다.</font><font papago-translate="translated"> 이 함수는 문자열을 인터닝할 때만 호출되며, 벤치마크에서 큰 스트레스를 받지 않았습니다.</font><font papago-translate="translated"> 하지만 많은 문자열을 생성한 Lox 프로그램은 이 변화의 혜택을 눈에 띄게 누릴 수 있습니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  if (table-&gt;count == 0) return NULL;
 
-</pre><div class="source-file"><em>table.c</em><br/>
-in <em>tableFindString</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>테이블FindString</em>()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  <span class="t">uint32_t</span> <span class="i">index</span> = <span class="i">hash</span> &amp; (<span class="i">table</span>-&gt;<span class="i">capacity</span> - <span class="n">1</span>);
 </pre><pre class="insert-after" translate="no">  for (;;) {
     Entry* entry = &amp;table-&gt;entries[index];
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, in <em>tableFindString</em>(), replace 1 line</div>
-<p>And also when the linear probing wraps around.</p>
+<p><font papago-translate="translated">또한 선형 탐사가 진행될 때도 마찬가지입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      return entry-&gt;key;
     }
 
-</pre><div class="source-file"><em>table.c</em><br/>
-in <em>tableFindString</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">테이블.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>테이블FindString</em>()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">    <span class="i">index</span> = (<span class="i">index</span> + <span class="n">1</span>) &amp; (<span class="i">table</span>-&gt;<span class="i">capacity</span> - <span class="n">1</span>);
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>table.c</em>, in <em>tableFindString</em>(), replace 1 line</div>
-<p>Let’s see if our fixes were worth it. I tweaked that zoological benchmark to
-count how many <span name="batch">batches</span> of 10,000 calls it can run in
-ten seconds. More batches equals faster performance. On my machine using the
-unoptimized code, the benchmark gets through 3,192 batches. After this
-optimization, that jumps to 6,249.</p><img alt="Bar chart comparing the performance before and after the optimization." src="image/optimization/hash-chart.png">
-<p>That’s almost exactly twice as much work in the same amount of time. We made the
-VM twice as fast (usual caveat: on this benchmark). That is a massive win when
-it comes to optimization. Usually you feel good if you can claw a few percentage
-points here or there. Since methods, fields, and global variables are so
-prevalent in Lox programs, this tiny optimization improves performance across
-the board. Almost every Lox program benefits.</p>
-<aside name="batch">
-<p>Our original benchmark fixed the amount of <em>work</em> and then measured the <em>time</em>.
-Changing the script to count how many batches of calls it can do in ten seconds
-fixes the time and measures the work. For performance comparisons, I like the
-latter measure because the reported number represents <em>speed</em>. You can directly
-compare the numbers before and after an optimization. When measuring execution
-time, you have to do a little arithmetic to get to a good relative measure of
-performance.</p>
+<p><font papago-translate="translated">우리의 해결책이 그만한 가치가 있는지 확인해 보겠습니다.</font><font papago-translate="translated"> 동물학적 벤치마크를 조정하여 10,000번의 호출<span name="batch">을</span> 10초 안에 실행할 수 있는지 세어 보았습니다.</font><font papago-translate="translated"> 배치가 많을수록 성능이 빨라집니다.</font><font papago-translate="translated"> 최적화되지 않은 코드를 사용하는 제 기계에서는 벤치마크가 3,192개의 배치를 통과합니다.</font><font papago-translate="translated"> 이 최적화 후에는 6,249로 점프합니다.</font></p><img alt="Bar chart comparing the performance before and after the optimization." src="https://youhogeon-meritz.github.io/image/optimization/hash-chart.png">
+<p><font papago-translate="translated">같은 시간 동안 거의 정확히 두 배의 작업량입니다.</font><font papago-translate="translated"> 우리는 VM을 두 배 더 빠르게 만들었습니다 (보통 주의사항: 이 벤치마크에서).</font><font papago-translate="translated"> 이는 최적화 측면에서 엄청난 승리입니다.</font><font papago-translate="translated"> 보통 여기저기서 몇 퍼센트 포인트를 따낼 수 있다면 기분이 좋습니다.</font><font papago-translate="translated"> 방법, 분야, 글로벌 변수가 Lox 프로그램에서 매우 널리 사용되기 때문에, 이 작은 최적화는 전반적으로 성능을 향상시킵니다.</font><font papago-translate="translated"> 거의 모든 Lox 프로그램이 혜택을 제공합니다.</font></p>
+<aside name="batch" style="top: 7316px;">
+<p><font papago-translate="translated">원래 벤치마크는<em> 작업</em>량을 수정한 다음<em> 시간</em>을 측정했습니다.</font><font papago-translate="translated"> 스크립트를 변경하여 10초 안에 몇 번의 통화 배치를 할 수 있는지 세어보면 시간이 고정되고 작업이 측정됩니다.</font><font papago-translate="translated"> 성능 비교를 위해, 보고된 숫자가<em> 속도</em>를 나타내기 때문에 후자의 측정값이 마음에 듭니다.</font><font papago-translate="translated"> 최적화 전후의 수치를 직접 비교할 수 있습니다.</font><font papago-translate="translated"> 실행 시간을 측정할 때, 좋은 상대적 성능 척도에 도달하려면 약간의 산술을 해야 합니다.</font></p>
 </aside>
-<p>Now, the point of this section is <em>not</em> that the modulo operator is profoundly
-evil and you should stamp it out of every program you ever write. Nor is it that
-micro-optimization is a vital engineering skill. It’s rare that a performance
-problem has such a narrow, effective solution. We got lucky.</p>
-<p>The point is that we didn’t <em>know</em> that the modulo operator was a performance
-drain until our profiler told us so. If we had wandered around our VM’s codebase
-blindly guessing at hotspots, we likely wouldn’t have noticed it. What I want
-you to take away from this is how important it is to have a profiler in your
-toolbox.</p>
-<p>To reinforce that point, let’s go ahead and run the original benchmark in our
-now-optimized VM and see what the profiler shows us. On my machine, <code translate="no">tableGet()</code>
-is still a fairly large chunk of execution time. That’s to be expected for a
-dynamically typed language. But it has dropped from 72% of the total execution
-time down to 35%. That’s much more in line with what we’d like to see and shows
-that our optimization didn’t just make the program faster, but made it faster
-<em>in the way we expected</em>. Profilers are as useful for verifying solutions as
-they are for discovering problems.</p>
-<h2><a href="#nan-boxing" id="nan-boxing"><small>30 . 3</small>NaN Boxing</a></h2>
-<p>This next optimization has a very different feel. Thankfully, despite the odd
-name, it does not involve punching your grandmother. It’s different, but not,
-like, <em>that</em> different. With our previous optimization, the profiler told us
-where the problem was, and we merely had to use some ingenuity to come up with a
-solution.</p>
-<p>This optimization is more subtle, and its performance effects more scattered
-across the virtual machine. The profiler won’t help us come up with this.
-Instead, it was invented by <span name="someone">someone</span> thinking deeply
-about the lowest levels of machine architecture.</p>
-<aside name="someone">
-<p>I’m not sure who first came up with this trick. The earliest source I can find
-is David Gudeman’s 1993 paper “Representing Type Information in Dynamically
-Typed Languages”. Everyone else cites that. But Gudeman himself says the paper
-isn’t novel work, but instead “gathers together a body of folklore”.</p>
-<p>Maybe the inventor has been lost to the mists of time, or maybe it’s been
-reinvented a number of times. Anyone who ruminates on IEEE 754 long enough
-probably starts thinking about trying to stuff something useful into all those
-unused NaN bits.</p>
+<p><font papago-translate="translated">이 섹션의 요점은 모듈로 연산자가 매우 사악하다는 것<em>이 아니며</em>, 당신이 작성하는 모든 프로그램에서 모듈로 연산자를 제거해야 한다는 것입니다.</font><font papago-translate="translated"> 마이크로 최적화가 중요한 엔지니어링 기술이라는 것도 아닙니다.</font><font papago-translate="translated"> 성능 문제에 이렇게 좁고 효과적인 해결책이 있는 경우는 드뭅니다.</font><font papago-translate="translated"> 운이 좋았습니다.</font></p>
+<p><font papago-translate="translated">요점은 프로파일러가<em></em> 그렇게 말해주기 전까지는 모듈로 연산자가 성능 저하라는 사실을 몰랐다는 것입니다.</font><font papago-translate="translated"> 만약 우리가 VM의 코드베이스를 돌아다니며 핫스팟에서 맹목적으로 추측했다면, 우리는 그것을 알아차리지 못했을 것입니다.</font><font papago-translate="translated"> 여기서 제가 말씀드리고 싶은 것은 도구 상자에 프로파일러가 있는 것이 얼마나 중요한지입니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 점을 강화하기 위해 현재 최적화된 VM에서 원래 벤치마크를 실행하고 프로파일러가 보여주는 내용을 살펴보겠습니다.</font><font papago-translate="translated"> 내 기계에서, </font></font><code translate="no">tableGet()</code><font papago-translate="splitted"><font papago-translate="translated"> 여전히 실행 시간의 상당 부분을 차지하고 있습니다.</font><font papago-translate="translated"> 그것은 동적으로 입력된 언어에 대해 예상되는 것입니다.</font><font papago-translate="translated"> 하지만 전체 실행 시간의 72%에서 35%로 감소했습니다.</font><font papago-translate="translated"> 그것은 우리가 보고 싶은 것과 훨씬 더 일치하며, 우리의 최적화가 단순히 프로그램을 더 빠르게 만들었을 뿐만 아니라<em> 우리가 기대했던 방식으로</em> 더 빠르게 만들었다는 것을 보여줍니다.</font><font papago-translate="translated"> 프로파일러는 문제를 발견하는 것만큼이나 솔루션을 검증하는 데 유용합니다.</font></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/optimization.html#nan-boxing" id="nan-boxing"><small><font papago-translate="translated">30 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">NaN 복싱</font></font></a></h2>
+<p><font papago-translate="translated">다음 최적화는 매우 다른 느낌을 줍니다.</font><font papago-translate="translated"> 다행히도 이상한 이름에도 불구하고 할머니를 주먹으로 때리지는 않습니다.</font><font papago-translate="translated"> 다르지만<em>, 그렇게</em> 다르지는 않습니다.</font><font papago-translate="translated"> 이전 최적화에서는 프로파일러가 문제의 위치를 알려주었고, 해결책을 찾기 위해 약간의 독창성만 사용하면 되었습니다.</font></p>
+<p><font papago-translate="translated">이 최적화는 더 미묘하고 성능 효과가 가상 머신 전체에 더 많이 분산되어 있습니다.</font><font papago-translate="translated"> 프로파일러는 우리가 이 문제를 해결하는 데 도움을 주지 않을 것입니다.</font><font papago-translate="translated"> 대신, 그것은 가장 낮은 수준의 기계 구조에 대해 깊이 생각해 본<span name="someone"> 사람</span>에 의해 발명되었습니다.</font></p>
+<aside name="someone" style="top: 8494.5px;">
+<p><font papago-translate="translated">누가 이 트릭을 처음 생각해냈는지 잘 모르겠습니다.</font><font papago-translate="translated"> 제가 찾을 수 있는 가장 초기의 자료는 데이비드 구드먼의 1993년 논문 "동적으로 유형화된 언어로 유형 정보를 표현하다"입니다.</font><font papago-translate="translated"> 다른 사람들은 모두 그것을 인용합니다.</font><font papago-translate="translated"> 하지만 구드먼 자신은 이 논문이 참신한 작품이 아니라 "민속의 집합체"라고 말합니다.</font></p>
+<p><font papago-translate="translated">발명가가 시간의 안개에 길을 잃었을 수도 있고, 여러 번 재창조되었을 수도 있습니다.</font><font papago-translate="translated"> IEEE 754에서 충분히 오랫동안 반추하는 사람이라면 아마도 사용하지 않는 모든 NaN 비트에 유용한 무언가를 채워 넣는 것에 대해 생각하기 시작할 것입니다.</font></p>
 </aside>
-<p>Like the heading says, this optimization is called <strong>NaN boxing</strong> or sometimes
-<strong>NaN tagging</strong>. Personally I like the latter name because “boxing” tends to imply
-some kind of heap-allocated representation, but the former seems to be the more
-widely used term. This technique changes how we represent values in the VM.</p>
-<p>On a 64-bit machine, our Value type takes up 16 bytes. The struct has two
-fields, a type tag and a union for the payload. The largest fields in the union
-are an Obj pointer and a double, which are both 8 bytes. To keep the union field
-aligned to an 8-byte boundary, the compiler adds padding after the tag too:</p><img alt="Byte layout of the 16-byte tagged union Value." src="image/optimization/union.png">
-<p>That’s pretty big. If we could cut that down, then the VM could pack more values
-into the same amount of memory. Most computers have plenty of RAM these days, so
-the direct memory savings aren’t a huge deal. But a smaller representation means
-more Values fit in a cache line. That means fewer cache misses, which affects
-<em>speed</em>.</p>
-<p>If Values need to be aligned to their largest payload size, and a Lox number or
-Obj pointer needs a full 8 bytes, how can we get any smaller? In a dynamically
-typed language like Lox, each value needs to carry not just its payload, but
-enough additional information to determine the value’s type at runtime. If a Lox
-number is already using the full 8 bytes, where could we squirrel away a couple
-of extra bits to tell the runtime “this is a number”?</p>
-<p>This is one of the perennial problems for dynamic language hackers. It
-particularly bugs them because statically typed languages don’t generally have
-this problem. The type of each value is known at compile time, so no extra
-memory is needed at runtime to track it. When your C compiler compiles a 32-bit
-int, the resulting variable gets <em>exactly</em> 32 bits of storage.</p>
-<p>Dynamic language folks hate losing ground to the static camp, so they’ve come up
-with a number of very clever ways to pack type information and a payload into a
-small number of bits. NaN boxing is one of those. It’s a particularly good fit
-for languages like JavaScript and Lua, where all numbers are double-precision
-floating point. Lox is in that same boat.</p>
-<h3><a href="#what-is-and-is-not-a-number" id="what-is-and-is-not-a-number"><small>30 . 3 . 1</small>What is (and is not) a number?</a></h3>
-<p>Before we start optimizing, we need to really understand how our friend the CPU
-represents floating-point numbers. Almost all machines today use the same
-scheme, encoded in the venerable scroll <a href="https://en.wikipedia.org/wiki/IEEE_754">IEEE 754</a>, known to mortals as the
-“IEEE Standard for Floating-Point Arithmetic”.</p>
-<p>In the eyes of your computer, a <span name="hyphen">64-bit</span>,
-double-precision, IEEE floating-point number looks like this:</p>
-<aside name="hyphen">
-<p>That’s a lot of hyphens for one sentence.</p>
-</aside><img alt="Bit representation of an IEEE 754 double." src="image/optimization/double.png"/>
+<p><font papago-translate="translated">제목에서 알 수 있듯이, 이 최적화를 Na<strong>N 복싱</strong> 또는 때때로 Na<strong>N 태깅</strong>이라고 합니다.</font><font papago-translate="translated"> 개인적으로 저는 후자의 이름을 좋아합니다. 왜냐하면 "boxing"이 힙 할당된 표현을 암시하는 경향이 있기 때문입니다. 하지만 전자가 더 널리 사용되는 용어인 것 같습니다.</font><font papago-translate="translated"> 이 기술은 VM에서 값을 표현하는 방식을 변화시킵니다.</font></p>
+<p><font papago-translate="translated">64비트 머신에서는 Value 유형이 16바이트를 차지합니다.</font><font papago-translate="translated"> 구조물에는 페이로드를 위한 타입 태그와 유니언이라는 두 개의 필드가 있습니다.</font><font papago-translate="translated"> 유니언에서 가장 큰 필드는 8바이트인 Obj 포인터와 더블입니다.</font><font papago-translate="translated"> 유니언 필드를 8바이트 경계에 맞추기 위해 컴파일러는 태그 뒤에 패딩도 추가합니다:</font></p><img alt="Byte layout of the 16-byte tagged union Value." src="https://youhogeon-meritz.github.io/image/optimization/union.png">
+<p><font papago-translate="translated">꽤 큰 규모입니다.</font><font papago-translate="translated"> 그것을 줄일 수 있다면, VM은 더 많은 값을 같은 양의 메모리에 담을 수 있을 것입니다.</font><font papago-translate="translated"> 요즘 대부분의 컴퓨터는 RAM이 충분하기 때문에 직접 메모리 절약은 큰 문제가 되지 않습니다.</font><font papago-translate="translated"> 하지만 표현이 작을수록 캐시 라인에 더 많은 값이 들어옵니다.</font><font papago-translate="translated"> 즉, 캐시 누락이 줄어들어<em> 속도</em>에 영향을 미칩니다.</font></p>
+<p><font papago-translate="translated">값을 가장 큰 페이로드 크기로 정렬해야 하고 Lox 숫자나 Obj 포인터에 전체 8바이트가 필요한 경우, 어떻게 더 작게 만들 수 있을까요?</font><font papago-translate="translated"> Lox와 같이 동적으로 입력된 언어에서는 각 값이 페이로드뿐만 아니라 런타임 시 값의 유형을 결정하기 위한 충분한 추가 정보를 전달해야 합니다.</font><font papago-translate="translated"> Lox 숫자가 이미 전체 8바이트를 사용하고 있다면, 런타임 "이것은 숫자입니다"를 나타내기 위해 몇 개의 추가 비트를 어디서 분석할 수 있을까요?</font></p>
+<p><font papago-translate="translated">이것은 동적 언어 해커들에게 지속적인 문제 중 하나입니다.</font><font papago-translate="translated"> 정적으로 입력된 언어에는 일반적으로 이 문제가 없기 때문에 특히 문제가 됩니다.</font><font papago-translate="translated"> 각 값의 유형은 컴파일 시점에 알려져 있으므로 런타임에 추적하는 데 추가 메모리가 필요하지 않습니다.</font><font papago-translate="translated"> C 컴파일러가 32비트 int를 컴파일하면, 결과 변수는<em> 정확히</em> 32비트 저장 공간을 얻게 됩니다.</font></p>
+<p><font papago-translate="translated">동적 언어 사용자들은 정적인 진영에 밀리는 것을 싫어하기 때문에 타입 정보와 페이로드를 소수의 비트로 묶는 매우 영리한 방법을 여러 가지 생각해냈습니다.</font><font papago-translate="translated"> NaN 복싱도 그 중 하나입니다.</font><font papago-translate="translated"> 모든 숫자가 이중 정밀 부동 소수점인 JavaScript와 Lua와 같은 언어에 특히 적합합니다.</font><font papago-translate="translated"> 록스도 같은 배를 타고 있습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/optimization.html#what-is-and-is-not-a-number" id="what-is-and-is-not-a-number"><small><font papago-translate="translated">30 . 3 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">숫자란 무엇인가요?</font></font></a></h3>
+<p><font papago-translate="translated">최적화를 시작하기 전에, 우리 친구가 CPU가 부동 소수점 숫자를 어떻게 나타내는지 정말로 이해해야 합니다.</font><font papago-translate="translated"> 오늘날 거의 모든 기계는 동일한 방식을 사용하며, 이는 인간에게 "플로팅 포인트 산술을 위한 IEEE 표준"으로 알려진 존경받는 스크롤 IEEE<a href="https://en.wikipedia.org/wiki/IEEE_754"> 75</a>4에 인코딩되어 있습니다.</font></p>
+<p><font papago-translate="translated">컴퓨터의 눈에는<span name="hyphen"> 64비트</span>, 이중 정밀도, IEEE 부동 소수점 번호가 다음과 같이 보입니다:</font></p>
+<aside name="hyphen" style="top: 9692px;">
+<p><font papago-translate="translated">한 문장에 하이픈이 많이 들어 있습니다.</font></p>
+</aside><img alt="Bit representation of an IEEE 754 double." src="https://youhogeon-meritz.github.io/image/optimization/double.png">
 <ul>
 <li>
-<p>Starting from the right, the first 52 bits are the <strong>fraction</strong>,
-<strong>mantissa</strong>, or <strong>significand</strong> bits. They represent the significant digits
-of the number, as a binary integer.</p>
+<p><font papago-translate="translated">오른쪽부터 시작하여 처음 52비트는<strong> 분수</strong><strong>, 만티사</strong> 또는<strong> 유의 비트</strong>입니다.</font><font papago-translate="translated"> 그것들은 숫자의 유효 숫자를 이진 정수로 나타냅니다.</font></p>
 </li>
 <li>
-<p>Next to that are 11 <strong>exponent</strong> bits. These tell you how far the mantissa
-is shifted away from the decimal (well, binary) point.</p>
+<p><font papago-translate="translated">그 옆에는 11개<strong>의 지수</strong> 비트가 있습니다.</font><font papago-translate="translated"> 이것들은 십진수(음, 이진) 지점에서 만티사가 얼마나 멀리 이동했는지를 알려줍니다.</font></p>
 </li>
 <li>
-<p>The highest bit is the <span name="sign"><strong>sign bit</strong></span>, which
-indicates whether the number is positive or negative.</p>
+<p><font papago-translate="translated">가장 높은 비트는<span name="sign"><strong> 부호 비트</strong></span>로, 숫자가 양수인지 음수인지를 나타냅니다.</font></p>
 </li>
 </ul>
-<p>I know that’s a little vague, but this chapter isn’t a deep dive on
-floating point representation. If you want to know how the exponent and mantissa
-play together, there are already better explanations out there than I could
-write.</p>
-<aside name="sign">
-<p>Since the sign bit is always present, even if the number is zero, that implies
-that “positive zero” and “negative zero” have different bit representations, and
-indeed, IEEE 754 does distinguish those.</p>
+<p><font papago-translate="translated">그것이 조금 모호하다는 것을 알고 있지만, 이 장에서는 부동 소수점 표현에 대해 자세히 다루지 않습니다.</font><font papago-translate="translated"> 지수와 가수가 어떻게 함께 작용하는지 알고 싶다면, 이미 제가 쓸 수 있는 것보다 더 나은 설명이 있습니다.</font></p>
+<aside name="sign" style="top: 10032.5px;">
+<p><font papago-translate="translated">부호 비트가 항상 존재하기 때문에 숫자가 0일지라도 이는 "양의 0"과 "음의 0"이 서로 다른 비트 표현을 가지고 있음을 의미하며, 실제로 IEEE 754는 이를 구별합니다.</font></p>
 </aside>
-<p>The important part for our purposes is that the spec carves out a special case
-exponent. When all of the exponent bits are set, then instead of just
-representing a really big number, the value has a different meaning. These
-values are “Not a Number” (hence, <strong>NaN</strong>) values. They represent concepts like
-infinity or the result of division by zero.</p>
-<p><em>Any</em> double whose exponent bits are all set is a NaN, regardless of the
-mantissa bits. That means there’s lots and lots of <em>different</em> NaN bit patterns.
-IEEE 754 divides those into two categories. Values where the highest mantissa
-bit is 0 are called <strong>signalling NaNs</strong>, and the others are <strong>quiet NaNs</strong>.
-Signalling NaNs are intended to be the result of erroneous computations, like
-division by zero. A chip <span name="abort">may</span> detect when one of these
-values is produced and abort a program completely. They may self-destruct if you
-try to read one.</p>
-<aside name="abort">
-<p>I don’t know if any CPUs actually <em>do</em> trap signalling NaNs and abort. The spec
-just says they <em>could</em>.</p>
+<p><font papago-translate="translated">우리의 목적에서 중요한 부분은 그 표본이 특별한 경우 지수를 도출한다는 것입니다.</font><font papago-translate="translated"> 모든 지수 비트가 설정되면, 단순히 큰 숫자를 나타내는 대신 그 값은 다른 의미를 갖습니다.</font><font papago-translate="translated"> 이 값들은 "Not a Number"<strong></strong> (따라서 NaN) 값입니다.</font><font papago-translate="translated"> 그들은 무한대나 0으로 나눈 결과와 같은 개념을 나타냅니다.</font></p>
+<p><font papago-translate="translated">지수 비트가 모두 설정된 더블은 맨티사 비트에 관계없이<em> Na</em>N입니다<em>.</em></font><font papago-translate="translated"> 즉,<em> 다양한</em> NaN 비트 패턴이 있다는 뜻입니다.</font><font papago-translate="translated"> IEEE 754는 이를 두 가지 범주로 나눕니다.</font><font papago-translate="translated"> 가장 높은 맨티사 비트가 0인 값을<strong> 신호</strong> Na<strong>N</strong>이라고 하고, 나머지 값은<strong> 조용한</strong> Na<strong>N</strong>이라고 합니다.</font><font papago-translate="translated"> NaN 신호는 0으로 나누는 것과 같은 잘못된 계산의 결과로 의도됩니다.</font><font papago-translate="translated"> 칩은 이러한 값 중 하나가 생성될 때를 감지하여 프로그램을 완전히 중단<span name="abort">할 수 있습니다</span>.</font><font papago-translate="translated"> 읽으려고 하면 자멸할 수 있습니다.</font></p>
+<aside name="abort" style="top: 10392.5px;">
+<p><font papago-translate="translated">실제로 신호를 가두고<em></em> 중단하는 CPU가 있는지 모르겠습니다.</font><font papago-translate="translated"> 사양에는<em> 그럴 수 있다고</em>만 나와 있습니다.</font></p>
 </aside>
-<p>Quiet NaNs are supposed to be safer to use. They don’t represent useful numeric
-values, but they should at least not set your hand on fire if you touch them.</p>
-<p>Every double with all of its exponent bits set and its highest mantissa bit set
-is a quiet NaN. That leaves 52 bits unaccounted for. We’ll avoid one of those so
-that we don’t step on Intel’s “QNaN Floating-Point Indefinite” value, leaving us
-51 bits. Those remaining bits can be anything. We’re talking
-2,251,799,813,685,248 unique quiet NaN bit patterns.</p><img alt="The bits in a double that make it a quiet NaN." src="image/optimization/nan.png"/>
-<p>This means a 64-bit double has enough room to store all of the various different
-numeric floating-point values and <em>also</em> has room for another 51 bits of data
-that we can use however we want. That’s plenty of room to set aside a couple of
-bit patterns to represent Lox’s <code translate="no">nil</code>, <code translate="no">true</code>, and <code translate="no">false</code> values. But what
-about Obj pointers? Don’t pointers need a full 64 bits too?</p>
-<p>Fortunately, we have another trick up our other sleeve. Yes, technically
-pointers on a 64-bit architecture are 64 bits. But, no architecture I know of
-actually uses that entire address space. Instead, most widely used chips today
-only ever use the low <span name="48">48</span> bits. The remaining 16 bits are
-either unspecified or always zero.</p>
-<aside name="48">
-<p>48 bits is enough to address 262,144 gigabytes of memory. Modern operating
-systems also give each process its own address space, so that should be plenty.</p>
+<p><font papago-translate="translated">조용한 NaN은 사용하기에 더 안전해야 합니다.</font><font papago-translate="translated"> 유용한 숫자 값을 나타내지는 않지만, 만지면 적어도 손에 불이 붙지 않아야 합니다.</font></p>
+<p><font papago-translate="translated">모든 지수 비트가 설정되고 가장 높은 맨티사 비트가 설정된 모든 더블은 조용한 NaN입니다.</font><font papago-translate="translated"> 그러면 52비트가 할당되지 않습니다.</font><font papago-translate="translated"> 인텔의 "QNaN 부동 소수점 무한대" 값을 51비트 남겨두지 않도록 그 중 하나를 피할 것입니다.</font><font papago-translate="translated"> 남은 비트는 무엇이든 될 수 있습니다.</font><font papago-translate="translated"> 우리는 2,251,799,813,685,248개의 고유한 조용한 NaN 비트 패턴에 대해 이야기하고 있습니다.</font></p><img alt="The bits in a double that make it a quiet NaN." src="https://youhogeon-meritz.github.io/image/optimization/nan.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">즉, 64비트 더블은 다양한 숫자 부동 소수점 값을 모두 저장할 수 있는 충분한 공간을 가지고 있으며<em></em>, 원하는 대로 사용할 수 있는 51비트의 데이터도 추가로 저장할 수 있습니다.</font><font papago-translate="translated"> Lox의 비트 패턴을 나타내기 위해 몇 가지 비트 패턴을 따로 설정할 수 있는 충분한 공간입니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated">,그리고. </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated"> 가치.</font><font papago-translate="translated"> 하지만 Obj 포인터는 어떨까요?</font><font papago-translate="translated"> 포인터도 64비트가 필요하지 않나요?</font></font></p>
+<p><font papago-translate="translated">다행히도, 우리는 또 다른 비밀을 가지고 있습니다.</font><font papago-translate="translated"> 네, 기술적으로 64비트 아키텍처의 포인터는 64비트입니다.</font><font papago-translate="translated"> 하지만 제가 아는 어떤 아키텍처도 실제로 그 전체 주소 공간을 사용하지 않습니다.</font><font papago-translate="translated"> 대신에, 오늘날 가장 널리 사용되는 칩들은 항상 낮은<span name="48"> 48</span>비트만 사용합니다.</font><font papago-translate="translated"> 나머지 16비트는 지정되지 않았거나 항상 0입니다.</font></p>
+<aside name="48" style="top: 11072px;">
+<p><font papago-translate="translated">48비트는 262,144기가바이트의 메모리를 처리하기에 충분합니다.</font><font papago-translate="translated"> 현대 운영 체제는 또한 각 프로세스에 고유한 주소 공간을 제공하므로 충분할 것입니다.</font></p>
 </aside>
-<p>If we’ve got 51 bits, we can stuff a 48-bit pointer in there with three bits to
-spare. Those three bits are just enough to store tiny type tags to distinguish
-between <code translate="no">nil</code>, Booleans, and Obj pointers.</p>
-<p>That’s NaN boxing. Within a single 64-bit double, you can store all of the
-different floating-point numeric values, a pointer, or any of a couple of other
-special sentinel values. Half the memory usage of our current Value struct,
-while retaining all of the fidelity.</p>
-<p>What’s particularly nice about this representation is that there is no need to
-<em>convert</em> a numeric double value into a “boxed” form. Lox numbers <em>are</em> just
-normal, 64-bit doubles. We still need to <em>check</em> their type before we use them,
-since Lox is dynamically typed, but we don’t need to do any bit shifting or
-pointer indirection to go from “value” to “number”.</p>
-<p>For the other value types, there is a conversion step, of course. But,
-fortunately, our VM hides all of the mechanism to go from values to raw types
-behind a handful of macros. Rewrite those to implement NaN boxing, and the rest
-of the VM should just work.</p>
-<h3><a href="#conditional-support" id="conditional-support"><small>30 . 3 . 2</small>Conditional support</a></h3>
-<p>I know the details of this new representation aren’t clear in your head yet.
-Don’t worry, they will crystallize as we work through the implementation. Before
-we get to that, we’re going to put some compile-time scaffolding in place.</p>
-<p>For our previous optimization, we rewrote the previous slow code and called it
-done. This one is a little different. NaN boxing relies on some very low-level
-details of how a chip represents floating-point numbers and pointers. It
-<em>probably</em> works on most CPUs you’re likely to encounter, but you can never be
-totally sure.</p>
-<p>It would suck if our VM completely lost support for an architecture just because
-of its value representation. To avoid that, we’ll maintain support for <em>both</em>
-the old tagged union implementation of Value and the new NaN-boxed form. We
-select which representation we want at compile time using this flag:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">51비트가 있다면 48비트 포인터에 3비트를 추가할 수 있습니다.</font><font papago-translate="translated"> 이 세 비트만으로도 작은 타이핑 태그를 저장하여 구별할 수 있습니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">, 부울리언과 오브제 포인터.</font></font></p>
+<p><font papago-translate="translated">그것은 NaN 복싱입니다.</font><font papago-translate="translated"> 64비트 더블 하나 안에 다양한 부동 소수점 숫자 값, 포인터 또는 몇 가지 다른 특수 감시 값을 모두 저장할 수 있습니다.</font><font papago-translate="translated"> 현재 가치 구조의 메모리 사용량의 절반을 차지하면서도 모든 충실도를 유지합니다.</font></p>
+<p><font papago-translate="translated">이 표현에서 특히 좋은 점은 숫자 이중 값을 "박스형" 형태<em>로 변환</em>할 필요가 없다는 것입니다.</font><font papago-translate="translated"> 록스 숫자<em>는</em> 그냥 일반적이고, 64비트는 두 배입니다.</font><font papago-translate="translated"> Lox는 동적으로 입력되므로 사용하기 전에 유형<em>을 확인</em>해야 하지만, "값"에서 "숫자"로 전환하기 위해 비트 시프트나 포인터 인다이렉션을 할 필요는 없습니다.</font></p>
+<p><font papago-translate="translated">다른 가치 유형의 경우, 물론 변환 단계가 있습니다.</font><font papago-translate="translated"> 하지만 다행히도 우리의 VM은 몇 가지 매크로 뒤에 값에서 원시 유형으로 전환하는 모든 메커니즘을 숨기고 있습니다.</font><font papago-translate="translated"> NaN 복싱을 구현하려면 이를 다시 작성하고 나머지 VM은 그냥 작동해야 합니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/optimization.html#conditional-support" id="conditional-support"><small><font papago-translate="translated">30 . 3 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">조건부 지원</font></font></a></h3>
+<p><font papago-translate="translated">이 새로운 표현의 세부 사항이 아직 머릿속에 명확하지 않다는 것을 알고 있습니다.</font><font papago-translate="translated"> 걱정하지 마세요, 우리가 실행 과정을 진행하면서 결정화될 것입니다.</font><font papago-translate="translated"> 그 전에 컴파일 타임 스캐폴딩을 도입할 예정입니다.</font></p>
+<p><font papago-translate="translated">이전 최적화를 위해 이전의 느린 코드를 다시 작성하고 완료라고 불렀습니다.</font><font papago-translate="translated"> 이것은 조금 다릅니다.</font><font papago-translate="translated"> NaN 복싱은 칩이 부동 소수점 숫자와 포인터를 어떻게 나타내는지에 대한 매우 낮은 수준의 세부 사항에 의존합니다.</font><font papago-translate="translated"> 대부분의 CPU에서 작동<em>할 가능</em>성<em>이 높지만</em> 완전히 확신할 수는 없습니다.</font></p>
+<p><font papago-translate="translated">우리 VM이 가치 표현 때문에 아키텍처에 대한 지원을 완전히 잃게 된다면 정말 짜증날 것입니다.</font><font papago-translate="translated"> 이를 방지하기 위해 기존 태그가 부착된 Value와 새로운 NaN 박스<em></em> 형태 모두에 대한 지원을 유지할 것입니다.</font><font papago-translate="translated"> 이 플래그를 사용하여 컴파일 시 원하는 표현을 선택합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include &lt;stdint.h&gt;
 
-</pre><div class="source-file"><em>common.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">일반적인.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define NAN_BOXING</span>
 </pre><pre class="insert-after" translate="no">#define DEBUG_PRINT_CODE
 </pre></div>
 <div class="source-file-narrow"><em>common.h</em></div>
-<p>If that’s defined, the VM uses the new form. Otherwise, it reverts to the old
-style. The few pieces of code that care about the details of the value
-representation<span class="em">—</span>mainly the handful of macros for wrapping and unwrapping
-Values<span class="em">—</span>vary based on whether this flag is set. The rest of the VM can
-continue along its merry way.</p>
-<p>Most of the work happens in the “value” module where we add a section for the
-new type.</p>
+<p><font papago-translate="translated">정의된 경우 VM은 새 형식을 사용합니다.</font><font papago-translate="translated"> 그렇지 않으면 이전 스타일로 돌아갑니다.</font><font papago-translate="translated"> 값 표현의 세부 사항에 관심이 있는 몇 안 되는 코드 조각들, 주로 값을 감싸고 풀기 위한 몇 안 되는 매크로 조각들은 이 플래그가<span class="em"></span><span class="em"></span> 설정되었는지 여부에 따라 달라집니다.</font><font papago-translate="translated"> 나머지 VM은 즐거운 여정을 계속할 수 있습니다.</font></p>
+<p><font papago-translate="translated">대부분의 작업은 새로운 유형에 대한 섹션을 추가하는 "가치" 모듈에서 이루어집니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">typedef struct ObjString ObjString;
 
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#ifdef NAN_BOXING</span>
 
 <span class="k">typedef</span> <span class="t">uint64_t</span> <span class="t">Value</span>;
@@ -622,120 +317,73 @@ new type.</p>
 </pre><pre class="insert-after" translate="no">typedef enum {
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>When NaN boxing is enabled, the actual type of a Value is a flat, unsigned
-64-bit integer. We could use double instead, which would make the macros for
-dealing with Lox numbers a little simpler. But all of the other macros need to
-do bitwise operations and uint64_t is a much friendlier type for that. Outside
-of this module, the rest of the VM doesn’t really care one way or the other.</p>
-<p>Before we start re-implementing those macros, we close the <code translate="no">#else</code> branch of the
-<code translate="no">#ifdef</code> at the end of the definitions for the old representation.</p>
+<p><font papago-translate="translated">NaN 복싱이 활성화되면 실제 값 유형은 부호 없는 평평한 64비트 정수입니다.</font><font papago-translate="translated"> 대신 더블을 사용하면 Lox 숫자를 처리하는 매크로가 조금 더 간단해질 수 있습니다.</font><font papago-translate="translated"> 하지만 다른 모든 매크로는 비트 단위 연산을 수행해야 하며, 이를 위해 uint64_t가 훨씬 더 친절한 타입입니다.</font><font papago-translate="translated"> 이 모듈 외의 다른 VM들은 어느 쪽이든 신경 쓰지 않습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">매크로를 다시 구현하기 전에 다음과 같이 마무리합니다 </font></font><code translate="no">#else</code><font papago-translate="splitted"><font papago-translate="translated"> 의 분파 </font></font><code translate="no">#ifdef</code><font papago-translate="splitted"><font papago-translate="translated"> 구 표현의 정의가 끝날 때.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define OBJ_VAL(object)   ((Value){VAL_OBJ, {.obj = (Obj*)object}})
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no">
-
 <span class="a">#endif</span>
 </pre><pre class="insert-after" translate="no">
-
 typedef struct {
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>Our remaining task is simply to fill in that first <code translate="no">#ifdef</code> section with new
-implementations of all the stuff already in the <code translate="no">#else</code> side. We’ll work through
-it one value type at a time, from easiest to hardest.</p>
-<h3><a href="#numbers" id="numbers"><small>30 . 3 . 3</small>Numbers</a></h3>
-<p>We’ll start with numbers since they have the most direct representation under
-NaN boxing. To “convert” a C double to a NaN-boxed clox Value, we don’t need to
-touch a single bit<span class="em">—</span>the representation is exactly the same. But we do need to
-convince our C compiler of that fact, which we made harder by defining Value to
-be uint64_t.</p>
-<p>We need to get the compiler to take a set of bits that it thinks are a double
-and use those same bits as a uint64_t, or vice versa. This is called <strong>type
-punning</strong>. C and C++ programmers have been doing this since the days of bell
-bottoms and 8-tracks, but the language specifications have <span name="hesitate">hesitated</span> to say which of the many ways to do this is
-officially sanctioned.</p>
-<aside class="bottom" name="hesitate">
-<p>Spec authors don’t like type punning because it makes optimization harder. A key
-optimization technique is reordering instructions to fill the CPU’s execution
-pipelines. A compiler can reorder code only when doing so doesn’t have a
-user-visible effect, obviously.</p>
-<p>Pointers make that harder. If two pointers point to the same value, then a write
-through one and a read through the other cannot be reordered. But what about two
-pointers of <em>different</em> types? If those could point to the same object, then
-basically <em>any</em> two pointers could be aliases to the same value. That
-drastically limits the amount of code the compiler is free to rearrange.</p>
-<p>To avoid that, compilers want to assume <strong>strict aliasing</strong><span class="em">—</span>pointers of
-incompatible types cannot point to the same value. Type punning, by nature,
-breaks that assumption.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리의 남은 과제는 먼저 그것을 채우는 것입니다 </font></font><code translate="no">#ifdef</code><font papago-translate="splitted"><font papago-translate="translated"> 이미 모든 항목이 새로 구현된 섹션 </font></font><code translate="no">#else</code><font papago-translate="splitted"><font papago-translate="translated"> 사이드. 가장 쉬운 것부터 가장 어려운 것까지 한 번에 하나씩 가치 유형을 다룰 것입니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/optimization.html#numbers" id="numbers"><small><font papago-translate="translated">30 . 3 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">숫자</font></font></a></h3>
+<p><font papago-translate="translated">숫자는 NaN 복싱에서 가장 직접적인 표현을 하기 때문에 숫자부터 시작하겠습니다.</font><font papago-translate="translated"> C 더블을 NaN 박스 클록스 값으로 "변환"하려면 한 비트도 터치할 필요가 없으며, 표현은 정확히<span class="em"></span> 동일합니다.</font><font papago-translate="translated"> 하지만 우리는 C 컴파일러에게 그 사실을 설득해야 합니다. 우리는 Value를 uint64_t로 정의함으로써 더 어렵게 만들었습니다.</font></p>
+<p><font papago-translate="translated">컴파일러가 더블이라고 생각되는 비트 집합을 가져와서 uint64_t와 동일한 비트를 사용하거나 그 반대의 비트를 사용하도록 해야 합니다.</font><font papago-translate="translated"> <strong>이것</strong>을<strong> 타입 펀닝</strong>이라고 합니다.</font><font papago-translate="translated"> C와 C++ 프로그래머들은 종소리와 8트랙 시대부터 이 작업을 해왔지만, 언어 사양은 여러 가지 방법 중 어느 것이 공식적으로 승인되었는지에 대해<span name="hesitate"> 망설</span>여 왔습니다.</font></p>
+<aside class="bottom" name="hesitate" style="top: 12769px;">
+<p><font papago-translate="translated">스펙 작성자들은 타이핑 펀닝이 최적화를 어렵게 만들기 때문에 좋아하지 않습니다.</font><font papago-translate="translated"> 주요 최적화 기법 중 하나는 CPU의 실행 파이프라인을 채우기 위해 명령어를 재정렬하는 것입니다.</font><font papago-translate="translated"> 컴파일러는 코드를 재정렬할 때만 코드를 재정렬할 수 있지만, 당연히 사용자가 볼 수 있는 효과는 없습니다.</font></p>
+<p><font papago-translate="translated">포인터는 그것을 더 어렵게 만듭니다.</font><font papago-translate="translated"> 두 포인터가 동일한 값을 가리키면, 하나를 통해 쓰기와 다른 하나를 통해 읽기 순서를 변경할 수 없습니다.</font><font papago-translate="translated"> 하지만 서로<em> 다른</em> 유형의 두 가지 포인터는 어떨까요?</font><font papago-translate="translated"> 만약 그것들이 동일한 객체를 가리킬 수 있다면, 기본적으로<em> 두</em> 개의 포인터<em>는</em> 동일한 값에 대한 별칭일 수 있습니다.</font><font papago-translate="translated"> 이는 컴파일러가 자유롭게 재배열할 수 있는 코드의 양을 크게 제한합니다.</font></p>
+<p><font papago-translate="translated">이를 방지하기 위해 컴파일러는<strong> 엄격한 앨리어싱</strong>을 가정하고자 합니다. 호환되지 않는 유형의 포인터는 동일<span class="em"></span>한 값을 가리킬 수 없습니다.</font><font papago-translate="translated"> 타입 펀닝은 본질적으로 그 가정을 깨뜨립니다.</font></p>
 </aside>
-<p>I know one way to convert a <code translate="no">double</code> to <code translate="no">Value</code> and back that I believe is
-supported by both the C and C++ specs. Unfortunately, it doesn’t fit in a single
-expression, so the conversion macros have to call out to helper functions.
-Here’s the first macro:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">변환하는 한 가지 방법을 알고 있습니다 </font></font><code translate="no">double</code><font papago-translate="splitted"><font papago-translate="translated"> 로. </font></font><code translate="no">Value</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 저는 그것이 C와 C++ 사양 모두에 의해 뒷받침된다고 믿습니다.</font><font papago-translate="translated"> 안타깝게도, 그것은 단일 표현식에 맞지 않아서 변환 매크로가 도우미 함수를 호출해야 합니다.</font><font papago-translate="translated"> 여기 첫 번째 매크로가 있습니다:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">typedef uint64_t Value;
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no">
-
 <span class="a">#define NUMBER_VAL(num) numToValue(num)</span>
 </pre><pre class="insert-after" translate="no">
-
 #else
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>That macro passes the double here:</p>
+<p><font papago-translate="translated">그 매크로는 여기서 두 배를 넘습니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define NUMBER_VAL(num) numToValue(num)
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no">
-
 <span class="k">static</span> <span class="k">inline</span> <span class="t">Value</span> <span class="i">numToValue</span>(<span class="t">double</span> <span class="i">num</span>) {
   <span class="t">Value</span> <span class="i">value</span>;
   <span class="i">memcpy</span>(&amp;<span class="i">value</span>, &amp;<span class="i">num</span>, <span class="k">sizeof</span>(<span class="t">double</span>));
   <span class="k">return</span> <span class="i">value</span>;
 }
 </pre><pre class="insert-after" translate="no">
-
 #else
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>I know, weird, right? The way to treat a series of bytes as having a different
-type without changing their value at all is <code translate="no">memcpy()</code>? This looks horrendously
-slow: Create a local variable. Pass its address to the operating system through
-a syscall to copy a few bytes. Then return the result, which is the exact same
-bytes as the input. Thankfully, because this <em>is</em> the supported idiom for type
-punning, most compilers recognize the pattern and optimize away the <code translate="no">memcpy()</code>
-entirely.</p>
-<p>“Unwrapping” a Lox number is the mirror image.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이상하지 않나요?</font><font papago-translate="translated"> 바이트의 값을 전혀 변경하지 않고 일련의 바이트를 다른 유형으로 취급하는 방법은 다음과 같습니다 </font></font><code translate="no">memcpy()</code><font papago-translate="splitted"><font papago-translate="translated">? 이것은 끔찍하게 느려 보입니다: 로컬 변수를 만듭니다.</font><font papago-translate="translated"> 운영 체제에 해당 주소를 시스템 호출을 통해 전달하여 몇 바이트를 복사합니다.</font><font papago-translate="translated"> 그런 다음 입력과 정확히 동일한 바이트인 결과를 반환합니다.</font><font papago-translate="translated"> 다행히도, 이것이 타입 펀닝을 지원하는 관용구이기 때문에 대부분의 컴파일러는 패턴을 인식하고 최적화<em></em>합니다 </font></font><code translate="no">memcpy()</code><font papago-translate="splitted"><font papago-translate="translated"> 전적으로.</font></font></p>
+<p><font papago-translate="translated">"록스 숫자를 "풀다"는 것이 거울 이미지입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">typedef uint64_t Value;
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no">
-
 <span class="a">#define AS_NUMBER(value)    valueToNum(value)</span>
 </pre><pre class="insert-after" translate="no">
-
 #define NUMBER_VAL(num) numToValue(num)
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>That macro calls this function:</p>
+<p><font papago-translate="translated">그 매크로는 이 함수를 호출합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define NUMBER_VAL(num) numToValue(num)
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no">
-
 <span class="k">static</span> <span class="k">inline</span> <span class="t">double</span> <span class="i">valueToNum</span>(<span class="t">Value</span> <span class="i">value</span>) {
   <span class="t">double</span> <span class="i">num</span>;
   <span class="i">memcpy</span>(&amp;<span class="i">num</span>, &amp;<span class="i">value</span>, <span class="k">sizeof</span>(<span class="t">Value</span>));
   <span class="k">return</span> <span class="i">num</span>;
 }
 </pre><pre class="insert-after" translate="no">
-
 static inline Value numToValue(double num) {
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>It works exactly the same except we swap the types. Again, the compiler will
-eliminate all of it. Even though those calls to
-<code translate="no">memcpy()</code> will disappear, we still need to show the compiler <em>which</em> <code translate="no">memcpy()</code>
-we’re calling so we also need an <span name="union">include</span>.</p>
-<aside class="bottom" name="union">
-<p>If you find yourself with a compiler that does not optimize the <code translate="no">memcpy()</code> away,
-try this instead:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">유형을 바꾸는 것 외에는 정확히 동일하게 작동합니다.</font><font papago-translate="translated"> 다시 말해서, 컴파일러가 모든 것을 제거할 것입니다.</font><font papago-translate="translated"> 비록 그것들이 ~를 요구하지만 </font></font><code translate="no">memcpy()</code><font papago-translate="splitted"><font papago-translate="translated"> 사라질 것입니다. 우리는 여전히 컴파일러에게<em> 다음을</em> 보여줘야 합니다</font></font> <code translate="no">memcpy()</code><font papago-translate="splitted"><font papago-translate="translated"> 저희는 전화를 드리기 때문에<span name="union"> 포함도</span> 필요합니다.</font></font></p>
+<aside class="bottom" name="union" style="top: 14241px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">최적화하지 않는 컴파일러를 사용하는 경우 </font></font><code translate="no">memcpy()</code><font papago-translate="splitted"><font papago-translate="translated"> 대신 이것을 시도해 보세요:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="t">double</span> <span class="i">valueToNum</span>(<span class="t">Value</span> <span class="i">value</span>) {
   <span class="k">union</span> {
     <span class="t">uint64_t</span> <span class="i">bits</span>;
@@ -747,263 +395,177 @@ try this instead:</p>
 </pre></div>
 </aside>
 <div class="codehilite"><pre class="insert-before" translate="no">#define clox_value_h
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no">
-
 <span class="a">#include &lt;string.h&gt;</span>
 </pre><pre class="insert-after" translate="no">
-
 #include "common.h"
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>That was a lot of code to ultimately do nothing but silence the C type checker.
-Doing a runtime type <em>test</em> on a Lox number is a little more interesting. If all
-we have are exactly the bits for a double, how do we tell that it <em>is</em> a double?
-It’s time to get bit twiddling.</p>
+<p><font papago-translate="translated">결국 C 타입 체커를 침묵시키는 것 외에는 아무것도 하지 않는 많은 코드였습니다.</font><font papago-translate="translated"> Lox 숫자에 대해 런타임 유형<em> 테스트</em>를 수행하는 것은 조금 더 흥미롭습니다.</font><font papago-translate="translated"> 우리가 가진 것이 정확히 두 배의 비트뿐이라면<em></em>, 그것이 두 배인지 어떻게 알 수 있을까요?</font><font papago-translate="translated"> 이제 약간의 빙글빙글 돌 때입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">typedef uint64_t Value;
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no">
-
 <span class="a">#define IS_NUMBER(value)    (((value) &amp; QNAN) != QNAN)</span>
 </pre><pre class="insert-after" translate="no">
-
 #define AS_NUMBER(value)    valueToNum(value)
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>We know that every Value that is <em>not</em> a number will use a special quiet NaN
-representation. And we presume we have correctly avoided any of the meaningful
-NaN representations that may actually be produced by doing arithmetic on
-numbers.</p>
-<p>If the double has all of its NaN bits set, and the quiet NaN bit set, and one
-more for good measure, we can be <span name="certain">pretty certain</span> it
-is one of the bit patterns we ourselves have set aside for other types. To check
-that, we mask out all of the bits except for our set of quiet NaN bits. If <em>all</em>
-of those bits are set, it must be a NaN-boxed value of some other Lox type.
-Otherwise, it is actually a number.</p>
-<aside name="certain">
-<p>Pretty certain, but not strictly guaranteed. As far as I know, there is nothing
-preventing a CPU from producing a NaN value as the result of some operation
-whose bit representation collides with ones we have claimed. But in my tests
-across a number of architectures, I haven’t seen it happen.</p>
+<p><font papago-translate="translated">우리는 숫자<em>가 아닌</em> 모든 값이 특별한 조용한 NaN 표현을 사용한다는 것을 알고 있습니다.</font><font papago-translate="translated"> 그리고 우리는 숫자에 대한 산술 연산을 통해 실제로 생성될 수 있는 의미 있는 NaN 표현을 올바르게 피했다고 가정합니다.</font></p>
+<p><font papago-translate="translated">더블에 모든 NaN 비트 세트와 조용한 NaN 비트 세트가 있고, 좋은 측정을 위해 하나 더 있다면, 우리가 다른 유형을 위해 따로 설정한 비트 패턴 중 하나<span name="certain">라고 확신</span>할 수<span name="certain"> 있습니다</span>.</font><font papago-translate="translated"> 이를 확인하기 위해 조용한 NaN 비트 세트를 제외한 모든 비트를 마스킹합니다.</font><font papago-translate="translated"> 모든 비트가 설정되어 있다면 다른 Lox<em></em> 유형의 NaN 박스 값이어야 합니다.</font><font papago-translate="translated"> 그렇지 않으면 실제로 숫자입니다.</font></p>
+<aside name="certain" style="top: 14976px;">
+<p><font papago-translate="translated">확실하지만, 엄밀히 보장되지는 않습니다.</font><font papago-translate="translated"> 제가 아는 한, 비트 표현이 우리가 주장한 것과 충돌하는 일부 연산의 결과로 CPU가 NaN 값을 생성하는 것을 막을 수 있는 것은 없습니다.</font><font papago-translate="translated"> 하지만 여러 아키텍처에 걸친 테스트에서 그런 일이 일어나는 것을 보지 못했습니다.</font></p>
 </aside>
-<p>The set of quiet NaN bits are declared like this:</p>
+<p><font papago-translate="translated">조용한 NaN 비트 집합은 다음과 같이 선언됩니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#ifdef NAN_BOXING
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no">
-
 <span class="a">#define QNAN     ((uint64_t)0x7ffc000000000000)</span>
 </pre><pre class="insert-after" translate="no">
-
 typedef uint64_t Value;
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>It would be nice if C supported binary literals. But if you do the conversion,
-you’ll see that value is the same as this:</p><img alt="The quiet NaN bits." src="image/optimization/qnan.png"/>
-<p>This is exactly all of the exponent bits, plus the quiet NaN bit, plus one extra
-to dodge that Intel value.</p>
-<h3><a href="#nil-true-and-false" id="nil-true-and-false"><small>30 . 3 . 4</small>Nil, true, and false</a></h3>
-<p>The next type to handle is <code translate="no">nil</code>. That’s pretty simple since there’s only one
-<code translate="no">nil</code> value and thus we need only a single bit pattern to represent it. There
-are two other singleton values, the two Booleans, <code translate="no">true</code> and <code translate="no">false</code>. This calls
-for three total unique bit patterns.</p>
-<p>Two bits give us four different combinations, which is plenty. We claim the two
-lowest bits of our unused mantissa space as a “type tag” to determine which of
-these three singleton values we’re looking at. The three type tags are defined
-like so:</p>
+<p><font papago-translate="translated">C가 이진 리터럴을 지원하면 좋을 것 같습니다.</font><font papago-translate="translated"> 하지만 변환을 하면 그 값이 다음과 같다는 것을 알 수 있습니다:</font></p><img alt="The quiet NaN bits." src="https://youhogeon-meritz.github.io/image/optimization/qnan.png">
+<p><font papago-translate="translated">이것은 정확히 모든 지수 비트에 조용한 NaN 비트를 더한 것이며, 인텔 가치를 피하기 위해 하나의 추가 비트를 더한 것입니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/optimization.html#nil-true-and-false" id="nil-true-and-false"><small><font papago-translate="translated">30 . 3 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">닐, 참, 거짓</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">다음으로 처리해야 할 유형은 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">. 하나뿐이니까 꽤 간단합니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 따라서 우리는 그것을 나타내기 위해 단일 비트 패턴만 필요합니다.</font><font papago-translate="translated"> 다른 두 개의 싱글톤 값, 즉 두 개의 불리언 값이 있습니다, </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated">. 이를 위해서는 총 세 가지 고유한 비트 패턴이 필요합니다.</font></font></p>
+<p><font papago-translate="translated">두 비트는 네 가지 다른 조합을 제공하며, 이는 충분합니다.</font><font papago-translate="translated"> 우리는 이 세 가지 싱글톤 값 중 어느 것을 보고 있는지 결정하기 위해 사용하지 않는 맨티사 공간의 가장 낮은 두 비트를 "유형 태그"라고 주장합니다.</font><font papago-translate="translated"> 세 가지 유형의 태그는 다음과 같이 정의됩니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define QNAN     ((uint64_t)0x7ffc000000000000)
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no">
-
 <span class="a">#define TAG_NIL   1 </span><span class="c">// 01.</span>
 <span class="a">#define TAG_FALSE 2 </span><span class="c">// 10.</span>
 <span class="a">#define TAG_TRUE  3 </span><span class="c">// 11.</span>
 </pre><pre class="insert-after" translate="no">
-
 typedef uint64_t Value;
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>Our representation of <code translate="no">nil</code> is thus all of the bits required to define our
-quiet NaN representation along with the <code translate="no">nil</code> type tag bits:</p><img alt="The bit representation of the nil value." src="image/optimization/nil.png"/>
-<p>In code, we check the bits like so:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리의 표현 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 따라서 조용한 NaN 표현을 정의하는 데 필요한 모든 비트와 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 태그 비트 입력:</font></font></p><img alt="The bit representation of the nil value." src="https://youhogeon-meritz.github.io/image/optimization/nil.png">
+<p><font papago-translate="translated">코드에서는 다음과 같이 비트를 확인합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define AS_NUMBER(value)    valueToNum(value)
 
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define NIL_VAL         ((Value)(uint64_t)(QNAN | TAG_NIL))</span>
 </pre><pre class="insert-after" translate="no">#define NUMBER_VAL(num) numToValue(num)
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>We simply bitwise <span class="small-caps">OR</span> the quiet NaN bits and the
-type tag, and then do a little cast dance to teach the C compiler what we want
-those bits to mean.</p>
-<p>Since <code translate="no">nil</code> has only a single bit representation, we can use equality on
-uint64_t to see if a Value is <code translate="no">nil</code>.</p>
+<p><font papago-translate="translated">우리는 단순히 비트와이즈<span class="small-caps"> 또는</span> 조용한 NaN 비트와 타입 태그를 사용한 다음, 작은 캐스트 댄스를 통해 C 컴파일러에게 그 비트들이 무엇을 의미하는지 가르칩니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">부터 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 단일 비트 표현만 있습니다. 우리는 uint64_t의 등식을 사용하여 값이 다음과 같은지 확인할 수 있습니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
 <p><span name="equal"></span></p>
 <div class="codehilite"><pre class="insert-before" translate="no">typedef uint64_t Value;
 
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define IS_NIL(value)       ((value) == NIL_VAL)</span>
 </pre><pre class="insert-after" translate="no">#define IS_NUMBER(value)    (((value) &amp; QNAN) != QNAN)
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>You can guess how we define the <code translate="no">true</code> and <code translate="no">false</code> values.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리가 어떻게 정의하는지 짐작할 수 있습니다 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated"> 가치.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define AS_NUMBER(value)    valueToNum(value)
 
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define FALSE_VAL       ((Value)(uint64_t)(QNAN | TAG_FALSE))</span>
 <span class="a">#define TRUE_VAL        ((Value)(uint64_t)(QNAN | TAG_TRUE))</span>
 </pre><pre class="insert-after" translate="no">#define NIL_VAL         ((Value)(uint64_t)(QNAN | TAG_NIL))
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>The bits look like this:</p><img alt="The bit representation of the true and false values." src="image/optimization/bools.png"/>
-<p>To convert a C bool into a Lox Boolean, we rely on these two singleton values
-and the good old conditional operator.</p>
+<p><font papago-translate="translated">비트는 다음과 같습니다:</font></p><img alt="The bit representation of the true and false values." src="https://youhogeon-meritz.github.io/image/optimization/bools.png">
+<p><font papago-translate="translated">C 불을 Lox 불리언으로 변환하려면 이 두 개의 싱글톤 값과 좋은 오래된 조건 연산자에 의존합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define AS_NUMBER(value)    valueToNum(value)
 
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define BOOL_VAL(b)     ((b) ? TRUE_VAL : FALSE_VAL)</span>
 </pre><pre class="insert-after" translate="no">#define FALSE_VAL       ((Value)(uint64_t)(QNAN | TAG_FALSE))
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>There’s probably a cleverer bitwise way to do this, but my hunch is that the
-compiler can figure one out faster than I can. Going the other direction is
-simpler.</p>
+<p><font papago-translate="translated">이 작업을 수행하는 데 더 명확한 방법이 있을 수 있지만, 제 직감은 컴파일러가 저보다 더 빨리 알아낼 수 있다는 것입니다.</font><font papago-translate="translated"> 다른 방향으로 가는 것이 더 간단합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define IS_NUMBER(value)    (((value) &amp; QNAN) != QNAN)
 
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define AS_BOOL(value)      ((value) == TRUE_VAL)</span>
 </pre><pre class="insert-after" translate="no">#define AS_NUMBER(value)    valueToNum(value)
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>Since we know there are exactly two Boolean bit representations in Lox<span class="em">—</span>unlike
-in C where any non-zero value can be considered “true”<span class="em">—</span>if it ain’t <code translate="no">true</code>, it
-must be <code translate="no">false</code>. This macro does assume you call it only on a Value that you
-know <em>is</em> a Lox Boolean. To check that, there’s one more macro.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">L<span class="em">ox</span>에는 0이 아닌 값이 "참"으로 간주될 수 있는 C와는 달리 정확히 두 개의 부울 비트 표현이 있다는 것을 알고 있으므로 그렇지<span class="em"></span> 않다면 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated">,그럴 것이다. </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated">. 이 매크로는 당신이 알고 있는 값에 대해서만 그것을 록<em></em>스 불리언이라고 부른다고 가정합니다.</font><font papago-translate="translated"> 이를 확인하기 위해 매크로가 하나 더 있습니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">typedef uint64_t Value;
 
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define IS_BOOL(value)      (((value) | 1) == TRUE_VAL)</span>
 </pre><pre class="insert-after" translate="no">#define IS_NIL(value)       ((value) == NIL_VAL)
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>That looks a little strange. A more obvious macro would look like this:</p>
+<p><font papago-translate="translated">조금 이상해 보이네요.</font><font papago-translate="translated"> 더 명확한 매크로는 다음과 같습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="a">#define IS_BOOL(v) ((v) == TRUE_VAL || (v) == FALSE_VAL)</span>
 </pre></div>
-<p>Unfortunately, that’s not safe. The expansion mentions <code translate="no">v</code> twice, which means if
-that expression has any side effects, they will be executed twice. We could have
-the macro call out to a separate function, but, ugh, what a chore.</p>
-<p>Instead, we bitwise <span class="small-caps">OR</span> a 1 onto the value to
-merge the only two valid Boolean bit patterns. That leaves three potential
-states the value can be in:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">안타깝게도 안전하지 않습니다.</font><font papago-translate="translated"> 확장은 다음과 같이 언급합니다 </font></font><code translate="no">v</code><font papago-translate="splitted"><font papago-translate="translated"> 두 번, 즉 그 표현에 부작용이 있으면 두 번 실행된다는 뜻입니다.</font><font papago-translate="translated"> 매크로를 별도의 함수로 호출할 수도 있지만, 어휴, 정말 번거롭네요.</font></font></p>
+<p><font papago-translate="translated">대신, 우리는 값에 비트 단위<span class="small-caps"> 또는</span> a를 1로 하여 유일하게 유효한 두 개의 불리언 비트 패턴을 병합합니다.</font><font papago-translate="translated"> 이는 값이 다음 세 가지 잠재적 상태에 있을 수 있음을 의미합니다:</font></p>
 <ol>
 <li>
-<p>It was <code translate="no">FALSE_VAL</code> and has now been converted to <code translate="no">TRUE_VAL</code>.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그랬다. </font></font><code translate="no">FALSE_VAL</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 이제 다음과 같이 변환되었습니다 </font></font><code translate="no">TRUE_VAL</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
 </li>
 <li>
-<p>It was <code translate="no">TRUE_VAL</code> and the <code translate="no">| 1</code> did nothing and it’s still <code translate="no">TRUE_VAL</code>.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그랬다. </font></font><code translate="no">TRUE_VAL</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 </font></font><code translate="no">| 1</code><font papago-translate="splitted"><font papago-translate="translated"> 아무것도 하지 않았지만 여전히 </font></font><code translate="no">TRUE_VAL</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
 </li>
 <li>
-<p>It’s some other, non-Boolean value.</p>
+<p><font papago-translate="translated">그것은 또 다른 비불리언 가치입니다.</font></p>
 </li>
 </ol>
-<p>At that point, we can simply compare the result to <code translate="no">TRUE_VAL</code> to see if we’re
-in the first two states or the third.</p>
-<h3><a href="#objects" id="objects"><small>30 . 3 . 5</small>Objects</a></h3>
-<p>The last value type is the hardest. Unlike the singleton values, there are
-billions of different pointer values we need to box inside a NaN. This means we
-need both some kind of tag to indicate that these particular NaNs <em>are</em> Obj
-pointers, and room for the addresses themselves.</p>
-<p>The tag bits we used for the singleton values are in the region where I decided
-to store the pointer itself, so we can’t easily use a different <span name="ptr">bit</span> there to indicate that the value is an object reference.
-However, there is another bit we aren’t using. Since all our NaN values are not
-numbers<span class="em">—</span>it’s right there in the name<span class="em">—</span>the sign bit isn’t used for anything.
-We’ll go ahead and use that as the type tag for objects. If one of our quiet
-NaNs has its sign bit set, then it’s an Obj pointer. Otherwise, it must be one
-of the previous singleton values.</p>
-<aside name="ptr">
-<p>We actually <em>could</em> use the lowest bits to store the type tag even when the
-value is an Obj pointer. That’s because Obj pointers are always aligned to an
-8-byte boundary since Obj contains a 64-bit field. That, in turn, implies that
-the three lowest bits of an Obj pointer will always be zero. We could store
-whatever we wanted in there and just mask it off before dereferencing the
-pointer.</p>
-<p>This is another value representation optimization called <strong>pointer tagging</strong>.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그 시점에서 우리는 단순히 결과를 비교할 수 있습니다 </font></font><code translate="no">TRUE_VAL</code><font papago-translate="splitted"><font papago-translate="translated"> 우리가 처음 두 개의 상태에 있는지 아니면 세 번째 상태에 있는지 확인하기 위해.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/optimization.html#objects" id="objects"><small><font papago-translate="translated">30 . 3 . 5</font></small><font papago-translate="splitted"><font papago-translate="translated">물건들</font></font></a></h3>
+<p><font papago-translate="translated">마지막 값 유형이 가장 어렵습니다.</font><font papago-translate="translated"> 싱글톤 값과 달리, NaN 안에는 수십억 개의 서로 다른 포인터 값을 입력해야 합니다.</font><font papago-translate="translated"> 즉, 이러한 특정 NaN이 Obj 포인터<em>임</em>을 나타내기 위해 어떤 종류의 태그가 필요하며, 주소 자체를 위한 공간이 필요합니다.</font></p>
+<p><font papago-translate="translated">싱글톤 값에 사용한 태그 비트는 포인터 자체를 저장하기로 결정한 영역에 있으므로, 다른<span name="ptr"> 비트를</span> 사용하여 값이 객체 참조임을 쉽게 나타낼 수 없습니다.</font><font papago-translate="translated"> 그러나 우리가 사용하지 않는 또 다른 부분이 있습니다.</font><font papago-translate="translated"> 우리의 모든 NaN 값은 숫자가 아니기 때문에, 바로 그 이름에 있습니다. 기호 비트는<span class="em"></span><span class="em"></span> 아무 용도로도 사용되지 않습니다.</font><font papago-translate="translated"> 우리는 그것을 객체의 타입 태그로 사용할 것입니다.</font><font papago-translate="translated"> 조용한 NaN 중 하나에 부호 비트가 설정되어 있다면, 그것은 Obj 포인터입니다.</font><font papago-translate="translated"> 그렇지 않으면 이전 싱글톤 값 중 하나여야 합니다.</font></p>
+<aside name="ptr" style="top: 18344px;">
+<p><font papago-translate="translated">실제로 값이 Obj 포인터인 경우에도 가장 낮은 비트를 사용하여 타입 태그를 저장<em>할 수 있습니다</em>.</font><font papago-translate="translated"> 그것은 Obj 포인터가 항상 8바이트 경계에 정렬되어 있기 때문입니다. 왜냐하면 Obj는 64비트 필드를 포함하고 있기 때문입니다.</font><font papago-translate="translated"> 이는 결국 Obj 포인터의 가장 낮은 세 비트가 항상 0이 된다는 것을 의미합니다.</font><font papago-translate="translated"> 포인터를 비참조하기 전에 원하는 것은 무엇이든 저장하고 마스킹하기만 하면 됩니다.</font></p>
+<p><font papago-translate="translated"><strong>이것</strong>은<strong> 포인터 태깅</strong>이라는 또 다른 가치 표현 최적화입니다.</font></p>
 </aside>
-<p>If the sign bit is set, then the remaining low bits store the pointer to the
-Obj:</p><img alt="Bit representation of an Obj* stored in a Value." src="image/optimization/obj.png"/>
-<p>To convert a raw Obj pointer to a Value, we take the pointer and set all of the
-quiet NaN bits and the sign bit.</p>
+<p><font papago-translate="translated">부호 비트가 설정되면 나머지 로우 비트는 Obj 포인터를 저장합니다:</font></p><img alt="Bit representation of an Obj* stored in a Value." src="https://youhogeon-meritz.github.io/image/optimization/obj.png">
+<p><font papago-translate="translated">원시 Obj 포인터를 값으로 변환하려면 포인터를 가져와서 모든 조용한 NaN 비트와 부호 비트를 설정합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define NUMBER_VAL(num) numToValue(num)
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define OBJ_VAL(obj) \</span>
 <span class="a">    (Value)(SIGN_BIT | QNAN | (uint64_t)(uintptr_t)(obj))</span>
 </pre><pre class="insert-after" translate="no">
-
 static inline double valueToNum(Value value) {
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>The pointer itself is a full 64 bits, and in <span name="safe">principle</span>,
-it could thus overlap with some of those quiet NaN and sign bits. But in
-practice, at least on the architectures I’ve tested, everything above the 48th
-bit in a pointer is always zero. There’s a lot of casting going on here, which
-I’ve found is necessary to satisfy some of the pickiest C compilers, but the
-end result is just jamming some bits together.</p>
-<aside name="safe">
-<p>I try to follow the letter of the law when it comes to the code in this book, so
-this paragraph is dubious. There comes a point when optimizing where you push
-the boundary of not just what the <em>spec says</em> you can do, but what a real
-compiler and chip let you get away with.</p>
-<p>There are risks when stepping outside of the spec, but there are rewards in that
-lawless territory too. It’s up to you to decide if the gains are worth it.</p>
+<p><font papago-translate="translated">포인터 자체는 64비트로 가득 차 있으며<span name="safe">, 원칙</span>적으로 조용한 NaN 및 부호 비트와 겹칠 수 있습니다.</font><font papago-translate="translated"> 하지만 실제로는 적어도 제가 테스트한 아키텍처에서 포인터의 48번째 비트 위의 모든 것이 항상 0입니다.</font><font papago-translate="translated"> 여기에는 많은 캐스팅이 진행되고 있는데, 이는 가장 까다로운 C 컴파일러를 만족시키기 위해 필요하다는 것을 알게 되었습니다. 하지만 결국에는 몇 가지 부분을 서로 뒤섞는 것뿐입니다.</font></p>
+<aside name="safe" style="top: 18886px;">
+<p><font papago-translate="translated">이 책의 코드에 관해서는 법문을 따르려고 하기 때문에 이 단락은 의심스럽습니다.</font><font papago-translate="translated"> <em>사양</em>에서<em> 할</em> 수<em> 있다고 말하는</em> 것뿐만 아니라 실제 컴파일러와 칩을 통해 얻을 수 있는 것의 경계를 어디로 밀어붙일지 최적화하는 시점이 찾아옵니다.</font></p>
+<p><font papago-translate="translated">스펙 밖으로 나갈 때 위험도 있지만, 그 무법지대에서도 보상이 있습니다.</font><font papago-translate="translated"> 이익이 그만한 가치가 있는지는 당신에게 달려 있습니다.</font></p>
 </aside>
-<p>We define the sign bit like so:</p>
+<p><font papago-translate="translated">우리는 부호 비트를 이렇게 정의합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#ifdef NAN_BOXING
 
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define SIGN_BIT ((uint64_t)0x8000000000000000)</span>
 </pre><pre class="insert-after" translate="no">#define QNAN     ((uint64_t)0x7ffc000000000000)
 
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>To get the Obj pointer back out, we simply mask off all of those extra bits.</p>
+<p><font papago-translate="translated">Obj 포인터를 다시 꺼내려면 추가 비트를 모두 마스킹하기만 하면 됩니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define AS_NUMBER(value)    valueToNum(value)
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define AS_OBJ(value) \</span>
 <span class="a">    ((Obj*)(uintptr_t)((value) &amp; ~(SIGN_BIT | QNAN)))</span>
 </pre><pre class="insert-after" translate="no">
-
 #define BOOL_VAL(b)     ((b) ? TRUE_VAL : FALSE_VAL)
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>The tilde (<code translate="no">~</code>), if you haven’t done enough bit manipulation to encounter it
-before, is bitwise <span class="small-caps">NOT</span>. It toggles all ones and
-zeroes in its operand. By masking the value with the bitwise negation of the
-quiet NaN and sign bits, we <em>clear</em> those bits and let the pointer bits remain.</p>
-<p>One last macro:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">틸데 (</font></font><code translate="no">~</code><font papago-translate="splitted"><font papago-translate="translated">), 이전에 비트 조작을 충분히 하지 않았다면 비트 단위<span class="small-caps">로 처리할 수 없습니다</span>.</font><font papago-translate="translated"> 모든 피연산자를 토글하고 피연산자에서 0을 표시합니다.</font><font papago-translate="translated"> 조용한 NaN과 부호 비트의 비트 단위 부정으로 값을 마스킹하여 해당 비트를<em> 지우고</em> 포인터 비트를 그대로 유지합니다.</font></font></p>
+<p><font papago-translate="translated">마지막 매크로:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define IS_NUMBER(value)    (((value) &amp; QNAN) != QNAN)
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define IS_OBJ(value) \</span>
 <span class="a">    (((value) &amp; (QNAN | SIGN_BIT)) == (QNAN | SIGN_BIT))</span>
 </pre><pre class="insert-after" translate="no">
-
 #define AS_BOOL(value)      ((value) == TRUE_VAL)
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<p>A Value storing an Obj pointer has its sign bit set, but so does any negative
-number. To tell if a Value is an Obj pointer, we need to check that both the
-sign bit and all of the quiet NaN bits are set. This is similar to how we detect
-the type of the singleton values, except this time we use the sign bit as the
-tag.</p>
-<h3><a href="#value-functions" id="value-functions"><small>30 . 3 . 6</small>Value functions</a></h3>
-<p>The rest of the VM usually goes through the macros when working with Values, so
-we are almost done. However, there are a couple of functions in the “value”
-module that peek inside the otherwise black box of Value and work with its
-encoding directly. We need to fix those too.</p>
-<p>The first is <code translate="no">printValue()</code>. It has separate code for each value type. We no
-longer have an explicit type enum we can switch on, so instead we use a series
-of type tests to handle each kind of value.</p>
+<p><font papago-translate="translated">Obj 포인터를 저장하는 값에는 부호 비트가 설정되어 있지만 음수도 마찬가지입니다.</font><font papago-translate="translated"> 값이 Obj 포인터인지 확인하려면 부호 비트와 모든 조용한 NaN 비트가 설정되어 있는지 확인해야 합니다.</font><font papago-translate="translated"> 이것은 싱글톤 값의 유형을 감지하는 방법과 유사하지만, 이번에는 부호 비트를 태그로 사용합니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/optimization.html#value-functions" id="value-functions"><small><font papago-translate="translated">30 . 3 . 6</font></small><font papago-translate="splitted"><font papago-translate="translated">가치 함수</font></font></a></h3>
+<p><font papago-translate="translated">나머지 VM은 보통 Value를 사용할 때 매크로를 거치기 때문에 거의 완료되었습니다.</font><font papago-translate="translated"> 그러나 "값" 모듈에는 값의 블랙박스 내부를 들여다보고 인코딩을 직접 처리하는 몇 가지 기능이 있습니다.</font><font papago-translate="translated"> 그것들도 고쳐야 합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">첫 번째는 </font></font><code translate="no">printValue()</code><font papago-translate="splitted"><font papago-translate="translated">. 각 값 유형에 대해 별도의 코드가 있습니다.</font><font papago-translate="translated"> 더 이상 전환할 수 있는 명시적인 유형 열거가 없으므로 대신 일련의 유형 테스트를 사용하여 각 유형의 값을 처리합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">void printValue(Value value) {
-</pre><div class="source-file"><em>value.c</em><br/>
-in <em>printValue</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>printValue</em>()에서</font></font></div>
 <pre class="insert" translate="no"><span class="a">#ifdef NAN_BOXING</span>
   <span class="k">if</span> (<span class="a">IS_BOOL</span>(<span class="i">value</span>)) {
     <span class="i">printf</span>(<span class="a">AS_BOOL</span>(<span class="i">value</span>) ? <span class="s">"true"</span> : <span class="s">"false"</span>);
@@ -1018,256 +580,117 @@ in <em>printValue</em>()</div>
 </pre><pre class="insert-after" translate="no">  switch (value.type) {
 </pre></div>
 <div class="source-file-narrow"><em>value.c</em>, in <em>printValue</em>()</div>
-<p>This is technically a tiny bit slower than a switch, but compared to the
-overhead of actually writing to a stream, it’s negligible.</p>
-<p>We still support the original tagged union representation, so we keep the old
-code and enclose it in the <code translate="no">#else</code> conditional section.</p>
+<p><font papago-translate="translated">이것은 기술적으로 스위치보다 약간 느리지만, 실제로 스트림에 쓰는 오버헤드와 비교하면 무시할 수 있는 수준입니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 여전히 원래 태그된 노조 표현을 지원하므로, 이전 코드를 유지하고 이를 포함합니다 </font></font><code translate="no">#else</code><font papago-translate="splitted"><font papago-translate="translated"> 조건부 섹션.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  }
-</pre><div class="source-file"><em>value.c</em><br/>
-in <em>printValue</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>printValue</em>()에서</font></font></div>
 <pre class="insert" translate="no"><span class="a">#endif</span>
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>value.c</em>, in <em>printValue</em>()</div>
-<p>The other operation is testing two values for equality.</p>
+<p><font papago-translate="translated">다른 작업은 두 가지 값을 동등하게 테스트하는 것입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">bool valuesEqual(Value a, Value b) {
-</pre><div class="source-file"><em>value.c</em><br/>
-in <em>valuesEqual</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>값</em>이 같습니다()</font></font></div>
 <pre class="insert" translate="no"><span class="a">#ifdef NAN_BOXING</span>
   <span class="k">return</span> <span class="i">a</span> == <span class="i">b</span>;
 <span class="a">#else</span>
 </pre><pre class="insert-after" translate="no">  if (a.type != b.type) return false;
 </pre></div>
 <div class="source-file-narrow"><em>value.c</em>, in <em>valuesEqual</em>()</div>
-<p>It doesn’t get much simpler than that! If the two bit representations are
-identical, the values are equal. That does the right thing for the singleton
-values since each has a unique bit representation and they are only equal to
-themselves. It also does the right thing for Obj pointers, since objects use
-identity for equality<span class="em">—</span>two Obj references are equal only if they point to the
-exact same object.</p>
-<p>It’s <em>mostly</em> correct for numbers too. Most floating-point numbers with
-different bit representations are distinct numeric values. Alas, IEEE 754
-contains a pothole to trip us up. For reasons that aren’t entirely clear to me,
-the spec mandates that NaN values are <em>not</em> equal to <em>themselves</em>. This isn’t a
-problem for the special quiet NaNs that we are using for our own purposes. But
-it’s possible to produce a “real” arithmetic NaN in Lox, and if we want to
-correctly implement IEEE 754 numbers, then the resulting value is not supposed
-to be equal to itself. More concretely:</p>
+<p><font papago-translate="translated">그것보다 훨씬 간단해지지 않습니다!</font><font papago-translate="translated"> 두 비트 표현이 동일하면 값이 동일합니다.</font><font papago-translate="translated"> 싱글톤 값은 각각 고유한 비트 표현을 가지고 있으며 자신과만 같기 때문에 이는 올바른 방법입니다.</font><font papago-translate="translated"> 객체가 동일성을 위해 동일성을 사용하기 때문에 Obj 포인터에 대해서도 올바른 작업을 수행합니다. 두 Obj 참조는 정확히 동일<span class="em"></span>한 객체를 가리킬 때만 동일합니다.</font></p>
+<p><font papago-translate="translated">숫자에 대해서도<em> 대부분</em> 맞습니다.</font><font papago-translate="translated"> 비트 표현이 다른 대부분의 부동 소수점 숫자는 서로 다른 숫자 값입니다.</font><font papago-translate="translated"> 안타깝게도 IEEE 754에는 우리를 넘어뜨릴 수 있는 포트홀이 포함되어 있습니다.</font><font papago-translate="translated"> 저에게 완전히 명확하지 않은 이유로, 사양은 NaN 값이<em></em><em> 자신</em>과 같지 않다고 요구합니다.</font><font papago-translate="translated"> 이것은 우리가 우리의 목적을 위해 사용하고 있는 특별한 조용한 NaNs에게는 문제가 되지 않습니다.</font><font papago-translate="translated"> 하지만 Lox에서 "실제" 산술 NaN을 생성하는 것은 가능하며, IEEE 754 숫자를 올바르게 구현하려면 결과 값이 자신과 같지 않아야 합니다.</font><font papago-translate="translated"> 좀 더 구체적으로:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">nan</span> = <span class="n">0</span>/<span class="n">0</span>;
 <span class="k">print</span> <span class="i">nan</span> == <span class="i">nan</span>;
 </pre></div>
-<p>IEEE 754 says this program is supposed to print “false”. It does the right thing
-with our old tagged union representation because the <code translate="no">VAL_NUMBER</code> case applies
-<code translate="no">==</code> to two values that the C compiler knows are doubles. Thus the compiler
-generates the right CPU instruction to perform an IEEE floating-point equality.</p>
-<p>Our new representation breaks that by defining Value to be a uint64_t. If we
-want to be <em>fully</em> compliant with IEEE 754, we need to handle this case.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">IEEE 754는 이 프로그램이 "거짓"으로 출력되어야 한다고 말합니다.</font><font papago-translate="translated"> 그것은 우리의 오래된 태그된 노조 표현에서 올바른 일을 합니다. 왜냐하면 </font></font><code translate="no">VAL_NUMBER</code><font papago-translate="splitted"><font papago-translate="translated"> 사례 적용 </font></font><code translate="no">==</code><font papago-translate="splitted"><font papago-translate="translated"> C 컴파일러가 알고 있는 두 값은 두 배입니다.</font><font papago-translate="translated"> 따라서 컴파일러는 IEEE 부동 소수점 평등을 수행하기 위한 적절한 CPU 명령어를 생성합니다.</font></font></p>
+<p><font papago-translate="translated">우리의 새로운 표현은 Value를 uint64_t로 정의함으로써 이를 깨뜨립니다.</font><font papago-translate="translated"> IEEE 754를<em> 완전히</em> 준수하려면 이 경우를 처리해야 합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#ifdef NAN_BOXING
-</pre><div class="source-file"><em>value.c</em><br/>
-in <em>valuesEqual</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>값</em>이 같습니다()</font></font></div>
 <pre class="insert" translate="no">  <span class="k">if</span> (<span class="a">IS_NUMBER</span>(<span class="i">a</span>) &amp;&amp; <span class="a">IS_NUMBER</span>(<span class="i">b</span>)) {
     <span class="k">return</span> <span class="a">AS_NUMBER</span>(<span class="i">a</span>) == <span class="a">AS_NUMBER</span>(<span class="i">b</span>);
   }
 </pre><pre class="insert-after" translate="no">  return a == b;
 </pre></div>
 <div class="source-file-narrow"><em>value.c</em>, in <em>valuesEqual</em>()</div>
-<p>I know, it’s weird. And there is a performance cost to doing this type test
-every time we check two Lox values for equality. If we are willing to sacrifice
-a little <span name="java">compatibility</span><span class="em">—</span>who <em>really</em> cares if NaN is
-not equal to itself?<span class="em">—</span>we could leave this off. I’ll leave it up to you to
-decide how pedantic you want to be.</p>
-<aside name="java">
-<p>In fact, jlox gets NaN equality wrong. Java does the right thing when you
-compare primitive doubles using <code translate="no">==</code>, but not if you box those to Double or
-Object and compare them using <code translate="no">equals()</code>, which is how jlox implements equality.</p>
+<p><font papago-translate="translated">알아요, 이상해요.</font><font papago-translate="translated"> 그리고 이 유형의 테스트를 수행할 때마다 두 개의 Lox 값이 동일한지 확인할 때마다 성능 비용이 발생합니다.</font><font papago-translate="translated"> <span name="java">우리</span>가 약간<span name="java">의 호환</span>성을 희생할 의향이 있다면, NaN이<span class="em"></span> 자신과 같지 않다면 누가<em> 진정</em>으로 신경 쓸까요?</font><font papago-translate="translated"><span class="em">-</span>이 작업을 중단할 수 있습니다<span class="em">.</span></font><font papago-translate="translated"> 당신이 얼마나 현학적으로 되고 싶은지는 당신에게 맡기겠습니다.</font></p>
+<aside name="java" style="top: 21499px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">사실, Jlox는 NaN 평등을 잘못 이해합니다.</font><font papago-translate="translated"> Java는 다음을 사용하여 원시 더블을 비교할 때 올바른 작업을 수행합니다 </font></font><code translate="no">==</code><font papago-translate="splitted"><font papago-translate="translated">, 하지만 더블 또는 오브젝트에 상자를 넣고 다음을 사용하여 비교하면 그렇지 않습니다 </font></font><code translate="no">equals()</code><font papago-translate="splitted"><font papago-translate="translated">, 이것이 바로 Jlox가 평등을 구현하는 방법입니다.</font></font></p>
 </aside>
-<p>Finally, we close the conditional compilation section around the old
-implementation.</p>
+<p><font papago-translate="translated">마지막으로, 기존 구현을 중심으로 조건부 컴파일 섹션을 닫습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  }
-</pre><div class="source-file"><em>value.c</em><br/>
-in <em>valuesEqual</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>값</em>이 같습니다()</font></font></div>
 <pre class="insert" translate="no"><span class="a">#endif</span>
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>value.c</em>, in <em>valuesEqual</em>()</div>
-<p>And that’s it. This optimization is complete, as is our clox virtual machine.
-That was the last line of new code in the book.</p>
-<h3><a href="#evaluating-performance" id="evaluating-performance"><small>30 . 3 . 7</small>Evaluating performance</a></h3>
-<p>The code is done, but we still need to figure out if we actually made anything
-better with these changes. Evaluating an optimization like this is very
-different from the previous one. There, we had a clear hotspot visible in the
-profiler. We fixed that part of the code and could instantly see the hotspot
-get faster.</p>
-<p>The effects of changing the value representation are more diffused. The macros
-are expanded in place wherever they are used, so the performance changes are
-spread across the codebase in a way that’s hard for many profilers to track
-well, especially in an <span name="opt">optimized</span> build.</p>
-<aside name="opt">
-<p>When doing profiling work, you almost always want to profile an optimized
-“release” build of your program since that reflects the performance story your
-end users experience. Compiler optimizations, like inlining, can dramatically
-affect which parts of the code are performance hotspots. Hand-optimizing a debug
-build risks sending you off “fixing” problems that the optimizing compiler will
-already solve for you.</p>
-<p>Make sure you don’t accidentally benchmark and optimize your debug build. I seem
-to make that mistake at least once a year.</p>
+<p><font papago-translate="translated">그게 다입니다.</font><font papago-translate="translated"> 이 최적화는 우리의 clox 가상 머신과 마찬가지로 완료되었습니다.</font><font papago-translate="translated"> 그것이 책의 새로운 코드의 마지막 줄이었습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/optimization.html#evaluating-performance" id="evaluating-performance"><small><font papago-translate="translated">30 . 3 . 7</font></small><font papago-translate="splitted"><font papago-translate="translated">성능 평가</font></font></a></h3>
+<p><font papago-translate="translated">코드는 끝났지만, 우리가 실제로 이러한 변화를 통해 더 나은 것을 만들었는지 알아내야 합니다.</font><font papago-translate="translated"> 이와 같은 최적화를 평가하는 것은 이전과 매우 다릅니다.</font><font papago-translate="translated"> 거기서 프로파일러에 명확한 핫스팟이 보였습니다.</font><font papago-translate="translated"> 우리는 코드의 그 부분을 수정했고 즉시 핫스팟이 더 빨라지는 것을 확인할 수 있었습니다.</font></p>
+<p><font papago-translate="translated">가치 표현 변경의 효과는 더 확산됩니다.</font><font papago-translate="translated"> 매크로는 사용되는 모든 곳에서 확장되므로 성능 변화가 코드베이스 전반에 걸쳐 분산되어 많은 프로파일러가 특히<span name="opt"> 최적</span>화된 빌드에서 잘 추적하기 어렵습니다.</font></p>
+<aside name="opt" style="top: 22063px;">
+<p><font papago-translate="translated">프로파일링 작업을 할 때는 최종 사용자가 경험하는 성능 스토리를 반영하기 때문에 프로그램의 최적화된 "릴리스" 빌드를 프로파일링하는 것이 거의 항상 필요합니다.</font><font papago-translate="translated"> 컴파일러 최적화는 인라인과 같은 방식으로 코드의 성능 핫스팟이 되는 부분에 극적인 영향을 미칠 수 있습니다.</font><font papago-translate="translated"> 디버그 빌드를 수작업으로 최적화하면 최적화 컴파일러가 이미 해결해 줄 "수정" 문제가 발생할 수 있습니다.</font></p>
+<p><font papago-translate="translated">실수로 디버그 빌드를 벤치마킹하고 최적화하지 않도록 주의하세요.</font><font papago-translate="translated"> 저는 적어도 일 년에 한 번은 그런 실수를 하는 것 같습니다.</font></p>
 </aside>
-<p>We also can’t easily <em>reason</em> about the effects of our change. We’ve made values
-smaller, which reduces cache misses all across the VM. But the actual real-world
-performance effect of that change is highly dependent on the memory use of the
-Lox program being run. A tiny Lox microbenchmark may not have enough values
-scattered around in memory for the effect to be noticeable, and even things like
-the addresses handed out to us by the C memory allocator can impact the results.</p>
-<p>If we did our job right, basically everything gets a little faster, especially
-on larger, more complex Lox programs. But it is possible that the extra bitwise
-operations we do when NaN-boxing values nullify the gains from the better
-memory use. Doing performance work like this is unnerving because you can’t
-easily <em>prove</em> that you’ve made the VM better. You can’t point to a single
-surgically targeted microbenchmark and say, “There, see?”</p>
-<p>Instead, what we really need is a <em>suite</em> of larger benchmarks. Ideally, they
-would be distilled from real-world applications<span class="em">—</span>not that such a thing exists
-for a toy language like Lox. Then we can measure the aggregate performance
-changes across all of those. I did my best to cobble together a handful of
-larger Lox programs. On my machine, the new value representation seems to make
-everything roughly 10% faster across the board.</p>
-<p>That’s not a huge improvement, especially compared to the profound effect of
-making hash table lookups faster. I added this optimization in large part
-because it’s a good example of a certain <em>kind</em> of performance work you may
-experience, and honestly, because I think it’s technically really cool. It might
-not be the first thing I would reach for if I were seriously trying to make clox
-faster. There is probably other, lower-hanging fruit.</p>
-<p>But, if you find yourself working on a program where all of the easy wins have
-been taken, then at some point you may want to think about tuning your value
-representation. I hope this chapter has shined a light on some of the options
-you have in that area.</p>
-<h2><a href="#where-to-next" id="where-to-next"><small>30 . 4</small>Where to Next</a></h2>
-<p>We’ll stop here with the Lox language and our two interpreters. We could tinker
-on it forever, adding new language features and clever speed improvements. But,
-for this book, I think we’ve reached a natural place to call our work complete.
-I won’t rehash everything we’ve learned in the past many pages. You were there
-with me and you remember. Instead, I’d like to take a minute to talk about where
-you might go from here. What is the next step in your programming language
-journey?</p>
-<p>Most of you probably won’t spend a significant part of your career working in
-compilers or interpreters. It’s a pretty small slice of the computer science
-academia pie, and an even smaller segment of software engineering in industry.
-That’s OK. Even if you never work on a compiler again in your life, you will
-certainly <em>use</em> one, and I hope this book has equipped you with a better
-understanding of how the programming languages you use are designed and
-implemented.</p>
-<p>You have also learned a handful of important, fundamental data structures and
-gotten some practice doing low-level profiling and optimization work. That kind
-of expertise is helpful no matter what domain you program in.</p>
-<p>I also hope I gave you a new way of <span name="domain">looking</span> at and
-solving problems. Even if you never work on a language again, you may be
-surprised to discover how many programming problems can be seen as
-language-<em>like</em>. Maybe that report generator you need to write can be modeled as
-a series of stack-based “instructions” that the generator “executes”. That user
-interface you need to render looks an awful lot like traversing an AST.</p>
-<aside name="domain">
-<p>This goes for other domains too. I don’t think there’s a single topic I’ve
-learned in programming<span class="em">—</span>or even outside of programming<span class="em">—</span>that I haven’t ended
-up finding useful in other areas. One of my favorite aspects of software
-engineering is how much it rewards those with eclectic interests.</p>
+<p><font papago-translate="translated">우리는 또한 우리의 변화의 영향에<em> 대해</em> 쉽게<em> 추론</em>할 수 없습니다.</font><font papago-translate="translated"> 우리는 값을 더 작게 만들어 VM 전체에서 캐시 누락을 줄였습니다.</font><font papago-translate="translated"> 하지만 이러한 변화의 실제 성능 효과는 실행 중인 Lox 프로그램의 메모리 사용량에 크게 좌우됩니다.</font><font papago-translate="translated"> 작은 Lox 마이크로벤치마크는 메모리에 충분한 값이 흩어져 있지 않아 효과가 눈에 띄지 않을 수 있으며, C 메모리 할당자가 우리에게 전달한 주소와 같은 것들도 결과에 영향을 미칠 수 있습니다.</font></p>
+<p><font papago-translate="translated">우리가 일을 제대로 했다면, 기본적으로 모든 것이 조금 더 빨라집니다. 특히 더 크고 복잡한 Lox 프로그램에서는 더욱 그렇습니다.</font><font papago-translate="translated"> 하지만 NaN-boxing 값을 사용할 때 추가적인 비트 단위 연산이 메모리 사용 개선으로 인한 이득을 무효화할 수 있습니다.</font><font papago-translate="translated"> 이렇게 성능 작업을 수행하는 것은 VM을 더 좋게 만들었다<em>는 것을</em> 쉽게<em> 증명</em>할 수 없기 때문에 불안합니다.</font><font papago-translate="translated"> 수술로 표적이 된 마이크로벤치마크를 가리키며 "저기, 보이시죠?"라고 말할 수는 없습니다</font></p>
+<p><font papago-translate="translated">대신, 우리에게 정말 필요한 것은 더 큰 벤치마크<em> 모음</em>입니다.</font><font papago-translate="translated"> 이상적으로는 L<span class="em"></span>ox와 같은 장난감 언어에 그런 것이 존재한다는 것이 아니라 실제 응용 프로그램에서 증류하는 것이 이상적입니다.</font><font papago-translate="translated"> 그런 다음 이러한 모든 것에 대한 총 성능 변화를 측정할 수 있습니다.</font><font papago-translate="translated"> 저는 몇 가지 더 큰 Lox 프로그램을 함께 만들기 위해 최선을 다했습니다.</font><font papago-translate="translated"> 제 기계에서는 새로운 가치 표현이 전체적으로 모든 것을 약 10% 더 빠르게 만드는 것 같습니다.</font></p>
+<p><font papago-translate="translated">특히 해시 테이블 조회 속도를 높이는 데 따른 깊은 효과에 비하면 큰 개선은 아닙니다.</font><font papago-translate="translated"> 이 최적화를 추가한 이유는 대부분 특정<em> 종류</em>의 성능 작업을 경험할 수 있는 좋은 예이기 때문이며, 솔직히 말해서 기술적으로 정말 멋지다고 생각하기 때문입니다.</font><font papago-translate="translated"> 클록스를 더 빨리 만들려고 한다면 가장 먼저 손을 뻗는 것이 아닐 수도 있습니다.</font><font papago-translate="translated"> 아마도 다른 낮은 길이의 과일이 있을 것입니다.</font></p>
+<p><font papago-translate="translated">하지만 모든 쉬운 승리를 거둔 프로그램에서 일하고 있다면 언젠가는 가치 표현을 조정하는 것에 대해 생각해 볼 수도 있습니다.</font><font papago-translate="translated"> 이 장이 해당 분야의 몇 가지 옵션에 대한 통찰을 제공했기를 바랍니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/optimization.html#where-to-next" id="where-to-next"><small><font papago-translate="translated">30 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">다음 단계</font></font></a></h2>
+<p><font papago-translate="translated">여기서 록스어와 두 명의 통역사에 대해 말씀드리겠습니다.</font><font papago-translate="translated"> 새로운 언어 기능과 영리한 속도 향상을 추가하여 영원히 손댈 수 있습니다.</font><font papago-translate="translated"> 하지만 이 책을 위해 우리는 우리의 작업을 완성했다고 부를 수 있는 자연스러운 위치에 도달했다고 생각합니다.</font><font papago-translate="translated"> 지난 여러 페이지에서 배운 모든 내용을 다시 정리하지 않겠습니다.</font><font papago-translate="translated"> 당신은 저와 함께 있었고 기억하고 있습니다.</font><font papago-translate="translated"> 대신에, 잠시 시간을 내어 여러분이 앞으로 나아갈 방향에 대해 이야기하고 싶습니다.</font><font papago-translate="translated"> 프로그래밍 언어 여정의 다음 단계는 무엇입니까?</font></p>
+<p><font papago-translate="translated">여러분 대부분은 아마도 경력의 상당 부분을 컴파일러나 통역사에서 일하지 않을 것입니다.</font><font papago-translate="translated"> 그것은 컴퓨터 과학 학계의 파이의 아주 작은 조각이며, 산업에서 소프트웨어 공학의 더 작은 부분입니다.</font><font papago-translate="translated"> 괜찮습니다.</font><font papago-translate="translated"> 인생에서 다시는 컴파일러 작업을 하지 않더라도 분명히 컴파일러<em>를 사용하게</em> 될 것이며, 이 책을 통해 사용하는 프로그래밍 언어가 어떻게 설계되고 구현되는지 더 잘 이해할 수 있기를 바랍니다.</font></p>
+<p><font papago-translate="translated">또한 몇 가지 중요하고 기본적인 데이터 구조를 배우고 저수준 프로파일링 및 최적화 작업을 수행하는 연습을 마쳤습니다.</font><font papago-translate="translated"> 그런 종류의 전문 지식은 어떤 분야에서 프로그래밍하든 도움이 됩니다.</font></p>
+<p><font papago-translate="translated">또한 문제<span name="domain">를</span> 바라보고 해결하는 새로운 방법을 알려드렸기를 바랍니다.</font><font papago-translate="translated"> 다시는 언어 작업을 하지 않더라도, 얼마나 많은 프로그래밍 문제가 언어<em>와 유사</em>한 것으로 보일 수 있는지 알게 되면 놀랄 수도 있습니다.</font><font papago-translate="translated"> 아마도 당신이 작성해야 할 보고서 생성기는 생성기가 "실행"하는 일련의 스택 기반 "명령어"로 모델링될 수 있을 것입니다.</font><font papago-translate="translated"> 렌더링해야 하는 사용자 인터페이스는 AST를 통과하는 것과 매우 비슷해 보입니다.</font></p>
+<aside name="domain" style="top: 23407px;">
+<p><font papago-translate="translated">이것은 다른 도메인에도 적용됩니다.</font><font papago-translate="translated"> 프로그래밍 분야에서 배운 주제 중 다른<span class="em"></span><span class="em"></span> 분야에서 유용하지 않게 된 주제는 단 한 가지도 없는 것 같습니다.</font><font papago-translate="translated"> 소프트웨어 엔지니어링에서 제가 가장 좋아하는 측면 중 하나는 다양한 관심사를 가진 사람들에게 얼마나 많은 보상을 주는지입니다.</font></p>
 </aside>
-<p>If you do want to go further down the programming language rabbit hole, here
-are some suggestions for which branches in the tunnel to explore:</p>
+<p><font papago-translate="translated">프로그래밍 언어의 토끼굴을 더 깊이 파고들고 싶다면 터널의 어떤 가지를 탐색할 수 있는지 몇 가지 제안을 드리겠습니다:</font></p>
 <ul>
 <li>
-<p>Our simple, single-pass bytecode compiler pushed us towards mostly runtime
-optimization. In a mature language implementation, compile-time optimization
-is generally more important, and the field of compiler optimizations is
-incredibly rich. Grab a classic <span name="cooper">compilers</span> book,
-and rebuild the front end of clox or jlox to be a sophisticated compilation
-pipeline with some interesting intermediate representations and optimization
-passes.</p>
-<p>Dynamic typing will place some restrictions on how far you can go, but there
-is still a lot you can do. Or maybe you want to take a big leap and add
-static types and a type checker to Lox. That will certainly give your front
-end a lot more to chew on.</p>
-<aside name="cooper">
-<p>I like Cooper and Torczon’s <em>Engineering a Compiler</em> for this. Appel’s
-<em>Modern Compiler Implementation</em> books are also well regarded.</p>
+<p><font papago-translate="translated">우리의 간단한 단일 패스 바이트코드 컴파일러는 주로 런타임 최적화를 향해 나아갔습니다.</font><font papago-translate="translated"> 성숙한 언어 구현에서는 컴파일 시간 최적화가 일반적으로 더 중요하며, 컴파일러 최적화 분야는 매우 풍부합니다.</font><font papago-translate="translated"> 고전<span name="cooper">적인 컴파일</span>러 책을 가져와서 clox 또는 jlox의 앞부분을 정교한 컴파일 파이프라인으로 재구성하고 흥미로운 중간 표현과 최적화 패스를 제공합니다.</font></p>
+<p><font papago-translate="translated">동적 타이핑은 얼마나 멀리 갈 수 있는지에 몇 가지 제한을 두지만, 여전히 할 수 있는 일이 많습니다.</font><font papago-translate="translated"> 또는 큰 도약을 통해 Lox에 정적 타입과 타입 체커를 추가하고 싶을 수도 있습니다.</font><font papago-translate="translated"> 그것은 분명히 당신의 앞부분을 더 많이 씹을 수 있게 해줄 것입니다.</font></p>
+<aside name="cooper" style="top: 23695px;">
+<p><font papago-translate="translated">저는 쿠퍼와 토크존의 컴파일러<em> 엔지니어링</em>을 좋아합니다.</font><font papago-translate="translated"> Appel의<em> 최신 컴파일러 구현</em> 책들도 잘 알려져 있습니다.</font></p>
 </aside></li>
 <li>
-<p>In this book, I aim to be correct, but not particularly rigorous. My goal is
-mostly to give you an <em>intuition</em> and a feel for doing language work. If you
-like more precision, then the whole world of programming language academia
-is waiting for you. Languages and compilers have been studied formally since
-before we even had computers, so there is no shortage of books and papers on
-parser theory, type systems, semantics, and formal logic. Going down this
-path will also teach you how to read CS papers, which is a valuable skill in
-its own right.</p>
+<p><font papago-translate="translated">이 책에서는 정확하지만 특별히 엄격하지는 않은 것을 목표로 합니다.</font><font papago-translate="translated"> 제 목표는 주로 언어 작업을 할<em> 때 직관</em>과 느낌을 주는 것입니다.</font><font papago-translate="translated"> 더 정밀한 정보를 원한다면 프로그래밍 언어 학계 전체가 여러분을 기다리고 있습니다.</font><font papago-translate="translated"> 언어와 컴파일러는 컴퓨터가 생기기 전부터 정식으로 연구되어 왔기 때문에 파서 이론, 타입 시스템, 의미론, 형식 논리에 관한 책과 논문이 부족하지 않습니다.</font><font papago-translate="translated"> 이 길을 따라가면 CS 논문을 읽는 방법도 배울 수 있는데, 이는 그 자체로 소중한 기술입니다.</font></p>
 </li>
 <li>
-<p>Or, if you just really enjoy hacking on and making languages, you can take
-Lox and turn it into your own <span name="license">plaything</span>. Change
-the syntax to something that delights your eye. Add missing features or
-remove ones you don’t like. Jam new optimizations in there.</p>
-<aside name="license">
-<p>The <em>text</em> of this book is copyrighted to me, but the <em>code</em> and the
-implementations of jlox and clox use the very permissive <a href="https://en.wikipedia.org/wiki/MIT_License">MIT license</a>.
-You are more than welcome to <a href="https://github.com/munificent/craftinginterpreters">take either of those interpreters</a> and
-do whatever you want with them. Go to town.</p>
-<p>If you make significant changes to the language, it would be good to also
-change the name, mostly to avoid confusing people about what the name “Lox”
-represents.</p>
+<p><font papago-translate="translated">또는 언어 해킹과 제작을 정말 즐긴다면 Lox를 자신만의<span name="license"> 놀이</span>로 만들 수도 있습니다.</font><font papago-translate="translated"> 구문을 눈을 즐겁게 하는 것으로 변경하세요.</font><font papago-translate="translated"> 누락된 기능을 추가하거나 마음에 들지 않는 기능을 제거합니다.</font><font papago-translate="translated"> 새로운 최적화를 방해합니다.</font></p>
+<aside name="license" style="top: 24103px;">
+<p><font papago-translate="translated">이 책<em>의 본문</em>은 저에게 저작권이 있지만<em>, 코드</em>와 jlox와 clox의 구현은 매우 허용적인 MIT<a href="https://en.wikipedia.org/wiki/MIT_License"> 라이선스</a>를 사용합니다.</font><font papago-translate="translated"> <a href="https://github.com/munificent/craftinginterpreters">당신</a>은<a href="https://github.com/munificent/craftinginterpreters"> 그 통역사들 중 한 명을 데리고</a> 가서 무엇이든 할 수 있습니다.</font><font papago-translate="translated"> 마을로 가세요.</font></p>
+<p><font papago-translate="translated">언어를 크게 변경할 경우, 주로 사람들이 "Lox"라는 이름이 무엇을 의미하는지 혼동하지 않도록 이름을 변경하는 것도 좋을 것입니다.</font></p>
 </aside>
-<p>Eventually you may get to a point where you have something you think others
-could use as well. That gets you into the very distinct world of programming
-language <em>popularity</em>. Expect to spend a ton of time writing documentation,
-example programs, tools, and useful libraries. The field is crowded with
-languages vying for users. To thrive in that space you’ll have to put on
-your marketing hat and <em>sell</em>. Not everyone enjoys that kind of
-public-facing work, but if you do, it can be incredibly gratifying to see
-people use your language to express themselves.</p>
+<p><font papago-translate="translated">결국 다른 사람들도 사용할 수 있다고 생각되는 무언가를 가지게 될 수도 있습니다.</font><font papago-translate="translated"> 그것은 당신을 매우 독특한 프로그래밍 언어<em> 인기</em>의 세계로 안내합니다.</font><font papago-translate="translated"> 문서 작성, 예제 프로그램, 도구 및 유용한 라이브러리를 작성하는 데 많은 시간을 할애할 것으로 예상됩니다.</font><font papago-translate="translated"> 이 분야는 사용자를 찾기 위해 경쟁하는 언어들로 붐빕니다.</font><font papago-translate="translated"> 그 분야에서 번창하려면 마케팅 모자를 쓰고<em> 판매해야</em> 합니다.</font><font papago-translate="translated"> 모든 사람이 그런 대중 앞에서 일하는 것을 즐기는 것은 아니지만, 그렇게 한다면 사람들이 자신의 언어를 사용하여 자신을 표현하는 것을 보는 것은 매우 기쁠 수 있습니다.</font></p>
 </li>
 </ul>
-<p>Or maybe this book has satisfied your craving and you’ll stop here. Whichever
-way you go, or don’t go, there is one lesson I hope to lodge in your heart. Like
-I was, you may have initially been intimidated by programming languages. But in
-these chapters, you’ve seen that even really challenging material can be tackled
-by us mortals if we get our hands dirty and take it a step at a time. If you can
-handle compilers and interpreters, you can do anything you put your mind to.</p>
+<p><font papago-translate="translated">또는 이 책이 당신의 갈망을 충족시켰을 수도 있고 여기서 멈출 수도 있습니다.</font><font papago-translate="translated"> 당신이 가는 길이든 가지 않는 길이든, 당신의 마음속에 담고 싶은 교훈이 하나 있습니다.</font><font papago-translate="translated" class=""> 저처럼 처음에는 프로그래밍 언어에 겁을 먹었을 수도 있습니다.</font><font papago-translate="translated" class=""> 하지만 이 장들에서 여러분은 손을 더럽히고 한 걸음씩 내딛으면 정말 어려운 물질도 인간이 해결할 수 있다는 것을 보았습니다.</font><font papago-translate="translated" class=""> 컴파일러와 통역사를 다룰 수 있다면, 당신이 생각하는 모든 것을 할 수 있습니다.</font></p>
 <div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
-<p>Assigning homework on the last day of school seems cruel but if you really want
-something to do during your summer vacation:</p>
+<h2><a href="https://youhogeon-meritz.github.io/optimization.html#challenges" id="challenges"><font papago-translate="translated">과제들</font></a></h2>
+<p><font papago-translate="translated">학교 마지막 날에 숙제를 내는 것은 잔인해 보이지만 여름 방학 동안 정말 하고 싶은 일이 있다면:</font></p>
 <ol>
 <li>
-<p>Fire up your profiler, run a couple of benchmarks, and look for other
-hotspots in the VM. Do you see anything in the runtime that you can improve?</p>
+<p><font papago-translate="translated">프로파일러를 부팅하고 몇 가지 벤치마크를 실행한 다음 VM에서 다른 핫스팟을 찾아보세요.</font><font papago-translate="translated"> 런타임에서 개선할 수 있는 점이 있나요?</font></p>
 </li>
 <li>
-<p>Many strings in real-world user programs are small, often only a character
-or two. This is less of a concern in clox because we intern strings, but
-most VMs don’t. For those that don’t, heap allocating a tiny character array
-for each of those little strings and then representing the value as a
-pointer to that array is wasteful. Often, the pointer is larger than the
-string’s characters. A classic trick is to have a separate value
-representation for small strings that stores the characters inline in the
-value.</p>
-<p>Starting from clox’s original tagged union representation, implement that
-optimization. Write a couple of relevant benchmarks and see if it helps.</p>
+<p><font papago-translate="translated">실제 사용자 프로그램의 많은 문자열은 작은 경우가 많으며, 종종 한두 글자에 불과합니다.</font><font papago-translate="translated"> 이것은 우리가 문자열을 삽입하기 때문에 clox에서는 덜 걱정되지만, 대부분의 VM은 그렇지 않습니다.</font><font papago-translate="translated"> 그렇지 않은 사람들에게는 각 작은 문자열에 작은 문자 배열을 할당하고 그 값을 해당 배열의 포인터로 표현하는 것이 낭비입니다.</font><font papago-translate="translated"> 종종 포인터가 문자열의 문자보다 큽니다.</font><font papago-translate="translated"> 고전적인 트릭은 작은 문자열에 대해 값에 문자를 인라인으로 저장하는 별도의 값 표현을 갖는 것입니다.</font></p>
+<p><font papago-translate="translated">clox의 원래 태그된 노조 표현에서 시작하여 해당 최적화를 구현합니다.</font><font papago-translate="translated" class=""> 몇 가지 관련 벤치마크를 작성하여 도움이 되는지 확인합니다.</font></p>
 </li>
 <li>
-<p>Reflect back on your experience with this book. What parts of it worked well
-for you? What didn’t? Was it easier for you to learn bottom-up or top-down?
-Did the illustrations help or distract? Did the analogies clarify or
-confuse?</p>
-<p>The more you understand your personal learning style, the more effectively
-you can upload knowledge into your head. You can specifically target
-material that teaches you the way you learn best.</p>
+<p><font papago-translate="translated">이 책에 대한 경험을 되돌아보세요.</font><font papago-translate="translated" class=""> 어떤 부분이 당신에게 잘 맞았나요?</font><font papago-translate="translated"> 무엇이 없었나요?</font><font papago-translate="translated" class=""> 상향식 학습이 더 쉬웠나요, 아니면 상향식 학습이 더 쉬웠나요?</font><font papago-translate="translated" class=""> 삽화가 도움이 되었나요, 아니면 방해가 되었나요?</font><font papago-translate="translated"> 비유가 명확하거나 혼란스러웠습니까?</font></p>
+<p><font papago-translate="translated">개인 학습 스타일을 더 잘 이해할수록 지식을 머릿속에 더 효과적으로 업로드할 수 있습니다.</font><font papago-translate="translated"> 당신이 가장 잘 배우는 방법을 가르쳐주는 자료를 구체적으로 타겟팅할 수 있습니다.</font></p>
 </li>
 </ol>
 </div>
 <footer>
-<a class="next" href="backmatter.html">
-  Next Part: “Backmatter” →
-</a>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+<a class="next" href="https://youhogeon-meritz.github.io/backmatter.html"><font papago-translate="translated"> 다음 부분: "백매터" → </font></a><font papago-translate="splitted"><font papago-translate="translated"> 로버트 니스트롬이 수작업으로 제작한 -<a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE"> © 2015 ~ 2021</a></font></font>
 </footer>
-</img></img></img></article>
+</article>
 </div>
-</body>
-</html>
+
+
+<div id="papagoTooltip" margin="5" style="display: none;">
+        <h1 id="tooltipTitle">원문</h1>
+        <p id="tooltipText"></p>
+      </div>
+      </body></html>

@@ -1,182 +1,133 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-5d9ed374-fe5a-42cb-9ec3-2dc9eb100840@mhtml.blink" />
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>Resolving and Binding · Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/style.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
-<script src="jquery-3.4.1.min.js"></script>
-<script src="script.js"></script>
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+
+<!-- Google analytics -->
+
+</head>
 <body id="top">
 <!-- <div class="scrim"></div> -->
 <nav class="wide">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="contents">
-<h3><a href="#top">Resolving and Binding<small>11</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#top"><font papago-translate="splitted"><font papago-translate="translated">해결 및 바인딩</font></font><small>11</small></a></h3>
 <ul>
-<li><a href="#static-scope"><small>11.1</small> Static Scope</a></li>
-<li><a href="#semantic-analysis"><small>11.2</small> Semantic Analysis</a></li>
-<li><a href="#a-resolver-class"><small>11.3</small> A Resolver Class</a></li>
-<li><a href="#interpreting-resolved-variables"><small>11.4</small> Interpreting Resolved Variables</a></li>
-<li><a href="#resolution-errors"><small>11.5</small> Resolution Errors</a></li>
+<li><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#static-scope"><small>11.1</small><font papago-translate="splitted"><font papago-translate="translated"> 정적 범위</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#semantic-analysis"><small>11.2</small><font papago-translate="splitted"><font papago-translate="translated"> 의미 분석</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#a-resolver-class"><small>11.3</small><font papago-translate="splitted"><font papago-translate="translated"> 해결사 클래스</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#interpreting-resolved-variables"><small>11.4</small><font papago-translate="splitted"><font papago-translate="translated"> 해결된 변수 해석</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#resolution-errors"><small>11.5</small><font papago-translate="splitted"><font papago-translate="translated"> 해상도 오류</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#challenges"><font papago-translate="translated">과제들</font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="functions.html" title="Functions">← Previous</a>
-<a href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑ Up</a>
-<a class="right" href="classes.html" title="Classes">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/functions.html" title="기능들" papago-attr-id="1"><font papago-translate="translated">← 이전</font></a>
+<a href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="나무 산책 통역사" papago-attr-id="2"><font papago-translate="translated">↑ 위로</font></a>
+<a class="right" href="https://youhogeon-meritz.github.io/classes.html" title="반" papago-attr-id="3"><font papago-translate="translated">다음 →</font></a>
 </div> </div>
 </nav>
 <nav class="narrow">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
-<a class="prev" href="functions.html" title="Functions">←</a>
-<a class="next" href="classes.html" title="Classes">→</a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
+<a class="prev" href="https://youhogeon-meritz.github.io/functions.html" title="Functions">←</a>
+<a class="next" href="https://youhogeon-meritz.github.io/classes.html" title="Classes">→</a>
 </nav>
 <div class="page">
 <div class="nav-wrapper">
 <nav class="floating">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="expandable">
-<h3><a href="#top">Resolving and Binding<small>11</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#top"><font papago-translate="splitted"><font papago-translate="translated">해결 및 바인딩</font></font><small>11</small></a></h3>
 <ul>
-<li><a href="#static-scope"><small>11.1</small> Static Scope</a></li>
-<li><a href="#semantic-analysis"><small>11.2</small> Semantic Analysis</a></li>
-<li><a href="#a-resolver-class"><small>11.3</small> A Resolver Class</a></li>
-<li><a href="#interpreting-resolved-variables"><small>11.4</small> Interpreting Resolved Variables</a></li>
-<li><a href="#resolution-errors"><small>11.5</small> Resolution Errors</a></li>
+<li><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#static-scope"><small>11.1</small><font papago-translate="splitted"><font papago-translate="translated"> 정적 범위</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#semantic-analysis"><small>11.2</small><font papago-translate="splitted"><font papago-translate="translated"> 의미 분석</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#a-resolver-class"><small>11.3</small><font papago-translate="splitted"><font papago-translate="translated"> 해결사 클래스</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#interpreting-resolved-variables"><small>11.4</small><font papago-translate="splitted"><font papago-translate="translated"> 해결된 변수 해석</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#resolution-errors"><small>11.5</small><font papago-translate="splitted"><font papago-translate="translated"> 해상도 오류</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#challenges">Challenges</a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="functions.html" title="Functions">← Previous</a>
-<a href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑ Up</a>
-<a class="right" href="classes.html" title="Classes">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/functions.html" title="Functions">←&nbsp;Previous</a>
+<a href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑&nbsp;Up</a>
+<a class="right" href="https://youhogeon-meritz.github.io/classes.html" title="Classes">Next&nbsp;→</a>
 </div> </div>
 <a id="expand-nav">≡</a>
 </nav>
 </div>
 <article class="chapter">
 <div class="number">11</div>
-<h1>Resolving and Binding</h1>
+<h1><font papago-translate="translated">해결 및 바인딩</font></h1>
 <blockquote>
-<p>Once in a while you find yourself in an odd situation. You get into it by
-degrees and in the most natural way but, when you are right in the midst of
-it, you are suddenly astonished and ask yourself how in the world it all came
-about.</p>
+<p><font papago-translate="translated" class="">가끔씩 당신은 이상한 상황에 처하게 됩니다.</font><font papago-translate="translated"> 점점 더 자연스럽게 들어가지만, 그 한가운데에 있을 때 갑자기 놀라면서 어떻게 이런 일이 일어났는지 스스로에게 묻습니다.</font></p>
 <p><cite>Thor Heyerdahl, <em>Kon-Tiki</em></cite></p>
 </blockquote>
-<p>Oh, no! Our language implementation is taking on water! Way back when we <a href="statements-and-state.html">added
-variables and blocks</a>, we had scoping nice and tight. But when we
-<a href="functions.html">later added closures</a>, a hole opened in our formerly waterproof
-interpreter. Most real programs are unlikely to slip through this hole, but as
-language implementers, we take a sacred vow to care about correctness even in
-the deepest, dampest corners of the semantics.</p>
-<p>We will spend this entire chapter exploring that leak, and then carefully
-patching it up. In the process, we will gain a more rigorous understanding of
-lexical scoping as used by Lox and other languages in the C tradition. We’ll
-also get a chance to learn about <em>semantic analysis</em><span class="em">—</span>a powerful technique for
-extracting meaning from the user’s source code without having to run it.</p>
-<h2><a href="#static-scope" id="static-scope"><small>11 . 1</small>Static Scope</a></h2>
-<p>A quick refresher: Lox, like most modern languages, uses <em>lexical</em> scoping. This
-means that you can figure out which declaration a variable name refers to just
-by reading the text of the program. For example:</p>
+<p><font papago-translate="translated">저런!</font><font papago-translate="translated"> 우리의 언어 구현이 물타기를 하고 있습니다!</font><font papago-translate="translated"> <a href="https://youhogeon-meritz.github.io/statements-and-state.html">아주</a> 오래 전<a href="https://youhogeon-meritz.github.io/statements-and-state.html">에 변수와 블록을 추가</a>했을 때, 우리는 범위를 아주 정확하게 설정했습니다.</font><font papago-translate="translated" class=""> 하지만<a href="https://youhogeon-meritz.github.io/functions.html"> 나중에 클로저를 추가</a>했을 때, 이전 방수 통역사에 구멍이 뚫렸습니다.</font><font papago-translate="translated" class=""> 대부분의 실제 프로그램은 이 구멍을 통과하지 못할 가능성이 높지만, 언어 구현자로서 우리는 의미론의 가장 깊고 습한 구석에서도 정확성에 신경 쓰겠다는 신성한 맹세를 합니다.</font></p>
+<p><font papago-translate="translated">우리는 이 장 전체를 통해 그 유출을 탐구한 다음, 신중하게 수정할 것입니다.</font><font papago-translate="translated"> 그 과정에서 우리는 Lox와 C 전통의 다른 언어들이 사용하는 어휘 범위에 대해 더 엄밀하게 이해하게 될 것입니다.</font><font papago-translate="translated"> <em>사용</em>자의 소스 코드<span class="em"></span>를 실행하지 않고도 의미를 추출할 수 있는 강력한 기술<em>인 의미 분석에</em> 대해서도 배울 수 있는 기회를 얻게 될 것입니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#static-scope" id="static-scope"><small><font papago-translate="translated">11 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">정적 범위</font></font></a></h2>
+<p><font papago-translate="translated">간단한 업데이트: Lox는 대부분의 현대 언어와 마찬가지로<em> 어휘</em> 범위를 사용합니다.</font><font papago-translate="translated"> 즉, 프로그램의 텍스트를 읽기만 하면 변수 이름이 어떤 선언을 의미하는지 파악할 수 있습니다.</font><font papago-translate="translated"> 예를 들어:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">a</span> = <span class="s">"outer"</span>;
 {
   <span class="k">var</span> <span class="i">a</span> = <span class="s">"inner"</span>;
   <span class="k">print</span> <span class="i">a</span>;
 }
 </pre></div>
-<p>Here, we know that the <code translate="no">a</code> being printed is the variable declared on the
-previous line, and not the global one. Running the program doesn’t<span class="em">—</span><em>can’t</em><span class="em">—</span>affect this. The scope rules are part of the <em>static</em> semantics of the language,
-which is why they’re also called <em>static scope</em>.</p>
-<p>I haven’t spelled out those scope rules, but now is the time for <span name="precise">precision</span>:</p>
-<aside name="precise">
-<p>This is still nowhere near as precise as a real language specification. Those
-docs must be so explicit that even a Martian or an outright malicious programmer
-would be forced to implement the correct semantics provided they followed the
-letter of the spec.</p>
-<p>That exactitude is important when a language may be implemented by competing
-companies who want their product to be incompatible with the others to lock
-customers onto their platform. For this book, we can thankfully ignore those
-kinds of shady shenanigans.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">여기서 우리는 다음을 알고 있습니다 </font></font><code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated"> 인쇄되는 변수는 이전 줄에 선언된 변수이며, 글로벌 변수는 아닙니다.</font><font papago-translate="translated"> 프로그램을 실행하는 것은<span class="em"></span><span class="em"></span> 이에 영향을<em> 미치지 않습니다.</em></font><font papago-translate="translated"> 범위 규칙은 언어<em>의 정적</em> 의미론의 일부이기 때문에<em> 정적 범위</em>라고도 합니다.</font></font></p>
+<p><font papago-translate="translated">저는 그 범위 규칙들을 명확히 설명하지 않았지만, 지금<span name="precise">이 바로 정확성</span>이 필요한 때입니다:</font></p>
+<aside name="precise" style="top: 1112px;">
+<p><font papago-translate="translated">이것은 여전히 실제 언어 사양만큼 정확하지 않습니다.</font><font papago-translate="translated"> 이러한 문서는 매우 명확해야 하므로 화성인이나 노골적인 악의적인 프로그래머라도 사양의 문자를 따랐다면 올바른 의미를 구현해야 할 것입니다.</font></p>
+<p><font papago-translate="translated" class="">이러한 정확성은 경쟁사가 자사 제품이 다른 제품과 호환되지 않도록 고객을 플랫폼에 가두기 위해 언어를 구현할 때 중요합니다.</font><font papago-translate="translated"> 이 책에서는 다행히도 그런 수상한 속임수들을 무시할 수 있습니다.</font></p>
 </aside>
-<p><strong>A variable usage refers to the preceding declaration with the same name in the
-innermost scope that encloses the expression where the variable is used.</strong></p>
-<p>There’s a lot to unpack in that:</p>
+<p><strong><font papago-translate="translated">변수 사용은 변수가 사용되는 표현을 둘러싸고 있는 가장 안쪽 범위에서 동일한 이름을 가진 이전 선언을 의미합니다.</font></strong></p>
+<p><font papago-translate="translated">그 안에는 풀어야 할 것이 많습니다:</font></p>
 <ul>
 <li>
-<p>I say “variable usage” instead of “variable expression” to cover both
-variable expressions and assignments. Likewise with “expression where the
-variable is used”.</p>
+<p><font papago-translate="translated">저는 변수 표현과 과제를 모두 다루기 위해 "변수 표현" 대신 "변수 사용"이라고 말합니다.</font><font papago-translate="translated"> 마찬가지로 "변수가 사용되는 표현식"도 마찬가지입니다.</font></p>
 </li>
 <li>
-<p>“Preceding” means appearing before <em>in the program text</em>.</p>
+<p><font papago-translate="translated">"선행"은<em> 프로그램 텍스트</em>에 이전에 나타나는 것을 의미합니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">a</span> = <span class="s">"outer"</span>;
 {
   <span class="k">print</span> <span class="i">a</span>;
   <span class="k">var</span> <span class="i">a</span> = <span class="s">"inner"</span>;
 }
 </pre></div>
-<p>Here, the <code translate="no">a</code> being printed is the outer one since it appears <span name="hoisting">before</span> the <code translate="no">print</code> statement that uses it. In most
-cases, in straight line code, the declaration preceding in <em>text</em> will also
-precede the usage in <em>time</em>. But that’s not always true. As we’ll see,
-functions may defer a chunk of code such that its <em>dynamic temporal</em>
-execution no longer mirrors the <em>static textual</em> ordering.</p>
-<aside name="hoisting">
-<p>In JavaScript, variables declared using <code translate="no">var</code> are implicitly “hoisted” to
-the beginning of the block. Any use of that name in the block will refer to
-that variable, even if the use appears before the declaration. When you
-write this in JavaScript:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">여기 </font></font><code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated"> 인쇄되는 것이 외부 인쇄물<span name="hoisting">입니다</span> </font></font><code translate="no">print</code><font papago-translate="splitted"><font papago-translate="translated"> 그것을 사용하는 진술.</font><font papago-translate="translated"> 대부분의 경우, 직선 코드에서는<em> 텍스트</em>에서 앞에 오는 선언문이<em> 시간</em> 내에 사용되기도 합니다.</font><font papago-translate="translated"> 하지만 항상 그런 것은 아닙니다.</font><font papago-translate="translated"> 보시다시피 함수는 코드의 동적<em> 시간</em> 실행이<em> 더</em> 이상<em> 정적 텍스트</em> 순서를 반영하지 않도록 코드 덩어리를 지연시킬 수 있습니다.</font></font></p>
+<aside name="hoisting" style="top: 1548px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">JavaScript에서 선언된 변수는 다음과 같습니다 </font></font><code translate="no">var</code><font papago-translate="splitted"><font papago-translate="translated"> 은 암묵적으로 블록의 시작 부분에 "호스팅"됩니다.</font><font papago-translate="translated"> 블록에서 해당 이름의 사용은 선언문 앞에 사용이 나타나더라도 해당 변수를 의미합니다.</font><font papago-translate="translated"> 이것을 JavaScript로 작성할 때:</font></font></p>
 <div class="codehilite"><pre translate="no">{
   <span class="i">console</span>.<span class="i">log</span>(<span class="i">a</span>);
   <span class="k">var</span> <span class="i">a</span> = <span class="s">"value"</span>;
 }
 </pre></div>
-<p>It behaves like:</p>
+<p><font papago-translate="translated">다음과 같이 작동합니다:</font></p>
 <div class="codehilite"><pre translate="no">{
   <span class="k">var</span> <span class="i">a</span>; <span class="c">// Hoist.</span>
   <span class="i">console</span>.<span class="i">log</span>(<span class="i">a</span>);
   <span class="i">a</span> = <span class="s">"value"</span>;
 }
 </pre></div>
-<p>That means that in some cases you can read a variable before its initializer
-has run<span class="em">—</span>an annoying source of bugs. The alternate <code translate="no">let</code> syntax for
-declaring variables was added later to address this problem.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">즉, 어떤 경우에는 변수의 초기화가 실행되기 전에 변수를 읽을 수 있는데, 이는 성가신<span class="em"></span> 버그의 원인입니다.</font><font papago-translate="translated"> 대안 </font></font><code translate="no">let</code><font papago-translate="splitted"><font papago-translate="translated"> 변수 선언 구문은 이 문제를 해결하기 위해 나중에 추가되었습니다.</font></font></p>
 </aside></li>
 <li>
-<p>“Innermost” is there because of our good friend shadowing. There may be more
-than one variable with the given name in enclosing scopes, as in:</p>
+<p><font papago-translate="translated">"가장 안쪽"은 우리의 좋은 친구가 그림자를 드리우고 있기 때문에 존재합니다.</font><font papago-translate="translated"> 범위를 둘러싸는 데에는 주어진 이름을 가진 변수가 여러 개 있을 수 있습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">a</span> = <span class="s">"outer"</span>;
 {
   <span class="k">var</span> <span class="i">a</span> = <span class="s">"inner"</span>;
   <span class="k">print</span> <span class="i">a</span>;
 }
 </pre></div>
-<p>Our rule disambiguates this case by saying the innermost scope wins.</p>
+<p><font papago-translate="translated">우리의 규칙은 가장 안쪽 범위가 승리한다고 함으로써 이 경우를 명확히 합니다.</font></p>
 </li>
 </ul>
-<p>Since this rule makes no mention of any runtime behavior, it implies that a
-variable expression always refers to the same declaration through the entire
-execution of the program. Our interpreter so far <em>mostly</em> implements the rule
-correctly. But when we added closures, an error snuck in.</p>
+<p><font papago-translate="translated">이 규칙은 런타임 동작에 대해 언급하지 않기 때문에, 변수 표현식이 프로그램의 전체 실행 동안 항상 동일한 선언을 의미한다는 것을 의미합니다.</font><font papago-translate="translated"> 지금까지 저희 통역사<em>는 대부분</em> 규칙을 올바르게 구현했습니다.</font><font papago-translate="translated"> 하지만 클로저를 추가했을 때 오류가 발생했습니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">a</span> = <span class="s">"global"</span>;
 {
   <span class="k">fun</span> <span class="i">showA</span>() {
@@ -188,67 +139,29 @@ correctly. But when we added closures, an error snuck in.</p>
   <span class="i">showA</span>();
 }
 </pre></div>
-<p><span name="tricky">Before</span> you type this in and run it, decide what you
-think it <em>should</em> print.</p>
-<aside name="tricky">
-<p>I know, it’s a totally pathological, contrived program. It’s just <em>weird</em>. No
-reasonable person would ever write code like this. Alas, more of your life than
-you’d expect will be spent dealing with bizarro snippets of code like this if
-you stay in the programming language game for long.</p>
+<p><font papago-translate="translated">이것을 입력하고 실행<span name="tricky">하기 전</span>에<em></em> 인쇄할 내용을 결정하세요<span name="tricky">.</span></font></p>
+<aside name="tricky" style="top: 2304px;">
+<p><font papago-translate="translated">완전히 병적이고 인위적인 프로그램이라는 것을 알고 있습니다.</font><font papago-translate="translated"> 그냥<em> 이상</em>해요.</font><font papago-translate="translated"> 합리적인 사람이라면 이런 코드를 쓸 수 없을 것입니다.</font><font papago-translate="translated"> 안타깝게도 프로그래밍 언어 게임에 오래 머무르면 예상보다 더 많은 시간이 이런 비사로 코드 조각을 다루는 데 할애될 것입니다.</font></p>
 </aside>
-<p>OK<span class="ellipse"> . . . </span>got it? If you’re familiar with closures in other languages, you’ll expect
-it to print “global” twice. The first call to <code translate="no">showA()</code> should definitely print
-“global” since we haven’t even reached the declaration of the inner <code translate="no">a</code> yet. And
-by our rule that a variable expression always resolves to the same variable,
-that implies the second call to <code translate="no">showA()</code> should print the same thing.</p>
-<p>Alas, it prints:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">알겠어<span class="ellipse">요...</span> 알겠어요<span class="ellipse">?</span></font><font papago-translate="translated"> 다른 언어로 된 폐쇄에 익숙하다면 "글로벌"이 두 번 인쇄될 것으로 예상할 수 있습니다.</font><font papago-translate="translated"> 첫 번째 호출 </font></font><code translate="no">showA()</code><font papago-translate="splitted"><font papago-translate="translated"> 내부 선언에 도달하지 못했기 때문에 "글로벌"을 반드시 인쇄해야 합니다 </font></font><code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated"> 하지만 변수 표현식은 항상 동일한 변수로 분해되며, 이는 두 번째 호출을 의미합니다 </font></font><code translate="no">showA()</code><font papago-translate="splitted"><font papago-translate="translated"> 같은 내용을 인쇄해야 합니다.</font></font></p>
+<p><font papago-translate="translated">아, 인쇄됩니다:</font></p>
 <div class="codehilite"><pre translate="no">global
 block
 </pre></div>
-<p>Let me stress that this program never reassigns any variable and contains only a
-single <code translate="no">print</code> statement. Yet, somehow, that <code translate="no">print</code> statement for a
-never-assigned variable prints two different values at different points in time.
-We definitely broke something somewhere.</p>
-<h3><a href="#scopes-and-mutable-environments" id="scopes-and-mutable-environments"><small>11 . 1 . 1</small>Scopes and mutable environments</a></h3>
-<p>In our interpreter, environments are the dynamic manifestation of static scopes.
-The two mostly stay in sync with each other<span class="em">—</span>we create a new environment when
-we enter a new scope, and discard it when we leave the scope. There is one other
-operation we perform on environments: binding a variable in one. This is where
-our bug lies.</p>
-<p>Let’s walk through that problematic example and see what the environments look
-like at each step. First, we declare <code translate="no">a</code> in the global scope.</p><img alt="The global environment with 'a' defined in it." src="image/resolving-and-binding/environment-1.png">
-<p>That gives us a single environment with a single variable in it. Then we enter
-the block and execute the declaration of <code translate="no">showA()</code>.</p><img alt="A block environment linking to the global one." src="image/resolving-and-binding/environment-2.png">
-<p>We get a new environment for the block. In that, we declare one name, <code translate="no">showA</code>,
-which is bound to the LoxFunction object we create to represent the function.
-That object has a <code translate="no">closure</code> field that captures the environment where the
-function was declared, so it has a reference back to the environment for the
-block.</p>
-<p>Now we call <code translate="no">showA()</code>.</p><img alt="An empty environment for showA()'s body linking to the previous two. 'a' is resolved in the global environment." src="image/resolving-and-binding/environment-3.png">
-<p>The interpreter dynamically creates a new environment for the function body of
-<code translate="no">showA()</code>. It’s empty since that function doesn’t declare any variables. The
-parent of that environment is the function’s closure<span class="em">—</span>the outer block
-environment.</p>
-<p>Inside the body of <code translate="no">showA()</code>, we print the value of <code translate="no">a</code>. The interpreter looks
-up this value by walking the chain of environments. It gets all the way
-to the global environment before finding it there and printing <code translate="no">"global"</code>.
-Great.</p>
-<p>Next, we declare the second <code translate="no">a</code>, this time inside the block.</p><img alt="The block environment has both 'a' and 'showA' now." src="image/resolving-and-binding/environment-4.png"/>
-<p>It’s in the same block<span class="em">—</span>the same scope<span class="em">—</span>as <code translate="no">showA()</code>, so it goes into the
-same environment, which is also the same environment <code translate="no">showA()</code>’s closure refers
-to. This is where it gets interesting. We call <code translate="no">showA()</code> again.</p><img alt="An empty environment for showA()'s body linking to the previous two. 'a' is resolved in the block environment." src="image/resolving-and-binding/environment-5.png"/>
-<p>We create a new empty environment for the body of <code translate="no">showA()</code> again, wire it up to
-that closure, and run the body. When the interpreter walks the chain of
-environments to find <code translate="no">a</code>, it now discovers the <em>new</em> <code translate="no">a</code> in the block
-environment. Boo.</p>
-<p>I chose to implement environments in a way that I hoped would agree with your
-informal intuition around scopes. We tend to consider all of the code within a
-block as being within the same scope, so our interpreter uses a single
-environment to represent that. Each environment is a mutable hash table. When a
-new local variable is declared, it gets added to the existing environment for
-that scope.</p>
-<p>That intuition, like many in life, isn’t quite right. A block is not necessarily
-all the same scope. Consider:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 프로그램은 변수를 재할당하지 않으며 단 하나의 변수만 포함한다는 점을 강조하고 싶습니다 </font></font><code translate="no">print</code><font papago-translate="splitted"><font papago-translate="translated"> 진술.</font><font papago-translate="translated"> 하지만, 어떻게든, 그것은 </font></font><code translate="no">print</code><font papago-translate="splitted"><font papago-translate="translated"> assigned가 없는 변수에 대한 문장은 서로 다른 시점에 두 가지 다른 값을 출력합니다.</font><font papago-translate="translated"> 우리는 분명히 어딘가에서 무언가를 깨뜨렸습니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#scopes-and-mutable-environments" id="scopes-and-mutable-environments"><small><font papago-translate="translated">11 . 1 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">범위 및 변이 가능한 환경</font></font></a></h3>
+<p><font papago-translate="translated">우리 통역사에서 환경은 정적 범위의 동적 표현입니다.</font><font papago-translate="translated"> 두 가지는 대부분 서로 동기화되어 있습니다—우리는 새로운 범위에 들어갈 때 새로운 환경을 만들고<span class="em"></span>, 범위를 벗어날 때 그것을 버립니다.</font><font papago-translate="translated"> 환경에서 수행하는 또 다른 작업 중 하나는 변수를 하나로 묶는 것입니다.</font><font papago-translate="translated"> 이것이 바로 우리의 버그가 있는 곳입니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그 문제적인 예를 살펴보고 각 단계에서 환경이 어떻게 생겼는지 살펴보겠습니다.</font><font papago-translate="translated"> 먼저, 다음과 같이 선언합니다 </font></font><code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated"> 글로벌 범위에서.</font></font></p><img alt="The global environment with 'a' defined in it." src="https://youhogeon-meritz.github.io/image/resolving-and-binding/environment-1.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">그것은 단일 변수가 포함된 단일 환경을 제공합니다.</font><font papago-translate="translated"> 그런 다음 블록에 들어가서 다음과 같은 선언을 실행합니다 </font></font><code translate="no">showA()</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p><img alt="A block environment linking to the global one." src="https://youhogeon-meritz.github.io/image/resolving-and-binding/environment-2.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 블록을 위한 새로운 환경을 확보했습니다.</font><font papago-translate="translated"> 그 안에서 우리는 하나의 이름을 선언합니다, </font></font><code translate="no">showA</code><font papago-translate="splitted"><font papago-translate="translated">, 함수를 나타내기 위해 생성하는 LoxFunction 객체에 바인딩됩니다.</font><font papago-translate="translated"> 그 객체는 다음과 같습니다 </font></font><code translate="no">closure</code><font papago-translate="splitted"><font papago-translate="translated"> 함수가 선언된 환경을 캡처하는 필드로, 블록의 환경에 대한 참조를 다시 제공합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이제 우리는 전화합니다 </font></font><code translate="no">showA()</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p><img alt="An empty environment for showA()'s body linking to the previous two. 'a' is resolved in the global environment." src="https://youhogeon-meritz.github.io/image/resolving-and-binding/environment-3.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">통역사는 다음과 같은 기능 본문을 위한 새로운 환경을 동적으로 생성합니다 </font></font><code translate="no">showA()</code><font papago-translate="splitted"><font papago-translate="translated">. 그 함수는 변수를 선언하지 않기 때문에 비어 있습니다.</font><font papago-translate="translated"> 그 환경의 모체는 기능의 폐쇄, 즉 외부 블록<span class="em"></span> 환경입니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">본문 내부 </font></font><code translate="no">showA()</code><font papago-translate="splitted"><font papago-translate="translated">, 우리는 다음과 같은 가치를 인쇄합니다 </font></font><code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated">. 통역사는 환경의 사슬을 걸으며 이 값을 찾습니다.</font><font papago-translate="translated"> 그것은 전 세계 환경까지 도달한 후 그곳에서 찾아내고 인쇄합니다 </font></font><code translate="no">"global"</code><font papago-translate="splitted"><font papago-translate="translated">.좋아요.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다음으로, 우리는 두 번째를 선언합니다 </font></font><code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated">, 이번에는 블록 안에서.</font></font></p><img alt="The block environment has both 'a' and 'showA' now." src="https://youhogeon-meritz.github.io/image/resolving-and-binding/environment-4.png">
+<p><font papago-translate="splitted"><font papago-translate="translated"><span class="em"></span><span class="em"></span>다음과 같은 블록, 즉 동일한 범위에 있습니다 </font></font><code translate="no">showA()</code><font papago-translate="splitted"><font papago-translate="translated">, 그래서 그것은 같은 환경으로 들어갑니다. 그것은 또한 같은 환경이기도 합니다 </font></font><code translate="no">showA()</code><font papago-translate="splitted"><font papago-translate="translated">의 폐쇄는 다음을 의미합니다.</font><font papago-translate="translated"> 여기서부터 흥미로워집니다.</font><font papago-translate="translated"> 우리는 전화합니다 </font></font><code translate="no">showA()</code><font papago-translate="splitted"><font papago-translate="translated"> 다시.</font></font></p><img alt="An empty environment for showA()'s body linking to the previous two. 'a' is resolved in the block environment." src="https://youhogeon-meritz.github.io/image/resolving-and-binding/environment-5.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 다음과 같은 신체를 위한 새로운 빈 환경을 만듭니다 </font></font><code translate="no">showA()</code><font papago-translate="splitted"><font papago-translate="translated"> 다시 한 번, 그 잠금장치에 연결하고 본체를 작동시킵니다.</font><font papago-translate="translated"> 통역사가 환경의 사슬을 걸어 다니며 </font></font><code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated">, 이제<em> 새로운</em> 것을 발견합니다</font></font> <code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated"> 블록 환경에서.</font><font papago-translate="translated"> 부.</font></font></p>
+<p><font papago-translate="translated">저는 당신의 비공식적인 직관에 동의하기를 바라며 환경을 구현하기로 선택했습니다.</font><font papago-translate="translated"> 우리는 블록 내의 모든 코드가 동일한 범위 내에 있다고 생각하는 경향이 있으므로, 우리의 통역사는 이를 표현하기 위해 단일 환경을 사용합니다.</font><font papago-translate="translated"> 각 환경은 변경 가능한 해시 테이블입니다.</font><font papago-translate="translated"> 새로운 로컬 변수가 선언되면 해당 범위에 대한 기존 환경에 추가됩니다.</font></p>
+<p><font papago-translate="translated">그 직관은 인생의 많은 사람들처럼 옳지 않습니다.</font><font papago-translate="translated"> 블록이 반드시 같은 범위인 것은 아닙니다.</font><font papago-translate="translated"> 고려:</font></p>
 <div class="codehilite"><pre translate="no">{
   <span class="k">var</span> <span class="i">a</span>;
   <span class="c">// 1.</span>
@@ -256,126 +169,47 @@ all the same scope. Consider:</p>
   <span class="c">// 2.</span>
 }
 </pre></div>
-<p>At the first marked line, only <code translate="no">a</code> is in scope. At the second line, both <code translate="no">a</code> and
-<code translate="no">b</code> are. If you define a “scope” to be a set of declarations, then those are
-clearly not the same scope<span class="em">—</span>they don’t contain the same declarations. It’s
-like each <code translate="no">var</code> statement <span name="split">splits</span> the block into two
-separate scopes, the scope before the variable is declared and the one after,
-which includes the new variable.</p>
-<aside name="split">
-<p>Some languages make this split explicit. In Scheme and ML, when you declare a
-local variable using <code translate="no">let</code>, you also delineate the subsequent code where the new
-variable is in scope. There is no implicit “rest of the block”.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">첫 번째 표시된 선에서만 </font></font><code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated"> 범위 내에 있습니다.</font><font papago-translate="translated"> 두 번째 줄에서, 둘 다 </font></font><code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">b</code><font papago-translate="splitted"><font papago-translate="translated"> "범위"를 선언의 집합으로 정의하면, 그것들은 분명히 동일한 범위가 아닙니다. 즉, 동일<span class="em"></span>한 선언을 포함하지 않습니다.</font><font papago-translate="translated"> 각각과 같습니다 </font></font><code translate="no">var</code><font papago-translate="splitted"><font papago-translate="translated"> 문은 블록을 두 개의 개별 범위로<span name="split"> 나눕니다</span>. 변수가 선언되기 전의 범위와 새로운 변수가 포함된 이후의 범위입니다.</font></font></p>
+<aside name="split" style="top: 4883.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">일부 언어는 이 분할을 명확하게 설명합니다.</font><font papago-translate="translated"> 스킴 및 ML에서 로컬 변수를 선언할 때 </font></font><code translate="no">let</code><font papago-translate="splitted"><font papago-translate="translated">, 또한 새 변수가 범위 내에 있는 후속 코드를 설명합니다.</font><font papago-translate="translated"> 암묵적인 "블록의 나머지 부분"은 없습니다.</font></font></p>
 </aside>
-<p>But in our implementation, environments do act like the entire block is one
-scope, just a scope that changes over time. Closures do not like that. When a
-function is declared, it captures a reference to the current environment. The
-function <em>should</em> capture a frozen snapshot of the environment <em>as it existed at
-the moment the function was declared</em>. But instead, in the Java code, it has a
-reference to the actual mutable environment object. When a variable is later
-declared in the scope that environment corresponds to, the closure sees the new
-variable, even though the declaration does <em>not</em> precede the function.</p>
-<h3><a href="#persistent-environments" id="persistent-environments"><small>11 . 1 . 2</small>Persistent environments</a></h3>
-<p>There is a style of programming that uses what are called <strong>persistent data
-structures</strong>. Unlike the squishy data structures you’re familiar with in
-imperative programming, a persistent data structure can never be directly
-modified. Instead, any “modification” to an existing structure produces a <span name="copy">brand</span> new object that contains all of the original data and
-the new modification. The original is left unchanged.</p>
-<aside name="copy">
-<p>This sounds like it might waste tons of memory and time copying the structure
-for each operation. In practice, persistent data structures share most of their
-data between the different “copies”.</p>
+<p><font papago-translate="translated">하지만 우리의 구현에서 환경은 전체 블록이 하나의 범위인 것처럼 작용하며, 시간이 지남에 따라 변하는 범위일 뿐입니다.</font><font papago-translate="translated"> 폐쇄는 그것을 좋아하지 않습니다.</font><font papago-translate="translated"> 함수가 선언되면 현재 환경에 대한 참조를 캡처합니다.</font><font papago-translate="translated"> 함수<em>는 함수가 선언된 순간 존재했던</em> 환경의 정지된 스냅샷을 캡처<em>해야 합니다</em>.</font><font papago-translate="translated"> 하지만 대신 Java 코드에서는 실제 변경 가능한 환경 객체에 대한 참조가 있습니다.</font><font papago-translate="translated"> 나중에 환경이 해당하는 범위에서 변수가 선언되면, 선언이<em></em> 함수 앞에 있지 않더라도 폐쇄는 새로운 변수를 보게 됩니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#persistent-environments" id="persistent-environments"><small><font papago-translate="translated">11 . 1 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">지속적인 환경</font></font></a></h3>
+<p><font papago-translate="translated"><strong>지속적인 데이터 구조</strong>라고 불리는 것을 사용하는 프로그래밍 스타일이 있습니다.</font><font papago-translate="translated"> 명령형 프로그래밍에서 익숙한 흐릿한 데이터 구조와 달리, 지속적인 데이터 구조는 절대 직접 수정할 수 없습니다.</font><font papago-translate="translated"> 대신 기존 구조에 대한 모든 "수정"은 원본 데이터와 새로운 수정 사항을 모두 포함하는<span name="copy"> 새로운</span> 객체를 생성합니다.</font><font papago-translate="translated"> 원본은 변경되지 않은 채로 남아 있습니다.</font></p>
+<aside name="copy" style="top: 5315.5px;">
+<p><font papago-translate="translated">이것은 각 작업의 구조를 복사하는 데 엄청난 메모리와 시간을 낭비할 수 있다는 것처럼 들립니다.</font><font papago-translate="translated"> 실제로 지속적인 데이터 구조는 대부분의 데이터를 서로 다른 "복사본" 사이에 공유합니다.</font></p>
 </aside>
-<p>If we were to apply that technique to Environment, then every time you declared
-a variable it would return a <em>new</em> environment that contained all of the
-previously declared variables along with the one new name. Declaring a variable
-would do the implicit “split” where you have an environment before the variable
-is declared and one after:</p><img alt="Separate environments before and after the variable is declared." src="image/resolving-and-binding/split.png"/>
-<p>A closure retains a reference to the Environment instance in play when the
-function was declared. Since any later declarations in that block would produce
-new Environment objects, the closure wouldn’t see the new variables and our bug
-would be fixed.</p>
-<p>This is a legit way to solve the problem, and it’s the classic way to implement
-environments in Scheme interpreters. We could do that for Lox, but it would mean
-going back and changing a pile of existing code.</p>
-<p>I won’t drag you through that. We’ll keep the way we represent environments the
-same. Instead of making the data more statically structured, we’ll bake the
-static resolution into the access <em>operation</em> itself.</p>
-<h2><a href="#semantic-analysis" id="semantic-analysis"><small>11 . 2</small>Semantic Analysis</a></h2>
-<p>Our interpreter <strong>resolves</strong> a variable<span class="em">—</span>tracks down which declaration it
-refers to<span class="em">—</span>each and every time the variable expression is evaluated. If that
-variable is swaddled inside a loop that runs a thousand times, that variable
-gets re-resolved a thousand times.</p>
-<p>We know static scope means that a variable usage always resolves to the same
-declaration, which can be determined just by looking at the text. Given that,
-why are we doing it dynamically every time? Doing so doesn’t just open the hole
-that leads to our annoying bug, it’s also needlessly slow.</p>
-<p>A better solution is to resolve each variable use <em>once</em>. Write a chunk of code
-that inspects the user’s program, finds every variable mentioned, and figures
-out which declaration each refers to. This process is an example of a <strong>semantic
-analysis</strong>. Where a parser tells only if a program is grammatically correct (a
-<em>syntactic</em> analysis), semantic analysis goes farther and starts to figure out
-what pieces of the program actually mean. In this case, our analysis will
-resolve variable bindings. We’ll know not just that an expression <em>is</em> a
-variable, but <em>which</em> variable it is.</p>
-<p>There are a lot of ways we could store the binding between a variable and its
-declaration. When we get to the C interpreter for Lox, we’ll have a <em>much</em> more
-efficient way of storing and accessing local variables. But for jlox, I want to
-minimize the collateral damage we inflict on our existing codebase. I’d hate to
-throw out a bunch of mostly fine code.</p>
-<p>Instead, we’ll store the resolution in a way that makes the most out of our
-existing Environment class. Recall how the accesses of <code translate="no">a</code> are interpreted in
-the problematic example.</p><img alt="An empty environment for showA()'s body linking to the previous two. 'a' is resolved in the global environment." src="image/resolving-and-binding/environment-3.png"/>
-<p>In the first (correct) evaluation, we look at three environments in the chain
-before finding the global declaration of <code translate="no">a</code>. Then, when the inner <code translate="no">a</code> is later
-declared in a block scope, it shadows the global one.</p><img alt="An empty environment for showA()'s body linking to the previous two. 'a' is resolved in the block environment." src="image/resolving-and-binding/environment-5.png"/>
-<p>The next lookup walks the chain, finds <code translate="no">a</code> in the <em>second</em> environment and
-stops there. Each environment corresponds to a single lexical scope where
-variables are declared. If we could ensure a variable lookup always walked the
-<em>same</em> number of links in the environment chain, that would ensure that it
-found the same variable in the same scope every time.</p>
-<p>To “resolve” a variable usage, we only need to calculate how many “hops” away
-the declared variable will be in the environment chain. The interesting question
-is <em>when</em> to do this calculation<span class="em">—</span>or, put differently, where in our
-interpreter’s implementation do we stuff the code for it?</p>
-<p>Since we’re calculating a static property based on the structure of the source
-code, the obvious answer is in the parser. That is the traditional home, and is
-where we’ll put it later in clox. It would work here too, but I want an excuse to
-show you another technique. We’ll write our resolver as a separate pass.</p>
-<h3><a href="#a-variable-resolution-pass" id="a-variable-resolution-pass"><small>11 . 2 . 1</small>A variable resolution pass</a></h3>
-<p>After the parser produces the syntax tree, but before the interpreter starts
-executing it, we’ll do a single walk over the tree to resolve all of the
-variables it contains. Additional passes between parsing and execution are
-common. If Lox had static types, we could slide a type checker in there.
-Optimizations are often implemented in separate passes like this too. Basically,
-any work that doesn’t rely on state that’s only available at runtime can be done
-in this way.</p>
-<p>Our variable resolution pass works like a sort of mini-interpreter. It walks the
-tree, visiting each node, but a static analysis is different from a dynamic
-execution:</p>
+<p><font papago-translate="translated">그 기술을 환경에 적용한다면, 변수를 선언할 때마다 이전에 선언된 모든 변수와 하나의 새로운 이름을 포함하는<em> 새로운</em> 환경이 반환될 것입니다.</font><font papago-translate="translated"> 변수를 선언하면 변수가 선언되기 전과 그 후에 환경이 존재하는 암묵적인 "분할"이 이루어집니다:</font></p><img alt="Separate environments before and after the variable is declared." src="https://youhogeon-meritz.github.io/image/resolving-and-binding/split.png">
+<p><font papago-translate="translated">폐쇄는 함수가 선언되었을 때 실행 중인 환경 인스턴스에 대한 참조를 유지합니다.</font><font papago-translate="translated"> 해당 블록에서 나중에 선언하면 새로운 환경 객체가 생성되므로, 폐쇄 시 새로운 변수가 표시되지 않고 버그가 수정될 것입니다.</font></p>
+<p><font papago-translate="translated">이것은 문제를 해결하는 합법적인 방법이며, 스키마 인터프리터에서 환경을 구현하는 고전적인 방법입니다.</font><font papago-translate="translated"> 우리는 Lox를 위해 그렇게 할 수 있지만, 그것은 돌아가서 기존 코드 더미를 변경하는 것을 의미할 것입니다.</font></p>
+<p><font papago-translate="translated">그 부분은 제가 끌고 가지 않겠습니다.</font><font papago-translate="translated"> 우리는 환경을 표현하는 방식을 그대로 유지할 것입니다.</font><font papago-translate="translated"> 데이터를 더 정적으로 구조화하는 대신, 우리는 정적 해상도를 액세스<em> 작업</em> 자체에 적용할 것입니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#semantic-analysis" id="semantic-analysis"><small><font papago-translate="translated">11 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">의미 분석</font></font></a></h2>
+<p><font papago-translate="translated">우리의 통역사는 변수 표현식<span class="em"></span><span class="em"></span>이 평가될 때마다 어떤 선언을 참조하는지 추적<strong>하여 변수를 해결합니다</strong>.</font><font papago-translate="translated"> 그 변수가 천 번 반복되는 루프 안에 흩어져 있다면, 그 변수는 천 번 다시 해결됩니다.</font></p>
+<p><font papago-translate="translated">정적 범위는 변수 사용이 항상 동일한 선언으로 해결된다는 것을 의미하며, 이는 텍스트만 봐도 알 수 있습니다.</font><font papago-translate="translated"> 그렇다면 왜 매번 역동적으로 하고 있을까요?</font><font papago-translate="translated"> 그렇게 하면 성가신 버그로 이어지는 구멍이 열릴 뿐만 아니라 불필요하게 느려집니다.</font></p>
+<p><font papago-translate="translated">더 나은 해결책은 각 변수 사용을<em> 한 번</em>씩 해결하는 것입니다.</font><font papago-translate="translated"> 사용자의 프로그램을 검사하고, 언급된 모든 변수를 찾아내고, 각각 어떤 선언을 의미하는지 알아내는 코드 조각을 작성합니다.</font><font papago-translate="translated"> 이 과정은<strong> 의미 분석</strong>의 한 예입니다.</font><font papago-translate="translated"> 구문 분석기가 프로그램이 문법적으로 올바른지 여부만 알려주는 경우(<em>통사</em> 분석<em>)</em>, 의미 분석은 더 나아가 프로그램의 일부가 실제로 무엇을 의미하는지 파악하기 시작합니다.</font><font papago-translate="translated"> 이 경우, 우리의 분석은 변수 결합을 해결할 것입니다.</font><font papago-translate="translated"> 표현식<em>이</em> 변수라는 것뿐만 아니라<em> 어떤</em> 변수인지 알게 될 것입니다.</font></p>
+<p><font papago-translate="translated">변수와 그 선언 사이의 바인딩을 저장할 수 있는 방법은 여러 가지가 있습니다.</font><font papago-translate="translated"> Lox용 C 인터프리터에 도달하면 로컬<em></em> 변수를 훨씬 더 효율적으로 저장하고 액세스할 수 있는 방법이 제공됩니다.</font><font papago-translate="translated"> 하지만 Jlox의 경우 기존 코드베이스에 가해지는 부수적인 피해를 최소화하고 싶습니다.</font><font papago-translate="translated"> 대부분 고급 코드를 많이 버리고 싶지 않습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">대신 기존 환경 클래스를 최대한 활용하는 방식으로 해상도를 저장합니다.</font><font papago-translate="translated"> 액세스 방법 기억하기 </font></font><code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated"> 문제가 있는 예제에서 해석됩니다.</font></font></p><img alt="An empty environment for showA()'s body linking to the previous two. 'a' is resolved in the global environment." src="https://youhogeon-meritz.github.io/image/resolving-and-binding/environment-3.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">첫 번째(정확한) 평가에서는 글로벌 선언을 찾기 전에 체인 내 세 가지 환경을 살펴봅니다 </font></font><code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated">. 그러면, 내면이 </font></font><code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated"> 나중에 블록 범위로 선언되며, 글로벌 범위를 흐리게 합니다.</font></font></p><img alt="An empty environment for showA()'s body linking to the previous two. 'a' is resolved in the block environment." src="https://youhogeon-meritz.github.io/image/resolving-and-binding/environment-5.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">다음 조회는 체인을 따라 진행되며 </font></font><code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated"> <em>두 번째</em> 환경에서 멈추고 거기서 멈춥니다.</font><font papago-translate="translated"> 각 환경은 변수가 선언되는 단일 어휘 범위에 해당합니다.</font><font papago-translate="translated"> 변수 조회가 환경 체인에서 항상<em> 동일</em>한 수의 링크를 걸도록 보장할 수 있다면, 매번 동일한 범위에서 동일한 변수를 찾을 수 있을 것입니다.</font></font></p>
+<p><font papago-translate="translated">변수 사용을 "해결"하려면 선언된 변수가 환경 체인에서 얼마나 "홉" 떨어져 있는지만 계산하면 됩니다.</font><font papago-translate="translated"> 흥미로운 질문은 이 계산<em>을 언제</em> 해야 할지, 아니면 다르게 말하면 통역사의 구현에서<span class="em"></span> 코드를 어디에 입력해야 할지입니다?</font></p>
+<p><font papago-translate="translated">소스 코드의 구조를 기반으로 정적 속성을 계산하기 때문에 명확한 답은 파서에 있습니다.</font><font papago-translate="translated"> 그것이 전통적인 집이며, 나중에 클록스에 넣을 곳입니다.</font><font papago-translate="translated"> 여기서도 작동하겠지만, 다른 기술을 보여드리기 위해 변명의 여지를 드리고 싶습니다.</font><font papago-translate="translated"> 우리는 해결사를 별도의 패스로 작성할 것입니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#a-variable-resolution-pass" id="a-variable-resolution-pass"><small><font papago-translate="translated">11 . 2 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">가변 해상도 패스</font></font></a></h3>
+<p><font papago-translate="translated">구문 분석기가 구문 트리를 생성한 후, 인터프리터가 구문 트리를 실행하기 전에 트리에 포함된 모든 변수를 해결하기 위해 한 번의 워크를 수행합니다.</font><font papago-translate="translated"> 구문 분석과 실행 사이에는 추가적인 패스가 일반적입니다.</font><font papago-translate="translated"> Lox에 정적 유형이 있다면, 우리는 그 안에 타입 체커를 넣을 수 있을 것입니다.</font><font papago-translate="translated"> 최적화는 종종 이렇게 별도의 패스로 구현됩니다.</font><font papago-translate="translated"> 기본적으로 런타임에만 사용할 수 있는 상태에 의존하지 않는 모든 작업은 이러한 방식으로 수행할 수 있습니다.</font></p>
+<p><font papago-translate="translated">우리의 가변 해상도 패스는 일종의 미니 인터프리터처럼 작동합니다.</font><font papago-translate="translated"> 트리를 걸어 각 노드를 방문하지만 정적 분석은 동적 실행과는 다릅니다:</font></p>
 <ul>
 <li>
-<p><strong>There are no side effects.</strong> When the static analysis visits a print
-statement, it doesn’t actually print anything. Calls to native functions or
-other operations that reach out to the outside world are stubbed out and
-have no effect.</p>
+<p><font papago-translate="translated"><strong>부작용이 없습니다.</strong></font><font papago-translate="translated"> 정적 분석이 인쇄 문을 방문하면 실제로 아무것도 인쇄하지 않습니다.</font><font papago-translate="translated"> 네이티브 함수나 외부에 도달하는 다른 연산에 대한 호출은 중단되며 아무런 효과가 없습니다.</font></p>
 </li>
 <li>
-<p><strong>There is no control flow.</strong> Loops are visited only <span name="fix">once</span>. Both branches are visited in <code translate="no">if</code> statements. Logic
-operators are not short-circuited.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><strong>제어 흐름이 없습니다.</strong></font><font papago-translate="translated"> 루프는<span name="fix"> 한 번</span>만 방문됩니다.</font><font papago-translate="translated"> 두 지점 모두 방문됩니다 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 진술들.</font><font papago-translate="translated"> 논리 연산자는 단락되지 않습니다.</font></font></p>
 </li>
 </ul>
-<aside name="fix">
-<p>Variable resolution touches each node once, so its performance is <em>O(n)</em> where
-<em>n</em> is the number of syntax tree nodes. More sophisticated analyses may have
-greater complexity, but most are carefully designed to be linear or not far from
-it. It’s an embarrassing faux pas if your compiler gets exponentially slower as
-the user’s program grows.</p>
+<aside name="fix" style="top: 7883.5px;">
+<p><font papago-translate="translated">변수 해상도는 각 노드에 한 번씩 닿기 때문에 성능은 O<em>(n</em>)이며<em>, 여기서 n</em>은 구문 트리 노드의 수입니다.</font><font papago-translate="translated"> 더 정교한 분석은 더 복잡할 수 있지만, 대부분은 선형적이거나 멀지 않은 곳에서 신중하게 설계되었습니다.</font><font papago-translate="translated"> 사용자의 프로그램이 증가함에 따라 컴파일러의 속도가 기하급수적으로 느려지면 당황스러운 가짜 패스가 됩니다.</font></p>
 </aside>
-<h2><a href="#a-resolver-class" id="a-resolver-class"><small>11 . 3</small>A Resolver Class</a></h2>
-<p>Like everything in Java, our variable resolution pass is embodied in a class.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-create new file</div>
+<h2><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#a-resolver-class" id="a-resolver-class"><small><font papago-translate="translated">11 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">해결사 클래스</font></font></a></h2>
+<p><font papago-translate="translated">자바의 모든 것과 마찬가지로, 우리의 가변 해상도 패스는 클래스로 구현됩니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 새 파일 만들기</font></font></div>
 <pre translate="no"><span class="k">package</span> <span class="i">com.craftinginterpreters.lox</span>;
 
 <span class="k">import</span> <span class="i">java.util.HashMap</span>;
@@ -392,33 +226,25 @@ create new file</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, create new file</div>
-<p>Since the resolver needs to visit every node in the syntax tree, it implements
-the visitor abstraction we already have in place. Only a few kinds of nodes are
-interesting when it comes to resolving variables:</p>
+<p><font papago-translate="translated">해결사는 구문 트리의 모든 노드를 방문해야 하므로, 우리가 이미 가지고 있는 방문자 추상화를 구현합니다.</font><font papago-translate="translated"> 변수를 해결할 때 흥미로운 노드는 몇 가지 종류에 불과합니다:</font></p>
 <ul>
 <li>
-<p>A block statement introduces a new scope for the statements it contains.</p>
+<p><font papago-translate="translated">블록 문은 포함된 문에 대한 새로운 범위를 도입합니다.</font></p>
 </li>
 <li>
-<p>A function declaration introduces a new scope for its body and binds its
-parameters in that scope.</p>
+<p><font papago-translate="translated">함수 선언은 자신의 몸에 새로운 범위를 도입하고 그 범위 내에서 매개변수를 묶습니다.</font></p>
 </li>
 <li>
-<p>A variable declaration adds a new variable to the current scope.</p>
+<p><font papago-translate="translated">변수 선언은 현재 범위에 새로운 변수를 추가합니다.</font></p>
 </li>
 <li>
-<p>Variable and assignment expressions need to have their variables resolved.</p>
+<p><font papago-translate="translated">변수와 할당 표현식은 변수를 해결해야 합니다.</font></p>
 </li>
 </ul>
-<p>The rest of the nodes don’t do anything special, but we still need to implement
-visit methods for them that traverse into their subtrees. Even though a <code translate="no">+</code>
-expression doesn’t <em>itself</em> have any variables to resolve, either of its
-operands might.</p>
-<h3><a href="#resolving-blocks" id="resolving-blocks"><small>11 . 3 . 1</small>Resolving blocks</a></h3>
-<p>We start with blocks since they create the local scopes where all the magic
-happens.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>Resolver</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">나머지 노드들은 특별한 일을 하지 않지만, 여전히 하위 트리로 이동하는 방문 방법을 구현해야 합니다.</font><font papago-translate="translated"> 비록 </font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated"> 식<em> 자체에는</em> 해결할 변수가 없으며, 그 피연산자 중 어느 쪽이든 해결할 수 있습니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#resolving-blocks" id="resolving-blocks"><small><font papago-translate="translated">11 . 3 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">블록 해결</font></font></a></h3>
+<p><font papago-translate="translated">블록은 모든 마법이 일어나는 지역 범위를 만들기 때문에 블록부터 시작합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> Res<em>olver</em>() 다음에 추가</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitBlockStmt</span>(<span class="t">Stmt</span>.<span class="t">Block</span> <span class="i">stmt</span>) {
     <span class="i">beginScope</span>();
@@ -428,11 +254,8 @@ add after <em>Resolver</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>Resolver</em>()</div>
-<p>This begins a new scope, traverses into the statements inside the block, and
-then discards the scope. The fun stuff lives in those helper methods. We start
-with the simple one.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>Resolver</em>()</div>
+<p><font papago-translate="translated">이것은 새로운 범위를 시작하고, 블록 내부의 문장들을 탐색한 다음, 범위를 버립니다.</font><font papago-translate="translated"> 재미있는 것은 그 도우미 방법들에 있습니다.</font><font papago-translate="translated"> 간단한 것부터 시작합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> Res<em>olver</em>() 다음에 추가</font></font></div>
 <pre translate="no">  <span class="t">void</span> <span class="i">resolve</span>(<span class="t">List</span>&lt;<span class="t">Stmt</span>&gt; <span class="i">statements</span>) {
     <span class="k">for</span> (<span class="t">Stmt</span> <span class="i">statement</span> : <span class="i">statements</span>) {
       <span class="i">resolve</span>(<span class="i">statement</span>);
@@ -440,69 +263,49 @@ add after <em>Resolver</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>Resolver</em>()</div>
-<p>This walks a list of statements and resolves each one. It in turn calls:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>visitBlockStmt</em>()</div>
+<p><font papago-translate="translated">이렇게 하면 문장 목록이 표시되고 각 문장이 해결됩니다.</font><font papago-translate="translated"> 차례로 호출됩니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가 Bl<em>ockStmt</em>()</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">void</span> <span class="i">resolve</span>(<span class="t">Stmt</span> <span class="i">stmt</span>) {
     <span class="i">stmt</span>.<span class="i">accept</span>(<span class="k">this</span>);
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>visitBlockStmt</em>()</div>
-<p>While we’re at it, let’s add another overload that we’ll need later for
-resolving an expression.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>resolve</em>(Stmt stmt)</div>
+<p><font papago-translate="translated">우리가 그것을 하는 동안, 나중에 식을 해결하기 위해 필요한 또 다른 과부하를 추가해 보겠습니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>해결</em> 후 추가(Stmt stmt)</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">void</span> <span class="i">resolve</span>(<span class="t">Expr</span> <span class="i">expr</span>) {
     <span class="i">expr</span>.<span class="i">accept</span>(<span class="k">this</span>);
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>resolve</em>(Stmt stmt)</div>
-<p>These methods are similar to the <code translate="no">evaluate()</code> and <code translate="no">execute()</code> methods in
-Interpreter<span class="em">—</span>they turn around and apply the Visitor pattern to the given
-syntax tree node.</p>
-<p>The real interesting behavior is around scopes. A new block scope is created
-like so:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>resolve</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 방법들은 다음과 유사합니다 </font></font><code translate="no">evaluate()</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">execute()</code><font papago-translate="splitted"><font papago-translate="translated"> 인터프리터 메서드—그 메서드들은 주어진 구문 트리<span class="em"></span> 노드에 방문자 패턴을 적용합니다.</font></font></p>
+<p><font papago-translate="translated">정말 흥미로운 행동은 스코프 주변에 있습니다.</font><font papago-translate="translated"> 새 블록 범위가 이렇게 생성됩니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>해결</em> 후 () 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">void</span> <span class="i">beginScope</span>() {
     <span class="i">scopes</span>.<span class="i">push</span>(<span class="k">new</span> <span class="t">HashMap</span>&lt;<span class="t">String</span>, <span class="t">Boolean</span>&gt;());
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>resolve</em>()</div>
-<p>Lexical scopes nest in both the interpreter and the resolver. They behave like a
-stack. The interpreter implements that stack using a linked list<span class="em">—</span>the chain of
-Environment objects. In the resolver, we use an actual Java Stack.</p>
+<p><font papago-translate="translated">어휘 범위는 해석자와 해석자 모두에 위치합니다.</font><font papago-translate="translated"> 그들은 마치 더미처럼 행동합니다.</font><font papago-translate="translated"> 인터프리터는 연결된 목록인 환경<span class="em"></span> 객체 체인을 사용하여 스택을 구현합니다.</font><font papago-translate="translated"> 해결사에서는 실제 Java 스택을 사용합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  private final Interpreter interpreter;
-</pre><div class="source-file"><em>lox/Resolver.java</em><br/>
-in class <em>Resolver</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 클래스 리<em>졸버</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="k">private</span> <span class="k">final</span> <span class="t">Stack</span>&lt;<span class="t">Map</span>&lt;<span class="t">String</span>, <span class="t">Boolean</span>&gt;&gt; <span class="i">scopes</span> = <span class="k">new</span> <span class="t">Stack</span>&lt;&gt;();
 </pre><pre class="insert-after" translate="no">
-
   Resolver(Interpreter interpreter) {
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, in class <em>Resolver</em></div>
-<p>This field keeps track of the stack of scopes currently, uh, in scope. Each
-element in the stack is a Map representing a single block scope. Keys, as in
-Environment, are variable names. The values are Booleans, for a reason I’ll
-explain soon.</p>
-<p>The scope stack is only used for local block scopes. Variables declared at the
-top level in the global scope are not tracked by the resolver since they are
-more dynamic in Lox. When resolving a variable, if we can’t find it in the stack
-of local scopes, we assume it must be global.</p>
-<p>Since scopes are stored in an explicit stack, exiting one is straightforward.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>beginScope</em>()</div>
+<p><font papago-translate="translated">이 필드는 현재 범위 내의 스코프 스택을 추적합니다.</font><font papago-translate="translated"> 스택의 각 요소는 단일 블록 범위를 나타내는 맵입니다.</font><font papago-translate="translated"> 키는 환경에서와 같이 변수 이름입니다.</font><font papago-translate="translated"> 값들은 불리언(Booleans)입니다. 그 이유는 곧 설명드리겠습니다.</font></p>
+<p><font papago-translate="translated">스코프 스택은 로컬 블록 스코프에만 사용됩니다.</font><font papago-translate="translated"> 글로벌 범위에서 최상위 수준으로 선언된 변수는 Lox에서 더 동적이기 때문에 해결사가 추적하지 않습니다.</font><font papago-translate="translated"> 변수를 해결할 때 로컬 스코프 스택에서 변수를 찾을 수 없다면 전역 변수여야 한다고 가정합니다.</font></p>
+<p><font papago-translate="translated">스코프는 명시적인 스택에 저장되므로 하나를 나가는 것이 간단합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated" class=""> <em>beginScope</em>() 다음에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">void</span> <span class="i">endScope</span>() {
     <span class="i">scopes</span>.<span class="i">pop</span>();
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>beginScope</em>()</div>
-<p>Now we can push and pop a stack of empty scopes. Let’s put some things in them.</p>
-<h3><a href="#resolving-variable-declarations" id="resolving-variable-declarations"><small>11 . 3 . 2</small>Resolving variable declarations</a></h3>
-<p>Resolving a variable declaration adds a new entry to the current innermost
-scope’s map. That seems simple, but there’s a little dance we need to do.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>visitBlockStmt</em>()</div>
+<p><font papago-translate="translated">이제 빈 스코프 스택을 밀어서 터뜨릴 수 있습니다.</font><font papago-translate="translated"> 몇 가지를 넣겠습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#resolving-variable-declarations" id="resolving-variable-declarations"><small><font papago-translate="translated">11 . 3 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">변수 선언 해결</font></font></a></h3>
+<p><font papago-translate="translated">변수 선언을 해결하면 현재 가장 안쪽 스코프의 맵에 새 항목이 추가됩니다.</font><font papago-translate="translated"> 간단해 보이지만, 우리가 해야 할 작은 춤이 있습니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가 Bl<em>ockStmt</em>()</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitVarStmt</span>(<span class="t">Stmt</span>.<span class="t">Var</span> <span class="i">stmt</span>) {
     <span class="i">declare</span>(<span class="i">stmt</span>.<span class="i">name</span>);
@@ -514,55 +317,36 @@ add after <em>visitBlockStmt</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>visitBlockStmt</em>()</div>
-<p>We split binding into two steps, declaring then defining, in order to handle
-funny edge cases like this:</p>
+<p><font papago-translate="translated">다음과 같은 재미있는 엣지 케이스를 처리하기 위해 바인딩을 두 단계로 나누고 선언한 다음 정의합니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">a</span> = <span class="s">"outer"</span>;
 {
   <span class="k">var</span> <span class="i">a</span> = <span class="i">a</span>;
 }
 </pre></div>
-<p>What happens when the initializer for a local variable refers to a variable with
-the same name as the variable being declared? We have a few options:</p>
+<p><font papago-translate="translated">로컬 변수의 초기화자가 선언되는 변수와 이름이 같은 변수를 참조하면 어떻게 되나요?</font><font papago-translate="translated"> 몇 가지 옵션이 있습니다:</font></p>
 <ol>
 <li>
-<p><strong>Run the initializer, then put the new variable in scope.</strong> Here, the new
-local <code translate="no">a</code> would be initialized with “outer”, the value of the <em>global</em> one.
-In other words, the previous declaration would desugar to:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><strong>초기화기를 실행한 다음 새 변수를 범위에 넣습니다.</strong></font><font papago-translate="translated"> 여기, 새로운 지역 </font></font><code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated"> <em>글로벌</em> 값인 "outer"로 초기화됩니다.</font><font papago-translate="translated"> 다시 말해, 이전 선언은 다음과 같은 것으로 간주될 것입니다:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">temp</span> = <span class="i">a</span>; <span class="c">// Run the initializer.</span>
 <span class="k">var</span> <span class="i">a</span>;        <span class="c">// Declare the variable.</span>
 <span class="i">a</span> = <span class="i">temp</span>;     <span class="c">// Initialize it.</span>
 </pre></div>
 </li>
 <li>
-<p><strong>Put the new variable in scope, then run the initializer.</strong> This means you
-could observe a variable before it’s initialized, so we would need to figure
-out what value it would have then. Probably <code translate="no">nil</code>. That means the new local
-<code translate="no">a</code> would be re-initialized to its own implicitly initialized value, <code translate="no">nil</code>.
-Now the desugaring would look like:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><strong>새 변수를 범위에 넣은 다음 초기화기를 실행합니다.</strong></font><font papago-translate="translated"> 즉, 변수가 초기화되기 전에 관찰할 수 있으므로 어떤 값을 가질지 파악해야 합니다.</font><font papago-translate="translated"> 아마도 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">. 즉, 새로운 지역을 의미합니다 </font></font><code translate="no">a</code><font papago-translate="splitted"><font papago-translate="translated"> 암묵적으로 초기화된 값으로 다시 initial화될 것입니다, </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">. 이제 분리수거는 다음과 같이 보일 것입니다:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">a</span>; <span class="c">// Define the variable.</span>
 <span class="i">a</span> = <span class="i">a</span>; <span class="c">// Run the initializer.</span>
 </pre></div>
 </li>
 <li>
-<p><strong>Make it an error to reference a variable in its initializer.</strong> Have the
-interpreter fail either at compile time or runtime if an initializer
-mentions the variable being initialized.</p>
+<p><font papago-translate="translated"><strong>변수를 초기화할 때 참조하는 것을 오류로 만드세요.</strong></font><font papago-translate="translated"> 초기화자가 변수를 초기화 중이라고 언급할 경우 컴파일 시간이나 런타임에 인터프리터가 실패하도록 합니다.</font></p>
 </li>
 </ol>
-<p>Do either of those first two options look like something a user actually
-<em>wants</em>? Shadowing is rare and often an error, so initializing a shadowing
-variable based on the value of the shadowed one seems unlikely to be deliberate.</p>
-<p>The second option is even less useful. The new variable will <em>always</em> have the
-value <code translate="no">nil</code>. There is never any point in mentioning it by name. You could use an
-explicit <code translate="no">nil</code> instead.</p>
-<p>Since the first two options are likely to mask user errors, we’ll take the
-third. Further, we’ll make it a compile error instead of a runtime one. That
-way, the user is alerted to the problem before any code is run.</p>
-<p>In order to do that, as we visit expressions, we need to know if we’re inside
-the initializer for some variable. We do that by splitting binding into two
-steps. The first is <strong>declaring</strong> it.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>endScope</em>()</div>
+<p><font papago-translate="translated">처음 두 가지 옵션 중 하나가 실제로 사용자<em>가 원하는</em> 것처럼 보이나요?</font><font papago-translate="translated"> 섀도잉은 드물고 종종 오류가 발생하기 때문에 섀도잉 변수의 값을 기준으로 섀도잉 변수를 초기화하는 것은 의도적이지 않은 것 같습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">두 번째 옵션은 훨씬 덜 유용합니다.</font><font papago-translate="translated"> 새 변수<em>는 항상</em> 값을 갖습니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">. 이름으로 언급하는 것은 의미가 없습니다.</font><font papago-translate="translated"> 명시적으로 사용할 수 있습니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 대신.</font></font></p>
+<p><font papago-translate="translated">처음 두 가지 옵션은 사용자 오류를 가릴 가능성이 높기 때문에, 세 번째 옵션을 선택하겠습니다.</font><font papago-translate="translated"> 또한 런타임 오류가 아닌 컴파일 오류로 만들겠습니다.</font><font papago-translate="translated"> 그렇게 하면 코드가 실행되기 전에 사용자에게 문제를 알릴 수 있습니다.</font></p>
+<p><font papago-translate="translated">이를 위해서는 식을 방문할 때 어떤 변수에 대한 초기화기 내부에 있는지 알아야 합니다.</font><font papago-translate="translated"> 바인딩을 두 단계로 나누어 수행합니다.</font><font papago-translate="translated"> 첫 번째는<strong> 선언</strong>하는 것입니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>endScope</em>() 뒤에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">void</span> <span class="i">declare</span>(<span class="t">Token</span> <span class="i">name</span>) {
     <span class="k">if</span> (<span class="i">scopes</span>.<span class="i">isEmpty</span>()) <span class="k">return</span>;
 
@@ -571,30 +355,19 @@ add after <em>endScope</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>endScope</em>()</div>
-<p>Declaration adds the variable to the innermost scope so that it shadows any
-outer one and so that we know the variable exists. We mark it as “not ready yet”
-by binding its name to <code translate="no">false</code> in the scope map. The value associated with a key
-in the scope map represents whether or not we have finished resolving that
-variable’s initializer.</p>
-<p>After declaring the variable, we resolve its initializer expression in that same
-scope where the new variable now exists but is unavailable. Once the initializer
-expression is done, the variable is ready for prime time. We do that by
-<strong>defining</strong> it.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>declare</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">선언은 변수를 가장 안쪽 범위에 추가하여 외부 변수를 가리고 변수가 존재한다는 것을 알 수 있도록 합니다.</font><font papago-translate="translated"> 이름을 바인딩하여 "아직 준비되지 않음"으로 표시합니다 </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated"> 스코프 맵에서.</font><font papago-translate="translated"> 스코프 맵에서 키와 관련된 값은 해당 변수의 초기화를 완료했는지 여부를 나타냅니다.</font></font></p>
+<p><font papago-translate="translated">변수를 선언한 후, 새로운 변수가 현재 존재하지만 사용할 수 없는 동일한 범위에서 초기화 표현식을 해결합니다.</font><font papago-translate="translated"> 초기화 표현식이 완료되면 변수는 프라임 타임에 사용할 준비가 됩니다.</font><font papago-translate="translated"> <strong>우리</strong>는<strong> 그것을 정의</strong>함으로써 그렇게 합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> ()<em> 선언</em> 후 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">void</span> <span class="i">define</span>(<span class="t">Token</span> <span class="i">name</span>) {
     <span class="k">if</span> (<span class="i">scopes</span>.<span class="i">isEmpty</span>()) <span class="k">return</span>;
     <span class="i">scopes</span>.<span class="i">peek</span>().<span class="i">put</span>(<span class="i">name</span>.<span class="i">lexeme</span>, <span class="k">true</span>);
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>declare</em>()</div>
-<p>We set the variable’s value in the scope map to <code translate="no">true</code> to mark it as fully
-initialized and available for use. It’s alive! </p>
-<h3><a href="#resolving-variable-expressions" id="resolving-variable-expressions"><small>11 . 3 . 3</small>Resolving variable expressions</a></h3>
-<p>Variable declarations<span class="em">—</span>and function declarations, which we’ll get to<span class="em">—</span>write
-to the scope maps. Those maps are read when we resolve variable expressions.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>visitVarStmt</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">스코프 맵에서 변수 값을 다음과 같이 설정합니다 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated"> 완전히 초기화되어 사용 가능하도록 표시합니다.</font><font papago-translate="translated"> 살아 있습니다! </font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#resolving-variable-expressions" id="resolving-variable-expressions"><small><font papago-translate="translated">11 . 3 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">변수 표현식 해결</font></font></a></h3>
+<p><font papago-translate="translated">변수 선언과 함수 선언은 이제 범위<span class="em"></span><span class="em"></span> 맵에 씁니다.</font><font papago-translate="translated"> 그 지도들은 변수 표현식을 풀 때 읽힙니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>V<em>arStmt</em>() 방문 후 추가</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitVariableExpr</span>(<span class="t">Expr</span>.<span class="t">Variable</span> <span class="i">expr</span>) {
     <span class="k">if</span> (!<span class="i">scopes</span>.<span class="i">isEmpty</span>() &amp;&amp;
@@ -608,13 +381,9 @@ add after <em>visitVarStmt</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>visitVarStmt</em>()</div>
-<p>First, we check to see if the variable is being accessed inside its own
-initializer. This is where the values in the scope map come into play. If the
-variable exists in the current scope but its value is <code translate="no">false</code>, that means we
-have declared it but not yet defined it. We report that error.</p>
-<p>After that check, we actually resolve the variable itself using this helper:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>define</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">먼저, 변수가 자체 초기화기 내부에서 접근되고 있는지 확인합니다.</font><font papago-translate="translated"> 이것이 바로 스코프 맵의 값들이 작용하는 지점입니다.</font><font papago-translate="translated"> 변수가 현재 범위에 존재하지만 그 값이 다음과 같은 경우 </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated">, 그것은 우리가 그것을 선언했지만 아직 정의하지 않았다는 것을 의미합니다.</font><font papago-translate="translated"> 우리는 그 오류를 보고합니다.</font></font></p>
+<p><font papago-translate="translated">그 확인 후에, 우리는 실제로 이 도우미를 사용하여 변수 자체를 해결합니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>정의</em>된 () 후에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">void</span> <span class="i">resolveLocal</span>(<span class="t">Expr</span> <span class="i">expr</span>, <span class="t">Token</span> <span class="i">name</span>) {
     <span class="k">for</span> (<span class="t">int</span> <span class="i">i</span> = <span class="i">scopes</span>.<span class="i">size</span>() - <span class="n">1</span>; <span class="i">i</span> &gt;= <span class="n">0</span>; <span class="i">i</span>--) {
       <span class="k">if</span> (<span class="i">scopes</span>.<span class="i">get</span>(<span class="i">i</span>).<span class="i">containsKey</span>(<span class="i">name</span>.<span class="i">lexeme</span>)) {
@@ -625,21 +394,11 @@ add after <em>define</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>define</em>()</div>
-<p>This looks, for good reason, a lot like the code in Environment for evaluating a
-variable. We start at the innermost scope and work outwards, looking in each map
-for a matching name. If we find the variable, we resolve it, passing in the
-number of scopes between the current innermost scope and the scope where the
-variable was found. So, if the variable was found in the current scope, we
-pass in 0. If it’s in the immediately enclosing scope, 1. You get the idea.</p>
-<p>If we walk through all of the block scopes and never find the variable, we leave
-it unresolved and assume it’s global. We’ll get to the implementation of that
-<code translate="no">resolve()</code> method a little later. For now, let’s keep on cranking through the
-other syntax nodes.</p>
-<h3><a href="#resolving-assignment-expressions" id="resolving-assignment-expressions"><small>11 . 3 . 4</small>Resolving assignment expressions</a></h3>
-<p>The other expression that references a variable is assignment. Resolving one
-looks like this:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>visitVarStmt</em>()</div>
+<p><font papago-translate="translated">이것은 타당한 이유로 변수를 평가하기 위한 환경의 코드와 매우 유사해 보입니다.</font><font papago-translate="translated"> 우리는 가장 안쪽 범위에서 시작하여 각 지도에서 일치하는 이름을 찾아 바깥쪽으로 나아갑니다.</font><font papago-translate="translated"> 변수를 찾으면 현재 가장 안쪽 범위와 변수가 발견된 범위 사이의 범위 수를 넘겨 해결합니다.</font><font papago-translate="translated"> 따라서 현재 범위에서 변수가 발견되면 0으로 넘어갑니다.</font><font papago-translate="translated"> 만약 그것이 즉시 둘러싸이는 범위에 있다면, 1.</font><font papago-translate="translated"> 이해했습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">모든 블록 범위를 통과하고 변수를 찾지 못하면 해결되지 않은 상태로 두고 전역적이라고 가정합니다.</font><font papago-translate="translated"> 우리는 그것을 구현할 것입니다 </font></font><code translate="no">resolve()</code><font papago-translate="splitted"><font papago-translate="translated"> 조금 후에 방법.</font><font papago-translate="translated"> 지금은 다른 구문 노드들을 계속 살펴봅시다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#resolving-assignment-expressions" id="resolving-assignment-expressions"><small><font papago-translate="translated">11 . 3 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">과제 표현식 해결하기</font></font></a></h3>
+<p><font papago-translate="translated">변수를 참조하는 또 다른 표현은 할당입니다.</font><font papago-translate="translated"> 하나를 해결하는 것은 다음과 같습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>V<em>arStmt</em>() 방문 후 추가</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitAssignExpr</span>(<span class="t">Expr</span>.<span class="t">Assign</span> <span class="i">expr</span>) {
     <span class="i">resolve</span>(<span class="i">expr</span>.<span class="i">value</span>);
@@ -648,16 +407,10 @@ add after <em>visitVarStmt</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>visitVarStmt</em>()</div>
-<p>First, we resolve the expression for the assigned value in case it also contains
-references to other variables. Then we use our existing <code translate="no">resolveLocal()</code> method
-to resolve the variable that’s being assigned to.</p>
-<h3><a href="#resolving-function-declarations" id="resolving-function-declarations"><small>11 . 3 . 5</small>Resolving function declarations</a></h3>
-<p>Finally, functions. Functions both bind names and introduce a scope. The name of
-the function itself is bound in the surrounding scope where the function is
-declared. When we step into the function’s body, we also bind its parameters
-into that inner function scope.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>visitBlockStmt</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">먼저, 할당된 값에 다른 변수에 대한 참조가 포함된 경우 해당 값의 식을 해결합니다.</font><font papago-translate="translated"> 그런 다음 기존 기능을 사용합니다 </font></font><code translate="no">resolveLocal()</code><font papago-translate="splitted"><font papago-translate="translated"> 할당된 변수를 해결하는 방법.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#resolving-function-declarations" id="resolving-function-declarations"><small><font papago-translate="translated">11 . 3 . 5</font></small><font papago-translate="splitted"><font papago-translate="translated">함수 선언 해결</font></font></a></h3>
+<p><font papago-translate="translated">마지막으로, 기능들.</font><font papago-translate="translated"> 함수는 이름을 묶고 범위를 도입합니다.</font><font papago-translate="translated"> 함수 자체의 이름은 함수가 선언되는 주변 범위에 속합니다.</font><font papago-translate="translated"> 함수의 본문에 들어갈 때, 우리는 또한 그 매개변수를 그 내부 함수 범위에 묶습니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가 Bl<em>ockStmt</em>()</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitFunctionStmt</span>(<span class="t">Stmt</span>.<span class="t">Function</span> <span class="i">stmt</span>) {
     <span class="i">declare</span>(<span class="i">stmt</span>.<span class="i">name</span>);
@@ -668,13 +421,9 @@ add after <em>visitBlockStmt</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>visitBlockStmt</em>()</div>
-<p>Similar to <code translate="no">visitVariableStmt()</code>, we declare and define the name of the function
-in the current scope. Unlike variables, though, we define the name eagerly,
-before resolving the function’s body. This lets a function recursively refer to
-itself inside its own body.</p>
-<p>Then we resolve the function’s body using this:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>resolve</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">유사하게 </font></font><code translate="no">visitVariableStmt()</code><font papago-translate="splitted"><font papago-translate="translated">, 현재 범위에서 함수의 이름을 선언하고 정의합니다.</font><font papago-translate="translated"> 변수와 달리 함수의 본문을 해결하기 전에 이름을 열심히 정의합니다.</font><font papago-translate="translated"> 이를 통해 함수는 자신의 몸 안에서 자신을 재귀적으로 지칭할 수 있습니다.</font></font></p>
+<p><font papago-translate="translated">그런 다음 이를 사용하여 함수의 본문을 해결합니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>해결</em> 후 () 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">void</span> <span class="i">resolveFunction</span>(<span class="t">Stmt</span>.<span class="t">Function</span> <span class="i">function</span>) {
     <span class="i">beginScope</span>();
     <span class="k">for</span> (<span class="t">Token</span> <span class="i">param</span> : <span class="i">function</span>.<span class="i">params</span>) {
@@ -686,28 +435,15 @@ add after <em>resolve</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>resolve</em>()</div>
-<p>It’s a separate method since we will also use it for resolving Lox methods when
-we add classes later. It creates a new scope for the body and then binds
-variables for each of the function’s parameters.</p>
-<p>Once that’s ready, it resolves the function body in that scope. This is
-different from how the interpreter handles function declarations. At <em>runtime</em>,
-declaring a function doesn’t do anything with the function’s body. The body
-doesn’t get touched until later when the function is called. In a <em>static</em>
-analysis, we immediately traverse into the body right then and there.</p>
-<h3><a href="#resolving-the-other-syntax-tree-nodes" id="resolving-the-other-syntax-tree-nodes"><small>11 . 3 . 6</small>Resolving the other syntax tree nodes</a></h3>
-<p>That covers the interesting corners of the grammars. We handle every place where
-a variable is declared, read, or written, and every place where a scope is
-created or destroyed. Even though they aren’t affected by variable resolution,
-we also need visit methods for all of the other syntax tree nodes in order to
-recurse into their subtrees. <span name="boring">Sorry</span> this bit is
-boring, but bear with me. We’ll go kind of “top down” and start with statements.</p>
-<aside name="boring">
-<p>I did say the book would have every single line of code for these interpreters.
-I didn’t say they’d all be exciting.</p>
+<p><font papago-translate="translated">나중에 수업을 추가할 때 Lox 메서드를 해결하는 데도 사용할 예정이므로 별도의 메서드입니다.</font><font papago-translate="translated"> 그것은 신체에 대한 새로운 범위를 생성한 다음 각 기능 매개변수에 대한 변수를 결합합니다.</font></p>
+<p><font papago-translate="translated">준비가 되면 해당 범위의 기능 본체를 해결합니다.</font><font papago-translate="translated"> 이것은 통역사가 함수 선언을 처리하는 방식과는 다릅니다.</font><font papago-translate="translated"> <em>런타임</em> 시 함수를 선언하는 것은 함수의 본문에 아무런 영향을 미치지 않습니다.</font><font papago-translate="translated"> 기능이 호출될 때까지 신체는 접촉하지 않습니다.</font><font papago-translate="translated"> <em>정적</em> 분석에서는 즉시 몸속으로 이동합니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#resolving-the-other-syntax-tree-nodes" id="resolving-the-other-syntax-tree-nodes"><small><font papago-translate="translated">11 . 3 . 6</font></small><font papago-translate="splitted"><font papago-translate="translated">다른 구문 트리 노드 해결하기</font></font></a></h3>
+<p><font papago-translate="translated">그것은 문법의 흥미로운 부분을 다룹니다.</font><font papago-translate="translated"> 우리는 변수가 선언되거나 읽히거나 작성되는 모든 장소와 범위가 생성되거나 파괴되는 모든 장소를 다룹니다.</font><font papago-translate="translated"> 변수 해상도의 영향을 받지 않더라도, 다른 모든 구문 트리 노드의 하위 트리로 반복하기 위해서는 방문 방법도 필요합니다.</font><font papago-translate="translated"> 지루해서<span name="boring"> 죄송하지만</span>, 조금만 참아<span name="boring">주세요.</span></font><font papago-translate="translated"> 우리는 "위에서 아래로" 가서 진술부터 시작할 것입니다.</font></p>
+<aside name="boring" style="top: 14875.5px;">
+<p><font papago-translate="translated">책에는 이 통역사들을 위한 모든 코드 라인이 포함될 것이라고 말씀드렸습니다.</font><font papago-translate="translated"> 모두 흥미진진할 거라고는 말하지 않았습니다.</font></p>
 </aside>
-<p>An expression statement contains a single expression to traverse.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>visitBlockStmt</em>()</div>
+<p><font papago-translate="translated">표현식 문에는 횡단할 단일 표현식이 포함되어 있습니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가 Bl<em>ockStmt</em>()</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitExpressionStmt</span>(<span class="t">Stmt</span>.<span class="t">Expression</span> <span class="i">stmt</span>) {
     <span class="i">resolve</span>(<span class="i">stmt</span>.<span class="i">expression</span>);
@@ -715,10 +451,8 @@ add after <em>visitBlockStmt</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>visitBlockStmt</em>()</div>
-<p>An if statement has an expression for its condition and one or two statements
-for the branches.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>visitFunctionStmt</em>()</div>
+<p><font papago-translate="translated">if 문에는 조건에 대한 표현이 있고 분기에 대한 한두 개의 문장이 있습니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가</font><font papago-translate="translated"><em>FunctionStmt</em>()</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitIfStmt</span>(<span class="t">Stmt</span>.<span class="t">If</span> <span class="i">stmt</span>) {
     <span class="i">resolve</span>(<span class="i">stmt</span>.<span class="i">condition</span>);
@@ -728,14 +462,9 @@ add after <em>visitFunctionStmt</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>visitFunctionStmt</em>()</div>
-<p>Here, we see how resolution is different from interpretation. When we resolve an
-<code translate="no">if</code> statement, there is no control flow. We resolve the condition and <em>both</em>
-branches. Where a dynamic execution steps only into the branch that <em>is</em> run, a
-static analysis is conservative<span class="em">—</span>it analyzes any branch that <em>could</em> be run.
-Since either one could be reached at runtime, we resolve both.</p>
-<p>Like expression statements, a <code translate="no">print</code> statement contains a single subexpression.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>visitIfStmt</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">여기에서는 해상도가 해석과 어떻게 다른지 확인할 수 있습니다.</font><font papago-translate="translated"> 해결할 때 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 문, 제어 흐름이 없습니다.</font><font papago-translate="translated"> 우리는 조건과<em> 두</em> 가지를 모두 해결합니다.</font><font papago-translate="translated"> 동적 실행이 실행 중인 분기에만 들어가는 경우, 정적 분석은 실행<span class="em"></span><em></em><em> 가능</em>한 모든 분기를 분석하는 보수적인 분석입니다.</font><font papago-translate="translated"> 런타임에 둘 중 하나에 도달할 수 있으므로 둘 다 해결합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">표현 문처럼, a </font></font><code translate="no">print</code><font papago-translate="splitted"><font papago-translate="translated"> 문에는 단일 하위 표현식이 포함되어 있습니다.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가<em>IfStmt</em>()</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitPrintStmt</span>(<span class="t">Stmt</span>.<span class="t">Print</span> <span class="i">stmt</span>) {
     <span class="i">resolve</span>(<span class="i">stmt</span>.<span class="i">expression</span>);
@@ -743,9 +472,8 @@ add after <em>visitIfStmt</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>visitIfStmt</em>()</div>
-<p>Same deal for return.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>visitPrintStmt</em>()</div>
+<p><font papago-translate="translated">반품도 마찬가지입니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가<em>PrintStmt</em>()</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitReturnStmt</span>(<span class="t">Stmt</span>.<span class="t">Return</span> <span class="i">stmt</span>) {
     <span class="k">if</span> (<span class="i">stmt</span>.<span class="i">value</span> != <span class="k">null</span>) {
@@ -756,10 +484,8 @@ add after <em>visitPrintStmt</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>visitPrintStmt</em>()</div>
-<p>As in <code translate="no">if</code> statements, with a <code translate="no">while</code> statement, we resolve its condition and
-resolve the body exactly once.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>visitVarStmt</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">에서와 같이 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 진술, a와 함께 </font></font><code translate="no">while</code><font papago-translate="splitted"><font papago-translate="translated"> 진술: 우리는 그것의 상태를 해결하고 몸을 정확히 한 번 해결합니다.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>V<em>arStmt</em>() 방문 후 추가</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitWhileStmt</span>(<span class="t">Stmt</span>.<span class="t">While</span> <span class="i">stmt</span>) {
     <span class="i">resolve</span>(<span class="i">stmt</span>.<span class="i">condition</span>);
@@ -768,11 +494,9 @@ add after <em>visitVarStmt</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>visitVarStmt</em>()</div>
-<p>That covers all the statements. On to expressions<span class="ellipse"> . . . </span></p>
-<p>Our old friend the binary expression. We traverse into and resolve both
-operands.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>visitAssignExpr</em>()</div>
+<p><font papago-translate="translated">그것은 모든 진술을 포함합니다.</font><font papago-translate="translated"> 표현으로 넘어<span class="ellipse">갑니다 . . .</span></font></p>
+<p><font papago-translate="translated">우리의 오랜 친구 이진 표현.</font><font papago-translate="translated"> 우리는 두 피연산자를 모두 탐색하고 해결합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가A<em>ssignEx</em>pr()</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitBinaryExpr</span>(<span class="t">Expr</span>.<span class="t">Binary</span> <span class="i">expr</span>) {
     <span class="i">resolve</span>(<span class="i">expr</span>.<span class="i">left</span>);
@@ -781,11 +505,8 @@ add after <em>visitAssignExpr</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>visitAssignExpr</em>()</div>
-<p>Calls are similar<span class="em">—</span>we walk the argument list and resolve them all. The thing
-being called is also an expression (usually a variable expression), so that gets
-resolved too.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>visitBinaryExpr</em>()</div>
+<p><font papago-translate="translated">통화 내용은 비슷합니다. 우리는 인수 목록을 작성하고<span class="em"></span> 모든 것을 해결합니다.</font><font papago-translate="translated"> 호출되는 것도 표현식(보통 변수 표현식)이므로 그것도 해결됩니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>BinaryExp</em>r<em>() 방문</em> 후 추가</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitCallExpr</span>(<span class="t">Expr</span>.<span class="t">Call</span> <span class="i">expr</span>) {
     <span class="i">resolve</span>(<span class="i">expr</span>.<span class="i">callee</span>);
@@ -798,9 +519,8 @@ add after <em>visitBinaryExpr</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>visitBinaryExpr</em>()</div>
-<p>Parentheses are easy.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>visitCallExpr</em>()</div>
+<p><font papago-translate="translated">괄호는 쉽습니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가C<em>allEx</em>pr()</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitGroupingExpr</span>(<span class="t">Expr</span>.<span class="t">Grouping</span> <span class="i">expr</span>) {
     <span class="i">resolve</span>(<span class="i">expr</span>.<span class="i">expression</span>);
@@ -808,21 +528,17 @@ add after <em>visitCallExpr</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>visitCallExpr</em>()</div>
-<p>Literals are easiest of all.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>visitGroupingExpr</em>()</div>
+<p><font papago-translate="translated">리터럴이 가장 쉽습니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가<em>GroupingEx</em>pr()</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitLiteralExpr</span>(<span class="t">Expr</span>.<span class="t">Literal</span> <span class="i">expr</span>) {
     <span class="k">return</span> <span class="k">null</span>;
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>visitGroupingExpr</em>()</div>
-<p>A literal expression doesn’t mention any variables and doesn’t contain any
-subexpressions so there is no work to do.</p>
-<p>Since a static analysis does no control flow or short-circuiting, logical
-expressions are exactly the same as other binary operators.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>visitLiteralExpr</em>()</div>
+<p><font papago-translate="translated">문자 그대로의 표현은 변수를 언급하지 않으며 하위 표현식을 포함하지 않으므로 할 일이 없습니다.</font></p>
+<p><font papago-translate="translated">정적 분석은 흐름이나 단락을 제어하지 않기 때문에 논리식은 다른 이진 연산자와 정확히 동일합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가L<em>iteralEx</em>pr()</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitLogicalExpr</span>(<span class="t">Expr</span>.<span class="t">Logical</span> <span class="i">expr</span>) {
     <span class="i">resolve</span>(<span class="i">expr</span>.<span class="i">left</span>);
@@ -831,9 +547,8 @@ add after <em>visitLiteralExpr</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>visitLiteralExpr</em>()</div>
-<p>And, finally, the last node. We resolve its one operand.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>visitLogicalExpr</em>()</div>
+<p><font papago-translate="translated">그리고 마지막으로, 마지막 노드.</font><font papago-translate="translated"> 우리는 그것의 하나의 피연산자를 해결합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 Log<em>icalEx</em>pr() 추가</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitUnaryExpr</span>(<span class="t">Expr</span>.<span class="t">Unary</span> <span class="i">expr</span>) {
     <span class="i">resolve</span>(<span class="i">expr</span>.<span class="i">right</span>);
@@ -841,85 +556,54 @@ add after <em>visitLogicalExpr</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>visitLogicalExpr</em>()</div>
-<p>With all of these visit methods, the Java compiler should be satisfied that
-Resolver fully implements Stmt.Visitor and Expr.Visitor. Now is a good time to
-take a break, have a snack, maybe a little nap.</p>
-<h2><a href="#interpreting-resolved-variables" id="interpreting-resolved-variables"><small>11 . 4</small>Interpreting Resolved Variables</a></h2>
-<p>Let’s see what our resolver is good for. Each time it visits a variable, it
-tells the interpreter how many scopes there are between the current scope and
-the scope where the variable is defined. At runtime, this corresponds exactly to
-the number of <em>environments</em> between the current one and the enclosing one where
-the interpreter can find the variable’s value. The resolver hands that number to
-the interpreter by calling this:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-add after <em>execute</em>()</div>
+<p><font papago-translate="translated">이 모든 방문 방법을 사용하면 Java 컴파일러는 Resolver가 Stmt를 완전히 구현한 것에 만족해야 합니다.</font><font papago-translate="translated">방문자와 탐험가.</font><font papago-translate="translated">방문자.</font><font papago-translate="translated"> 지금은 휴식을 취하고, 간식을 먹거나, 낮잠을 잘 수 있는 좋은 시간입니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#interpreting-resolved-variables" id="interpreting-resolved-variables"><small><font papago-translate="translated">11 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">해결된 변수 해석</font></font></a></h2>
+<p><font papago-translate="translated">우리의 해결책이 무엇에 좋은지 한번 봅시다.</font><font papago-translate="translated"> 변수를 방문할 때마다 현재 범위와 변수가 정의된 범위 사이에 몇 개의 범위가 있는지 통역사에게 알려줍니다.</font><font papago-translate="translated"> 런타임 시, 이는 현재 환경과 인터프리터가 변수<em></em>의 값을 찾을 수 있는 주변 환경 사이의 수에 정확히 해당합니다.</font><font papago-translate="translated"> 해결사는 다음과 같이 호출하여 해당 번호를 통역사에게 넘깁니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>실행</em> 후 () 추가</font></font></div>
 <pre translate="no">  <span class="t">void</span> <span class="i">resolve</span>(<span class="t">Expr</span> <span class="i">expr</span>, <span class="t">int</span> <span class="i">depth</span>) {
     <span class="i">locals</span>.<span class="i">put</span>(<span class="i">expr</span>, <span class="i">depth</span>);
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, add after <em>execute</em>()</div>
-<p>We want to store the resolution information somewhere so we can use it when the
-variable or assignment expression is later executed, but where? One obvious
-place is right in the syntax tree node itself. That’s a fine approach, and
-that’s where many compilers store the results of analyses like this.</p>
-<p>We could do that, but it would require mucking around with our syntax tree
-generator. Instead, we’ll take another common approach and store it off to the
-<span name="side">side</span> in a map that associates each syntax tree node
-with its resolved data.</p>
-<aside name="side">
-<p>I <em>think</em> I’ve heard this map called a “side table” since it’s a tabular data
-structure that stores data separately from the objects it relates to. But
-whenever I try to Google for that term, I get pages about furniture.</p>
+<p><font papago-translate="translated">나중에 변수나 할당 표현식이 실행될 때 사용할 수 있도록 해상도 정보를 어딘가에 저장하고 싶은데, 어디에 있을까요?</font><font papago-translate="translated"> 한 가지 분명한 위치는 구문 트리 노드 자체에 있습니다.</font><font papago-translate="translated"> 이는 훌륭한 접근 방식이며, 많은 컴파일러가 이러한 분석 결과를 저장합니다.</font></p>
+<p><font papago-translate="translated">그렇게 할 수는 있지만 구문 트리 생성기를 사용해야 합니다.</font><font papago-translate="translated"> 대신, 우리는 또 다른 일반적인 접근 방식을 사용하여 각 구문 트리 노드와 해결된 데이터를 연결하는 맵의<span name="side"> 측면</span>에 저장할 것입니다.</font></p>
+<aside name="side" style="top: 18003.5px;">
+<p><font papago-translate="translated">"사이드 테이블"이라는 지도는 관련된 객체와 데이터를 따로 저장하는 표 형식의 데이터 구조이기 때문에 들어본<em> 적</em>이<em> 있는</em> 것<em> 같습니다</em>.</font><font papago-translate="translated"> 하지만 그 용어를 검색하려고 할 때마다 가구에 관한 페이지가 나옵니다.</font></p>
 </aside>
-<p>Interactive tools like IDEs often incrementally reparse and re-resolve parts of
-the user’s program. It may be hard to find all of the bits of state that need
-recalculating when they’re hiding in the foliage of the syntax tree. A benefit
-of storing this data outside of the nodes is that it makes it easy to <em>discard</em>
-it<span class="em">—</span>simply clear the map.</p>
+<p><font papago-translate="translated">IDE와 같은 대화형 도구는 종종 사용자 프로그램의 일부를 점진적으로 재분석하고 재해결합니다.</font><font papago-translate="translated"> 구문 트리의 잎사귀에 숨어 있을 때 다시 계산해야 하는 모든 상태 비트를 찾는 것은 어려울 수 있습니다.</font><font papago-translate="translated"> 이 데이터를 노드 외부에 저장하면<span class="em"></span> 쉽게<em> 폐기</em>할 수 있고, 단순히 지도를 지울 수 있다는 장점이 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  private Environment environment = globals;
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in class <em>Interpreter</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 클래스<em> 인터프리터</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="k">private</span> <span class="k">final</span> <span class="t">Map</span>&lt;<span class="t">Expr</span>, <span class="t">Integer</span>&gt; <span class="i">locals</span> = <span class="k">new</span> <span class="t">HashMap</span>&lt;&gt;();
 </pre><pre class="insert-after" translate="no">
-
   Interpreter() {
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in class <em>Interpreter</em></div>
-<p>You might think we’d need some sort of nested tree structure to avoid getting
-confused when there are multiple expressions that reference the same variable,
-but each expression node is its own Java object with its own unique identity. A
-single monolithic map doesn’t have any trouble keeping them separated.</p>
-<p>As usual, using a collection requires us to import a couple of names.</p>
+<p><font papago-translate="translated">같은 변수를 참조하는 여러 개의 표현식이 있을 때 혼동을 피하기 위해 일종의 중첩 트리 구조가 필요하다고 생각할 수 있지만, 각 표현식 노드는 고유한 정체성을 가진 자체 Java 객체입니다.</font><font papago-translate="translated"> 단일 단일 모놀리식 지도는 그것들을 분리하는 데 아무런 문제가 없습니다.</font></p>
+<p><font papago-translate="translated">평소처럼 컬렉션을 사용하려면 몇 가지 이름을 가져와야 합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">import java.util.ArrayList;
 </pre><div class="source-file"><em>lox/Interpreter.java</em></div>
 <pre class="insert" translate="no"><span class="k">import</span> <span class="i">java.util.HashMap</span>;
 </pre><pre class="insert-after" translate="no">import java.util.List;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em></div>
-<p>And:</p>
+<p><font papago-translate="translated">그리고:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">import java.util.List;
 </pre><div class="source-file"><em>lox/Interpreter.java</em></div>
 <pre class="insert" translate="no"><span class="k">import</span> <span class="i">java.util.Map</span>;
 </pre><pre class="insert-after" translate="no">
-
 class Interpreter implements Expr.Visitor&lt;Object&gt;,
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em></div>
-<h3><a href="#accessing-a-resolved-variable" id="accessing-a-resolved-variable"><small>11 . 4 . 1</small>Accessing a resolved variable</a></h3>
-<p>Our interpreter now has access to each variable’s resolved location. Finally, we
-get to make use of that. We replace the visit method for variable expressions
-with this:</p>
+<h3><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#accessing-a-resolved-variable" id="accessing-a-resolved-variable"><small><font papago-translate="translated">11 . 4 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">해결된 변수 접근하기</font></font></a></h3>
+<p><font papago-translate="translated">이제 통역사가 각 변수의 해결된 위치에 접근할 수 있습니다.</font><font papago-translate="translated"> 마침내 우리는 그것을 활용할 수 있게 되었습니다.</font><font papago-translate="translated"> 변수 표현을 위한 방문 방법을 다음과 같이 대체합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  public Object visitVariableExpr(Expr.Variable expr) {
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitVariableExpr</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visitVariableExpr</em>()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">    <span class="k">return</span> <span class="i">lookUpVariable</span>(<span class="i">expr</span>.<span class="i">name</span>, <span class="i">expr</span>);
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitVariableExpr</em>(), replace 1 line</div>
-<p>That delegates to:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-add after <em>visitVariableExpr</em>()</div>
+<p><font papago-translate="translated">이는 다음과 같습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>V<em>ariableEx</em>pr() 방문 후 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Object</span> <span class="i">lookUpVariable</span>(<span class="t">Token</span> <span class="i">name</span>, <span class="t">Expr</span> <span class="i">expr</span>) {
     <span class="t">Integer</span> <span class="i">distance</span> = <span class="i">locals</span>.<span class="i">get</span>(<span class="i">expr</span>);
     <span class="k">if</span> (<span class="i">distance</span> != <span class="k">null</span>) {
@@ -930,28 +614,16 @@ add after <em>visitVariableExpr</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, add after <em>visitVariableExpr</em>()</div>
-<p>There are a couple of things going on here. First, we look up the resolved
-distance in the map. Remember that we resolved only <em>local</em> variables. Globals
-are treated specially and don’t end up in the map (hence the name <code translate="no">locals</code>). So,
-if we don’t find a distance in the map, it must be global. In that case, we
-look it up, dynamically, directly in the global environment. That throws a
-runtime error if the variable isn’t defined.</p>
-<p>If we <em>do</em> get a distance, we have a local variable, and we get to take
-advantage of the results of our static analysis. Instead of calling <code translate="no">get()</code>, we
-call this new method on Environment:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Environment.java</em><br/>
-add after <em>define</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">여기에는 몇 가지 일이 일어나고 있습니다.</font><font papago-translate="translated"> 먼저, 지도에서 해상된 거리를 확인합니다.</font><font papago-translate="translated"> <em>우리</em>는<em> 지역</em> 변수만 해결했다는 점을 기억하세요.</font><font papago-translate="translated"> 글로벌은 특별한 대우를 받으며 맵에 포함되지 않습니다 (따라서 이름은 </font></font><code translate="no">locals</code><font papago-translate="splitted"><font papago-translate="translated">). 따라서 지도에서 거리를 찾지 못하면 전역이어야 합니다.</font><font papago-translate="translated"> 그렇다면, 우리는 그것을 동적으로, 글로벌 환경에서 직접 찾아봅니다.</font><font papago-translate="translated"> 변수가 정의되지 않으면 런타임 오류가 발생합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">거리를 구<em>하면</em> 지역 변수가 생기고 정적 분석 결과를 활용할 수 있습니다.</font><font papago-translate="translated"> 전화 대신 </font></font><code translate="no">get()</code><font papago-translate="splitted"><font papago-translate="translated">, 우리는 이 새로운 환경 방법을 환경에 관한 방법이라고 부릅니다:</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Environment.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>정의</em>된 () 후에 추가</font></font></div>
 <pre translate="no">  <span class="t">Object</span> <span class="i">getAt</span>(<span class="t">int</span> <span class="i">distance</span>, <span class="t">String</span> <span class="i">name</span>) {
     <span class="k">return</span> <span class="i">ancestor</span>(<span class="i">distance</span>).<span class="i">values</span>.<span class="i">get</span>(<span class="i">name</span>);
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Environment.java</em>, add after <em>define</em>()</div>
-<p>The old <code translate="no">get()</code> method dynamically walks the chain of enclosing environments,
-scouring each one to see if the variable might be hiding in there somewhere. But
-now we know exactly which environment in the chain will have the variable. We
-reach it using this helper method:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Environment.java</em><br/>
-add after <em>define</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">옛것 </font></font><code translate="no">get()</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드는 주변 환경의 체인을 동적으로 걸어가며 변수가 어딘가에 숨겨져 있는지 확인하기 위해 각 환경을 샅샅이 뒤집니다.</font><font papago-translate="translated"> 하지만 이제 우리는 체인의 어떤 환경에서 변수가 발생할지 정확히 알고 있습니다.</font><font papago-translate="translated"> 우리는 이 도우미 방법을 사용하여 그것에 도달합니다:</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Environment.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>정의</em>된 () 후에 추가</font></font></div>
 <pre translate="no">  <span class="t">Environment</span> <span class="i">ancestor</span>(<span class="t">int</span> <span class="i">distance</span>) {
     <span class="t">Environment</span> <span class="i">environment</span> = <span class="k">this</span>;
     <span class="k">for</span> (<span class="t">int</span> <span class="i">i</span> = <span class="n">0</span>; <span class="i">i</span> &lt; <span class="i">distance</span>; <span class="i">i</span>++) {
@@ -962,34 +634,17 @@ add after <em>define</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Environment.java</em>, add after <em>define</em>()</div>
-<p>This walks a fixed number of hops up the parent chain and returns the
-environment there. Once we have that, <code translate="no">getAt()</code> simply returns the value of the
-variable in that environment’s map. It doesn’t even have to check to see if the
-variable is there<span class="em">—</span>we know it will be because the resolver already found it
-before.</p>
-<aside name="coupled">
-<p>The way the interpreter assumes the variable is in that map feels like flying
-blind. The interpreter code trusts that the resolver did its job and resolved
-the variable correctly. This implies a deep coupling between these two classes.
-In the resolver, each line of code that touches a scope must have its exact
-match in the interpreter for modifying an environment.</p>
-<p>I felt that coupling firsthand because as I wrote the code for the book, I
-ran into a couple of subtle bugs where the resolver and interpreter code were
-slightly out of sync. Tracking those down was difficult. One tool to make that
-easier is to have the interpreter explicitly assert<span class="em">—</span>using Java’s assert
-statements or some other validation tool<span class="em">—</span>the contract it expects the resolver
-to have already upheld.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 고정된 수의 홉을 부모 사슬 위로 걸어 올라가 그곳의 환경을 반환합니다.</font><font papago-translate="translated"> 일단 우리가 그것을 가지게 되면, </font></font><code translate="no">getAt()</code><font papago-translate="splitted"><font papago-translate="translated"> 단순히 해당 환경의 지도에서 변수 값을 반환합니다.</font><font papago-translate="translated"> 변수가 있는지 확인할 필요도 없습니다. 해결사가<span class="em"></span> 이미 변수를 찾았기 때문에 변수가 있는지 확인할 필요도 없습니다.</font></font></p>
+<aside name="coupled" style="top: 19666.5px;">
+<p><font papago-translate="translated">통역사가 그 지도에 변수가 있다고 가정하는 방식은 마치 맹목적으로 날아가는 것처럼 느껴집니다.</font><font papago-translate="translated"> 인터프리터 코드는 해결사가 제 역할을 수행하고 변수를 올바르게 해결했다고 신뢰합니다.</font><font papago-translate="translated"> 이는 이 두 클래스 간의 깊은 연관성을 의미합니다.</font><font papago-translate="translated"> 해결사에서 범위를 터치하는 각 코드 라인은 환경을 수정하기 위해 인터프리터에서 정확히 일치해야 합니다.</font></p>
+<p><font papago-translate="translated">책의 코드를 작성할 때 리졸버와 인터프리터 코드가 약간 맞지 않는 미묘한 버그를 발견했기 때문에 직접 그 연결고리를 느꼈습니다.</font><font papago-translate="translated"> 그것들을 추적하는 것은 어려웠습니다.</font><font papago-translate="translated"> 이를 더 쉽게 만드는 한 가지 도구는 해석자가 Java의 assert 문 또는 기타 검증 도구를 사용하여 해결사가 이미<span class="em"></span><span class="em"></span> 유지했을 것으로 예상하는 계약을 명시적으로 주장하도록 하는 것입니다.</font></p>
 </aside>
-<h3><a href="#assigning-to-a-resolved-variable" id="assigning-to-a-resolved-variable"><small>11 . 4 . 2</small>Assigning to a resolved variable</a></h3>
-<p>We can also use a variable by assigning to it. The changes to visiting an
-assignment expression are similar.</p>
+<h3><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#assigning-to-a-resolved-variable" id="assigning-to-a-resolved-variable"><small><font papago-translate="translated">11 . 4 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">해결된 변수에 할당하기</font></font></a></h3>
+<p><font papago-translate="translated">변수를 할당하여 사용할 수도 있습니다.</font><font papago-translate="translated"> 과제 표현식 방문의 변경 사항도 비슷합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  public Object visitAssignExpr(Expr.Assign expr) {
     Object value = evaluate(expr.value);
-</pre><div class="source-file"><em>lox/Interpreter.java</em><br/>
-in <em>visitAssignExpr</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>A<em>ssignEx</em>pr()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="t">Integer</span> <span class="i">distance</span> = <span class="i">locals</span>.<span class="i">get</span>(<span class="i">expr</span>);
     <span class="k">if</span> (<span class="i">distance</span> != <span class="k">null</span>) {
       <span class="i">environment</span>.<span class="i">assignAt</span>(<span class="i">distance</span>, <span class="i">expr</span>.<span class="i">name</span>, <span class="i">value</span>);
@@ -1000,61 +655,40 @@ replace 1 line</div>
 </pre><pre class="insert-after" translate="no">    return value;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, in <em>visitAssignExpr</em>(), replace 1 line</div>
-<p>Again, we look up the variable’s scope distance. If not found, we assume it’s
-global and handle it the same way as before. Otherwise, we call this new method:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Environment.java</em><br/>
-add after <em>getAt</em>()</div>
+<p><font papago-translate="translated">다시 한 번 변수의 범위 거리를 확인합니다.</font><font papago-translate="translated"> 발견되지 않으면, 우리는 그것이 글로벌하다고 가정하고 이전과 동일한 방식으로 처리합니다.</font><font papago-translate="translated"> 그렇지 않으면, 우리는 이 새로운 방법을 부릅니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated" class="">lox/Environment.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> g<em>etAt</em>() 후에 추가</font></font></div>
 <pre translate="no">  <span class="t">void</span> <span class="i">assignAt</span>(<span class="t">int</span> <span class="i">distance</span>, <span class="t">Token</span> <span class="i">name</span>, <span class="t">Object</span> <span class="i">value</span>) {
     <span class="i">ancestor</span>(<span class="i">distance</span>).<span class="i">values</span>.<span class="i">put</span>(<span class="i">name</span>.<span class="i">lexeme</span>, <span class="i">value</span>);
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Environment.java</em>, add after <em>getAt</em>()</div>
-<p>As <code translate="no">getAt()</code> is to <code translate="no">get()</code>, <code translate="no">assignAt()</code> is to <code translate="no">assign()</code>. It walks a fixed
-number of environments, and then stuffs the new value in that map.</p>
-<p>Those are the only changes to Interpreter. This is why I chose a representation
-for our resolved data that was minimally invasive. All of the rest of the nodes
-continue working as they did before. Even the code for modifying environments is
-unchanged.</p>
-<h3><a href="#running-the-resolver" id="running-the-resolver"><small>11 . 4 . 3</small>Running the resolver</a></h3>
-<p>We do need to actually <em>run</em> the resolver, though. We insert the new pass after
-the parser does its magic.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">~하듯이 </font></font><code translate="no">getAt()</code><font papago-translate="splitted"><font papago-translate="translated"> ~에게 </font></font><code translate="no">get()</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">assignAt()</code><font papago-translate="splitted"><font papago-translate="translated"> ~에게 </font></font><code translate="no">assign()</code><font papago-translate="splitted"><font papago-translate="translated">. 고정된 수의 환경을 걷고 나서 그 지도에 새로운 값을 입력합니다.</font></font></p>
+<p><font papago-translate="translated">이것이 인터프리터의 유일한 변경 사항입니다.</font><font papago-translate="translated"> 이것이 바로 제가 우리의 해결된 데이터를 최소한의 침습적으로 표현한 이유입니다.</font><font papago-translate="translated"> 나머지 모든 노드는 이전과 마찬가지로 계속 작동합니다.</font><font papago-translate="translated"> 환경을 수정하는 코드조차도 변하지 않습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#running-the-resolver" id="running-the-resolver"><small><font papago-translate="translated">11 . 4 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">해결사 실행하기</font></font></a></h3>
+<p><font papago-translate="translated">하지만 실제로 리졸버<em>를 실행</em>해야 합니다.</font><font papago-translate="translated"> 파서가 마법을 부린 후 새 패스를 삽입합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    // Stop if there was a syntax error.
     if (hadError) return;
 
-</pre><div class="source-file"><em>lox/Lox.java</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Lox.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="t">Resolver</span> <span class="i">resolver</span> = <span class="k">new</span> <span class="t">Resolver</span>(<span class="i">interpreter</span>);
     <span class="i">resolver</span>.<span class="i">resolve</span>(<span class="i">statements</span>);
 
 </pre><pre class="insert-after" translate="no">    interpreter.interpret(statements);
 </pre></div>
 <div class="source-file-narrow"><em>lox/Lox.java</em>, in <em>run</em>()</div>
-<p>We don’t run the resolver if there are any parse errors. If the code has a
-syntax error, it’s never going to run, so there’s little value in resolving it.
-If the syntax is clean, we tell the resolver to do its thing. The resolver has a
-reference to the interpreter and pokes the resolution data directly into it as
-it walks over variables. When the interpreter runs next, it has everything it
-needs.</p>
-<p>At least, that’s true if the resolver <em>succeeds</em>. But what about errors during
-resolution?</p>
-<h2><a href="#resolution-errors" id="resolution-errors"><small>11 . 5</small>Resolution Errors</a></h2>
-<p>Since we are doing a semantic analysis pass, we have an opportunity to make
-Lox’s semantics more precise, and to help users catch bugs early before running
-their code. Take a look at this bad boy:</p>
+<p><font papago-translate="translated">구문 분석 오류가 있는 경우 해결사를 실행하지 않습니다.</font><font papago-translate="translated"> 코드에 구문 오류가 있으면 실행되지 않으므로 해결할 가치가 거의 없습니다.</font><font papago-translate="translated"> 구문이 깨끗하다면, 우리는 해결사에게 그 일을 하라고 지시합니다.</font><font papago-translate="translated"> 해결사는 인터프리터에 대한 참조를 가지고 있으며 변수를 통과할 때 해상도 데이터를 직접 입력합니다.</font><font papago-translate="translated"> 통역사가 다음에 실행되면 필요한 모든 것을 갖추게 됩니다.</font></p>
+<p><font papago-translate="translated">적어도 해결사<em>가 성공</em>한다면, 그것은 사실입니다.</font><font papago-translate="translated"> 하지만 해결 중 오류는 어떻게 되나요?</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#resolution-errors" id="resolution-errors"><small><font papago-translate="translated">11 . 5</font></small><font papago-translate="splitted"><font papago-translate="translated">해상도 오류</font></font></a></h2>
+<p><font papago-translate="translated">의미 분석 패스를 수행하고 있기 때문에 Lox의 의미를 더 정확하게 만들고 사용자가 코드를 실행하기 전에 버그를 조기에 발견할 수 있도록 도울 수 있는 기회가 있습니다.</font><font papago-translate="translated"> 이 나쁜 소년을 한번 보세요:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> <span class="i">bad</span>() {
   <span class="k">var</span> <span class="i">a</span> = <span class="s">"first"</span>;
   <span class="k">var</span> <span class="i">a</span> = <span class="s">"second"</span>;
 }
 </pre></div>
-<p>We do allow declaring multiple variables with the same name in the <em>global</em>
-scope, but doing so in a local scope is probably a mistake. If they knew the
-variable already existed, they would have assigned to it instead of using <code translate="no">var</code>.
-And if they <em>didn’t</em> know it existed, they probably didn’t intend to overwrite
-the previous one.</p>
-<p>We can detect this mistake statically while resolving.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><em>우리</em>는<em> 글로벌</em> 범위에서 동일한 이름을 가진 여러 변수를 선언하는 것을 허용하지만, 로컬 범위에서 그렇게 하는 것은 아마도 실수일 것입니다.</font><font papago-translate="translated"> 변수가 이미 존재한다는 것을 알았다면 다음을 사용하는 대신 변수에 할당했을 것입니다 </font></font><code translate="no">var</code><font papago-translate="splitted"><font papago-translate="translated">. 그리고 만약 그들이 그것이 존재한다는 것을 몰랐다면, 아마도 이전<em></em> 것을 덮어쓸 의도는 없었을 것입니다.</font></font></p>
+<p><font papago-translate="translated">이 실수를 해결하는 동안 정적으로 감지할 수 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    Map&lt;String, Boolean&gt; scope = scopes.peek();
-</pre><div class="source-file"><em>lox/Resolver.java</em><br/>
-in <em>declare</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> ()<em> 선언</em>에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">if</span> (<span class="i">scope</span>.<span class="i">containsKey</span>(<span class="i">name</span>.<span class="i">lexeme</span>)) {
       <span class="t">Lox</span>.<span class="i">error</span>(<span class="i">name</span>,
           <span class="s">"Already a variable with this name in this scope."</span>);
@@ -1063,54 +697,38 @@ in <em>declare</em>()</div>
 </pre><pre class="insert-after" translate="no">    scope.put(name.lexeme, false);
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, in <em>declare</em>()</div>
-<p>When we declare a variable in a local scope, we already know the names of every
-variable previously declared in that same scope. If we see a collision, we
-report an error.</p>
-<h3><a href="#invalid-return-errors" id="invalid-return-errors"><small>11 . 5 . 1</small>Invalid return errors</a></h3>
-<p>Here’s another nasty little script:</p>
+<p><font papago-translate="translated">로컬 범위에서 변수를 선언할 때, 우리는 이미 동일한 범위에서 이전에 선언된 모든 변수의 이름을 알고 있습니다.</font><font papago-translate="translated"> 충돌이 발생하면 오류를 보고합니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#invalid-return-errors" id="invalid-return-errors"><small><font papago-translate="translated">11 . 5 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">잘못된 반품 오류</font></font></a></h3>
+<p><font papago-translate="translated">또 다른 지저분한 작은 대본이 있습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">return</span> <span class="s">"at top level"</span>;
 </pre></div>
-<p>This executes a <code translate="no">return</code> statement, but it’s not even inside a function at all.
-It’s top-level code. I don’t know what the user <em>thinks</em> is going to happen, but
-I don’t think we want Lox to allow this.</p>
-<p>We can extend the resolver to detect this statically. Much like we track scopes
-as we walk the tree, we can track whether or not the code we are currently
-visiting is inside a function declaration.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 다음을 실행합니다 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 진술하지만, 그것은 전혀 함수 내부에 있지 않습니다.</font><font papago-translate="translated"> 최상위 코드입니다.</font><font papago-translate="translated"> 사용자<em>가 어떻게 생각하는지</em> 모르겠지만 Lox가 이를 허용하지 않기를 바란다고 생각합니다.</font></font></p>
+<p><font papago-translate="translated">우리는 이것을 정적으로 감지하기 위해 해결사를 확장할 수 있습니다.</font><font papago-translate="translated"> 우리가 나무를 걸으면서 스코프를 추적하는 것과 마찬가지로, 현재 방문 중인 코드가 함수 선언 안에 있는지 여부를 추적할 수 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  private final Stack&lt;Map&lt;String, Boolean&gt;&gt; scopes = new Stack&lt;&gt;();
-</pre><div class="source-file"><em>lox/Resolver.java</em><br/>
-in class <em>Resolver</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 클래스 리<em>졸버</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="k">private</span> <span class="t">FunctionType</span> <span class="i">currentFunction</span> = <span class="t">FunctionType</span>.<span class="i">NONE</span>;
 </pre><pre class="insert-after" translate="no">
-
   Resolver(Interpreter interpreter) {
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, in class <em>Resolver</em></div>
-<p>Instead of a bare Boolean, we use this funny enum:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-add after <em>Resolver</em>()</div>
+<p><font papago-translate="translated">우리는 맨 불리언 대신에 이 재미있는 열거를 사용합니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> Res<em>olver</em>() 다음에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="k">enum</span> <span class="t">FunctionType</span> {
     <span class="i">NONE</span>,
     <span class="i">FUNCTION</span>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, add after <em>Resolver</em>()</div>
-<p>It seems kind of dumb now, but we’ll add a couple more cases to it later and
-then it will make more sense. When we resolve a function declaration, we pass
-that in.</p>
+<p><font papago-translate="translated">지금은 좀 멍청해 보이지만, 나중에 몇 가지 사례를 더 추가하면 더 이해가 될 것입니다.</font><font papago-translate="translated"> 함수 선언을 해결할 때, 우리는 그것을 전달합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    define(stmt.name);
 
-</pre><div class="source-file"><em>lox/Resolver.java</em><br/>
-in <em>visitFunctionStmt</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 중에</font><font papago-translate="translated"><em>FunctionStmt</em>()</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">    <span class="i">resolveFunction</span>(<span class="i">stmt</span>, <span class="t">FunctionType</span>.<span class="i">FUNCTION</span>);
 </pre><pre class="insert-after" translate="no">    return null;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, in <em>visitFunctionStmt</em>(), replace 1 line</div>
-<p>Over in <code translate="no">resolveFunction()</code>, we take that parameter and store it in the field
-before resolving the body.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Resolver.java</em><br/>
-method <em>resolveFunction</em>()<br/>
-replace 1 line</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">오버 인 </font></font><code translate="no">resolveFunction()</code><font papago-translate="splitted"><font papago-translate="translated">, 우리는 그 매개변수를 가져와서 몸을 해결하기 전에 필드에 저장합니다.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 메서드<em> resolveFunction</em>()</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  <span class="k">private</span> <span class="t">void</span> <span class="i">resolveFunction</span>(
       <span class="t">Stmt</span>.<span class="t">Function</span> <span class="i">function</span>, <span class="t">FunctionType</span> <span class="i">type</span>) {
     <span class="t">FunctionType</span> <span class="i">enclosingFunction</span> = <span class="i">currentFunction</span>;
@@ -1119,26 +737,17 @@ replace 1 line</div>
 </pre><pre class="insert-after" translate="no">    beginScope();
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, method <em>resolveFunction</em>(), replace 1 line</div>
-<p>We stash the previous value of the field in a local variable first. Remember,
-Lox has local functions, so you can nest function declarations arbitrarily
-deeply. We need to track not just that we’re in a function, but <em>how many</em> we’re
-in.</p>
-<p>We could use an explicit stack of FunctionType values for that, but instead
-we’ll piggyback on the JVM. We store the previous value in a local on the Java
-stack. When we’re done resolving the function body, we restore the field to that
-value.</p>
+<p><font papago-translate="translated">필드의 이전 값을 먼저 로컬 변수에 저장합니다.</font><font papago-translate="translated"> 기억하세요, Lox에는 로컬 함수가 있으므로 함수 선언을 임의의 깊이로 중첩할 수 있습니다.</font><font papago-translate="translated"> 우리는 단순히 함수 안에 있다는 것뿐만 아니라<em>, 얼마나 많은</em> 함수 안에 있는지 추적해야 합니다.</font></p>
+<p><font papago-translate="translated">명시적인 함수 스택을 사용할 수 있습니다</font><font papago-translate="translated">값을 입력하면 대신 JVM을 다시 사용할 수 있습니다.</font><font papago-translate="translated"> 이전 값을 Java 스택의 로컬에 저장합니다.</font><font papago-translate="translated"> 함수체를 다 해결하면 필드를 해당 값으로 복원합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    endScope();
-</pre><div class="source-file"><em>lox/Resolver.java</em><br/>
-in <em>resolveFunction</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>resolveFunction</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="i">currentFunction</span> = <span class="i">enclosingFunction</span>;
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, in <em>resolveFunction</em>()</div>
-<p>Now that we can always tell whether or not we’re inside a function declaration,
-we check that when resolving a <code translate="no">return</code> statement.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이제 함수 선언에 포함되어 있는지 여부를 항상 알 수 있으므로, 함수 선언을 해결할 때 다음 사항을 확인합니다 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 진술.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  public Void visitReturnStmt(Stmt.Return stmt) {
-</pre><div class="source-file"><em>lox/Resolver.java</em><br/>
-in <em>visitReturnStmt</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Resolver.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visitReturnStmt</em>()</font></font></div>
 <pre class="insert" translate="no">    <span class="k">if</span> (<span class="i">currentFunction</span> == <span class="t">FunctionType</span>.<span class="i">NONE</span>) {
       <span class="t">Lox</span>.<span class="i">error</span>(<span class="i">stmt</span>.<span class="i">keyword</span>, <span class="s">"Can't return from top-level code."</span>);
     }
@@ -1146,84 +755,57 @@ in <em>visitReturnStmt</em>()</div>
 </pre><pre class="insert-after" translate="no">    if (stmt.value != null) {
 </pre></div>
 <div class="source-file-narrow"><em>lox/Resolver.java</em>, in <em>visitReturnStmt</em>()</div>
-<p>Neat, right?</p>
-<p>There’s one more piece. Back in the main Lox class that stitches everything
-together, we are careful to not run the interpreter if any parse errors are
-encountered. That check runs <em>before</em> the resolver so that we don’t try to
-resolve syntactically invalid code.</p>
-<p>But we also need to skip the interpreter if there are resolution errors, so we
-add <em>another</em> check.</p>
+<p><font papago-translate="translated">멋지지 않나요?</font></p>
+<p><font papago-translate="translated">한 조각 더 있습니다.</font><font papago-translate="translated"> 모든 것을 하나로 묶는 메인 Lox 클래스로 돌아가서, 구문 분석 오류가 발생하면 인터프리터를 실행하지 않도록 주의합니다.</font><font papago-translate="translated"> 해당 검사는 구문적으로 유효하지 않은 코드를 해결하려고 하지 않도록 해결기<em> 앞</em>에서 실행됩니다.</font></p>
+<p><font papago-translate="translated">하지만 해상도 오류가 있는 경우 인터프리터를 건너뛰어야 하므로<em> 다른</em> 확인을 추가합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    resolver.resolve(statements);
-</pre><div class="source-file"><em>lox/Lox.java</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Lox.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="c">// Stop if there was a resolution error.</span>
     <span class="k">if</span> (<span class="i">hadError</span>) <span class="k">return</span>;
 </pre><pre class="insert-after" translate="no">
-
     interpreter.interpret(statements);
 </pre></div>
 <div class="source-file-narrow"><em>lox/Lox.java</em>, in <em>run</em>()</div>
-<p>You could imagine doing lots of other analysis in here. For example, if we added
-<code translate="no">break</code> statements to Lox, we would probably want to ensure they are only used
-inside loops.</p>
-<p>We could go farther and report warnings for code that isn’t necessarily <em>wrong</em>
-but probably isn’t useful. For example, many IDEs will warn if you have
-unreachable code after a <code translate="no">return</code> statement, or a local variable whose value is
-never read. All of that would be pretty easy to add to our static visiting pass,
-or as <span name="separate">separate</span> passes.</p>
-<aside name="separate">
-<p>The choice of how many different analyses to lump into a single pass is
-difficult. Many small isolated passes, each with their own responsibility, are
-simpler to implement and maintain. However, there is a real runtime cost to
-traversing the syntax tree itself, so bundling multiple analyses into a single
-pass is usually faster.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">여기서 다른 많은 분석을 하는 것을 상상할 수 있습니다.</font><font papago-translate="translated"> 예를 들어, 우리가 추가한 경우 </font></font><code translate="no">break</code><font papago-translate="splitted"><font papago-translate="translated"> Lox에 대한 진술은 아마도 루프 내부에서만 사용되도록 하고 싶을 것입니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">더 멀리 가서 반드시<em> 틀리지</em>는 않지만 유용하지는 않은 코드에 대한 경고를 보고할 수 있습니다.</font><font papago-translate="translated"> 예를 들어, 많은 IDE는 다음과 같은 코드가 도달할 수 없는 경우 경고합니다 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 문 또는 값이 절대 읽히지 않는 로컬 변수.</font><font papago-translate="translated"> 이 모든 것을 고정 방문 패스에 추가하거나<span name="separate"> 별도</span>의 패스로 추가하는 것은 꽤 쉬울 것입니다.</font></font></p>
+<aside name="separate" style="top: 23991.5px;">
+<p><font papago-translate="translated">하나의 패스로 묶을 다양한 분석의 수를 선택하는 것은 어렵습니다.</font><font papago-translate="translated"> 각자의 책임이 있는 많은 작은 고립 패스는 구현 및 유지 관리가 더 간단합니다.</font><font papago-translate="translated"> 그러나 구문 트리 자체를 탐색하는 데는 실제 런타임 비용이 들기 때문에 여러 분석을 하나의 패스로 묶는 것이 일반적으로 더 빠릅니다.</font></p>
 </aside>
-<p>But, for now, we’ll stick with that limited amount of analysis. The important
-part is that we fixed that one weird annoying edge case bug, though it might be
-surprising that it took this much work to do it.</p>
+<p><font papago-translate="translated">하지만 지금은 그 제한된 양의 분석을 고수하겠습니다.</font><font papago-translate="translated"> 중요한 부분은 우리가 그 이상하고 성가신 엣지 케이스 버그를 하나 수정했다는 점입니다. 하지만 이 작업을 하는 데 이렇게 많은 노력이 필요했다는 것은 놀랄 만한 일입니다.</font></p>
 <div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+<h2><a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#challenges" id="challenges"><font papago-translate="translated">과제들</font></a></h2>
 <ol>
 <li>
-<p>Why is it safe to eagerly define the variable bound to a function’s name
-when other variables must wait until after they are initialized before they
-can be used?</p>
+<p><font papago-translate="translated">다른 변수들이 초기화된 후에야 사용할 수 있는데, 왜 함수의 이름에 묶인 변수를 열심히 정의하는 것이 안전한가요?</font></p>
 </li>
 <li>
-<p>How do other languages you know handle local variables that refer to the
-same name in their initializer, like:</p>
+<p><font papago-translate="translated">다른 언어들은 이니셜라이저에서 같은 이름을 참조하는 로컬 변수를 어떻게 처리하나요:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">a</span> = <span class="s">"outer"</span>;
 {
   <span class="k">var</span> <span class="i">a</span> = <span class="i">a</span>;
 }
 </pre></div>
-<p>Is it a runtime error? Compile error? Allowed? Do they treat global
-variables differently? Do you agree with their choices? Justify your answer.</p>
+<p><font papago-translate="translated">런타임 오류인가요?</font><font papago-translate="translated"> 컴파일 오류?</font><font papago-translate="translated"> 허용되나요?</font><font papago-translate="translated"> 글로벌 변수를 다르게 취급하나요?</font><font papago-translate="translated"> 그들의 선택에 동의하십니까?</font><font papago-translate="translated"> 답변을 정당화하세요.</font></p>
 </li>
 <li>
-<p>Extend the resolver to report an error if a local variable is never used.</p>
+<p><font papago-translate="translated">로컬 변수를 사용하지 않는 경우 오류를 보고하도록 해결사를 확장합니다.</font></p>
 </li>
 <li>
-<p>Our resolver calculates <em>which</em> environment the variable is found in, but
-it’s still looked up by name in that map. A more efficient environment
-representation would store local variables in an array and look them up by
-index.</p>
-<p>Extend the resolver to associate a unique index for each local variable
-declared in a scope. When resolving a variable access, look up both the
-scope the variable is in and its index and store that. In the interpreter,
-use that to quickly access a variable by its index instead of using a map.</p>
+<p><font papago-translate="translated">우리의 해결사는 변수가<em> 어떤</em> 환경에 있는지 계산하지만, 여전히 그 지도에서 이름으로 조회됩니다.</font><font papago-translate="translated"> 더 효율적인 환경 표현은 로컬 변수를 배열로 저장하고 인덱스별로 찾아보는 것입니다.</font></p>
+<p><font papago-translate="translated">범위에 선언된 각 지역 변수에 대해 고유한 인덱스를 연결하도록 해결사를 확장합니다.</font><font papago-translate="translated"> 변수 접근을 해결할 때 변수의 범위와 인덱스를 모두 찾아 저장합니다.</font><font papago-translate="translated"> 인터프리터에서 이를 사용하여 맵을 사용하는 대신 인덱스를 기준으로 변수에 빠르게 접근합니다.</font></p>
 </li>
 </ol>
 </div>
 <footer>
-<a class="next" href="classes.html">
-  Next Chapter: “Classes” →
-</a>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+<a class="next" href="https://youhogeon-meritz.github.io/classes.html"><font papago-translate="translated"> 다음 장: "수업" → </font></a><font papago-translate="splitted"><font papago-translate="translated"> 로버트 니스트롬이 수작업으로 제작한 -<a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE"> © 2015 ~ 2021</a></font></font>
 </footer>
-</img></img></img></article>
+</article>
 </div>
-</body>
-</html>
+
+
+<div id="papagoTooltip" margin="5" style="display: none;">
+        <h1 id="tooltipTitle">원문</h1>
+        <p id="tooltipText"></p>
+      </div>
+      </body></html>

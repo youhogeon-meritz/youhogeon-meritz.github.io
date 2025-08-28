@@ -1,141 +1,92 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-75ac3ca7-4062-4a17-8299-7ae873dc54da@mhtml.blink" />
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>Parsing Expressions · Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/style.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
-<script src="jquery-3.4.1.min.js"></script>
-<script src="script.js"></script>
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+
+<!-- Google analytics -->
+
+</head>
 <body id="top">
 <!-- <div class="scrim"></div> -->
 <nav class="wide">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="contents">
-<h3><a href="#top">Parsing Expressions<small>6</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#top"><font papago-translate="splitted"><font papago-translate="translated">구문 분석 표현</font></font><small>6</small></a></h3>
 <ul>
-<li><a href="#ambiguity-and-the-parsing-game"><small>6.1</small> Ambiguity and the Parsing Game</a></li>
-<li><a href="#recursive-descent-parsing"><small>6.2</small> Recursive Descent Parsing</a></li>
-<li><a href="#syntax-errors"><small>6.3</small> Syntax Errors</a></li>
-<li><a href="#wiring-up-the-parser"><small>6.4</small> Wiring up the Parser</a></li>
+<li><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#ambiguity-and-the-parsing-game"><small>6.1</small><font papago-translate="splitted"><font papago-translate="translated"> 모호성과 파싱 게임</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#recursive-descent-parsing"><small>6.2</small><font papago-translate="splitted"><font papago-translate="translated"> 재귀 하강 구문 분석</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#syntax-errors"><small>6.3</small><font papago-translate="splitted"><font papago-translate="translated"> 구문 오류</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#wiring-up-the-parser"><small>6.4</small><font papago-translate="splitted"><font papago-translate="translated"> 파서 배선하기</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
-<li class="end-part"><a href="#design-note"><small>note</small>Logic Versus History</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#challenges"><font papago-translate="translated">과제들</font></a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#design-note"><small><font papago-translate="translated">메모</font></small><font papago-translate="splitted"><font papago-translate="translated">논리 대 역사</font></font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="representing-code.html" title="Representing Code">← Previous</a>
-<a href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑ Up</a>
-<a class="right" href="evaluating-expressions.html" title="Evaluating Expressions">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/representing-code.html" title="대표 코드" papago-attr-id="1"><font papago-translate="translated">← 이전</font></a>
+<a href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="나무 산책 통역사" papago-attr-id="2"><font papago-translate="translated">↑ 위로</font></a>
+<a class="right" href="https://youhogeon-meritz.github.io/evaluating-expressions.html" title="표현식 평가하기" papago-attr-id="3"><font papago-translate="translated">다음 →</font></a>
 </div> </div>
 </nav>
 <nav class="narrow">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
-<a class="prev" href="representing-code.html" title="Representing Code">←</a>
-<a class="next" href="evaluating-expressions.html" title="Evaluating Expressions">→</a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
+<a class="prev" href="https://youhogeon-meritz.github.io/representing-code.html" title="Representing Code">←</a>
+<a class="next" href="https://youhogeon-meritz.github.io/evaluating-expressions.html" title="Evaluating Expressions">→</a>
 </nav>
 <div class="page">
 <div class="nav-wrapper">
-<nav class="floating">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<nav class="floating pinned">
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="expandable">
-<h3><a href="#top">Parsing Expressions<small>6</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#top"><font papago-translate="splitted"><font papago-translate="translated">구문 분석 표현</font></font><small>6</small></a></h3>
 <ul>
-<li><a href="#ambiguity-and-the-parsing-game"><small>6.1</small> Ambiguity and the Parsing Game</a></li>
-<li><a href="#recursive-descent-parsing"><small>6.2</small> Recursive Descent Parsing</a></li>
-<li><a href="#syntax-errors"><small>6.3</small> Syntax Errors</a></li>
-<li><a href="#wiring-up-the-parser"><small>6.4</small> Wiring up the Parser</a></li>
+<li><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#ambiguity-and-the-parsing-game"><small>6.1</small><font papago-translate="splitted"><font papago-translate="translated"> 모호성과 파싱 게임</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#recursive-descent-parsing"><small>6.2</small><font papago-translate="splitted"><font papago-translate="translated"> 재귀 하강 구문 분석</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#syntax-errors"><small>6.3</small><font papago-translate="splitted"><font papago-translate="translated"> 구문 오류</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#wiring-up-the-parser"><small>6.4</small><font papago-translate="splitted"><font papago-translate="translated"> 파서 배선하기</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
-<li class="end-part"><a href="#design-note"><small>note</small>Logic Versus History</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#design-note"><small>note</small><font papago-translate="splitted"><font papago-translate="translated">논리 대 역사</font></font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="representing-code.html" title="Representing Code">← Previous</a>
-<a href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑ Up</a>
-<a class="right" href="evaluating-expressions.html" title="Evaluating Expressions">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/representing-code.html" title="Representing Code">←&nbsp;Previous</a>
+<a href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑&nbsp;Up</a>
+<a class="right" href="https://youhogeon-meritz.github.io/evaluating-expressions.html" title="Evaluating Expressions">Next&nbsp;→</a>
 </div> </div>
 <a id="expand-nav">≡</a>
 </nav>
 </div>
 <article class="chapter">
 <div class="number">6</div>
-<h1>Parsing Expressions</h1>
+<h1><font papago-translate="translated">구문 분석 표현</font></h1>
 <blockquote>
-<p>Grammar, which knows how to control even kings.
-<cite>Molière</cite></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">문법, 심지어 왕들도 통제할 줄 아는. </font></font><cite>Molière</cite></p>
 </blockquote>
-<p><span name="parse">This</span> chapter marks the first major milestone of the
-book. Many of us have cobbled together a mishmash of regular expressions and
-substring operations to extract some sense out of a pile of text. The code was
-probably riddled with bugs and a beast to maintain. Writing a <em>real</em> parser<span class="em">—</span>one with decent error handling, a coherent internal structure, and the ability
-to robustly chew through a sophisticated syntax<span class="em">—</span>is considered a rare,
-impressive skill. In this chapter, you will <span name="attain">attain</span>
-it.</p>
-<aside name="parse">
-<p>“Parse” comes to English from the Old French “pars” for “part of speech”. It
-means to take a text and map each word to the grammar of the language. We use it
-here in the same sense, except that our language is a little more modern than
-Old French.</p>
+<p><font papago-translate="translated"><span name="parse">이</span> 장은 책의 첫 번째 주요 이정표입니다<span name="parse">.</span></font><font papago-translate="translated"> 우리 중 많은 사람들이 텍스트 더미에서 어떤 감각을 추출하기 위해 정규 표현식과 부분 문자열 연산의 실수를 종합해 보았습니다.</font><font papago-translate="translated"> 코드는 아마도 유지 관리해야 할 버그와 짐승으로 가득 차 있었을 것입니다.</font><font papago-translate="translated"> <em>오류</em> 처리가 적절하고 일관된 내부 구조를 가지고 있으며 정교한 구문을 강력하게 씹을 수 있는<em> 진정</em>한 파서를 작성하는 것은 드문 인상<span class="em"></span><span class="em"></span>적인 기술로 간주됩니다.</font><font papago-translate="translated"> 이 장에서는 이를<span name="attain"> 달성</span>할 것입니다.</font></p>
+<aside name="parse" style="top: 304px;">
+<p><font papago-translate="translated">"Parse"는 고대 프랑스어 "pars"에서 영어로 "말의 일부"를 의미합니다.</font><font papago-translate="translated"> 텍스트를 가져와서 각 단어를 언어의 문법에 맞게 매핑하는 것을 의미합니다.</font><font papago-translate="translated"> 우리는 여기서 같은 의미로 사용하지만, 우리의 언어가 고대 프랑스어보다 조금 더 현대적이라는 점을 제외하고는 그렇습니다.</font></p>
 </aside>
-<aside name="attain">
-<p>Like many rites of passage, you’ll probably find it looks a little smaller, a
-little less daunting when it’s behind you than when it loomed ahead.</p>
+<aside name="attain" style="top: 448px;">
+<p><font papago-translate="translated">많은 통과 의식과 마찬가지로, 아마도 앞에 다가올 때보다 뒤에 있을 때 조금 더 작고 덜 위압적으로 보일 것입니다.</font></p>
 </aside>
-<p>It’s easier than you think, partially because we front-loaded a lot of the hard
-work in the <a href="representing-code.html">last chapter</a>. You already know your way around a formal grammar.
-You’re familiar with syntax trees, and we have some Java classes to represent
-them. The only remaining piece is parsing<span class="em">—</span>transmogrifying a sequence of
-tokens into one of those syntax trees.</p>
-<p>Some CS textbooks make a big deal out of parsers. In the ’60s, computer
-scientists<span class="em">—</span>understandably tired of programming in assembly language<span class="em">—</span>started designing more sophisticated, <span name="human">human</span>-friendly
-languages like Fortran and ALGOL. Alas, they weren’t very <em>machine</em>-friendly
-for the primitive computers of the time.</p>
-<aside name="human">
-<p>Imagine how harrowing assembly programming on those old machines must have been
-that they considered <em>Fortran</em> to be an improvement.</p>
+<p><font papago-translate="translated">지난<a href="https://youhogeon-meritz.github.io/representing-code.html"> 장</a>에서 많은 노력을 기울였기 때문에 생각보다 쉽습니다.</font><font papago-translate="translated"> 당신은 이미 공식적인 문법을 잘 알고 있습니다.</font><font papago-translate="translated"> 구문 트리에 익숙하시며, 이를 표현할 수 있는 Java 클래스가 몇 가지 있습니다.</font><font papago-translate="translated"> 남은 유일한 조각은 구문 분석으로, 일련의 토큰을 구문<span class="em"></span> 트리 중 하나로 변환하는 것입니다.</font></p>
+<p><font papago-translate="translated">일부 CS 교과서는 파서로 큰 의미를 갖습니다.</font><font papago-translate="translated"> 60년대에 컴퓨터 과학자들은 어셈블리 언어로 프로그래밍하는 데 지친 것이 당연하지만 포트란이나 ALGOL과 같은 더 정교<span name="human">하고 인간</span> 친화적인 언어를 설계하기 시작했습니다. 안타깝게도 당시의 원시<span class="em"></span><span class="em"></span> 컴퓨터에는<em> 그다지 기계</em> 친화적이지 않았습니다.</font></p>
+<aside name="human" style="top: 688px;">
+<p><font papago-translate="translated">그 오래된 기계들에서 조립 프로그래밍이 얼마나 끔찍했을지 상상해 보세요. 그들은 포트<em>란</em>을 개선된 것으로 여겼습니다.</font></p>
 </aside>
-<p>These pioneers designed languages that they honestly weren’t even sure how to
-write compilers for, and then did groundbreaking work inventing parsing and
-compiling techniques that could handle these new, big languages on those old, tiny
-machines.</p>
-<p>Classic compiler books read like fawning hagiographies of these heroes and their
-tools. The cover of <em>Compilers: Principles, Techniques, and Tools</em> literally has
-a dragon labeled “complexity of compiler design” being slain by a knight bearing
-a sword and shield branded “LALR parser generator” and “syntax directed
-translation”. They laid it on thick.</p>
-<p>A little self-congratulation is well-deserved, but the truth is you don’t need
-to know most of that stuff to bang out a high quality parser for a modern
-machine. As always, I encourage you to broaden your education and take it in
-later, but this book omits the trophy case.</p>
-<h2><a href="#ambiguity-and-the-parsing-game" id="ambiguity-and-the-parsing-game"><small>6 . 1</small>Ambiguity and the Parsing Game</a></h2>
-<p>In the last chapter, I said you can “play” a context-free grammar like a game in
-order to <em>generate</em> strings. Parsers play that game in reverse. Given a string<span class="em">—</span>a series of tokens<span class="em">—</span>we map those tokens to terminals in the grammar to
-figure out which rules could have generated that string.</p>
-<p>The “could have” part is interesting. It’s entirely possible to create a grammar
-that is <em>ambiguous</em>, where different choices of productions can lead to the same
-string. When you’re using the grammar to <em>generate</em> strings, that doesn’t matter
-much. Once you have the string, who cares how you got to it?</p>
-<p>When parsing, ambiguity means the parser may misunderstand the user’s code. As
-we parse, we aren’t just determining if the string is valid Lox code, we’re
-also tracking which rules match which parts of it so that we know what part of
-the language each token belongs to. Here’s the Lox expression grammar we put
-together in the last chapter:</p>
+<p><font papago-translate="translated">이 선구자들은 컴파일러를 작성하는 방법조차 모르는 언어를 설계한 후, 오래되고 작은 기계에서 이러한 새로운 큰 언어를 처리할 수 있는 구문 분석 및 컴파일 기술을 고안하는 획기적인 작업을 수행했습니다.</font></p>
+<p><font papago-translate="translated">고전적인 컴파일러 책들은 이 영웅들과 그들의 도구들에 대한 이야기를 마치 허풍쟁이처럼 읽습니다.</font><font papago-translate="translated"> <em>Compil</em>er<em>: 원칙, 기법</em>,<em> 도구</em>의 표지에는 "컴파일러 설계의 복잡성"이라는 제목의 용이 검과 방패 브랜드인 "LALR 파서 생성기"와 "구문 지시 번역"을 가진 기사에게 살해당하는 장면이 담겨 있습니다.</font><font papago-translate="translated"> 그들은 그것을 두껍게 깔았습니다.</font></p>
+<p><font papago-translate="translated">약간의 자화자찬은 당연한 일이지만, 사실 현대 기계를 위한 고품질 파서를 출시하기 위해 대부분의 정보를 알 필요는 없습니다.</font><font papago-translate="translated"> 언제나 그렇듯이, 교육 범위를 넓히고 나중에 받아들이도록 권장하지만, 이 책은 트로피 사례를 생략하고 있습니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#ambiguity-and-the-parsing-game" id="ambiguity-and-the-parsing-game"><small><font papago-translate="translated">6 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">모호성과 파싱 게임</font></font></a></h2>
+<p><font papago-translate="translated">지난 장에서 저는 문자열<em>을 생성</em>하기 위해 맥락 없는 문법을 게임처럼 "재생"할 수 있다고 말했습니다.</font><font papago-translate="translated"> 파서들은 그 게임을 역으로 합니다.</font><font papago-translate="translated"> 문자열, 즉 일련의 토큰이 주어졌을 때, 우리는 해당 토큰을 문법의 터미널에 매핑하여<span class="em"></span><span class="em"></span> 해당 문자열을 생성할 수 있는 규칙을 알아냅니다.</font></p>
+<p><font papago-translate="translated">"있을 수도 있었다"는 부분이 흥미롭습니다.</font><font papago-translate="translated"> <em>다양</em>한 제작 선택이 동일한 문자열로 이어질 수 있는<em> 모호한</em> 문법을 만드는 것은 전적으로 가능합니다.</font><font papago-translate="translated"> 문법을 사용하여 문자열<em>을 생성</em>할 때는 큰 문제가 되지 않습니다.</font><font papago-translate="translated"> 일단 끈을 잡으면, 어떻게 그 끈에 도달했는지 누가 신경 쓰겠어요?</font></p>
+<p><font papago-translate="translated">파싱할 때 모호성은 파싱자가 사용자의 코드를 오해할 수 있음을 의미합니다.</font><font papago-translate="translated"> 구문 분석을 할 때 문자열이 유효한 Lox 코드인지 여부를 결정하는 것뿐만 아니라, 각 토큰이 언어의 어느 부분에 속하는지 알 수 있도록 어떤 규칙이 일치하는지 추적하고 있습니다.</font><font papago-translate="translated"> 지난 장에서 정리한 Lox 표현 문법은 다음과 같습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">expression</span>     → <span class="i">literal</span>
                | <span class="i">unary</span>
                | <span class="i">binary</span>
@@ -148,109 +99,87 @@ together in the last chapter:</p>
 <span class="i">operator</span>       → <span class="s">"=="</span> | <span class="s">"!="</span> | <span class="s">"&lt;"</span> | <span class="s">"&lt;="</span> | <span class="s">"&gt;"</span> | <span class="s">"&gt;="</span>
                | <span class="s">"+"</span>  | <span class="s">"-"</span>  | <span class="s">"*"</span> | <span class="s">"/"</span> ;
 </pre></div>
-<p>This is a valid string in that grammar:</p><img alt="6 / 3 - 1" src="image/parsing-expressions/tokens.png">
-<p>But there are two ways we could have generated it. One way is:</p>
+<p><font papago-translate="translated">이것은 해당 문법에서 유효한 문자열입니다:</font></p><img alt="6 / 3 - 1" src="https://youhogeon-meritz.github.io/image/parsing-expressions/tokens.png">
+<p><font papago-translate="translated">하지만 우리가 그것을 생성할 수 있었던 두 가지 방법이 있습니다.</font><font papago-translate="translated"> 한 가지 방법은:</font></p>
 <ol>
-<li>Starting at <code translate="no">expression</code>, pick <code translate="no">binary</code>.</li>
-<li>For the left-hand <code translate="no">expression</code>, pick <code translate="no">NUMBER</code>, and use <code translate="no">6</code>.</li>
-<li>For the operator, pick <code translate="no">"/"</code>.</li>
-<li>For the right-hand <code translate="no">expression</code>, pick <code translate="no">binary</code> again.</li>
-<li>In that nested <code translate="no">binary</code> expression, pick <code translate="no">3 - 1</code>.</li>
+<li><font papago-translate="splitted"><font papago-translate="translated">처음부터 </font></font><code translate="no">expression</code><font papago-translate="splitted"><font papago-translate="translated">,고르다 </font></font><code translate="no">binary</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></li>
+<li><font papago-translate="splitted"><font papago-translate="translated">왼쪽의 경우 </font></font><code translate="no">expression</code><font papago-translate="splitted"><font papago-translate="translated">,고르다 </font></font><code translate="no">NUMBER</code><font papago-translate="splitted"><font papago-translate="translated">, 그리고 사용 </font></font><code translate="no">6</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></li>
+<li><font papago-translate="splitted"><font papago-translate="translated">연산자의 경우 </font></font><code translate="no">"/"</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></li>
+<li><font papago-translate="splitted"><font papago-translate="translated">오른쪽의 경우 </font></font><code translate="no">expression</code><font papago-translate="splitted"><font papago-translate="translated">,고르다 </font></font><code translate="no">binary</code><font papago-translate="splitted"><font papago-translate="translated"> 다시.</font></font></li>
+<li><font papago-translate="splitted"><font papago-translate="translated">그 중첩된 안에서 </font></font><code translate="no">binary</code><font papago-translate="splitted"><font papago-translate="translated"> 표현, 선택 </font></font><code translate="no">3 - 1</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></li>
 </ol>
-<p>Another is:</p>
+<p><font papago-translate="translated">또 다른 것은:</font></p>
 <ol>
-<li>Starting at <code translate="no">expression</code>, pick <code translate="no">binary</code>.</li>
-<li>For the left-hand <code translate="no">expression</code>, pick <code translate="no">binary</code> again.</li>
-<li>In that nested <code translate="no">binary</code> expression, pick <code translate="no">6 / 3</code>.</li>
-<li>Back at the outer <code translate="no">binary</code>, for the operator, pick <code translate="no">"-"</code>.</li>
-<li>For the right-hand <code translate="no">expression</code>, pick <code translate="no">NUMBER</code>, and use <code translate="no">1</code>.</li>
+<li><font papago-translate="splitted"><font papago-translate="translated">처음부터 </font></font><code translate="no">expression</code><font papago-translate="splitted"><font papago-translate="translated">,고르다 </font></font><code translate="no">binary</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></li>
+<li><font papago-translate="splitted"><font papago-translate="translated">왼쪽의 경우 </font></font><code translate="no">expression</code><font papago-translate="splitted"><font papago-translate="translated">,고르다 </font></font><code translate="no">binary</code><font papago-translate="splitted"><font papago-translate="translated"> 다시.</font></font></li>
+<li><font papago-translate="splitted"><font papago-translate="translated">그 중첩된 안에서 </font></font><code translate="no">binary</code><font papago-translate="splitted"><font papago-translate="translated"> 표현, 선택 </font></font><code translate="no">6 / 3</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></li>
+<li><font papago-translate="splitted"><font papago-translate="translated">바깥쪽으로 돌아가기 </font></font><code translate="no">binary</code><font papago-translate="splitted"><font papago-translate="translated">, 연산자의 경우, 선택 </font></font><code translate="no">"-"</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></li>
+<li><font papago-translate="splitted"><font papago-translate="translated">오른쪽의 경우 </font></font><code translate="no">expression</code><font papago-translate="splitted"><font papago-translate="translated">,고르다 </font></font><code translate="no">NUMBER</code><font papago-translate="splitted"><font papago-translate="translated">, 그리고 사용 </font></font><code translate="no">1</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></li>
 </ol>
-<p>Those produce the same <em>strings</em>, but not the same <em>syntax trees</em>:</p><img alt="Two valid syntax trees: (6 / 3) - 1 and 6 / (3 - 1)" src="image/parsing-expressions/syntax-trees.png">
-<p>In other words, the grammar allows seeing the expression as <code translate="no">(6 / 3) - 1</code> or <code translate="no">6 / (3 - 1)</code>. The <code translate="no">binary</code> rule lets operands nest any which way you want. That in
-turn affects the result of evaluating the parsed tree. The way mathematicians
-have addressed this ambiguity since blackboards were first invented is by
-defining rules for precedence and associativity.</p>
+<p><font papago-translate="translated">같은<em> 문자열</em>을 생성하지만<em> 구문 트리는</em> 생성되지 않습니다:</font></p><img alt="Two valid syntax trees: (6 / 3) - 1 and 6 / (3 - 1)" src="https://youhogeon-meritz.github.io/image/parsing-expressions/syntax-trees.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">다시 말해, 문법은 다음과 같은 표현을 볼 수 있게 해줍니다 </font></font><code translate="no">(6 / 3) - 1</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 </font></font><code translate="no">6 / (3 - 1)</code><font papago-translate="splitted"><font papago-translate="translated">.그 </font></font><code translate="no">binary</code><font papago-translate="splitted"><font papago-translate="translated"> 규칙은 피연산자가 원하는 방식으로 둥지를 틀 수 있게 해줍니다.</font><font papago-translate="translated"> 그것은 결국 파싱된 트리를 평가하는 결과에 영향을 미칩니다.</font><font papago-translate="translated"> 수학자들이 칠판이 처음 발명된 이래로 이 모호함을 해결해 온 방법은 우선순위와 연관성에 대한 규칙을 정의하는 것입니다.</font></font></p>
 <ul>
 <li>
-<p><span name="nonassociative"><strong>Precedence</strong></span> determines which operator
-is evaluated first in an expression containing a mixture of different
-operators. Precedence rules tell us that we evaluate the <code translate="no">/</code> before the <code translate="no">-</code>
-in the above example. Operators with higher precedence are evaluated
-before operators with lower precedence. Equivalently, higher precedence
-operators are said to “bind tighter”.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><span name="nonassociative"><strong>우선순위는</strong></span> 다양한 연산자가 혼합된 표현식에서 어떤 연산자가 먼저 평가되는지를 결정합니다<span name="nonassociative"><strong>.</strong></span></font><font papago-translate="translated"> 우선순위 규칙에 따르면 우리는 다음을 평가합니다 </font></font><code translate="no">/</code><font papago-translate="splitted"><font papago-translate="translated"> 이전에 </font></font><code translate="no">-</code><font papago-translate="splitted"><font papago-translate="translated"> 위의 예시에서.</font><font papago-translate="translated"> 우선순위가 높은 연산자는 우선순위가 낮은 연산자보다 먼저 평가됩니다.</font><font papago-translate="translated"> 마찬가지로, 상위 우선순위 연산자는 "더 엄격하게 묶인다"고 합니다.</font></font></p>
 </li>
 <li>
-<p><strong>Associativity</strong> determines which operator is evaluated first in a series
-of the <em>same</em> operator. When an operator is <strong>left-associative</strong> (think
-“left-to-right”), operators on the left evaluate before those on the right.
-Since <code translate="no">-</code> is left-associative, this expression:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><strong>연상성은</strong><em> 동일</em>한 연산자 시리즈에서 어떤 연산자가 먼저 평가되는지를 결정<strong>합니다.</strong></font><font papago-translate="translated"> 연산자가<strong> 왼쪽으로 연상</strong>될 때(예: "왼쪽에서 오른쪽으로"), 왼쪽의 연산자는 오른쪽의 연산자보다 먼저 평가합니다.</font><font papago-translate="translated"> 부터 </font></font><code translate="no">-</code><font papago-translate="splitted"><font papago-translate="translated"> 는 왼쪽 연상입니다. 이 표현은:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="n">5</span> - <span class="n">3</span> - <span class="n">1</span>
 </pre></div>
-<p>is equivalent to:</p>
+<p><font papago-translate="translated">는 다음과 같습니다:</font></p>
 <div class="codehilite"><pre translate="no">(<span class="n">5</span> - <span class="n">3</span>) - <span class="n">1</span>
 </pre></div>
-<p>Assignment, on the other hand, is <strong>right-associative</strong>. This:</p>
+<p><font papago-translate="translated">반면에 과제는<strong> 오른쪽 연관</strong>성이 있습니다.</font><font papago-translate="translated"> 이것:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">a</span> = <span class="i">b</span> = <span class="i">c</span>
 </pre></div>
-<p>is equivalent to:</p>
+<p><font papago-translate="translated">는 다음과 같습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">a</span> = (<span class="i">b</span> = <span class="i">c</span>)
 </pre></div>
 </li>
 </ul>
-<aside name="nonassociative">
-<p>While not common these days, some languages specify that certain pairs of
-operators have <em>no</em> relative precedence. That makes it a syntax error to mix
-those operators in an expression without using explicit grouping.</p>
-<p>Likewise, some operators are <strong>non-associative</strong>. That means it’s an error to
-use that operator more than once in a sequence. For example, Perl’s range
-operator isn’t associative, so <code translate="no">a .. b</code> is OK, but <code translate="no">a .. b .. c</code> is an error.</p>
+<aside name="nonassociative" style="top: 2746.5px;">
+<p><font papago-translate="translated">요즘에는 흔하지 않지만, 일부 언어에서는 특정 연산자 쌍에 상대적인 우선순위<em>가 없다고</em> 명시하고 있습니다.</font><font papago-translate="translated"> 따라서 명시적인 그룹화를 사용하지 않고 표현식에서 이러한 연산자를 혼합하는 것은 구문 오류가 됩니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">마찬가지로, 일부 연산자는<strong> 비결합</strong> 연산자입니다.</font><font papago-translate="translated"> 즉, 시퀀스에서 해당 연산자를 두 번 이상 사용하는 것은 오류입니다.</font><font papago-translate="translated"> 예를 들어, Perl의 범위 연산자는 연관성이 없으므로 </font></font><code translate="no">a .. b</code><font papago-translate="splitted"><font papago-translate="translated"> 괜찮아요, 하지만 </font></font><code translate="no">a .. b .. c</code><font papago-translate="splitted"><font papago-translate="translated"> 오류입니다.</font></font></p>
 </aside>
-<p>Without well-defined precedence and associativity, an expression that uses
-multiple operators is ambiguous<span class="em">—</span>it can be parsed into different syntax trees,
-which could in turn evaluate to different results. We’ll fix that in Lox by
-applying the same precedence rules as C, going from lowest to highest.</p><table>
+<p><font papago-translate="translated">명확하게 정의된 우선순위와 연관성이 없다면, 여러 연산자를 사용하는 표현은 모호합니다. 이 표현은 서로 다른 구문 트리로 해석될 수 있으며, 이는 다시 서로 다른<span class="em"></span> 결과로 평가될 수 있습니다.</font><font papago-translate="translated"> 우리는 Lox에서 C와 동일한 우선순위 규칙을 적용하여 가장 낮은 것부터 가장 높은 것까지 이 문제를 해결할 것입니다.</font></p><table>
 <thead>
 <tr>
-<td>Name</td>
-<td>Operators</td>
-<td>Associates</td>
+<td><font papago-translate="translated">이름.</font></td>
+<td><font papago-translate="translated">운영자</font></td>
+<td><font papago-translate="translated">어소시에이츠</font></td>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Equality</td>
+<td><font papago-translate="translated">평등</font></td>
 <td><code translate="no">==</code> <code translate="no">!=</code></td>
-<td>Left</td>
+<td><font papago-translate="translated">왼쪽</font></td>
 </tr>
 <tr>
-<td>Comparison</td>
+<td><font papago-translate="translated">비교</font></td>
 <td><code translate="no">&gt;</code> <code translate="no">&gt;=</code>
 <code translate="no">&lt;</code> <code translate="no">&lt;=</code></td>
-<td>Left</td>
+<td><font papago-translate="translated">왼쪽</font></td>
 </tr>
 <tr>
-<td>Term</td>
+<td><font papago-translate="translated">용어</font></td>
 <td><code translate="no">-</code> <code translate="no">+</code></td>
-<td>Left</td>
+<td><font papago-translate="translated">왼쪽</font></td>
 </tr>
 <tr>
-<td>Factor</td>
+<td><font papago-translate="translated">요인</font></td>
 <td><code translate="no">/</code> <code translate="no">*</code></td>
-<td>Left</td>
+<td><font papago-translate="translated">왼쪽</font></td>
 </tr>
 <tr>
-<td>Unary</td>
+<td><font papago-translate="translated">유니리</font></td>
 <td><code translate="no">!</code> <code translate="no">-</code></td>
-<td>Right</td>
+<td><font papago-translate="translated">맞다</font></td>
 </tr>
 </tbody>
 </table>
-<p>Right now, the grammar stuffs all expression types into a single <code translate="no">expression</code>
-rule. That same rule is used as the non-terminal for operands, which lets the
-grammar accept any kind of expression as a subexpression, regardless of whether
-the precedence rules allow it.</p>
-<p>We fix that by <span name="massage">stratifying</span> the grammar. We define a
-separate rule for each precedence level.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">현재 문법은 모든 표현 유형을 하나로 묶습니다 </font></font><code translate="no">expression</code><font papago-translate="splitted"><font papago-translate="translated"> 규칙. 동일한 규칙이 피연산자의 비터미널로 사용되며, 이는 우선순위 규칙이 허용하는지 여부에 관계없이 문법이 모든 종류의 표현을 하위 표현으로 받아들일 수 있도록 합니다.</font></font></p>
+<p><font papago-translate="translated">문법<span name="massage">을 계층화</span>하여 이를 수정합니다.</font><font papago-translate="translated"> 우리는 각 우선순위 수준에 대해 별도의 규칙을 정의합니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">expression</span>     → ...
 <span class="i">equality</span>       → ...
 <span class="i">comparison</span>     → ...
@@ -259,86 +188,47 @@ separate rule for each precedence level.</p>
 <span class="i">unary</span>          → ...
 <span class="i">primary</span>        → ...
 </pre></div>
-<aside name="massage">
-<p>Instead of baking precedence right into the grammar rules, some parser
-generators let you keep the same ambiguous-but-simple grammar and then add in a
-little explicit operator precedence metadata on the side in order to
-disambiguate.</p>
+<aside name="massage" style="top: 3726.5px;">
+<p><font papago-translate="translated">일부 파서 생성기는 문법 규칙에 우선순위를 입력하는 대신, 모호하지만 간단한 문법을 그대로 유지한 다음, 명확하지 않게 하기 위해 약간 명시적인 연산자 우선순위 메타데이터를 측면에 추가할 수 있도록 합니다.</font></p>
 </aside>
-<p>Each rule here only matches expressions at its precedence level or higher. For
-example, <code translate="no">unary</code> matches a unary expression like <code translate="no">!negated</code> or a primary
-expression like <code translate="no">1234</code>. And <code translate="no">term</code> can match <code translate="no">1 + 2</code> but also <code translate="no">3 * 4 / 5</code>. The
-final <code translate="no">primary</code> rule covers the highest-precedence forms<span class="em">—</span>literals and
-parenthesized expressions.</p>
-<p>We just need to fill in the productions for each of those rules. We’ll do the
-easy ones first. The top <code translate="no">expression</code> rule matches any expression at any
-precedence level. Since <span name="equality"><code translate="no">equality</code></span> has the lowest
-precedence, if we match that, then it covers everything.</p>
-<aside name="equality">
-<p>We could eliminate <code translate="no">expression</code> and simply use <code translate="no">equality</code> in the other rules
-that contain expressions, but using <code translate="no">expression</code> makes those other rules read a
-little better.</p>
-<p>Also, in later chapters when we expand the grammar to include assignment and
-logical operators, we’ll only need to change the production for <code translate="no">expression</code>
-instead of touching every rule that contains an expression.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">여기서 각 규칙은 우선순위 수준 이상의 표현식만 일치합니다.</font><font papago-translate="translated"> 예를들면, </font></font><code translate="no">unary</code><font papago-translate="splitted"><font papago-translate="translated"> 다음과 같은 단항식과 일치합니다 </font></font><code translate="no">!negated</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 다음과 같은 주요 표현식 </font></font><code translate="no">1234</code><font papago-translate="splitted"><font papago-translate="translated">.그리고. </font></font><code translate="no">term</code><font papago-translate="splitted"><font papago-translate="translated"> 일치할 수 있습니다 </font></font><code translate="no">1 + 2</code><font papago-translate="splitted"><font papago-translate="translated"> 하지만 또한 </font></font><code translate="no">3 * 4 / 5</code><font papago-translate="splitted"><font papago-translate="translated">. 결승전 </font></font><code translate="no">primary</code><font papago-translate="splitted"><font papago-translate="translated"> 규칙은 가장 우선순위가 높은 형식인 리터럴과 괄호로 묶은<span class="em"></span> 표현을 다룹니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 각 규칙에 대한 생산물을 작성하기만 하면 됩니다.</font><font papago-translate="translated"> 쉬운 것부터 먼저 하겠습니다.</font><font papago-translate="translated"> 상단 </font></font><code translate="no">expression</code><font papago-translate="splitted"><font papago-translate="translated"> 규칙은 모든 우선순위 수준에서 모든 표현식과 일치합니다.</font><font papago-translate="translated"> 우선순위가 가장 낮기 때문에, 우리가 그것과 일치시키면 모든 것이 포함됩니다<span name="equality"></span>.</font></font></p>
+<aside name="equality" style="top: 4178.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">제거할 수 있습니다 </font></font><code translate="no">expression</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 단순히 사용하기 </font></font><code translate="no">equality</code><font papago-translate="splitted"><font papago-translate="translated"> 표현이 포함된 다른 규칙에서는 다음과 같은 방법을 사용합니다 </font></font><code translate="no">expression</code><font papago-translate="splitted"><font papago-translate="translated"> 다른 규칙들을 조금 더 잘 읽게 해줍니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">또한, 나중 장에서 문법을 할당과 논리 연산자로 확장할 때는 다음과 같은 경우에만 프로덕션을 변경하면 됩니다 </font></font><code translate="no">expression</code><font papago-translate="splitted"><font papago-translate="translated"> 표현이 포함된 모든 규칙을 터치하는 대신.</font></font></p>
 </aside>
 <div class="codehilite"><pre translate="no"><span class="i">expression</span>     → <span class="i">equality</span>
 </pre></div>
-<p>Over at the other end of the precedence table, a primary expression contains
-all the literals and grouping expressions.</p>
+<p><font papago-translate="translated">우선순위 표의 다른 쪽 끝에는 기본 표현식이 모든 리터럴과 그룹화 표현식을 포함합니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">primary</span>        → <span class="t">NUMBER</span> | <span class="t">STRING</span> | <span class="s">"true"</span> | <span class="s">"false"</span> | <span class="s">"nil"</span>
                | <span class="s">"("</span> <span class="i">expression</span> <span class="s">")"</span> ;
 </pre></div>
-<p>A unary expression starts with a unary operator followed by the operand. Since
-unary operators can nest<span class="em">—</span><code translate="no">!!true</code> is a valid if weird expression<span class="em">—</span>the
-operand can itself be a unary operator. A recursive rule handles that nicely.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">단항식은 단항 연산자로 시작하여 피연산자로 이어집니다.</font><font papago-translate="translated"> 단항 연산자<span class="em"></span>가 둥지를 틀 수 있기 때문에</font></font><code translate="no">!!true</code><font papago-translate="splitted"><font papago-translate="translated"> 가 이상한 표현일 경우 유효합니다—오퍼랜드 자체가 단항<span class="em"></span> 연산자가 될 수 있습니다.</font><font papago-translate="translated"> 재귀적 규칙은 그것을 잘 처리합니다.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="i">unary</span>          → ( <span class="s">"!"</span> | <span class="s">"-"</span> ) <span class="i">unary</span> ;
 </pre></div>
-<p>But this rule has a problem. It never terminates.</p>
-<p>Remember, each rule needs to match expressions at that precedence level <em>or
-higher</em>, so we also need to let this match a primary expression.</p>
+<p><font papago-translate="translated">하지만 이 규칙에는 문제가 있습니다.</font><font papago-translate="translated"> 결코 끝나지 않습니다.</font></p>
+<p><font papago-translate="translated">기억하세요, 각 규칙은 해당 우선순위 수준<em> 이상</em>의 표현식과 일치해야 하므로 이 표현식도 기본 표현식과 일치하도록 해야 합니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">unary</span>          → ( <span class="s">"!"</span> | <span class="s">"-"</span> ) <span class="i">unary</span>
                | <span class="i">primary</span> ;
 </pre></div>
-<p>That works.</p>
-<p>The remaining rules are all binary operators. We’ll start with the rule for
-multiplication and division. Here’s a first try:</p>
+<p><font papago-translate="translated">작동합니다.</font></p>
+<p><font papago-translate="translated">나머지 규칙들은 모두 이진 연산자입니다.</font><font papago-translate="translated"> 곱셈과 나눗셈의 규칙부터 시작하겠습니다.</font><font papago-translate="translated"> 첫 번째 시도입니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">factor</span>         → <span class="i">factor</span> ( <span class="s">"/"</span> | <span class="s">"*"</span> ) <span class="i">unary</span>
                | <span class="i">unary</span> ;
 </pre></div>
-<p>The rule recurses to match the left operand. That enables the rule to match a
-series of multiplication and division expressions like <code translate="no">1 * 2 / 3</code>. Putting the
-recursive production on the left side and <code translate="no">unary</code> on the right makes the rule
-<span name="mult">left-associative</span> and unambiguous.</p>
-<aside name="mult">
-<p>In principle, it doesn’t matter whether you treat multiplication as left- or
-right-associative<span class="em">—</span>you get the same result either way. Alas, in the real world
-with limited precision, roundoff and overflow mean that associativity can affect
-the result of a sequence of multiplications. Consider:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">규칙이 왼쪽 피연산자와 일치하도록 재귀합니다.</font><font papago-translate="translated"> 이를 통해 규칙은 다음과 같은 일련의 곱셈 및 나눗셈 표현과 일치할 수 있습니다 </font></font><code translate="no">1 * 2 / 3</code><font papago-translate="splitted"><font papago-translate="translated">. 재귀적 생산을 왼쪽에 배치하고 </font></font><code translate="no">unary</code><font papago-translate="splitted"><font papago-translate="translated"> 오른쪽은 규칙<span name="mult">을 왼쪽 연관</span>적이고 명확하게 만듭니다.</font></font></p>
+<aside name="mult" style="top: 4962.5px;">
+<p><font papago-translate="translated">원칙적으로 곱셈을 왼쪽 또는 오른쪽 연상으로 취급하든 상관없이<span class="em"></span> 어느 쪽이든 동일한 결과를 얻을 수 있습니다.</font><font papago-translate="translated"> 안타깝게도, 정밀도가 제한된 현실 세계에서는 반올림과 오버플로우가 결합성이 일련의 곱셈 결과에 영향을 미칠 수 있습니다.</font><font papago-translate="translated"> 고려:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">print</span> <span class="n">0.1</span> * (<span class="n">0.2</span> * <span class="n">0.3</span>);
 <span class="k">print</span> (<span class="n">0.1</span> * <span class="n">0.2</span>) * <span class="n">0.3</span>;
 </pre></div>
-<p>In languages like Lox that use <a href="https://en.wikipedia.org/wiki/Double-precision_floating-point_format">IEEE 754</a> double-precision floating-point
-numbers, the first evaluates to <code translate="no">0.006</code>, while the second yields
-<code translate="no">0.006000000000000001</code>. Sometimes that tiny difference matters.
-<a href="https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html">This</a> is a good place to learn more.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><a href="https://en.wikipedia.org/wiki/Double-precision_floating-point_format">IEEE 75</a>4 이중 정밀 부동 소수점 숫자를 사용하는 Lox와 같은 언어에서 첫 번째 평가는 다음과 같습니다 </font></font><code translate="no">0.006</code><font papago-translate="splitted"><font papago-translate="translated">, 두 번째 결과는 </font></font><code translate="no">0.006000000000000001</code><font papago-translate="splitted"><font papago-translate="translated">. 때때로 그 작은 차이가 중요합니다.</font><font papago-translate="translated"> 여기는 더 배우기에 좋은 곳<a href="https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html">입니다.</a></font></font></p>
 </aside>
-<p>All of this is correct, but the fact that the first symbol in the body of the
-rule is the same as the head of the rule means this production is
-<strong>left-recursive</strong>. Some parsing techniques, including the one we’re going to
-use, have trouble with left recursion. (Recursion elsewhere, like we have in
-<code translate="no">unary</code> and the indirect recursion for grouping in <code translate="no">primary</code> are not a problem.)</p>
-<p>There are many grammars you can define that match the same language. The choice
-for how to model a particular language is partially a matter of taste and
-partially a pragmatic one. This rule is correct, but not optimal for how we
-intend to parse it. Instead of a left recursive rule, we’ll use a different one.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 모든 것이 맞지만, 규칙 본문의 첫 번째 기호가 규칙의 머리와 같다는 사실은 이 생산이<strong> 왼쪽으로 순환</strong>한다는 것을 의미합니다.</font><font papago-translate="translated"> 일부 구문 분석 기법, 특히 우리가 사용할 기법은 왼쪽 재귀에 문제가 있습니다.</font><font papago-translate="translated"> (다른 곳에서의 재귀, 우리가 했던 것처럼) </font></font><code translate="no">unary</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 그룹화를 위한 간접 재귀 </font></font><code translate="no">primary</code><font papago-translate="splitted"><font papago-translate="translated"> 문제 없습니다.)</font></font></p>
+<p><font papago-translate="translated">같은 언어와 일치하는 많은 문법을 정의할 수 있습니다.</font><font papago-translate="translated"> 특정 언어를 모델링하는 방법에 대한 선택은 부분적으로는 취향의 문제이고, 부분적으로는 실용적인 선택입니다.</font><font papago-translate="translated"> 이 규칙은 맞지만, 우리가 그것을 분석하려는 방식에는 최적이 아닙니다.</font><font papago-translate="translated"> 왼쪽 재귀 규칙 대신 다른 규칙을 사용하겠습니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">factor</span>         → <span class="i">unary</span> ( ( <span class="s">"/"</span> | <span class="s">"*"</span> ) <span class="i">unary</span> )* ;
 </pre></div>
-<p>We define a factor expression as a flat <em>sequence</em> of multiplications
-and divisions. This matches the same syntax as the previous rule, but better
-mirrors the code we’ll write to parse Lox. We use the same structure for all of
-the other binary operator precedence levels, giving us this complete expression
-grammar:</p>
+<p><font papago-translate="translated">우리는 요인 표현식을 곱셈과 나눗셈의 평탄<em>한 순서로</em> 정의합니다.</font><font papago-translate="translated"> 이것은 이전 규칙과 동일한 구문과 일치하지만, 우리가 Lox를 구문 분석하기 위해 작성할 코드를 더 잘 반영합니다.</font><font papago-translate="translated"> 다른 모든 이진 연산자 우선순위 레벨에 대해 동일한 구조를 사용하여 완전한 표현 문법을 제공합니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">expression</span>     → <span class="i">equality</span> ;
 <span class="i">equality</span>       → <span class="i">comparison</span> ( ( <span class="s">"!="</span> | <span class="s">"=="</span> ) <span class="i">comparison</span> )* ;
 <span class="i">comparison</span>     → <span class="i">term</span> ( ( <span class="s">"&gt;"</span> | <span class="s">"&gt;="</span> | <span class="s">"&lt;"</span> | <span class="s">"&lt;="</span> ) <span class="i">term</span> )* ;
@@ -349,61 +239,34 @@ grammar:</p>
 <span class="i">primary</span>        → <span class="t">NUMBER</span> | <span class="t">STRING</span> | <span class="s">"true"</span> | <span class="s">"false"</span> | <span class="s">"nil"</span>
                | <span class="s">"("</span> <span class="i">expression</span> <span class="s">")"</span> ;
 </pre></div>
-<p>This grammar is more complex than the one we had before, but in return we have
-eliminated the previous one’s ambiguity. It’s just what we need to make a
-parser.</p>
-<h2><a href="#recursive-descent-parsing" id="recursive-descent-parsing"><small>6 . 2</small>Recursive Descent Parsing</a></h2>
-<p>There is a whole pack of parsing techniques whose names are mostly combinations
-of “L” and “R”<span class="em">—</span><a href="https://en.wikipedia.org/wiki/LL_parser">LL(k)</a>, <a href="https://en.wikipedia.org/wiki/LR_parser">LR(1)</a>, <a href="https://en.wikipedia.org/wiki/LALR_parser">LALR</a><span class="em">—</span>along with more exotic
-beasts like <a href="https://en.wikipedia.org/wiki/Parser_combinator">parser combinators</a>, <a href="https://en.wikipedia.org/wiki/Earley_parser">Earley parsers</a>, <a href="https://en.wikipedia.org/wiki/Shunting-yard_algorithm">the shunting yard
-algorithm</a>, and <a href="https://en.wikipedia.org/wiki/Parsing_expression_grammar">packrat parsing</a>. For our first interpreter, one
-technique is more than sufficient: <strong>recursive descent</strong>.</p>
-<p>Recursive descent is the simplest way to build a parser, and doesn’t require
-using complex parser generator tools like Yacc, Bison or ANTLR. All you need is
-straightforward handwritten code. Don’t be fooled by its simplicity, though.
-Recursive descent parsers are fast, robust, and can support sophisticated
-error handling. In fact, GCC, V8 (the JavaScript VM in Chrome), Roslyn (the C#
-compiler written in C#) and many other heavyweight production language
-implementations use recursive descent. It rocks.</p>
-<p>Recursive descent is considered a <strong>top-down parser</strong> because it starts from the
-top or outermost grammar rule (here <code translate="no">expression</code>) and works its way <span name="descent">down</span> into the nested subexpressions before finally
-reaching the leaves of the syntax tree. This is in contrast with bottom-up
-parsers like LR that start with primary expressions and compose them into larger
-and larger chunks of syntax.</p>
-<aside name="descent">
-<p>It’s called “recursive <em>descent</em>” because it walks <em>down</em> the grammar.
-Confusingly, we also use direction metaphorically when talking about “high” and
-“low” precedence, but the orientation is reversed. In a top-down parser, you
-reach the lowest-precedence expressions first because they may in turn contain
-subexpressions of higher precedence.</p><img alt="Top-down grammar rules in order of increasing precedence." src="image/parsing-expressions/direction.png">
-<p>CS people really need to get together and straighten out their metaphors. Don’t
-even get me started on which direction a stack grows or why trees have their
-roots on top.</p>
-</img></aside>
-<p>A recursive descent parser is a literal translation of the grammar’s rules
-straight into imperative code. Each rule becomes a function. The body of the
-rule translates to code roughly like:</p><table>
+<p><font papago-translate="translated">이 문법은 이전에 사용했던 문법보다 더 복잡하지만, 대신 이전 문법의 모호함을 제거했습니다.</font><font papago-translate="translated"> 파서를 만들기 위해 필요한 것입니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#recursive-descent-parsing" id="recursive-descent-parsing"><small><font papago-translate="translated">6 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">재귀 하강 구문 분석</font></font></a></h2>
+<p><font papago-translate="translated">파싱 기법에는 주로 "L"과 "R<span class="em">"</span><a href="https://en.wikipedia.org/wiki/LL_parser">—LL(k)</a>,<a href="https://en.wikipedia.org/wiki/LR_parser"> LR(1)</a>, LA<span class="em">LR</span>— 그리고<a href="https://en.wikipedia.org/wiki/Parser_combinator"> 파서 조합자</a><a href="https://en.wikipedia.org/wiki/Earley_parser">, 얼리 파서</a><a href="https://en.wikipedia.org/wiki/Shunting-yard_algorithm">, 션팅 야드 알고리즘,</a><a href="https://en.wikipedia.org/wiki/Parsing_expression_grammar"> 팩랫</a><a href="https://en.wikipedia.org/wiki/LALR_parser"></a><a href="https://en.wikipedia.org/wiki/Parsing_expression_grammar"> 파싱</a>과 같은 이국적인 동물들의 조합으로 이루어진 전체 팩이 있습니다.</font><font papago-translate="translated"> 첫 번째 통역사에게는<strong> 한</strong> 가지 기술<strong>만으로도 충분합니다: 재귀적 하강입니다</strong>.</font></p>
+<p><font papago-translate="translated">재귀 하강법은 파서를 만드는 가장 간단한 방법이며, Yacc, Bison 또는 ANTLR과 같은 복잡한 파서 생성 도구를 사용할 필요가 없습니다.</font><font papago-translate="translated"> 간단한 손글씨 코드만 있으면 됩니다.</font><font papago-translate="translated"> 하지만 그 단순함에 속지 마세요.</font><font papago-translate="translated"> 재귀 하강 파서는 빠르고 견고하며 정교한 오류 처리를 지원할 수 있습니다.</font><font papago-translate="translated"> 실제로 GCC, V8(Chrome의 JavaScript VM), Roslyn(C#으로 작성된 C# 컴파일러) 및 기타 많은 헤비급 프로덕션 언어 구현은 재귀적 하강법을 사용합니다.</font><font papago-translate="translated"> 바위가 있습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">재귀적 하강법은 상위 또는 가장 바깥쪽 문법 규칙에서 시작하기 때문에<strong> 하향식 파서</strong>로 간주됩니다(여기서) </font></font><code translate="no">expression</code><font papago-translate="splitted"><font papago-translate="translated">)를 사용하여 중첩된 하위 표현식으로<span name="descent"> 이동</span>한 후 구문 트리의 잎에 도달합니다.</font><font papago-translate="translated"> 이는 기본 표현식으로 시작하여 점점 더 큰 구문 덩어리로 구성되는 LR과 같은 상향식 파서와는 대조적입니다.</font></font></p>
+<aside name="descent" style="top: 6170.5px;">
+<p><font papago-translate="translated">문법<em>을 따라</em> 내려가기 때문에 "재귀<em>적 하강"</em>이라고 불립니다.</font><font papago-translate="translated"> 혼란스럽게도, 우리는 "높음"과 "낮음"의 우선순위에 대해 이야기할 때 방향을 은유적으로 사용하지만, 방향은 반대입니다.</font><font papago-translate="translated"> 하향식 파서에서는 가장 낮은 우선순위의 표현식에 먼저 도달합니다. 왜냐하면 이 표현식들은 더 높은 우선순위의 하위 표현식을 포함할 수 있기 때문입니다.</font></p><img alt="Top-down grammar rules in order of increasing precedence." src="https://youhogeon-meritz.github.io/image/parsing-expressions/direction.png">
+<p><font papago-translate="translated">CS 사람들은 정말로 모여서 은유를 바로잡아야 합니다.</font><font papago-translate="translated"> 스택이 어느 방향으로 자라며 나무의 뿌리가 왜 위에 있는지에 대해서는 시작조차 하지 마세요.</font></p>
+</aside>
+<p><font papago-translate="translated">재귀적 하강 파서는 문법 규칙을 명령어 코드로 직접 번역한 것입니다.</font><font papago-translate="translated"> 각 규칙은 함수가 됩니다.</font><font papago-translate="translated"> 규칙의 본문은 대략 다음과 같이 코드로 번역됩니다:</font></p><table>
 <thead>
 <tr>
-<td>Grammar notation</td>
-<td>Code representation</td>
+<td><font papago-translate="translated">문법 표기법</font></td>
+<td><font papago-translate="translated">코드 표현</font></td>
 </tr>
 </thead>
 <tbody>
-<tr><td>Terminal</td><td>Code to match and consume a token</td></tr>
-<tr><td>Nonterminal</td><td>Call to that rule’s function</td></tr>
-<tr><td><code translate="no">|</code></td><td><code translate="no">if</code> or <code translate="no">switch</code> statement</td></tr>
-<tr><td><code translate="no">*</code> or <code translate="no">+</code></td><td><code translate="no">while</code> or <code translate="no">for</code> loop</td></tr>
-<tr><td><code translate="no">?</code></td><td><code translate="no">if</code> statement</td></tr>
+<tr><td><font papago-translate="translated">터미널</font></td><td><font papago-translate="translated">토큰을 일치시키고 소비하는 코드</font></td></tr>
+<tr><td><font papago-translate="translated">비터미널</font></td><td><font papago-translate="translated">해당 규칙의 함수 호출</font></td></tr>
+<tr><td><code translate="no">|</code></td><td><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 </font></font><code translate="no">switch</code><font papago-translate="splitted"><font papago-translate="translated"> 진술</font></font></td></tr>
+<tr><td><code translate="no">*</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 </font></font><code translate="no">+</code></td><td><code translate="no">while</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 고리</font></font></td></tr>
+<tr><td><code translate="no">?</code></td><td><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 진술</font></font></td></tr>
 </tbody>
 </table>
-<p>The descent is described as “recursive” because when a grammar rule refers to
-itself<span class="em">—</span>directly or indirectly<span class="em">—</span>that translates to a recursive function
-call.</p>
-<h3><a href="#the-parser-class" id="the-parser-class"><small>6 . 2 . 1</small>The parser class</a></h3>
-<p>Each grammar rule becomes a method inside this new class:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-create new file</div>
+<p><font papago-translate="translated">문법 규칙이 직접적으로 또는 간접적으로 자신을 지칭할 때, 이는 재귀 함수<span class="em"></span><span class="em"></span> 호출로 변환되기 때문에 하강은 "재귀적"이라고 설명됩니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#the-parser-class" id="the-parser-class"><small><font papago-translate="translated">6 . 2 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">파서 클래스</font></font></a></h3>
+<p><font papago-translate="translated">각 문법 규칙은 이 새로운 클래스 내에서 하나의 메서드가 됩니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 새 파일 만들기</font></font></div>
 <pre translate="no"><span class="k">package</span> <span class="i">com.craftinginterpreters.lox</span>;
 
 <span class="k">import</span> <span class="i">java.util.List</span>;
@@ -420,34 +283,23 @@ create new file</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, create new file</div>
-<p>Like the scanner, the parser consumes a flat input sequence, only now we’re
-reading tokens instead of characters. We store the list of tokens and use
-<code translate="no">current</code> to point to the next token eagerly waiting to be parsed.</p>
-<p>We’re going to run straight through the expression grammar now and translate
-each rule to Java code. The first rule, <code translate="no">expression</code>, simply expands to the
-<code translate="no">equality</code> rule, so that’s straightforward.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>Parser</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">스캐너와 마찬가지로 파서도 평평한 입력 시퀀스를 사용하지만, 이제서야 문자 대신 토큰을 읽고 있습니다.</font><font papago-translate="translated"> 토큰 목록을 저장하고 사용합니다 </font></font><code translate="no">current</code><font papago-translate="splitted"><font papago-translate="translated"> 구문 분석을 간절히 기다리는 다음 토큰을 가리키기 위해.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이제 표현 문법을 바로 살펴보고 각 규칙을 자바 코드로 번역해 보겠습니다.</font><font papago-translate="translated"> 첫 번째 규칙, </font></font><code translate="no">expression</code><font papago-translate="splitted"><font papago-translate="translated">, 단순히 다음으로 확장됩니다 </font></font><code translate="no">equality</code><font papago-translate="splitted"><font papago-translate="translated"> 규칙은 간단합니다.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>Parser</em>() 뒤에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Expr</span> <span class="i">expression</span>() {
     <span class="k">return</span> <span class="i">equality</span>();
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>Parser</em>()</div>
-<p>Each method for parsing a grammar rule produces a syntax tree for that rule and
-returns it to the caller. When the body of the rule contains a nonterminal<span class="em">—</span>a
-reference to another rule<span class="em">—</span>we <span name="left">call</span> that other rule’s
-method.</p>
-<aside name="left">
-<p>This is why left recursion is problematic for recursive descent. The function
-for a left-recursive rule immediately calls itself, which calls itself again,
-and so on, until the parser hits a stack overflow and dies.</p>
+<p><font papago-translate="translated">문법 규칙을 구문 분석하는 각 방법은 해당 규칙에 대한 구문 트리를 생성하여 호출자에게 반환합니다.</font><font papago-translate="translated"> 규칙 본문에 비터미널(다른 규칙에 대한 참조)이 포함되어 있을 때, 우리는 그 다른 규칙<span class="em"></span><span class="em"></span>의 메서드<span name="left">를 호출합니다</span>.</font></p>
+<aside name="left" style="top: 7386.5px;">
+<p><font papago-translate="translated">이것이 바로 왼쪽 재귀가 재귀 하강에 문제가 되는 이유입니다.</font><font papago-translate="translated"> 왼쪽 순환 규칙의 함수는 즉시 자신을 호출하며, 파서가 스택 오버플로에 부딪혀 죽을 때까지 다시 호출합니다.</font></p>
 </aside>
-<p>The rule for equality is a little more complex.</p>
+<p><font papago-translate="translated">평등에 대한 규칙은 조금 더 복잡합니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">equality</span>       → <span class="i">comparison</span> ( ( <span class="s">"!="</span> | <span class="s">"=="</span> ) <span class="i">comparison</span> )* ;
 </pre></div>
-<p>In Java, that becomes:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>expression</em>()</div>
+<p><font papago-translate="translated">자바에서는 이렇게 됩니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 식<em></em> () 뒤에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Expr</span> <span class="i">equality</span>() {
     <span class="t">Expr</span> <span class="i">expr</span> = <span class="i">comparison</span>();
 
@@ -461,16 +313,9 @@ add after <em>expression</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>expression</em>()</div>
-<p>Let’s step through it. The first <code translate="no">comparison</code> nonterminal in the body translates
-to the first call to <code translate="no">comparison()</code> in the method. We take that result and store
-it in a local variable.</p>
-<p>Then, the <code translate="no">( ... )*</code> loop in the rule maps to a <code translate="no">while</code> loop. We need to know
-when to exit that loop. We can see that inside the rule, we must first find
-either a <code translate="no">!=</code> or <code translate="no">==</code> token. So, if we <em>don’t</em> see one of those, we must be done
-with the sequence of equality operators. We express that check using a handy
-<code translate="no">match()</code> method.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>equality</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">한 걸음 더 나아가 보겠습니다.</font><font papago-translate="translated"> 첫 번째 </font></font><code translate="no">comparison</code><font papago-translate="splitted"><font papago-translate="translated"> 체내 비말단은 다음과 같은 첫 번째 호출로 번역됩니다 </font></font><code translate="no">comparison()</code><font papago-translate="splitted"><font papago-translate="translated"> 방법에서.</font><font papago-translate="translated"> 우리는 그 결과를 가져와서 지역 변수에 저장합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그러면 </font></font><code translate="no">( ... )*</code><font papago-translate="splitted"><font papago-translate="translated"> 규칙의 루프 맵은 다음과 같습니다 </font></font><code translate="no">while</code><font papago-translate="splitted"><font papago-translate="translated"> 루프. 우리는 그 루프를 언제 종료해야 하는지 알아야 합니다.</font><font papago-translate="translated"> 규칙 안에서 먼저 다음 중 하나를 찾아야 한다는 것을 알 수 있습니다 </font></font><code translate="no">!=</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 </font></font><code translate="no">==</code><font papago-translate="splitted"><font papago-translate="translated"> 상품권.</font><font papago-translate="translated"> 따라서 이러한<em></em> 연산자 중 하나를 보지 못하면 평등 연산자의 순서를 완료해야 합니다.</font><font papago-translate="translated"> 우리는 그 수표를 핸디를 사용하여 표현합니다 </font></font><code translate="no">match()</code><font papago-translate="splitted"><font papago-translate="translated"> 방법.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>평등</em> () 후에 추가하기</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">boolean</span> <span class="i">match</span>(<span class="t">TokenType</span>... <span class="i">types</span>) {
     <span class="k">for</span> (<span class="t">TokenType</span> <span class="i">type</span> : <span class="i">types</span>) {
       <span class="k">if</span> (<span class="i">check</span>(<span class="i">type</span>)) {
@@ -483,33 +328,25 @@ add after <em>equality</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>equality</em>()</div>
-<p>This checks to see if the current token has any of the given types. If so, it
-consumes the token and returns <code translate="no">true</code>. Otherwise, it returns <code translate="no">false</code> and leaves
-the current token alone. The <code translate="no">match()</code> method is defined in terms of two more
-fundamental operations.</p>
-<p>The <code translate="no">check()</code> method returns <code translate="no">true</code> if the current token is of the given type.
-Unlike <code translate="no">match()</code>, it never consumes the token, it only looks at it.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>match</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">현재 토큰에 주어진 유형이 있는지 확인합니다.</font><font papago-translate="translated"> 그렇다면 토큰을 소비하고 반환합니다 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated">. 그렇지 않으면 반환됩니다 </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated"> 현재 토큰은 그대로 둡니다.</font><font papago-translate="translated"> 그 </font></font><code translate="no">match()</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드는 두 가지 기본 연산으로 정의됩니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그 </font></font><code translate="no">check()</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드 반환 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated"> 현재 토큰이 지정된 유형인 경우.</font><font papago-translate="translated"> 와는 달리 </font></font><code translate="no">match()</code><font papago-translate="splitted"><font papago-translate="translated">, 토큰을 소비하지 않고 보기만 합니다.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>경기</em> 후 () 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">boolean</span> <span class="i">check</span>(<span class="t">TokenType</span> <span class="i">type</span>) {
     <span class="k">if</span> (<span class="i">isAtEnd</span>()) <span class="k">return</span> <span class="k">false</span>;
     <span class="k">return</span> <span class="i">peek</span>().<span class="i">type</span> == <span class="i">type</span>;
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>match</em>()</div>
-<p>The <code translate="no">advance()</code> method consumes the current token and returns it, similar to how
-our scanner’s corresponding method crawled through characters.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>check</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">그 </font></font><code translate="no">advance()</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드는 현재 토큰을 소비하고 반환합니다. 이는 스캐너의 해당 메서드가 문자를 크롤링하는 방식과 유사합니다.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>확인</em> 후 추가 ()</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Token</span> <span class="i">advance</span>() {
     <span class="k">if</span> (!<span class="i">isAtEnd</span>()) <span class="i">current</span>++;
     <span class="k">return</span> <span class="i">previous</span>();
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>check</em>()</div>
-<p>These methods bottom out on the last handful of primitive operations.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>advance</em>()</div>
+<p><font papago-translate="translated">이 방법들은 마지막 소수의 원시 연산에 기초합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>사전</em> () 후 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">boolean</span> <span class="i">isAtEnd</span>() {
     <span class="k">return</span> <span class="i">peek</span>().<span class="i">type</span> == <span class="i">EOF</span>;
   }
@@ -523,37 +360,19 @@ add after <em>advance</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>advance</em>()</div>
-<p><code translate="no">isAtEnd()</code> checks if we’ve run out of tokens to parse. <code translate="no">peek()</code> returns the
-current token we have yet to consume, and <code translate="no">previous()</code> returns the most recently
-consumed token. The latter makes it easier to use <code translate="no">match()</code> and then access the
-just-matched token.</p>
-<p>That’s most of the parsing infrastructure we need. Where were we? Right, so if
-we are inside the <code translate="no">while</code> loop in <code translate="no">equality()</code>, then we know we have found a
-<code translate="no">!=</code> or <code translate="no">==</code> operator and must be parsing an equality expression.</p>
-<p>We grab the matched operator token so we can track which kind of equality
-expression we have. Then we call <code translate="no">comparison()</code> again to parse the right-hand
-operand. We combine the operator and its two operands into a new <code translate="no">Expr.Binary</code>
-syntax tree node, and then loop around. For each iteration, we store the
-resulting expression back in the same <code translate="no">expr</code> local variable. As we zip through a
-sequence of equality expressions, that creates a left-associative nested tree of
-binary operator nodes.</p>
-<p><span name="sequence"></span></p><img alt="The syntax tree created by parsing 'a == b == c == d == e'" src="image/parsing-expressions/sequence.png"/>
-<aside name="sequence">
-<p>Parsing <code translate="no">a == b == c == d == e</code>. For each iteration, we create a new binary
-expression using the previous one as the left operand.</p>
+<p><code translate="no">isAtEnd()</code><font papago-translate="splitted"><font papago-translate="translated"> 구문 분석할 토큰이 부족한지 확인합니다. </font></font><code translate="no">peek()</code><font papago-translate="splitted"><font papago-translate="translated"> 아직 소비하지 않은 현재 토큰을 반환합니다 </font></font><code translate="no">previous()</code><font papago-translate="splitted"><font papago-translate="translated"> 가장 최근에 소비된 토큰을 반환합니다.</font><font papago-translate="translated"> 후자는 사용하기 쉽게 만듭니다 </font></font><code translate="no">match()</code><font papago-translate="splitted"><font papago-translate="translated"> 그런 다음 방금 matched 토큰에 액세스합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그것이 우리가 필요한 대부분의 파싱 인프라입니다.</font><font papago-translate="translated"> 우리가 어디까지 얘기했죠?</font><font papago-translate="translated"> 맞아요, 그래서 만약 우리가 안에 있다면 </font></font><code translate="no">while</code><font papago-translate="splitted"><font papago-translate="translated"> 루프 인 </font></font><code translate="no">equality()</code><font papago-translate="splitted"><font papago-translate="translated">, 그러면 우리는 우리가 </font></font><code translate="no">!=</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 </font></font><code translate="no">==</code><font papago-translate="splitted"><font papago-translate="translated"> 연산자이며 등식을 구문 분석해야 합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 일치하는 연산자 토큰을 가져와서 어떤 종류의 평등 표현이 있는지 추적할 수 있습니다.</font><font papago-translate="translated"> 그러면 우리는 전화합니다 </font></font><code translate="no">comparison()</code><font papago-translate="splitted"><font papago-translate="translated"> 다시 오른쪽 피연산자를 구문 분석합니다.</font><font papago-translate="translated"> 연산자와 그 두 피연산자를 결합하여 새로운 연산자를 만듭니다 </font></font><code translate="no">Expr.Binary</code><font papago-translate="splitted"><font papago-translate="translated"> 구문 트리 노드를 반복합니다.</font><font papago-translate="translated"> 각 반복마다 결과 표현식을 동일하게 다시 저장합니다 </font></font><code translate="no">expr</code><font papago-translate="splitted"><font papago-translate="translated"> 지역 변수.</font><font papago-translate="translated"> 일련의 등식 표현식을 살펴봄에 따라 이진 연산자 노드의 왼쪽 연관 중첩 트리가 생성됩니다.</font></font></p>
+<p><span name="sequence"></span></p><img alt="The syntax tree created by parsing 'a == b == c == d == e'" src="https://youhogeon-meritz.github.io/image/parsing-expressions/sequence.png">
+<aside name="sequence" style="top: 9404.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">구문 분석 </font></font><code translate="no">a == b == c == d == e</code><font papago-translate="splitted"><font papago-translate="translated">. 각 반복마다 이전 것을 왼쪽 피연산자로 사용하여 새로운 이진 표현식을 만듭니다.</font></font></p>
 </aside>
-<p>The parser falls out of the loop once it hits a token that’s not an equality
-operator. Finally, it returns the expression. Note that if the parser never
-encounters an equality operator, then it never enters the loop. In that case,
-the <code translate="no">equality()</code> method effectively calls and returns <code translate="no">comparison()</code>. In that
-way, this method matches an equality operator <em>or anything of higher
-precedence</em>.</p>
-<p>Moving on to the next rule<span class="ellipse"> . . . </span></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">파서는 동등 연산자가 아닌 토큰에 도달하면 루프에서 제외됩니다.</font><font papago-translate="translated"> 마침내 표현을 반환합니다.</font><font papago-translate="translated"> 파서가 등호 연산자를 만나지 않으면 루프에 들어가지 않는다는 점에 유의하세요.</font><font papago-translate="translated"> 이 경우 </font></font><code translate="no">equality()</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드가 효과적으로 호출하고 반환합니다 </font></font><code translate="no">comparison()</code><font papago-translate="splitted"><font papago-translate="translated">. 이러한 방식으로 이 방법은 동등 연산자<em> 또는 더 높은 우선순위를</em> 가진<em> 모든 것</em>과 일치합니다.</font></font></p>
+<p><font papago-translate="translated">다음 규칙<span class="ellipse">으로</span> 넘어가<span class="ellipse">겠습니다 . . .</span></font></p>
 <div class="codehilite"><pre translate="no"><span class="i">comparison</span>     → <span class="i">term</span> ( ( <span class="s">"&gt;"</span> | <span class="s">"&gt;="</span> | <span class="s">"&lt;"</span> | <span class="s">"&lt;="</span> ) <span class="i">term</span> )* ;
 </pre></div>
-<p>Translated to Java:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>equality</em>()</div>
+<p><font papago-translate="translated">자바로 번역:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>평등</em> () 후에 추가하기</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Expr</span> <span class="i">comparison</span>() {
     <span class="t">Expr</span> <span class="i">expr</span> = <span class="i">term</span>();
 
@@ -567,19 +386,12 @@ add after <em>equality</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>equality</em>()</div>
-<p>The grammar rule is virtually <span name="handle">identical</span> to <code translate="no">equality</code>
-and so is the corresponding code. The only differences are the token types for
-the operators we match, and the method we call for the operands<span class="em">—</span>now
-<code translate="no">term()</code> instead of <code translate="no">comparison()</code>. The remaining two binary operator rules
-follow the same pattern.</p>
-<p>In order of precedence, first addition and subtraction:</p>
-<aside name="handle">
-<p>If you wanted to do some clever Java 8, you could create a helper method for
-parsing a left-associative series of binary operators given a list of token
-types, and an operand method handle to simplify this redundant code.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">문법 규칙은 사실상 다음과<span name="handle"> 동일합니다</span> </font></font><code translate="no">equality</code><font papago-translate="splitted"><font papago-translate="translated"> 해당 코드도 마찬가지입니다.</font><font papago-translate="translated"> 유일한 차이점은 우리가 매칭하는 연산자의 토큰 유형과 피연산자를 호출하는 방법입니다—<span class="em"></span>현재로서는 </font></font><code translate="no">term()</code><font papago-translate="splitted"><font papago-translate="translated"> 대신 </font></font><code translate="no">comparison()</code><font papago-translate="splitted"><font papago-translate="translated">. 나머지 두 이진 연산자 규칙은 동일한 패턴을 따릅니다.</font></font></p>
+<p><font papago-translate="translated">우선순위, 첫 번째 덧셈 및 뺄셈 순서:</font></p>
+<aside name="handle" style="top: 10162px;">
+<p><font papago-translate="translated">영리한 Java 8을 사용하고 싶다면 토큰 유형 목록이 주어진 왼쪽 연관 이진 연산자 시리즈를 구문 분석하는 도우미 메서드와 이 중복 코드를 단순화하는 피연산자 메서드 핸들을 만들 수 있습니다.</font></p>
 </aside>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>comparison</em>()</div>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>비교</em> 후 추가 ()</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Expr</span> <span class="i">term</span>() {
     <span class="t">Expr</span> <span class="i">expr</span> = <span class="i">factor</span>();
 
@@ -593,9 +405,8 @@ add after <em>comparison</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>comparison</em>()</div>
-<p>And finally, multiplication and division:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>term</em>()</div>
+<p><font papago-translate="translated">마지막으로, 곱셈과 나눗셈입니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>용어</em> () 후 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Expr</span> <span class="i">factor</span>() {
     <span class="t">Expr</span> <span class="i">expr</span> = <span class="i">unary</span>();
 
@@ -609,15 +420,12 @@ add after <em>term</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>term</em>()</div>
-<p>That’s all of the binary operators, parsed with the correct precedence and
-associativity. We’re crawling up the precedence hierarchy and now we’ve reached
-the unary operators.</p>
+<p><font papago-translate="translated">이것이 올바른 우선순위와 연관성으로 구문 분석된 모든 이진 연산자입니다.</font><font papago-translate="translated"> 우리는 우선순위 계층을 기어 올라가 이제 단항 연산자에 도달했습니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">unary</span>          → ( <span class="s">"!"</span> | <span class="s">"-"</span> ) <span class="i">unary</span>
                | <span class="i">primary</span> ;
 </pre></div>
-<p>The code for this is a little different.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>factor</em>()</div>
+<p><font papago-translate="translated">이것의 코드는 조금 다릅니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 애프터<em> 팩터</em> () 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Expr</span> <span class="i">unary</span>() {
     <span class="k">if</span> (<span class="i">match</span>(<span class="i">BANG</span>, <span class="i">MINUS</span>)) {
       <span class="t">Token</span> <span class="i">operator</span> = <span class="i">previous</span>();
@@ -629,23 +437,16 @@ add after <em>factor</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>factor</em>()</div>
-<p>Again, we look at the <span name="current">current</span> token to see how to
-parse. If it’s a <code translate="no">!</code> or <code translate="no">-</code>, we must have a unary expression. In that case, we
-grab the token and then recursively call <code translate="no">unary()</code> again to parse the operand.
-Wrap that all up in a unary expression syntax tree and we’re done.</p>
-<aside name="current">
-<p>The fact that the parser looks ahead at upcoming tokens to decide how to parse
-puts recursive descent into the category of <strong>predictive parsers</strong>.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다시<span name="current"> 현재</span> 토큰을 살펴보고 구문 분석 방법을 살펴봅니다.</font><font papago-translate="translated"> 만약 </font></font><code translate="no">!</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 </font></font><code translate="no">-</code><font papago-translate="splitted"><font papago-translate="translated">, 우리는 단항식을 가져야 합니다.</font><font papago-translate="translated"> 이 경우 토큰을 잡은 다음 재귀적으로 호출합니다 </font></font><code translate="no">unary()</code><font papago-translate="splitted"><font papago-translate="translated"> 다시 피연산자를 구문 분석합니다.</font><font papago-translate="translated"> 이 모든 것을 단항식 구문 트리로 마무리하면 끝입니다.</font></font></p>
+<aside name="current" style="top: 11278px;">
+<p><font papago-translate="translated">파서가 파서 방법을 결정하기 위해 다가오는 토큰을 미리 살펴본다는 사실은 재귀적 하강을<strong> 예측 파서</strong>의 범주에 포함시킵니다.</font></p>
 </aside>
-<p>Otherwise, we must have reached the highest level of precedence, primary
-expressions.</p>
+<p><font papago-translate="translated">그렇지 않으면 우리는 최고 수준의 우선순위, 즉 일차 표현에 도달했을 것입니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">primary</span>        → <span class="t">NUMBER</span> | <span class="t">STRING</span> | <span class="s">"true"</span> | <span class="s">"false"</span> | <span class="s">"nil"</span>
                | <span class="s">"("</span> <span class="i">expression</span> <span class="s">")"</span> ;
 </pre></div>
-<p>Most of the cases for the rule are single terminals, so parsing is
-straightforward.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>unary</em>()</div>
+<p><font papago-translate="translated">규칙의 대부분은 단일 터미널이기 때문에 구문 분석이 간단합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>단항</em> () 후에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Expr</span> <span class="i">primary</span>() {
     <span class="k">if</span> (<span class="i">match</span>(<span class="i">FALSE</span>)) <span class="k">return</span> <span class="k">new</span> <span class="t">Expr</span>.<span class="t">Literal</span>(<span class="k">false</span>);
     <span class="k">if</span> (<span class="i">match</span>(<span class="i">TRUE</span>)) <span class="k">return</span> <span class="k">new</span> <span class="t">Expr</span>.<span class="t">Literal</span>(<span class="k">true</span>);
@@ -663,119 +464,60 @@ add after <em>unary</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>unary</em>()</div>
-<p>The interesting branch is the one for handling parentheses. After we match an
-opening <code translate="no">(</code> and parse the expression inside it, we <em>must</em> find a <code translate="no">)</code> token. If
-we don’t, that’s an error.</p>
-<h2><a href="#syntax-errors" id="syntax-errors"><small>6 . 3</small>Syntax Errors</a></h2>
-<p>A parser really has two jobs:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">흥미로운 지점은 괄호를 다루는 지점입니다.</font><font papago-translate="translated"> 오프닝을 맞춘 후 </font></font><code translate="no">(</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 그 안의 표현을 분석하면, 우리는 다음을 찾아야<em> 합니다</em> </font></font><code translate="no">)</code><font papago-translate="splitted"><font papago-translate="translated"> 상품권.</font><font papago-translate="translated"> 그렇지 않으면 오류입니다.</font></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#syntax-errors" id="syntax-errors"><small><font papago-translate="translated">6 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">구문 오류</font></font></a></h2>
+<p><font papago-translate="translated">파서는 정말 두 가지 직업을 가지고 있습니다:</font></p>
 <ol>
 <li>
-<p>Given a valid sequence of tokens, produce a corresponding syntax tree.</p>
+<p><font papago-translate="translated">유효한 토큰 시퀀스가 주어지면 해당 구문 트리를 생성합니다.</font></p>
 </li>
 <li>
-<p>Given an <em>invalid</em> sequence of tokens, detect any errors and tell the
-user about their mistakes.</p>
+<p><font papago-translate="translated">잘못된 토큰 시퀀스가 주어지면 오류를 감지하고 사용자에게<em></em> 오류에 대해 알려줍니다.</font></p>
 </li>
 </ol>
-<p>Don’t underestimate how important the second job is! In modern IDEs and editors,
-the parser is constantly reparsing code<span class="em">—</span>often while the user is still editing
-it<span class="em">—</span>in order to syntax highlight and support things like auto-complete. That
-means it will encounter code in incomplete, half-wrong states <em>all the time.</em></p>
-<p>When the user doesn’t realize the syntax is wrong, it is up to the parser to
-help guide them back onto the right path. The way it reports errors is a large
-part of your language’s user interface. Good syntax error handling is hard. By
-definition, the code isn’t in a well-defined state, so there’s no infallible way
-to know what the user <em>meant</em> to write. The parser can’t read your <span name="telepathy">mind</span>.</p>
-<aside name="telepathy">
-<p>Not yet at least. With the way things are going in machine learning these days,
-who knows what the future will bring?</p>
+<p><font papago-translate="translated">두 번째 직업이 얼마나 중요한지 과소평가하지 마세요!</font><font papago-translate="translated"> 현대 IDE와 편집기에서 파서는 구문을 강조하고 자동<span class="em"></span><span class="em"></span> 완성과 같은 기능을 지원하기 위해 사용자가 여전히 편집하는 동안에도 코드를 지속적으로 재파싱합니다.</font><font papago-translate="translated"> 그것은 항상 불완전하고 반쯤 잘못된<em></em> 상태의 코드를 만나게 된다는 것을 의미합니다.</font></p>
+<p><font papago-translate="translated">사용자가 구문이 잘못되었다는 것을 깨닫지 못하면 파서가 올바른 경로로 다시 안내하는 데 도움을 줄 수 있습니다.</font><font papago-translate="translated"> 오류를 보고하는 방식은 언어 사용자 인터페이스의 큰 부분을 차지합니다.</font><font papago-translate="translated"> 구문 오류를 잘 처리하는 것은 어렵습니다.</font><font papago-translate="translated"> 정의에 따르면 코드가 명확하게 정의된 상태가 아니므로 사용자가 무엇을 작성<em>했는지</em> 알 수 있는 확실한 방법은 없습니다.</font><font papago-translate="translated"> 파서는 당신<span name="telepathy">의 마음</span>을 읽을 수 없습니다.</font></p>
+<aside name="telepathy" style="top: 12482px;">
+<p><font papago-translate="translated">적어도 아직은.</font><font papago-translate="translated"> 요즘 기계 학습이 이렇게 진행되고 있는데, 미래가 어떻게 될지 누가 알겠습니까?</font></p>
 </aside>
-<p>There are a couple of hard requirements for when the parser runs into a syntax
-error. A parser must:</p>
+<p><font papago-translate="translated">구문 오류가 발생할 때 파서에 몇 가지 어려운 요구 사항이 있습니다.</font><font papago-translate="translated"> 파서는 반드시 해야 합니다:</font></p>
 <ul>
 <li>
-<p><strong>Detect and report the error.</strong> If it doesn’t detect the <span name="error">error</span> and passes the resulting malformed syntax tree on
-to the interpreter, all manner of horrors may be summoned.</p>
-<aside name="error">
-<p>Philosophically speaking, if an error isn’t detected and the interpreter
-runs the code, is it <em>really</em> an error?</p>
+<p><font papago-translate="translated"><strong>오류를 감지하고 보고합니다.</strong></font><font papago-translate="translated"> <span name="error">오류</span>를 감지하지 못하고 결과적으로 잘못된 구문 트리를 인터프리터에게 전달하면 모든 종류의 공포가 소환될 수 있습니다.</font></p>
+<aside name="error" style="top: 12602px;">
+<p><font papago-translate="translated">철학적으로 말하자면, 오류가 감지되지 않고 통역사가 코드를 실행한다면<em>, 그것</em>이<em> 정말</em> 오류일까요?</font></p>
 </aside></li>
 <li>
-<p><strong>Avoid crashing or hanging.</strong> Syntax errors are a fact of life, and
-language tools have to be robust in the face of them. Segfaulting or getting
-stuck in an infinite loop isn’t allowed. While the source may not be valid
-<em>code</em>, it’s still a valid <em>input to the parser</em> because users use the
-parser to learn what syntax is allowed.</p>
+<p><font papago-translate="translated"><strong>충돌하거나 매달리지 마세요.</strong></font><font papago-translate="translated"> 구문 오류는 삶의 일부이며, 언어 도구는 그들 앞에서 견고해야 합니다.</font><font papago-translate="translated"> 세프 고장이나 무한 루프에 갇히는 것은 허용되지 않습니다.</font><font papago-translate="translated"> 소스<em>가</em> 유효<em>한 코드</em>가 아닐 수도 있지만, 사용자가 파서를 사용하여 허용되는 구문을 학습하기 때문에<em> 파서에 대한 유효한 입력입니다</em>.</font></p>
 </li>
 </ul>
-<p>Those are the table stakes if you want to get in the parser game at all, but you
-really want to raise the ante beyond that. A decent parser should:</p>
+<p><font papago-translate="translated">파서 게임에 참여하고 싶지만 그 이상으로 판돈을 올리고 싶다면 이것이 테이블 스테이크입니다.</font><font papago-translate="translated"> 괜찮은 파서는 다음과 같이 해야 합니다:</font></p>
 <ul>
 <li>
-<p><strong>Be fast.</strong> Computers are thousands of times faster than they were when
-parser technology was first invented. The days of needing to optimize your
-parser so that it could get through an entire source file during a coffee
-break are over. But programmer expectations have risen as quickly, if not
-faster. They expect their editors to reparse files in milliseconds after
-every keystroke.</p>
+<p><font papago-translate="translated"><strong>빨리 하세요.</strong></font><font papago-translate="translated"> 컴퓨터는 파서 기술이 처음 발명되었을 때보다 수천 배 더 빠릅니다.</font><font papago-translate="translated"> 커피 휴식 시간 동안 전체 소스 파일을 통과할 수 있도록 파서를 최적화해야 했던 시대는 끝났습니다.</font><font papago-translate="translated"> 하지만 프로그래머의 기대치는 더 빠르지는 않더라도 빠르게 상승했습니다.</font><font papago-translate="translated"> 그들은 편집자들이 모든 키 입력 후에 파일을 밀리초 만에 다시 분석하기를 기대합니다.</font></p>
 </li>
 <li>
-<p><strong>Report as many distinct errors as there are.</strong> Aborting after the first
-error is easy to implement, but it’s annoying for users if every time they
-fix what they think is the one error in a file, a new one appears. They
-want to see them all.</p>
+<p><font papago-translate="translated"><strong>명확한 오류가 있는 만큼 보고하세요.</strong></font><font papago-translate="translated"> 첫 번째 오류 이후에 중단하는 것은 구현하기 쉽지만, 사용자들이 파일의 유일한 오류라고 생각하는 내용을 수정할 때마다 새로운 오류가 나타나면 성가시게 만듭니다.</font><font papago-translate="translated"> 그들은 모두 보고 싶어 합니다.</font></p>
 </li>
 <li>
-<p><strong>Minimize <em>cascaded</em> errors.</strong> Once a single error is found, the parser no
-longer really knows what’s going on. It tries to get itself back on track
-and keep going, but if it gets confused, it may report a slew of ghost
-errors that don’t indicate other real problems in the code. When the first
-error is fixed, those phantoms disappear, because they reflect only the
-parser’s own confusion. Cascaded errors are annoying because they can scare
-the user into thinking their code is in a worse state than it is.</p>
+<p><font papago-translate="translated"><strong><em>계단</em>식 오류를 최소화합니다.</strong></font><font papago-translate="translated"> 한 번의 오류가 발견되면 파서는 더 이상 무슨 일이 일어나고 있는지 제대로 알지 못합니다.</font><font papago-translate="translated"> 다시 정상 궤도에 진입하고 계속 진행하려고 하지만, 혼란스러워지면 코드의 다른 실제 문제를 나타내지 않는 수많은 유령 오류를 보고할 수 있습니다.</font><font papago-translate="translated"> 첫 번째 오류가 수정되면 파서의 혼란만 반영하기 때문에 이러한 유령은 사라집니다.</font><font papago-translate="translated"> 계단식 오류는 사용자가 자신의 코드 상태가 더 나쁘다고 생각하도록 겁을 줄 수 있기 때문에 성가십니다.</font></p>
 </li>
 </ul>
-<p>The last two points are in tension. We want to report as many separate errors as
-we can, but we don’t want to report ones that are merely side effects of an
-earlier one.</p>
-<p>The way a parser responds to an error and keeps going to look for later errors
-is called <strong>error recovery</strong>. This was a hot research topic in the ’60s. Back
-then, you’d hand a stack of punch cards to the secretary and come back the next
-day to see if the compiler succeeded. With an iteration loop that slow, you
-<em>really</em> wanted to find every single error in your code in one pass.</p>
-<p>Today, when parsers complete before you’ve even finished typing, it’s less of an
-issue. Simple, fast error recovery is fine.</p>
-<h3><a href="#panic-mode-error-recovery" id="panic-mode-error-recovery"><small>6 . 3 . 1</small>Panic mode error recovery</a></h3>
-<aside name="panic">
-<p>You know you want to push it.</p><img alt="A big shiny 'PANIC' button." src="image/parsing-expressions/panic.png"/>
+<p><font papago-translate="translated">마지막 두 지점은 긴장 상태에 있습니다.</font><font papago-translate="translated"> 우리는 가능한 한 많은 개별 오류를 보고하고 싶지만, 이전 오류의 부작용에 불과한 오류는 보고하고 싶지 않습니다.</font></p>
+<p><font papago-translate="translated">파서가 오류에 대응하고 이후 오류를 계속 찾는 방식을<strong> 오류 복구</strong>라고 합니다.</font><font papago-translate="translated"> 이것은 60년대에 뜨거운 연구 주제였습니다.</font><font papago-translate="translated"> 그 당시에는 비서에게 펀치 카드 더미를 건네주고 다음 날 돌아와서 컴파일러가 성공했는지 확인하곤 했습니다.</font><font papago-translate="translated"> 반복 루프가 느리면 코드의 모든 오류를 한<em></em> 번의 패스로 찾고 싶었습니다.</font></p>
+<p><font papago-translate="translated">오늘날, 입력이 끝나기도 전에 파서가 완성되면 문제가 덜 됩니다.</font><font papago-translate="translated"> 간단하고 빠른 오류 복구는 괜찮습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#panic-mode-error-recovery" id="panic-mode-error-recovery"><small><font papago-translate="translated">6 . 3 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">패닉 모드 오류 복구</font></font></a></h3>
+<aside name="panic" style="top: 13826px;">
+<p><font papago-translate="translated">당신은 그것을 밀어붙이고 싶어 한다는 것을 알고 있습니다.</font></p><img alt="A big shiny 'PANIC' button." src="https://youhogeon-meritz.github.io/image/parsing-expressions/panic.png">
 </aside>
-<p>Of all the recovery techniques devised in yesteryear, the one that best stood
-the test of time is called<span class="em">—</span>somewhat alarmingly<span class="em">—</span><span name="panic"><strong>panic
-mode</strong></span>. As soon as the parser detects an error, it enters panic mode. It
-knows at least one token doesn’t make sense given its current state in the
-middle of some stack of grammar productions.</p>
-<p>Before it can get back to parsing, it needs to get its state and the sequence of
-forthcoming tokens aligned such that the next token does match the rule being
-parsed. This process is called <strong>synchronization</strong>.</p>
-<p>To do that, we select some rule in the grammar that will mark the
-synchronization point. The parser fixes its parsing state by jumping out of any
-nested productions until it gets back to that rule. Then it synchronizes the
-token stream by discarding tokens until it reaches one that can appear at that
-point in the rule.</p>
-<p>Any additional real syntax errors hiding in those discarded tokens aren’t
-reported, but it also means that any mistaken cascaded errors that are side
-effects of the initial error aren’t <em>falsely</em> reported either, which is a decent
-trade-off.</p>
-<p>The traditional place in the grammar to synchronize is between statements. We
-don’t have those yet, so we won’t actually synchronize in this chapter, but
-we’ll get the machinery in place for later.</p>
-<h3><a href="#entering-panic-mode" id="entering-panic-mode"><small>6 . 3 . 2</small>Entering panic mode</a></h3>
-<p>Back before we went on this side trip around error recovery, we were writing the
-code to parse a parenthesized expression. After parsing the expression, the
-parser looks for the closing <code translate="no">)</code> by calling <code translate="no">consume()</code>. Here, finally, is that
-method:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>match</em>()</div>
+<p><font papago-translate="translated">과거에 고안된 모든 회복 기법 중에서 시간의 시험을 가장 잘 견뎌낸 기법은<span name="panic"><strong> 다소</strong></span> 놀랍도록<span name="panic"><strong> 공황</strong></span><span class="em"></span><span class="em"></span><span name="panic"><strong> 모드</strong></span>라고 불립니다.</font><font papago-translate="translated"> 파서가 오류를 감지하자마자 패닉 모드로 전환됩니다.</font><font papago-translate="translated"> 현재 상태가 일부 문법 작품의 중간에 있다는 점을 고려할 때 적어도 하나의 토큰이 의미가 없다는 것을 알고 있습니다.</font></p>
+<p><font papago-translate="translated">구문 분석으로 돌아가기 전에 다음 토큰이 구문 분석 중인 규칙과 일치하도록 상태와 다가오는 토큰의 순서를 정렬해야 합니다.</font><font papago-translate="translated"> 이 과정을<strong> 동기화</strong>라고 합니다.</font></p>
+<p><font papago-translate="translated">이를 위해 문법에서 동기화 지점을 표시할 몇 가지 규칙을 선택합니다.</font><font papago-translate="translated"> 파서는 해당 규칙으로 돌아갈 때까지 중첩된 프로덕션에서 뛰어내려 파싱 상태를 수정합니다.</font><font papago-translate="translated"> 그런 다음 토큰이 규칙의 해당 지점에 나타날 수 있는 토큰에 도달할 때까지 토큰을 폐기하여 토큰 스트림을 동기화합니다.</font></p>
+<p><font papago-translate="translated">폐기된 토큰에 숨겨진 추가적인 실제 구문 오류는 보고되지 않지만, 이는 초기 오류의 부작용인 실수 연쇄 오류도<em> 거짓</em>으로 보고되지 않는다는 것을 의미하며, 이는 괜찮은 절충안입니다.</font></p>
+<p><font papago-translate="translated">문법에서 전통적으로 동기화하는 위치는 문장 사이입니다.</font><font papago-translate="translated"> 아직 그런 것들이 없어서 이 장에서는 실제로 동기화하지 않겠지만, 나중에 기계를 설치할 예정입니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#entering-panic-mode" id="entering-panic-mode"><small><font papago-translate="translated">6 . 3 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">패닉 모드 진입</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리가 오류 복구 문제를 해결하기 전에, 우리는 괄호로 묶은 표현식을 구문 분석하기 위해 코드를 작성하고 있었습니다.</font><font papago-translate="translated"> 식을 파싱한 후 파서는 마무리를 찾습니다 </font></font><code translate="no">)</code><font papago-translate="splitted"><font papago-translate="translated"> 전화로 </font></font><code translate="no">consume()</code><font papago-translate="splitted"><font papago-translate="translated">. 마지막으로, 이것이 그 방법입니다:</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>경기</em> 후 () 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Token</span> <span class="i">consume</span>(<span class="t">TokenType</span> <span class="i">type</span>, <span class="t">String</span> <span class="i">message</span>) {
     <span class="k">if</span> (<span class="i">check</span>(<span class="i">type</span>)) <span class="k">return</span> <span class="i">advance</span>();
 
@@ -783,20 +525,16 @@ add after <em>match</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>match</em>()</div>
-<p>It’s similar to <code translate="no">match()</code> in that it checks to see if the next token is of the
-expected type. If so, it consumes the token and everything is groovy. If some
-other token is there, then we’ve hit an error. We report it by calling this:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>previous</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">다음과 유사합니다 </font></font><code translate="no">match()</code><font papago-translate="splitted"><font papago-translate="translated"> 다음 토큰이 예상되는 유형인지 확인한다는 점에서.</font><font papago-translate="translated"> 그렇다면 토큰을 소비하고 모든 것이 그루비합니다.</font><font papago-translate="translated"> 다른 토큰이 있으면 오류가 발생한 것입니다.</font><font papago-translate="translated"> 우리는 이것을 호출하여 보고합니다:</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>이전</em> () 뒤에 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">ParseError</span> <span class="i">error</span>(<span class="t">Token</span> <span class="i">token</span>, <span class="t">String</span> <span class="i">message</span>) {
     <span class="t">Lox</span>.<span class="i">error</span>(<span class="i">token</span>, <span class="i">message</span>);
     <span class="k">return</span> <span class="k">new</span> <span class="t">ParseError</span>();
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>previous</em>()</div>
-<p>First, that shows the error to the user by calling:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Lox.java</em><br/>
-add after <em>report</em>()</div>
+<p><font papago-translate="translated">먼저, 사용자에게 전화를 걸어 오류를 표시합니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Lox.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>보고서</em> () 후 추가</font></font></div>
 <pre translate="no">  <span class="k">static</span> <span class="t">void</span> <span class="i">error</span>(<span class="t">Token</span> <span class="i">token</span>, <span class="t">String</span> <span class="i">message</span>) {
     <span class="k">if</span> (<span class="i">token</span>.<span class="i">type</span> == <span class="t">TokenType</span>.<span class="i">EOF</span>) {
       <span class="i">report</span>(<span class="i">token</span>.<span class="i">line</span>, <span class="s">" at end"</span>, <span class="i">message</span>);
@@ -806,77 +544,36 @@ add after <em>report</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Lox.java</em>, add after <em>report</em>()</div>
-<p>This reports an error at a given token. It shows the token’s location and the
-token itself. This will come in handy later since we use tokens throughout the
-interpreter to track locations in code.</p>
-<p>After we report the error, the user knows about their mistake, but what does the
-<em>parser</em> do next? Back in <code translate="no">error()</code>, we create and return a ParseError, an
-instance of this new class:</p>
+<p><font papago-translate="translated">이것은 주어진 토큰에서 오류를 보고합니다.</font><font papago-translate="translated"> 토큰의 위치와 토큰 자체를 표시합니다.</font><font papago-translate="translated"> 이것은 나중에 유용할 것입니다. 왜냐하면 우리는 코드에서 위치를 추적하기 위해 인터프리터 전반에 걸쳐 토큰을 사용하기 때문입니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">오류를 보고한 후 사용자는 자신의 실수에 대해 알고 있지만<em> 파서</em>는 다음에 무엇을 하나요?</font><font papago-translate="translated"> 다시 안으로 </font></font><code translate="no">error()</code><font papago-translate="splitted"><font papago-translate="translated">, 우리는 이 새로운 클래스의 인스턴스인 ParseError를 생성하고 반환합니다:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">class Parser {
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-nest inside class <em>Parser</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 클래스 파<em>서</em> 내부 둥지</font></font></div>
 <pre class="insert" translate="no">  <span class="k">private</span> <span class="k">static</span> <span class="k">class</span> <span class="t">ParseError</span> <span class="k">extends</span> <span class="t">RuntimeException</span> {}
 
 </pre><pre class="insert-after" translate="no">  private final List&lt;Token&gt; tokens;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, nest inside class <em>Parser</em></div>
-<p>This is a simple sentinel class we use to unwind the parser. The <code translate="no">error()</code>
-method <em>returns</em> the error instead of <em>throwing</em> it because we want to let the
-calling method inside the parser decide whether to unwind or not. Some parse
-errors occur in places where the parser isn’t likely to get into a weird state
-and we don’t need to <span name="production">synchronize</span>. In those
-places, we simply report the error and keep on truckin’.</p>
-<p>For example, Lox limits the number of arguments you can pass to a function. If
-you pass too many, the parser needs to report that error, but it can and should
-simply keep on parsing the extra arguments instead of freaking out and going
-into panic mode.</p>
-<aside name="production">
-<p>Another way to handle common syntax errors is with <strong>error productions</strong>. You
-augment the grammar with a rule that <em>successfully</em> matches the <em>erroneous</em>
-syntax. The parser safely parses it but then reports it as an error instead of
-producing a syntax tree.</p>
-<p>For example, some languages have a unary <code translate="no">+</code> operator, like <code translate="no">+123</code>, but Lox does
-not. Instead of getting confused when the parser stumbles onto a <code translate="no">+</code> at the
-beginning of an expression, we could extend the unary rule to allow it.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 파서를 풀기 위해 사용하는 간단한 감시 수업입니다.</font><font papago-translate="translated"> 그 </font></font><code translate="no">error()</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드는 오류<em>를 던지는</em> 대신<em> 오류를 반환합니다</em>. 왜냐하면 파서 내부의 호출 메서드가 해제 여부를 결정하도록 하고 싶기 때문입니다.</font><font papago-translate="translated"> 파서가 이상한 상태가 되지 않을 가능성이 높고<span name="production"> 동기화</span>할 필요가 없는 곳에서 일부 파서 오류가 발생합니다.</font><font papago-translate="translated"> 그런 곳에서는 단순히 오류를 보고하고 트럭을 계속 운행합니다.</font></font></p>
+<p><font papago-translate="translated">예를 들어, Lox는 함수에 전달할 수 있는 인수의 수를 제한합니다.</font><font papago-translate="translated"> 너무 많이 통과하면 파서가 그 오류를 보고해야 하지만, 당황해서 패닉 모드로 들어가는 대신 추가 인수를 파싱할 수 있고 계속해서 파싱해야 합니다.</font></p>
+<aside name="production" style="top: 15498px;">
+<p><font papago-translate="translated">일반적인 구문 오류를 처리하는 또 다른 방법은<strong> 오류 생성</strong>입니다.</font><font papago-translate="translated"> <em>문법</em>을 잘못된<em></em> 구문과 성공적으로 일치시키는 규칙으로 보강합니다.</font><font papago-translate="translated"> 파서는 이를 안전하게 파싱하지만 구문 트리를 생성하는 대신 오류로 보고합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">예를 들어, 일부 언어에는 유니너리가 있습니다 </font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated"> 연산자, 예를 들어 </font></font><code translate="no">+123</code><font papago-translate="splitted"><font papago-translate="translated">, 하지만 Lox는 그렇지 않습니다.</font><font papago-translate="translated"> 파서가 실수할 때 혼란스러워하는 대신 </font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated"> 표현식의 시작 부분에서 우리는 단항 규칙을 확장하여 이를 허용할 수 있습니다.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="i">unary</span> → ( <span class="s">"!"</span> | <span class="s">"-"</span> | <span class="s">"+"</span> ) <span class="i">unary</span>
       | <span class="i">primary</span> ;
 </pre></div>
-<p>This lets the parser consume <code translate="no">+</code> without going into panic mode or leaving the
-parser in a weird state.</p>
-<p>Error productions work well because you, the parser author, know <em>how</em> the code
-is wrong and what the user was likely trying to do. That means you can give a
-more helpful message to get the user back on track, like, “Unary ‘+’ expressions
-are not supported.” Mature parsers tend to accumulate error productions like
-barnacles since they help users fix common mistakes.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 파서가 소비할 수 있도록 합니다 </font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated"> 패닉 모드에 들어가지 않거나 파서를 이상한 상태로 두지 않습니다.</font></font></p>
+<p><font papago-translate="translated">오류 생성은 파서 작성자인 사용자가 코드가<em> 어떻게</em> 잘못되었는지, 사용자가 무엇을 하려고 했는지 알고 있기 때문에 잘 작동합니다.</font><font papago-translate="translated"> 즉, "단순한 '+' 표현식은 지원되지 않습니다."와 같은 더 유용한 메시지를 제공하여 사용자를 정상으로 되돌릴 수 있습니다</font><font papago-translate="translated"> 성숙한 파서는 사용자가 일반적인 실수를 수정하는 데 도움이 되기 때문에 따개비와 같은 오류 생성이 누적되는 경향이 있습니다.</font></p>
 </aside>
-<p>In our case, though, the syntax error is nasty enough that we want to panic and
-synchronize. Discarding tokens is pretty easy, but how do we synchronize the
-parser’s own state?</p>
-<h3><a href="#synchronizing-a-recursive-descent-parser" id="synchronizing-a-recursive-descent-parser"><small>6 . 3 . 3</small>Synchronizing a recursive descent parser</a></h3>
-<p>With recursive descent, the parser’s state<span class="em">—</span>which rules it is in the middle of
-recognizing<span class="em">—</span>is not stored explicitly in fields. Instead, we use Java’s
-own call stack to track what the parser is doing. Each rule in the middle of
-being parsed is a call frame on the stack. In order to reset that state, we need
-to clear out those call frames.</p>
-<p>The natural way to do that in Java is exceptions. When we want to synchronize,
-we <em>throw</em> that ParseError object. Higher up in the method for the grammar rule
-we are synchronizing to, we’ll catch it. Since we synchronize on statement
-boundaries, we’ll catch the exception there. After the exception is caught, the
-parser is in the right state. All that’s left is to synchronize the tokens.</p>
-<p>We want to discard tokens until we’re right at the beginning of the next
-statement. That boundary is pretty easy to spot<span class="em">—</span>it’s one of the main reasons
-we picked it. <em>After</em> a semicolon, we’re <span name="semicolon">probably</span>
-finished with a statement. Most statements start with a keyword<span class="em">—</span><code translate="no">for</code>, <code translate="no">if</code>,
-<code translate="no">return</code>, <code translate="no">var</code>, etc. When the <em>next</em> token is any of those, we’re probably
-about to start a statement.</p>
-<aside name="semicolon">
-<p>I say “probably” because we could hit a semicolon separating clauses in a <code translate="no">for</code>
-loop. Our synchronization isn’t perfect, but that’s OK. We’ve already reported
-the first error precisely, so everything after that is kind of “best effort”.</p>
+<p><font papago-translate="translated">하지만 우리의 경우 구문 오류가 너무 심해서 당황하고 동기화하고 싶을 정도입니다.</font><font papago-translate="translated"> 토큰을 폐기하는 것은 꽤 쉽지만, 파서의 상태를 어떻게 동기화할 수 있을까요?</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#synchronizing-a-recursive-descent-parser" id="synchronizing-a-recursive-descent-parser"><small><font papago-translate="translated">6 . 3 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">재귀 하강 파서 동기화</font></font></a></h3>
+<p><font papago-translate="translated">재귀적 하강법에서는 파서의 상태(인식 중인 상태를 제어)<span class="em"></span><span class="em"></span>가 필드에 명시적으로 저장되지 않습니다.</font><font papago-translate="translated"> 대신, 우리는 Java의 자체 호출 스택을 사용하여 파서가 무엇을 하고 있는지 추적합니다.</font><font papago-translate="translated"> 구문 분석 중인 각 규칙은 스택의 호출 프레임입니다.</font><font papago-translate="translated"> 해당 상태를 재설정하려면 해당 통화 프레임을 삭제해야 합니다.</font></p>
+<p><font papago-translate="translated">Java에서 이를 자연스럽게 수행하는 방법은 예외입니다.</font><font papago-translate="translated"> 동기화할 때는 ParseError 객체<em>를 던집니다</em>.</font><font papago-translate="translated"> 우리가 동기화하고 있는 문법 규칙의 상위 단계에서, 우리는 그것을 잡을 것입니다.</font><font papago-translate="translated"> 문장 경계에서 동기화되므로 예외를 잡을 수 있습니다.</font><font papago-translate="translated"> 예외가 발견되면 파서는 올바른 상태가 됩니다.</font><font papago-translate="translated"> 남은 것은 토큰을 동기화하는 것뿐입니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다음 문장의 시작 부분에 도달할 때까지 토큰을 폐기하고 싶습니다.</font><font papago-translate="translated"> 그 경계는 꽤 쉽게 찾을 수 있습니다. 이것이 우리가 그것<span class="em"></span>을 선택한 주요 이유 중 하나입니다.</font><font papago-translate="translated"> 세미콜론<em>이 끝나면</em> 아마도 문장으로 마무리<span name="semicolon">될 것입니다</span><em>.</em></font><font papago-translate="translated"> 대부분의 문장은<span class="em"></span> 키워드로 시작합니다</font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">var</code><font papago-translate="splitted"><font papago-translate="translated">, 등.<em> 다음</em> 토큰이 그 중 하나일 때, 우리는 아마 성명서를 시작하려고 할 것입니다.</font></font></p>
+<aside name="semicolon" style="top: 16218px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">제가 "아마도"라고 말하는 이유는 우리가 절을 구분하는 세미콜론을 사용할 수 있기 때문입니다 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 루프. 동기화가 완벽하지는 않지만 괜찮습니다.</font><font papago-translate="translated"> 우리는 이미 첫 번째 오류를 정확하게 보고했기 때문에, 그 이후의 모든 것은 일종의 "최선의 노력"입니다.</font></font></p>
 </aside>
-<p>This method encapsulates that logic:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>error</em>()</div>
+<p><font papago-translate="translated">이 방법은 해당 논리를 캡슐화합니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>오류</em> 후 추가 ()</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">void</span> <span class="i">synchronize</span>() {
     <span class="i">advance</span>();
 
@@ -900,38 +597,23 @@ add after <em>error</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>error</em>()</div>
-<p>It discards tokens until it thinks it has found a statement boundary. After
-catching a ParseError, we’ll call this and then we are hopefully back in sync.
-When it works well, we have discarded tokens that would have likely caused
-cascaded errors anyway, and now we can parse the rest of the file starting at
-the next statement.</p>
-<p>Alas, we don’t get to see this method in action, since we don’t have statements
-yet. We’ll get to that <a href="statements-and-state.html">in a couple of chapters</a>. For now, if an
-error occurs, we’ll panic and unwind all the way to the top and stop parsing.
-Since we can parse only a single expression anyway, that’s no big loss.</p>
-<h2><a href="#wiring-up-the-parser" id="wiring-up-the-parser"><small>6 . 4</small>Wiring up the Parser</a></h2>
-<p>We are mostly done parsing expressions now. There is one other place where we
-need to add a little error handling. As the parser descends through the parsing
-methods for each grammar rule, it eventually hits <code translate="no">primary()</code>. If none of the
-cases in there match, it means we are sitting on a token that can’t start an
-expression. We need to handle that error too.</p>
+<p><font papago-translate="translated">문장 경계를 찾았다고 생각할 때까지 토큰을 폐기합니다.</font><font papago-translate="translated"> ParseError를 포착한 후 이를 호출하고 다시 동기화되기를 바랍니다.</font><font papago-translate="translated"> 잘 작동하면 어차피 연쇄 오류를 일으킬 수 있는 토큰을 폐기했고, 이제 다음 문장부터 나머지 파일을 구문 분석할 수 있습니다.</font></p>
+<p><font papago-translate="translated">안타깝게도 아직 진술이 없기 때문에 이 방법이 실제로 작동하는 것을 볼 수 없습니다.</font><font papago-translate="translated"> <a href="https://youhogeon-meritz.github.io/statements-and-state.html">몇 장 후에</a> 이 문제를 해결할 것입니다.</font><font papago-translate="translated"> 지금은 오류가 발생하면 당황하여 맨 위까지 긴장을 풀고 구문 분석을 중단하겠습니다.</font><font papago-translate="translated"> 어차피 하나의 표현만 구문 분석할 수 있기 때문에 큰 손실은 아닙니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#wiring-up-the-parser" id="wiring-up-the-parser"><small><font papago-translate="translated">6 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">파서 배선하기</font></font></a></h2>
+<p><font papago-translate="splitted"><font papago-translate="translated">이제 대부분의 구문 분석이 끝났습니다.</font><font papago-translate="translated"> 오류 처리를 조금 더 추가해야 할 또 다른 곳이 있습니다.</font><font papago-translate="translated"> 파서가 각 문법 규칙에 대한 파싱 방법을 통해 내려가면서 결국 </font></font><code translate="no">primary()</code><font papago-translate="splitted"><font papago-translate="translated">. 해당 사례 중 어느 것도 일치하지 않는다면 표현식을 시작할 수 없는 토큰에 앉아 있다는 의미입니다.</font><font papago-translate="translated"> 우리도 그 오류를 처리해야 합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    if (match(LEFT_PAREN)) {
       Expr expr = expression();
       consume(RIGHT_PAREN, "Expect ')' after expression.");
       return new Expr.Grouping(expr);
     }
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>primary</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>일차</em> ()에서</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="k">throw</span> <span class="i">error</span>(<span class="i">peek</span>(), <span class="s">"Expect expression."</span>);
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>primary</em>()</div>
-<p>With that, all that remains in the parser is to define an initial method to kick
-it off. That method is called, naturally enough, <code translate="no">parse()</code>.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>Parser</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">이제 파서에 남아 있는 것은 파서를 시작할 초기 방법을 정의하는 것뿐입니다.</font><font papago-translate="translated"> 그 방법은 당연히 충분히 불립니다, </font></font><code translate="no">parse()</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>Parser</em>() 뒤에 추가</font></font></div>
 <pre translate="no">  <span class="t">Expr</span> <span class="i">parse</span>() {
     <span class="k">try</span> {
       <span class="k">return</span> <span class="i">expression</span>();
@@ -941,23 +623,12 @@ add after <em>Parser</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>Parser</em>()</div>
-<p>We’ll revisit this method later when we add statements to the language. For now,
-it parses a single expression and returns it. We also have some temporary code
-to exit out of panic mode. Syntax error recovery is the parser’s job, so we
-don’t want the ParseError exception to escape into the rest of the interpreter.</p>
-<p>When a syntax error does occur, this method returns <code translate="no">null</code>. That’s OK. The
-parser promises not to crash or hang on invalid syntax, but it doesn’t promise
-to return a <em>usable syntax tree</em> if an error is found. As soon as the parser
-reports an error, <code translate="no">hadError</code> gets set, and subsequent phases are skipped.</p>
-<p>Finally, we can hook up our brand new parser to the main Lox class and try it
-out. We still don’t have an interpreter, so for now, we’ll parse to a syntax
-tree and then use the AstPrinter class from the <a href="representing-code.html#a-not-very-pretty-printer">last chapter</a> to
-display it.</p>
-<p>Delete the old code to print the scanned tokens and replace it with this:</p>
+<p><font papago-translate="translated">이 방법은 나중에 언어에 문장을 추가할 때 다시 검토하겠습니다.</font><font papago-translate="translated"> 현재로서는 하나의 표현을 구문 분석하고 반환합니다.</font><font papago-translate="translated"> 패닉 모드에서 종료할 수 있는 임시 코드도 있습니다.</font><font papago-translate="translated"> 구문 오류 복구는 파서의 작업이므로 ParseError 예외가 인터프리터의 나머지 부분으로 빠져나가는 것을 원하지 않습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">구문 오류가 발생하면 이 메서드는 반환됩니다 </font></font><code translate="no">null</code><font papago-translate="splitted"><font papago-translate="translated">. 괜찮습니다.</font><font papago-translate="translated"> 파서는 잘못된 구문을 크래시하거나 보류하지 않겠다고 약속하지만, 오류가 발견되면<em> 사용 가능한 구문 트리</em>를 반환하겠다고 약속하지는 않습니다.</font><font papago-translate="translated"> 파서가 오류를 보고하는 즉시, </font></font><code translate="no">hadError</code><font papago-translate="splitted"><font papago-translate="translated"> 설정된 후 단계를 건너뛸 수 있습니다.</font></font></p>
+<p><font papago-translate="translated">마지막으로, 새로운 파서를 메인 Lox 클래스에 연결하여 사용해 볼 수 있습니다.</font><font papago-translate="translated"> 아직 인터프리터가 없기 때문에 지금은 구문 트리로 파싱한 다음<a href="https://youhogeon-meritz.github.io/representing-code.html#a-not-very-pretty-printer"> 마지막 장</a>의 AstPrinter 클래스를 사용하여 표시하겠습니다.</font></p>
+<p><font papago-translate="translated">스캔한 토큰을 인쇄하려면 이전 코드를 삭제하고 다음 코드로 대체합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    List&lt;Token&gt; tokens = scanner.scanTokens();
-</pre><div class="source-file"><em>lox/Lox.java</em><br/>
-in <em>run</em>()<br/>
-replace 5 lines</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Lox.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 5줄 교체</font></font></div>
 <pre class="insert" translate="no">    <span class="t">Parser</span> <span class="i">parser</span> = <span class="k">new</span> <span class="t">Parser</span>(<span class="i">tokens</span>);
     <span class="t">Expr</span> <span class="i">expression</span> = <span class="i">parser</span>.<span class="i">parse</span>();
 
@@ -968,105 +639,52 @@ replace 5 lines</div>
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Lox.java</em>, in <em>run</em>(), replace 5 lines</div>
-<p>Congratulations, you have crossed the <span name="harder">threshold</span>! That
-really is all there is to handwriting a parser. We’ll extend the grammar in
-later chapters with assignment, statements, and other stuff, but none of that is
-any more complex than the binary operators we tackled here.</p>
-<aside name="harder">
-<p>It is possible to define a more complex grammar than Lox’s that’s difficult to
-parse using recursive descent. Predictive parsing gets tricky when you may need
-to look ahead a large number of tokens to figure out what you’re sitting on.</p>
-<p>In practice, most languages are designed to avoid that. Even in cases where they
-aren’t, you can usually hack around it without too much pain. If you can parse
-C++ using recursive descent<span class="em">—</span>which many C++ compilers do<span class="em">—</span>you can parse
-anything.</p>
+<p><font papago-translate="translated">축하합니다<span name="harder">, 문턱</span>을 넘으셨습니다!</font><font papago-translate="translated"> 파서를 손으로 쓰는 것이 정말 전부입니다.</font><font papago-translate="translated"> 문법은 나중 장에서 과제, 문장 및 기타 내용으로 확장하겠지만, 여기서 다룬 이진 연산자보다 더 복잡한 것은 없습니다.</font></p>
+<aside name="harder" style="top: 18294px;">
+<p><font papago-translate="translated">재귀적 하강법을 사용하여 분석하기 어려운 Lox 문법보다 더 복잡한 문법을 정의하는 것이 가능합니다.</font><font papago-translate="translated"> 예측 구문 분석은 자신이 무엇을 하고 있는지 파악하기 위해 많은 토큰을 미리 살펴봐야 할 때 까다로워집니다.</font></p>
+<p><font papago-translate="translated">실제로 대부분의 언어는 이를 방지하도록 설계되어 있습니다.</font><font papago-translate="translated"> 그렇지 않은 경우에도 보통 큰 고통 없이 해킹할 수 있습니다.</font><font papago-translate="translated"> 만약 많은 C++ 컴파일러들이 하는 재귀적 하강법을 사용하여 C++를 파싱할 수 있다면<span class="em"></span><span class="em"></span>, 무엇이든 파싱할 수 있습니다.</font></p>
 </aside>
-<p>Fire up the interpreter and type in some expressions. See how it handles
-precedence and associativity correctly? Not bad for less than 200 lines of code.</p>
+<p><font papago-translate="translated">통역사를 실행하고 몇 가지 표현을 입력합니다.</font><font papago-translate="translated"> 우선순위와 연관성을 올바르게 처리하는 방법을 확인할 수 있습니까?</font><font papago-translate="translated"> 200줄 미만의 코드로도 나쁘지 않습니다.</font></p>
 <div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+<h2><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#challenges" id="challenges"><font papago-translate="translated">과제들</font></a></h2>
 <ol>
 <li>
-<p>In C, a block is a statement form that allows you to pack a series of
-statements where a single one is expected. The <a href="https://en.wikipedia.org/wiki/Comma_operator">comma operator</a> is an
-analogous syntax for expressions. A comma-separated series of expressions
-can be given where a single expression is expected (except inside a function
-call’s argument list). At runtime, the comma operator evaluates the left
-operand and discards the result. Then it evaluates and returns the right
-operand.</p>
-<p>Add support for comma expressions. Give them the same precedence and
-associativity as in C. Write the grammar, and then implement the necessary
-parsing code.</p>
+<p><font papago-translate="translated">C에서 블록은 하나의 문장이 예상되는 일련의 문장을 포장할 수 있는 문장 형식입니다.</font><font papago-translate="translated"> <a href="https://en.wikipedia.org/wiki/Comma_operator">쉼표 연산자</a>는 표현식에 대한 유사한 구문입니다.</font><font papago-translate="translated"> 쉼표로 구분된 일련의 표현식은 단일 표현식이 예상되는 경우(함수 호출의 인수 목록 내 제외) 제공될 수 있습니다.</font><font papago-translate="translated"> 런타임 시, 쉼표 연산자는 왼쪽 피연산자를 평가하고 결과를 버립니다.</font><font papago-translate="translated"> 그런 다음 올바른 피연산자를 평가하고 반환합니다.</font></p>
+<p><font papago-translate="translated">쉼표 표현식에 대한 지원을 추가합니다.</font><font papago-translate="translated"> 그들에게 C에서와 같은 우선순위와 연관성을 부여하세요.</font><font papago-translate="translated"> 문법을 작성한 다음 필요한 구문 분석 코드를 구현합니다.</font></p>
 </li>
 <li>
-<p>Likewise, add support for the C-style conditional or “ternary” operator
-<code translate="no">?:</code>. What precedence level is allowed between the <code translate="no">?</code> and <code translate="no">:</code>? Is the whole
-operator left-associative or right-associative?</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">마찬가지로 C 스타일 조건부 또는 "삼차" 연산자에 대한 지원을 추가합니다 </font></font><code translate="no">?:</code><font papago-translate="splitted"><font papago-translate="translated">. 다음 사이에 허용되는 우선 순위 수준 </font></font><code translate="no">?</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">:</code><font papago-translate="splitted"><font papago-translate="translated">? 전체 연산자가 왼쪽 결합 연산자인가요, 오른쪽 결합 연산자인가요?</font></font></p>
 </li>
 <li>
-<p>Add error productions to handle each binary operator appearing without a
-left-hand operand. In other words, detect a binary operator appearing at the
-beginning of an expression. Report that as an error, but also parse and
-discard a right-hand operand with the appropriate precedence.</p>
+<p><font papago-translate="translated">왼쪽 피연산자 없이 나타나는 각 이진 연산자를 처리하기 위해 오류 연산을 추가합니다.</font><font papago-translate="translated"> 즉, 식의 시작 부분에 나타나는 이진 연산자를 감지합니다.</font><font papago-translate="translated"> 그것을 오류로 보고하되, 적절한 우선순위를 가진 오른쪽 피연산자를 분석하고 폐기해야 합니다.</font></p>
 </li>
 </ol>
 </div>
 <div class="design-note">
-<h2><a href="#design-note" id="design-note">Design Note: Logic Versus History</a></h2>
-<p>Let’s say we decide to add bitwise <code translate="no">&amp;</code> and <code translate="no">|</code> operators to Lox. Where should we
-put them in the precedence hierarchy? C<span class="em">—</span>and most languages that follow in C’s
-footsteps<span class="em">—</span>place them below <code translate="no">==</code>. This is widely considered a mistake because
-it means common operations like testing a flag require parentheses.</p>
+<h2><a href="https://youhogeon-meritz.github.io/parsing-expressions.html#design-note" id="design-note"><font papago-translate="translated">디자인 노트: 논리 대 역사</font></a></h2>
+<p><font papago-translate="splitted"><font papago-translate="translated">비트 단위로 추가하기로 결정했다고 가정해 보겠습니다 </font></font><code translate="no">&amp;</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">|</code><font papago-translate="splitted"><font papago-translate="translated"> 록스로 가는 운영자.</font><font papago-translate="translated"> 그들을 우선순위 계층에서 어디에 두어야 할까요?</font><font papago-translate="translated"> C와 C의 발자취를 따르는 대부분의 언어는<span class="em"></span><span class="em"></span> 아래에 배치합니다 </font></font><code translate="no">==</code><font papago-translate="splitted"><font papago-translate="translated">. 이는 깃발을 테스트하는 것과 같은 일반적인 작업에는 괄호가 필요하기 때문에 실수로 널리 간주됩니다.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">if</span> (<span class="i">flags</span> &amp; <span class="a">FLAG_MASK</span> == <span class="a">SOME_FLAG</span>) { ... } <span class="c">// Wrong.</span>
 <span class="k">if</span> ((<span class="i">flags</span> &amp; <span class="a">FLAG_MASK</span>) == <span class="a">SOME_FLAG</span>) { ... } <span class="c">// Right.</span>
 </pre></div>
-<p>Should we fix this for Lox and put bitwise operators higher up the precedence
-table than C does? There are two strategies we can take.</p>
-<p>You almost never want to use the result of an <code translate="no">==</code> expression as the operand to
-a bitwise operator. By making bitwise bind tighter, users don’t need to
-parenthesize as often. So if we do that, and users assume the precedence is
-chosen logically to minimize parentheses, they’re likely to infer it correctly.</p>
-<p>This kind of internal consistency makes the language easier to learn because
-there are fewer edge cases and exceptions users have to stumble into and then
-correct. That’s good, because before users can use our language, they have to
-load all of that syntax and semantics into their heads. A simpler, more rational
-language <em>makes sense</em>.</p>
-<p>But, for many users there is an even faster shortcut to getting our language’s
-ideas into their wetware<span class="em">—</span><em>use concepts they already know</em>. Many newcomers to
-our language will be coming from some other language or languages. If our
-language uses some of the same syntax or semantics as those, there is much less
-for the user to learn (and <em>unlearn</em>).</p>
-<p>This is particularly helpful with syntax. You may not remember it well today,
-but way back when you learned your very first programming language, code
-probably looked alien and unapproachable. Only through painstaking effort did
-you learn to read and accept it. If you design a novel syntax for your new
-language, you force users to start that process all over again.</p>
-<p>Taking advantage of what users already know is one of the most powerful tools
-you can use to ease adoption of your language. It’s almost impossible to
-overestimate how valuable this is. But it faces you with a nasty problem: What
-happens when the thing the users all know <em>kind of sucks</em>? C’s bitwise operator
-precedence is a mistake that doesn’t make sense. But it’s a <em>familiar</em> mistake
-that millions have already gotten used to and learned to live with.</p>
-<p>Do you stay true to your language’s own internal logic and ignore history? Do
-you start from a blank slate and first principles? Or do you weave your language
-into the rich tapestry of programming history and give your users a leg up by
-starting from something they already know?</p>
-<p>There is no perfect answer here, only trade-offs. You and I are obviously biased
-towards liking novel languages, so our natural inclination is to burn the
-history books and start our own story.</p>
-<p>In practice, it’s often better to make the most of what users already know.
-Getting them to come to your language requires a big leap. The smaller you can
-make that chasm, the more people will be willing to cross it. But you can’t
-<em>always</em> stick to history, or your language won’t have anything new and
-compelling to give people a <em>reason</em> to jump over.</p>
+<p><font papago-translate="translated">Lox에 대해 이 문제를 해결하고 비트 단위 연산자를 C보다 우선순위 테이블 위에 올려야 할까요?</font><font papago-translate="translated"> 우리가 취할 수 있는 두 가지 전략이 있습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">거의 다음과 같은 결과를 사용하고 싶지 않을 것입니다 </font></font><code translate="no">==</code><font papago-translate="splitted"><font papago-translate="translated"> 비트 단위 연산자에 대한 피연산자로서의 표현.</font><font papago-translate="translated"> 비트와이즈 바인딩을 더 단단히 설정하면 사용자가 자주 괄호를 묶을 필요가 없습니다.</font><font papago-translate="translated"> 따라서 사용자가 괄호를 최소화하기 위해 논리적으로 우선순위를 선택한다고 가정하면 올바르게 추론할 가능성이 높습니다.</font></font></p>
+<p><font papago-translate="translated">이러한 내부 일관성은 사용자가 우연히 발견한 후 수정해야 하는 엣지 케이스와 예외가 적기 때문에 언어를 더 쉽게 배울 수 있게 합니다.</font><font papago-translate="translated"> 사용자가 우리 언어를 사용하기 전에 모든 구문과 의미를 머릿속에 채워야 하기 때문에 좋습니다.</font><font papago-translate="translated"> 더 간단하고 합리적인 언어가<em> 합리적</em>입니다.</font></p>
+<p><font papago-translate="translated">하지만 많은 사용자에게는<em> 이미</em><span class="em"></span><em> 알고 있는 개념을 사용하여</em> 우리 언어의 아이디어를 웨트웨어로 가져오는 더 빠른 지름길이 있습니다.</font><font papago-translate="translated"> 우리 언어의 많은 새로운 사람들이 다른 언어나 언어에서 올 것입니다.</font><font papago-translate="translated"> 우리 언어가 그것들과 동일한 구문이나 의미론을 사용한다면, 사용자가 배울 것이 훨씬 적습니다 (그리고<em> 배우지 않음</em>).</font></p>
+<p><font papago-translate="translated">이것은 구문에 특히 도움이 됩니다.</font><font papago-translate="translated"> 오늘날 잘 기억하지 못할 수도 있지만, 처음 프로그래밍 언어를 배웠을 때 코드는 아마도 낯설고 접근하기 어려워 보였을 것입니다.</font><font papago-translate="translated"> 오직 열심히 노력해야만 읽고 받아들이는 법을 배웠습니다.</font><font papago-translate="translated"> 새로운 언어를 위한 새로운 구문을 설계하면 사용자가 해당 프로세스를 처음부터 다시 시작하도록 강제합니다.</font></p>
+<p><font papago-translate="translated">사용자가 이미 알고 있는 것을 활용하는 것은 언어 채택을 용이하게 하는 데 사용할 수 있는 가장 강력한 도구 중 하나입니다.</font><font papago-translate="translated"> 이것이 얼마나 가치 있는지 과대평가하는 것은 거의 불가능합니다.</font><font papago-translate="translated"> 하지만 그것은 끔찍한 문제에 직면해 있습니다:</font><font papago-translate="translated"> 사용자들이 모두 알고 있는<em> 것이 조금 형편없</em>으면 어떻게 될까요?</font><font papago-translate="translated"> C의 비트 단위 연산자 우선순위는 말이 안 되는 실수입니다.</font><font papago-translate="translated"> 하지만 이미 수백만 명이 익숙해지고 함께 살아가는 법을 배운<em> 익숙한</em> 실수입니다.</font></p>
+<p><font papago-translate="translated">당신은 자신의 언어 내부 논리에 충실하고 역사를 무시합니까?</font><font papago-translate="translated"> 빈 슬레이트와 첫 번째 원칙에서 시작하시겠습니까?</font><font papago-translate="translated" class="papago-selected"> 아니면 당신의 언어를 풍부한 프로그래밍 역사의 태피스트리에 엮어 사용자들이 이미 알고 있는 것부터 시작함으로써 우위를 점할 수 있을까요?</font></p>
+<p><font papago-translate="translated">여기에는 완벽한 답이 없고, 단지 절충안일 뿐입니다.</font><font papago-translate="translated"> 당신과 나는 분명히 새로운 언어를 좋아하는 것에 편향되어 있기 때문에, 우리의 자연스러운 성향은 역사책을 불태우고 우리만의 이야기를 시작하는 것입니다.</font></p>
+<p><font papago-translate="translated">실제로는 사용자가 이미 알고 있는 것을 최대한 활용하는 것이 더 좋습니다.</font><font papago-translate="translated"> 그들이 당신의 언어를 접하게 하려면 큰 도약이 필요합니다.</font><font papago-translate="translated"> 그 틈새를 작게 만들 수 있을수록 더 많은 사람들이 기꺼이 건너갈 것입니다.</font><font papago-translate="translated"> 하지만 항상 역사를 고수할 수는 없으며, 그렇지 않으면 사람들에게<em></em> 뛰어넘을<em> 이유</em>를 제공할 새롭고 설득력 있는 언어가 없을 것입니다.</font></p>
 </div>
 <footer>
-<a class="next" href="evaluating-expressions.html">
-  Next Chapter: “Evaluating Expressions” →
-</a>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+<a class="next" href="https://youhogeon-meritz.github.io/evaluating-expressions.html"><font papago-translate="translated"> 다음 장: "표현식 평가" → </font></a><font papago-translate="splitted"><font papago-translate="translated"> 로버트 니스트롬이 수작업으로 제작한 -<a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE"> © 2015 ~ 2021</a></font></font>
 </footer>
-</img></img></article>
+</article>
 </div>
-</body>
-</html>
+
+
+<div id="papagoTooltip" margin="5">
+        <h1 id="tooltipTitle">원문</h1>
+        <p id="tooltipText"></p>
+      </div>
+      </body></html>

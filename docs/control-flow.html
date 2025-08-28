@@ -1,187 +1,116 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-2a4661c0-8366-410e-8c6e-8af3e9a24c2a@mhtml.blink" />
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>Control Flow · Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/style.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
-<script src="jquery-3.4.1.min.js"></script>
-<script src="script.js"></script>
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+
+<!-- Google analytics -->
+
+</head>
 <body id="top">
 <!-- <div class="scrim"></div> -->
 <nav class="wide">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="contents">
-<h3><a href="#top">Control Flow<small>9</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/control-flow.html#top"><font papago-translate="splitted"><font papago-translate="translated">제어 흐름</font></font><small>9</small></a></h3>
 <ul>
-<li><a href="#turing-machines-briefly"><small>9.1</small> Turing Machines (Briefly)</a></li>
-<li><a href="#conditional-execution"><small>9.2</small> Conditional Execution</a></li>
-<li><a href="#logical-operators"><small>9.3</small> Logical Operators</a></li>
-<li><a href="#while-loops"><small>9.4</small> While Loops</a></li>
-<li><a href="#for-loops"><small>9.5</small> For Loops</a></li>
+<li><a href="https://youhogeon-meritz.github.io/control-flow.html#turing-machines-briefly"><small>9.1</small><font papago-translate="splitted"><font papago-translate="translated"> 튜링 머신 (약간)</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/control-flow.html#conditional-execution"><small>9.2</small><font papago-translate="splitted"><font papago-translate="translated"> 조건부 실행</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/control-flow.html#logical-operators"><small>9.3</small><font papago-translate="splitted"><font papago-translate="translated"> 논리 연산자</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/control-flow.html#while-loops"><small>9.4</small><font papago-translate="splitted"><font papago-translate="translated"> 루프 중</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/control-flow.html#for-loops"><small>9.5</small><font papago-translate="splitted"><font papago-translate="translated"> 루프용</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
-<li class="end-part"><a href="#design-note"><small>note</small>Spoonfuls of Syntactic Sugar</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/control-flow.html#challenges"><font papago-translate="translated">과제들</font></a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/control-flow.html#design-note"><small><font papago-translate="translated">메모</font></small><font papago-translate="splitted"><font papago-translate="translated">통사 설탕 한 스푼</font></font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="statements-and-state.html" title="Statements and State">← Previous</a>
-<a href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑ Up</a>
-<a class="right" href="functions.html" title="Functions">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/statements-and-state.html" title="진술 및 진술" papago-attr-id="1"><font papago-translate="translated">← 이전</font></a>
+<a href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="나무 산책 통역사" papago-attr-id="2"><font papago-translate="translated">↑ 위로</font></a>
+<a class="right" href="https://youhogeon-meritz.github.io/functions.html" title="기능들" papago-attr-id="3"><font papago-translate="translated">다음 →</font></a>
 </div> </div>
 </nav>
 <nav class="narrow">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
-<a class="prev" href="statements-and-state.html" title="Statements and State">←</a>
-<a class="next" href="functions.html" title="Functions">→</a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
+<a class="prev" href="https://youhogeon-meritz.github.io/statements-and-state.html" title="Statements and State">←</a>
+<a class="next" href="https://youhogeon-meritz.github.io/functions.html" title="Functions">→</a>
 </nav>
 <div class="page">
 <div class="nav-wrapper">
-<nav class="floating">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<nav class="floating pinned">
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="expandable">
-<h3><a href="#top">Control Flow<small>9</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/control-flow.html#top"><font papago-translate="splitted"><font papago-translate="translated">제어 흐름</font></font><small>9</small></a></h3>
 <ul>
-<li><a href="#turing-machines-briefly"><small>9.1</small> Turing Machines (Briefly)</a></li>
-<li><a href="#conditional-execution"><small>9.2</small> Conditional Execution</a></li>
-<li><a href="#logical-operators"><small>9.3</small> Logical Operators</a></li>
-<li><a href="#while-loops"><small>9.4</small> While Loops</a></li>
-<li><a href="#for-loops"><small>9.5</small> For Loops</a></li>
+<li><a href="https://youhogeon-meritz.github.io/control-flow.html#turing-machines-briefly"><small>9.1</small><font papago-translate="splitted"><font papago-translate="translated"> 튜링 머신 (약간)</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/control-flow.html#conditional-execution"><small>9.2</small><font papago-translate="splitted"><font papago-translate="translated"> 조건부 실행</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/control-flow.html#logical-operators"><small>9.3</small><font papago-translate="splitted"><font papago-translate="translated"> 논리 연산자</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/control-flow.html#while-loops"><small>9.4</small><font papago-translate="splitted"><font papago-translate="translated"> 루프 중</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/control-flow.html#for-loops"><small>9.5</small><font papago-translate="splitted"><font papago-translate="translated"> 루프용</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
-<li class="end-part"><a href="#design-note"><small>note</small>Spoonfuls of Syntactic Sugar</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/control-flow.html#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/control-flow.html#design-note"><small>note</small><font papago-translate="splitted"><font papago-translate="translated">통사 설탕 한 스푼</font></font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="statements-and-state.html" title="Statements and State">← Previous</a>
-<a href="a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑ Up</a>
-<a class="right" href="functions.html" title="Functions">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/statements-and-state.html" title="Statements and State">←&nbsp;Previous</a>
+<a href="https://youhogeon-meritz.github.io/a-tree-walk-interpreter.html" title="A Tree-Walk Interpreter">↑&nbsp;Up</a>
+<a class="right" href="https://youhogeon-meritz.github.io/functions.html" title="Functions">Next&nbsp;→</a>
 </div> </div>
 <a id="expand-nav">≡</a>
 </nav>
 </div>
 <article class="chapter">
 <div class="number">9</div>
-<h1>Control Flow</h1>
+<h1><font papago-translate="translated">제어 흐름</font></h1>
 <blockquote>
-<p>Logic, like whiskey, loses its beneficial effect when taken in too large
-quantities.</p>
+<p><font papago-translate="translated">논리는 위스키와 마찬가지로 너무 많은 양을 섭취하면 유익한 효과를 잃게 됩니다.</font></p>
 <p><cite>Edward John Moreton Drax Plunkett, Lord Dunsany</cite></p>
 </blockquote>
-<p>Compared to <a href="statements-and-state.html">last chapter’s</a> grueling marathon, today is a
-lighthearted frolic through a daisy meadow. But while the work is easy, the
-reward is surprisingly large.</p>
-<p>Right now, our interpreter is little more than a calculator. A Lox program can
-only do a fixed amount of work before completing. To make it run twice as long
-you have to make the source code twice as lengthy. We’re about to fix that. In
-this chapter, our interpreter takes a big step towards the programming
-language major leagues: <em>Turing-completeness</em>.</p>
-<h2><a href="#turing-machines-briefly" id="turing-machines-briefly"><small>9 . 1</small>Turing Machines (Briefly)</a></h2>
-<p>In the early part of last century, mathematicians stumbled into a series of
-confusing <span name="paradox">paradoxes</span> that led them to doubt the
-stability of the foundation they had built their work upon. To address that
-<a href="https://en.wikipedia.org/wiki/Foundations_of_mathematics#Foundational_crisis">crisis</a>, they went back to square one. Starting from a handful of axioms,
-logic, and set theory, they hoped to rebuild mathematics on top of an
-impervious foundation.</p>
-<aside name="paradox">
-<p>The most famous is <a href="https://en.wikipedia.org/wiki/Russell%27s_paradox"><strong>Russell’s paradox</strong></a>. Initially, set theory
-allowed you to define any sort of set. If you could describe it in English, it
-was valid. Naturally, given mathematicians’ predilection for self-reference,
-sets can contain other sets. So Russell, rascal that he was, came up with:</p>
-<p><em>R is the set of all sets that do not contain themselves.</em></p>
-<p>Does R contain itself? If it doesn’t, then according to the second half of the
-definition it should. But if it does, then it no longer meets the definition.
-Cue mind exploding.</p>
+<p><font papago-translate="translated"><a href="https://youhogeon-meritz.github.io/statements-and-state.html">지난 장의</a> 혹독한 마라톤과 비교하면, 오늘은 데이지 초원을 통과하는 가벼운 장난입니다.</font><font papago-translate="translated"> 하지만 일은 쉽지만 보상은 의외로 큽니다.</font></p>
+<p><font papago-translate="translated">현재 저희 통역사는 계산기에 불과합니다.</font><font papago-translate="translated"> Lox 프로그램은 완료하기 전에 정해진 양의 작업만 수행할 수 있습니다.</font><font papago-translate="translated"> 소스 코드를 두 배로 길게 만들려면 소스 코드를 두 배로 길게 만들어야 합니다.</font><font papago-translate="translated"> 우리는 곧 그것을 고치려고 합니다.</font><font papago-translate="translated"> 이 장에서 우리 통역사는 프로그래밍 언어 메이저 리그를 향한 큰 발걸음을 내딛습니다:</font><font papago-translate="translated"> <em>튜링 완전성.</em></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/control-flow.html#turing-machines-briefly" id="turing-machines-briefly"><small><font papago-translate="translated">9 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">튜링 머신 (약간)</font></font></a></h2>
+<p><font papago-translate="translated">지난 세기 초, 수학자들은 일련의 혼란<span name="paradox">스러운 역설</span>에 부딪혀 자신들이 쌓아온 기초의 안정성을 의심하게 되었습니다.</font><font papago-translate="translated"> 그<a href="https://en.wikipedia.org/wiki/Foundations_of_mathematics#Foundational_crisis"> 위기</a>를 해결하기 위해 그들은 원점으로 돌아갔습니다.</font><font papago-translate="translated"> 소수의 공리, 논리, 집합론에서 출발하여, 그들은 불굴의 기초 위에 수학을 재건하기를 희망했습니다.</font></p>
+<aside name="paradox" style="top: 700px;">
+<p><font papago-translate="translated">가장 유명한<a href="https://en.wikipedia.org/wiki/Russell%27s_paradox"><strong> 것</strong></a>은<a href="https://en.wikipedia.org/wiki/Russell%27s_paradox"><strong> 러셀의 역설</strong></a>입니다.</font><font papago-translate="translated"> 처음에는 집합 이론을 통해 모든 종류의 집합을 정의할 수 있었습니다.</font><font papago-translate="translated"> 영어로 설명할 수 있다면 유효했습니다.</font><font papago-translate="translated"> 당연히 수학자들이 자기 참조를 선호하기 때문에, 집합은 다른 집합을 포함할 수 있습니다.</font><font papago-translate="translated"> 그래서 러셀은 정말 악당이었습니다:</font></p>
+<p><em><font papago-translate="translated">R은 자신을 포함하지 않는 모든 집합의 집합입니다.</font></em></p>
+<p><font papago-translate="translated">R에는 자체가 포함되어 있습니까?</font><font papago-translate="translated"> 그렇지 않다면 정의의 후반부에 따라 해야 합니다.</font><font papago-translate="translated"> 하지만 그렇게 되면 더 이상 정의를 충족하지 못합니다.</font><font papago-translate="translated"> 큐 마인드 폭발.</font></p>
 </aside>
-<p>They wanted to rigorously answer questions like, “Can all true statements be
-proven?”, “Can we <a href="https://en.wikipedia.org/wiki/Computable_function">compute</a> all functions that we can define?”, or even the
-more general question, “What do we mean when we claim a function is
-‘computable’?”</p>
-<p>They presumed the answer to the first two questions would be “yes”. All that
-remained was to prove it. It turns out that the answer to both is “no”, and
-astonishingly, the two questions are deeply intertwined. This is a fascinating
-corner of mathematics that touches fundamental questions about what brains are
-able to do and how the universe works. I can’t do it justice here.</p>
-<p>What I do want to note is that in the process of proving that the answer to the
-first two questions is “no”, Alan Turing and Alonzo Church devised a precise
-answer to the last question<span class="em">—</span>a definition of what kinds of functions are <span name="uncomputable">computable</span>. They each crafted a tiny system with a
-minimum set of machinery that is still powerful enough to compute any of a
-(very) large class of functions.</p>
-<aside name="uncomputable">
-<p>They proved the answer to the first question is “no” by showing that the
-function that returns the truth value of a given statement is <em>not</em> a computable
-one.</p>
+<p><font papago-translate="translated">그들은 "모든 참된 진술이 증명될 수 있는가?", "우리가 정의할 수 있는 모든 함수<a href="https://en.wikipedia.org/wiki/Computable_function">를 계산</a>할 수 있는가?", 또는 "함수가 '계산 가능하다'고 주장하는 것이 무엇을 의미하는가?"와 같은 질문에 엄격하게 답하고 싶어 했습니다</font></p>
+<p><font papago-translate="translated">그들은 처음 두 질문에 대한 답이 "예"라고 가정했습니다.</font><font papago-translate="translated"> 남은 것은 그것을 증명하는 것뿐이었습니다.</font><font papago-translate="translated"> 알고 보니 두 가지 모두에 대한 답은 "아니오"이며, 놀랍게도 두 질문은 깊이 얽혀 있습니다.</font><font papago-translate="translated"> 이것은 뇌가 무엇을 할 수 있고 우주가 어떻게 작동하는지에 대한 근본적인 질문을 다루는 흥미로운 수학의 한 부분입니다.</font><font papago-translate="translated"> 여기서는 공정하게 할 수 없습니다.</font></p>
+<p><font papago-translate="translated">제가 주목하고 싶은 것은 처음 두 질문에 대한 답이 "아니오"라는 것을 증명하는 과정에서 앨런 튜링과 알론조 처치가 마지막 질문에 대한 정확한 답, 즉<span name="uncomputable"> 어떤</span> 종류의 함수<span name="uncomputable">가 계산</span><span class="em"></span><span name="uncomputable"> 가능</span>한지에 대한 정의를 고안했다는 점입니다.</font><font papago-translate="translated"> 그들은 각각 (매우) 큰 함수 클래스를 계산할 수 있을 만큼 여전히 강력한 최소한의 기계 세트를 갖춘 작은 시스템을 만들었습니다.</font></p>
+<aside name="uncomputable" style="top: 1132px;">
+<p><font papago-translate="translated">그들은 주어진 문장의 진리 값을 반환하는 함수가 계산 가능한 함수<em>가 아님</em>을 보여줌으로써 첫 번째 질문에 대한 답이 "아니오"임을 증명했습니다.</font></p>
 </aside>
-<p>These are now considered the “computable functions”. Turing’s system is called a
-<span name="turing"><strong>Turing machine</strong></span>. Church’s is the <strong>lambda
-calculus</strong>. Both are still widely used as the basis for models of computation
-and, in fact, many modern functional programming languages use the lambda
-calculus at their core.</p>
-<aside name="turing">
-<p>Turing called his inventions “a-machines” for “automatic”. He wasn’t so
-self-aggrandizing as to put his <em>own</em> name on them. Later mathematicians did
-that for him. That’s how you get famous while still retaining some modesty.</p>
-</aside><img alt="A Turing machine." src="image/control-flow/turing-machine.png">
-<p>Turing machines have better name recognition<span class="em">—</span>there’s no Hollywood film about
-Alonzo Church yet<span class="em">—</span>but the two formalisms are <a href="https://en.wikipedia.org/wiki/Church%E2%80%93Turing_thesis">equivalent in power</a>.
-In fact, any programming language with some minimal level of expressiveness is
-powerful enough to compute <em>any</em> computable function.</p>
-<p>You can prove that by writing a simulator for a Turing machine in your language.
-Since Turing proved his machine can compute any computable function, by
-extension, that means your language can too. All you need to do is translate the
-function into a Turing machine, and then run that on your simulator.</p>
-<p>If your language is expressive enough to do that, it’s considered
-<strong>Turing-complete</strong>. Turing machines are pretty dang simple, so it doesn’t take
-much power to do this. You basically need arithmetic, a little control flow,
-and the ability to allocate and use (theoretically) arbitrary amounts of memory.
-We’ve got the first. By the end of this chapter, we’ll have the <span name="memory">second</span>.</p>
-<aside name="memory">
-<p>We <em>almost</em> have the third too. You can create and concatenate strings of
-arbitrary size, so you can <em>store</em> unbounded memory. But we don’t have any way
-to access parts of a string.</p>
+<p><font papago-translate="translated">이것들은 이제 "계산 가능한 함수"로 간주됩니다.</font><font papago-translate="translated"> 튜링의 시스템은<span name="turing"><strong> 튜링 머신</strong></span>이라고 불립니다.</font><font papago-translate="translated"> Church's는<strong> 람다 계산법</strong>입니다.</font><font papago-translate="translated" class="papago-selected"> 둘 다 여전히 계산 모델의 기초로 널리 사용되고 있으며, 실제로 많은 현대 함수형 프로그래밍 언어들은 그 핵심에 람다 계산법을 사용합니다.</font></p>
+<aside name="turing" style="top: 1228px;">
+<p><font papago-translate="translated">튜링은 자신의 발명품을 "자동"을 의미하는 "a-기계"라고 불렀습니다.</font><font papago-translate="translated"> 그는 자신<em>의</em> 이름을 붙일 만큼 자만심이 강하지 않았습니다.</font><font papago-translate="translated"> 나중에 수학자들이 그를 위해 그렇게 했습니다.</font><font papago-translate="translated"> 그렇게 하면 겸손함을 유지하면서도 유명해집니다.</font></p>
+</aside><img alt="A Turing machine." src="https://youhogeon-meritz.github.io/image/control-flow/turing-machine.png">
+<p><font papago-translate="translated">튜링 기계는 더 나은 이름 인식을 가지고 있습니다. 알론조 교회에 관한 할리우드 영화는 아직 없지만, 두 형식은<span class="em"></span><span class="em"></span><a href="https://en.wikipedia.org/wiki/Church%E2%80%93Turing_thesis"> 동등한 힘을</a> 가지고 있습니다.</font><font papago-translate="translated"> 사실, 표현력이 어느 정도 낮은 프로그래밍 언어는<em> 어떤</em> 계산 가능한 함수<em>도</em> 계산할 수 있을 만큼 강력합니다.</font></p>
+<p><font papago-translate="translated">튜링 기계를 위한 시뮬레이터를 당신의 언어로 작성함으로써 그것을 증명할 수 있습니다.</font><font papago-translate="translated"> 튜링이 자신의 기계가 어떤 계산 가능한 함수도 계산할 수 있다는 것을 증명했기 때문에, 이는 언어도 계산할 수 있다는 것을 의미합니다.</font><font papago-translate="translated"> 함수를 튜링 기계로 변환한 다음 시뮬레이터에서 실행하기만 하면 됩니다.</font></p>
+<p><font papago-translate="translated">만약 당신의 언어가 그렇게 할 만큼 충분히 표현력이 있다면<strong>, 그것</strong>은 튜<strong>링 완전체</strong>로 간주됩니다.</font><font papago-translate="translated"> 튜링 기계는 매우 간단하기 때문에 이 작업을 수행하는 데 큰 힘이 들지 않습니다.</font><font papago-translate="translated"> 기본적으로 산술, 약간의 제어 흐름, 그리고 (이론적으로) 임의의 양의 메모리를 할당하고 사용할 수 있는 능력이 필요합니다.</font><font papago-translate="translated"> 첫 번째가 있습니다.</font><font papago-translate="translated"> 이 장이 끝날 때쯤<span name="memory">이면 두 번째</span> 장을 보게 될 것입니다.</font></p>
+<aside name="memory" style="top: 2038.5px;">
+<p><font papago-translate="translated">세 번째 것도<em> 거의</em> 다 있습니다.</font><font papago-translate="translated"> 임의의 크기의 문자열을 생성하고 연결할 수 있으므로 무제한 메모리<em>를 저장</em>할 수 있습니다.</font><font papago-translate="translated"> 하지만 문자열의 일부에 접근할 방법이 없습니다.</font></p>
 </aside>
-<h2><a href="#conditional-execution" id="conditional-execution"><small>9 . 2</small>Conditional Execution</a></h2>
-<p>Enough history, let’s jazz up our language. We can divide control flow roughly
-into two kinds:</p>
+<h2><a href="https://youhogeon-meritz.github.io/control-flow.html#conditional-execution" id="conditional-execution"><small><font papago-translate="translated">9 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">조건부 실행</font></font></a></h2>
+<p><font papago-translate="translated">충분한 역사를 바탕으로, 우리의 언어를 새롭게 만들어 봅시다.</font><font papago-translate="translated"> 제어 흐름은 대략 두 가지 종류로 나눌 수 있습니다:</font></p>
 <ul>
 <li>
-<p><strong>Conditional</strong> or <strong>branching control flow</strong> is used to <em>not</em> execute
-some piece of code. Imperatively, you can think of it as jumping <em>ahead</em>
-over a region of code.</p>
+<p><font papago-translate="translated"><strong>조건</strong><strong>부 또는 분기 제어 흐름은</strong> 코드 조각을 실행<em>하지</em> 않는 데 사용됩니다<strong>.</strong></font><font papago-translate="translated"> 긴급하게<em></em>도 코드의 한 영역을 뛰어넘는다고 생각할 수 있습니다.</font></p>
 </li>
 <li>
-<p><strong>Looping control flow</strong> executes a chunk of code more than once. It jumps
-<em>back</em> so that you can do something again. Since you don’t usually want
-<em>infinite</em> loops, it typically has some conditional logic to know when to
-stop looping as well.</p>
+<p><font papago-translate="translated"><strong>제어 흐름을 반복하면</strong> 코드 덩어리가 여러 번 실행<strong>됩니다.</strong></font><font papago-translate="translated"> <em>다시</em> 무언가를 할 수 있도록<em> 뒤로</em> 튕겨 나갑니다.</font><font papago-translate="translated"> 일반적으로<em> 무한</em> 루프를 원하지 않기 때문에 루프를 중단해야 할 때를 알 수 있는 조건부 논리가 있습니다.</font></p>
 </li>
 </ul>
-<p>Branching is simpler, so we’ll start there. C-derived languages have two main
-conditional execution features, the <code translate="no">if</code> statement and the perspicaciously named
-“conditional” <span name="ternary">operator</span> (<code translate="no">?:</code>). An <code translate="no">if</code> statement
-lets you conditionally execute statements and the conditional operator lets you
-conditionally execute expressions.</p>
-<aside name="ternary">
-<p>The conditional operator is also called the “ternary” operator because it’s the
-only operator in C that takes three operands.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">분기는 더 간단하므로 거기서부터 시작하겠습니다.</font><font papago-translate="translated"> C 파생 언어에는 두 가지 주요 조건부 실행 기능이 있습니다 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 문장과 특이하게 명명된 "조건<span name="ternary">부" 연산자</span> (</font></font><code translate="no">?:</code><font papago-translate="splitted"><font papago-translate="translated">). 안 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 문은 문을 조건부로 실행할 수 있게 해주며, 조건부 연산자는 표현식을 조건부로 실행할 수 있게 해줍니다.</font></font></p>
+<aside name="ternary" style="top: 2494.5px;">
+<p><font papago-translate="translated">조건 연산자는 C에서 세 개의 피연산자를 사용하는 유일한 연산자이기 때문에 "삼차 연산자"라고도 불립니다.</font></p>
 </aside>
-<p>For simplicity’s sake, Lox doesn’t have a conditional operator, so let’s get our
-<code translate="no">if</code> statement on. Our statement grammar gets a new production.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">간단히 하기 위해 Lox에는 조건부 연산자가 없으므로 다음과 같이 합시다 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 에 대한 설명.</font><font papago-translate="translated"> 우리의 문장 문법은 새로운 형식을 갖추게 됩니다.</font></font></p>
 <p><span name="semicolon"></span></p>
 <div class="codehilite"><pre translate="no"><span class="i">statement</span>      → <span class="i">exprStmt</span>
                | <span class="i">ifStmt</span>
@@ -191,39 +120,29 @@ only operator in C that takes three operands.</p>
 <span class="i">ifStmt</span>         → <span class="s">"if"</span> <span class="s">"("</span> <span class="i">expression</span> <span class="s">")"</span> <span class="i">statement</span>
                ( <span class="s">"else"</span> <span class="i">statement</span> )? ;
 </pre></div>
-<aside name="semicolon">
-<p>The semicolons in the rules aren’t quoted, which means they are part of the
-grammar metasyntax, not Lox’s syntax. A block does not have a <code translate="no">;</code> at the end and
-an <code translate="no">if</code> statement doesn’t either, unless the then or else statement happens to
-be one that ends in a semicolon.</p>
+<aside name="semicolon" style="top: 2660.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">규칙의 세미콜론은 인용되지 않으므로 Lox의 구문이 아닌 문법 메타신택스의 일부입니다.</font><font papago-translate="translated"> 블록에는 다음이 없습니다 </font></font><code translate="no">;</code><font papago-translate="splitted"><font papago-translate="translated"> 마지막에 그리고 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 문장은 세미콜론으로 끝나는 문장이 아니면 그렇지 않습니다.</font></font></p>
 </aside>
-<p>An <code translate="no">if</code> statement has an expression for the condition, then a statement to execute
-if the condition is truthy. Optionally, it may also have an <code translate="no">else</code> keyword and a
-statement to execute if the condition is falsey. The <span name="if-ast">syntax
-tree node</span> has fields for each of those three pieces.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">안 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 문에는 조건에 대한 표현이 있고, 조건이 사실일 경우 실행할 문이 있습니다.</font><font papago-translate="translated"> 선택적으로 다음과 같은 기능을 가질 수도 있습니다 </font></font><code translate="no">else</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드와 조건이 거짓일 경우 실행할 문.</font><font papago-translate="translated"> <span name="if-ast">구문 트리 노드에는</span> 이 세 조각 각각에 대한 필드가 있습니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      "Expression : Expr expression",
-</pre><div class="source-file"><em>tool/GenerateAst.java</em><br/>
-in <em>main</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">도구/GenerateAst.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>메인</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="s">"If         : Expr condition, Stmt thenBranch,"</span> +
                   <span class="s">" Stmt elseBranch"</span>,
 </pre><pre class="insert-after" translate="no">      "Print      : Expr expression",
 </pre></div>
 <div class="source-file-narrow"><em>tool/GenerateAst.java</em>, in <em>main</em>()</div>
-<aside name="if-ast">
-<p>The generated code for the new node is in <a href="appendix-ii.html#if-statement">Appendix II</a>.</p>
+<aside name="if-ast" style="top: 2874.5px;">
+<p><font papago-translate="translated">새 노드에 대한 생성된 코드는 부록<a href="https://youhogeon-meritz.github.io/appendix-ii.html#if-statement"> II</a>에 있습니다.</font></p>
 </aside>
-<p>Like other statements, the parser recognizes an <code translate="no">if</code> statement by the leading
-<code translate="no">if</code> keyword.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다른 진술과 마찬가지로 파서는 다음을 인식합니다 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 선도자의 진술 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  private Stmt statement() {
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>statement</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>성명</em>서 ()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">if</span> (<span class="i">match</span>(<span class="i">IF</span>)) <span class="k">return</span> <span class="i">ifStatement</span>();
 </pre><pre class="insert-after" translate="no">    if (match(PRINT)) return printStatement();
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>statement</em>()</div>
-<p>When it finds one, it calls this new method to parse the rest:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>statement</em>()</div>
+<p><font papago-translate="translated">하나를 찾으면 이 새로운 메서드를 호출하여 나머지를 구문 분석합니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>문</em> 뒤에 () 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Stmt</span> <span class="i">ifStatement</span>() {
     <span class="i">consume</span>(<span class="i">LEFT_PAREN</span>, <span class="s">"Expect '(' after 'if'."</span>);
     <span class="t">Expr</span> <span class="i">condition</span> = <span class="i">expression</span>();
@@ -239,60 +158,33 @@ add after <em>statement</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>statement</em>()</div>
-<aside name="parens">
-<p>The parentheses around the condition are only half useful. You need some kind of
-delimiter <em>between</em> the condition and the then statement, otherwise the parser
-can’t tell when it has reached the end of the condition expression. But the
-<em>opening</em> parenthesis after <code translate="no">if</code> doesn’t do anything useful. Dennis Ritchie put
-it there so he could use <code translate="no">)</code> as the ending delimiter without having unbalanced
-parentheses.</p>
-<p>Other languages like Lua and some BASICs use a keyword like <code translate="no">then</code> as the ending
-delimiter and don’t have anything before the condition. Go and Swift instead
-require the statement to be a braced block. That lets them use the <code translate="no">{</code> at the
-beginning of the statement to tell when the condition is done.</p>
+<aside name="parens" style="top: 3265.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">조건 주변의 괄호는 절반만 유용합니다.</font><font papago-translate="translated"> 조건과 그 다음 문장<em> 사이에</em> 일종의 구분 기호가 필요합니다. 그렇지 않으면 파서는 조건 표현식의 끝에 도달했는지 알 수 없습니다.</font><font papago-translate="translated"> 하지만 그 후<em>의 첫</em> 괄호는 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 유용한 기능을 하지 않습니다.</font><font papago-translate="translated"> 데니스 리치가 사용할 수 있도록 거기에 두었습니다 </font></font><code translate="no">)</code><font papago-translate="splitted"><font papago-translate="translated"> 괄호가 불균형하지 않은 끝 구분 기호로 사용됩니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">Lua와 같은 다른 언어와 일부 BASIC는 다음과 같은 키워드를 사용합니다 </font></font><code translate="no">then</code><font papago-translate="splitted"><font papago-translate="translated"> 끝 구분 기호로 사용되며 조건 앞에 아무것도 없습니다.</font><font papago-translate="translated"> Go와 Swift는 대신 문장을 괄호로 묶어야 합니다.</font><font papago-translate="translated"> 이를 통해 다음을 사용할 수 있습니다 </font></font><code translate="no">{</code><font papago-translate="splitted"><font papago-translate="translated"> 조건이 완료되었을 때를 알려주는 문장의 시작 부분.</font></font></p>
 </aside>
-<p>As usual, the parsing code hews closely to the grammar. It detects an else
-clause by looking for the preceding <code translate="no">else</code> keyword. If there isn’t one, the
-<code translate="no">elseBranch</code> field in the syntax tree is <code translate="no">null</code>.</p>
-<p>That seemingly innocuous optional else has, in fact, opened up an ambiguity in
-our grammar. Consider:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">평소처럼 구문 분석 코드는 문법에 가깝게 흐릅니다.</font><font papago-translate="translated"> 이전 조항을 찾아 다른 조항을 감지합니다 </font></font><code translate="no">else</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드.</font><font papago-translate="translated"> 만약 없다면 </font></font><code translate="no">elseBranch</code><font papago-translate="splitted"><font papago-translate="translated"> 구문 트리의 필드는 다음과 같습니다 </font></font><code translate="no">null</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="translated">무해해 보이는 다른 선택 사항은 사실 우리 문법에 모호함을 열어주었습니다.</font><font papago-translate="translated"> 고려:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">if</span> (<span class="i">first</span>) <span class="k">if</span> (<span class="i">second</span>) <span class="i">whenTrue</span>(); <span class="k">else</span> <span class="i">whenFalse</span>();
 </pre></div>
-<p>Here’s the riddle: Which <code translate="no">if</code> statement does that else clause belong to? This
-isn’t just a theoretical question about how we notate our grammar. It actually
-affects how the code executes:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">수수께끼는 다음과 같습니다:</font><font papago-translate="translated"> 어떤. </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 그 다른 조항은 해당 조항에 속합니까?</font><font papago-translate="translated"> 이것은 우리가 문법을 어떻게 표기하는지에 대한 단순한 이론적 질문이 아닙니다.</font><font papago-translate="translated"> 실제로 코드가 실행되는 방식에 영향을 미칩니다:</font></font></p>
 <ul>
 <li>
-<p>If we attach the else to the first <code translate="no">if</code> statement, then <code translate="no">whenFalse()</code> is
-called if <code translate="no">first</code> is falsey, regardless of what value <code translate="no">second</code> has.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다른 것을 첫 번째에 붙이면 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 진술, 그러면 </font></font><code translate="no">whenFalse()</code><font papago-translate="splitted"><font papago-translate="translated"> 다음과 같은 경우 </font></font><code translate="no">first</code><font papago-translate="splitted"><font papago-translate="translated"> 값에 상관없이 거짓입니다 </font></font><code translate="no">second</code><font papago-translate="splitted"><font papago-translate="translated"> 가지다.</font></font></p>
 </li>
 <li>
-<p>If we attach it to the second <code translate="no">if</code> statement, then <code translate="no">whenFalse()</code> is only
-called if <code translate="no">first</code> is truthy and <code translate="no">second</code> is falsey.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">두 번째에 부착하면 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 진술, 그러면 </font></font><code translate="no">whenFalse()</code><font papago-translate="splitted"><font papago-translate="translated"> 다음과 같은 경우에만 호출됩니다 </font></font><code translate="no">first</code><font papago-translate="splitted"><font papago-translate="translated"> 는 진실입니다 </font></font><code translate="no">second</code><font papago-translate="splitted"><font papago-translate="translated"> 거짓입니다.</font></font></p>
 </li>
 </ul>
-<p>Since else clauses are optional, and there is no explicit delimiter marking the
-end of the <code translate="no">if</code> statement, the grammar is ambiguous when you nest <code translate="no">if</code>s in this
-way. This classic pitfall of syntax is called the <strong><a href="https://en.wikipedia.org/wiki/Dangling_else">dangling else</a></strong> problem.</p>
-<p><span name="else"></span></p><img alt="Two ways the else can be interpreted." class="above" src="image/control-flow/dangling-else.png">
-<aside name="else">
-<p>Here, formatting highlights the two ways the else could be parsed. But note that
-since whitespace characters are ignored by the parser, this is only a guide to
-the human reader.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다른 절은 선택 사항이며 끝을 표시하는 명확한 구분 기호가 없기 때문입니다 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 문장, 둥지를 틀면 문법이 모호합니다 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated">이런 식으로 s.</font><font papago-translate="translated"> 이 고전적인 구문의 함정을<strong><a href="https://en.wikipedia.org/wiki/Dangling_else"> 매달림 다른</a></strong> 문제라고 합니다.</font></font></p>
+<p><span name="else"></span></p><img alt="Two ways the else can be interpreted." class="above" src="https://youhogeon-meritz.github.io/image/control-flow/dangling-else.png">
+<aside name="else" style="top: 4036.5px;">
+<p><font papago-translate="translated">여기서 형식 지정은 다른 두 가지 방법을 강조합니다.</font><font papago-translate="translated"> 하지만 공백 문자는 파서에 의해 무시되므로, 이는 단지 인간 독자를 위한 안내서일 뿐입니다.</font></p>
 </aside>
-<p>It <em>is</em> possible to define a context-free grammar that avoids the ambiguity
-directly, but it requires splitting most of the statement rules into pairs, one
-that allows an <code translate="no">if</code> with an <code translate="no">else</code> and one that doesn’t. It’s annoying.</p>
-<p>Instead, most languages and parsers avoid the problem in an ad hoc way. No
-matter what hack they use to get themselves out of the trouble, they always
-choose the same interpretation<span class="em">—</span>the <code translate="no">else</code> is bound to the nearest <code translate="no">if</code> that
-precedes it.</p>
-<p>Our parser conveniently does that already. Since <code translate="no">ifStatement()</code> eagerly looks
-for an <code translate="no">else</code> before returning, the innermost call to a nested series will claim
-the else clause for itself before returning to the outer <code translate="no">if</code> statements.</p>
-<p>Syntax in hand, we are ready to interpret.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-add after <em>visitExpressionStmt</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">문맥 자유 문법을 정의하는 것은 모호성을 직접 피하는 것이 가능하지만, 대부분의 문장 규칙을 쌍으로 나누어야<em></em> 합니다. 이 쌍은 다음을 가능하게 합니다 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 와 함께 </font></font><code translate="no">else</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 그렇지 않은 것.</font><font papago-translate="translated"> 짜증나요.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">대신 대부분의 언어와 파서는 임시방편으로 문제를 피합니다.</font><font papago-translate="translated"> 어떤 해킹을 사용하여 문제를 해결하더라도 항상 동일한 해석<span class="em"></span>을 선택합니다— </font></font><code translate="no">else</code><font papago-translate="splitted"><font papago-translate="translated"> 가장 가까운 곳에 묶여 있습니다 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 그 이전에.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">저희 파서는 이미 편리하게 그렇게 하고 있습니다.</font><font papago-translate="translated"> 부터 </font></font><code translate="no">ifStatement()</code><font papago-translate="splitted"><font papago-translate="translated"> 간절히 찾습니다 </font></font><code translate="no">else</code><font papago-translate="splitted"><font papago-translate="translated"> 반환하기 전에 중첩된 시리즈의 가장 안쪽 호출은 외부로 돌아가기 전에 스스로 다른 절을 주장합니다 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 진술들.</font></font></p>
+<p><font papago-translate="translated">구문을 이해하면 우리는 해석할 준비가 되었습니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가Ex<em>pressionStmt</em>()</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitIfStmt</span>(<span class="t">Stmt</span>.<span class="t">If</span> <span class="i">stmt</span>) {
     <span class="k">if</span> (<span class="i">isTruthy</span>(<span class="i">evaluate</span>(<span class="i">stmt</span>.<span class="i">condition</span>))) {
@@ -304,35 +196,17 @@ add after <em>visitExpressionStmt</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, add after <em>visitExpressionStmt</em>()</div>
-<p>The interpreter implementation is a thin wrapper around the self-same Java code.
-It evaluates the condition. If truthy, it executes the then branch. Otherwise,
-if there is an else branch, it executes that.</p>
-<p>If you compare this code to how the interpreter handles other syntax we’ve
-implemented, the part that makes control flow special is that Java <code translate="no">if</code>
-statement. Most other syntax trees always evaluate their subtrees. Here, we may
-not evaluate the then or else statement. If either of those has a side effect,
-the choice not to evaluate it becomes user visible.</p>
-<h2><a href="#logical-operators" id="logical-operators"><small>9 . 3</small>Logical Operators</a></h2>
-<p>Since we don’t have the conditional operator, you might think we’re done with
-branching, but no. Even without the ternary operator, there are two other
-operators that are technically control flow constructs<span class="em">—</span>the logical operators
-<code translate="no">and</code> and <code translate="no">or</code>.</p>
-<p>These aren’t like other binary operators because they <strong>short-circuit</strong>. If,
-after evaluating the left operand, we know what the result of the logical
-expression must be, we don’t evaluate the right operand. For example:</p>
+<p><font papago-translate="translated">인터프리터 구현은 자체 동일한 Java 코드 주변의 얇은 래퍼입니다.</font><font papago-translate="translated"> 상태를 평가합니다.</font><font papago-translate="translated"> 사실이라면 그때 분기를 실행합니다.</font><font papago-translate="translated"> 그렇지 않으면 다른 분기가 있으면 실행됩니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 코드를 우리가 구현한 다른 구문을 인터프리터가 처리하는 방식과 비교하면, 제어 흐름을 특별하게 만드는 부분은 Java입니다 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 진술.</font><font papago-translate="translated"> 대부분의 다른 구문 트리는 항상 하위 트리를 평가합니다.</font><font papago-translate="translated"> 여기서 우리는 그때나 다른 진술을 평가하지 않을 수 있습니다.</font><font papago-translate="translated"> 둘 중 하나라도 부작용이 발생하면, 이를 평가하지 않을 선택이 사용자에게 눈에 띄게 됩니다.</font></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/control-flow.html#logical-operators" id="logical-operators"><small><font papago-translate="translated">9 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">논리 연산자</font></font></a></h2>
+<p><font papago-translate="splitted"><font papago-translate="translated">조건부 연산자가 없기 때문에 분기가 끝났다고 생각할 수 있지만, 그렇지 않습니다.</font><font papago-translate="translated"> 삼항 연산자가 없더라도 기술적으로 제어 흐름 구성<span class="em"> 요소</span>인 논리 연산자라는 두 가지 다른 연산자가 있습니다 </font></font><code translate="no">and</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">or</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="translated"><strong>이것</strong>들은<strong> 단락</strong>되기 때문에 다른 이진 연산자들과는 다릅니다.</font><font papago-translate="translated"> 왼쪽 피연산자를 평가한 후 논리식의 결과가 무엇인지 알게 되면, 올바른 피연산자를 평가하지 않습니다.</font><font papago-translate="translated"> 예를 들어:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">false</span> <span class="k">and</span> <span class="i">sideEffect</span>();
 </pre></div>
-<p>For an <code translate="no">and</code> expression to evaluate to something truthy, both operands must be
-truthy. We can see as soon as we evaluate the left <code translate="no">false</code> operand that that
-isn’t going to be the case, so there’s no need to evaluate <code translate="no">sideEffect()</code> and it
-gets skipped.</p>
-<p>This is why we didn’t implement the logical operators with the other binary
-operators. Now we’re ready. The two new operators are low in the precedence
-table. Similar to <code translate="no">||</code> and <code translate="no">&amp;&amp;</code> in C, they each have their <span name="logical">own</span> precedence with <code translate="no">or</code> lower than <code translate="no">and</code>. We slot them
-right between <code translate="no">assignment</code> and <code translate="no">equality</code>.</p>
-<aside name="logical">
-<p>I’ve always wondered why they don’t have the same precedence, like the various
-comparison or equality operators do.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">잠시 동안 </font></font><code translate="no">and</code><font papago-translate="splitted"><font papago-translate="translated"> 진정한 것을 평가하기 위한 표현은 두 피연산자 모두 진정한 것이어야 합니다.</font><font papago-translate="translated"> 왼쪽을 평가하면 바로 알 수 있습니다 </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated"> 그렇지 않을 것이므로 평가할 필요가 없다고 피연산자는 말합니다 </font></font><code translate="no">sideEffect()</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 건너뛸 수 있습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것이 우리가 다른 이진 연산자들과 논리 연산자를 구현하지 않은 이유입니다.</font><font papago-translate="translated"> 이제 준비되었습니다.</font><font papago-translate="translated"> 두 개의 새로운 연산자는 우선순위 표에서 낮습니다.</font><font papago-translate="translated"> 유사하게 </font></font><code translate="no">||</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">&amp;&amp;</code><font papago-translate="splitted"><font papago-translate="translated"> C에서는 각각<span name="logical"></span> 다음과 같은 우선순위를 가지고 있습니다 </font></font><code translate="no">or</code><font papago-translate="splitted"><font papago-translate="translated"> 보다 낮은 </font></font><code translate="no">and</code><font papago-translate="splitted"><font papago-translate="translated">. 우리는 그것들을 바로 사이에 배치합니다 </font></font><code translate="no">assignment</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">equality</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<aside name="logical" style="top: 5469px;">
+<p><font papago-translate="translated">저는 왜 다양한 비교나 평등 연산자처럼 동일한 우선순위를 가지지 않는지 항상 궁금했습니다.</font></p>
 </aside>
 <div class="codehilite"><pre translate="no"><span class="i">expression</span>     → <span class="i">assignment</span> ;
 <span class="i">assignment</span>     → <span class="t">IDENTIFIER</span> <span class="s">"="</span> <span class="i">assignment</span>
@@ -340,43 +214,30 @@ comparison or equality operators do.</p>
 <span class="i">logic_or</span>       → <span class="i">logic_and</span> ( <span class="s">"or"</span> <span class="i">logic_and</span> )* ;
 <span class="i">logic_and</span>      → <span class="i">equality</span> ( <span class="s">"and"</span> <span class="i">equality</span> )* ;
 </pre></div>
-<p>Instead of falling back to <code translate="no">equality</code>, <code translate="no">assignment</code> now cascades to <code translate="no">logic_or</code>.
-The two new rules, <code translate="no">logic_or</code> and <code translate="no">logic_and</code>, are <span name="same">similar</span> to other binary operators. Then <code translate="no">logic_and</code> calls
-out to <code translate="no">equality</code> for its operands, and we chain back to the rest of the
-expression rules.</p>
-<aside name="same">
-<p>The <em>syntax</em> doesn’t care that they short-circuit. That’s a semantic concern.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">뒤로 물러나는 대신 </font></font><code translate="no">equality</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">assignment</code><font papago-translate="splitted"><font papago-translate="translated"> 이제 계단식으로 이어집니다 </font></font><code translate="no">logic_or</code><font papago-translate="splitted"><font papago-translate="translated">. 두 가지 새로운 규칙, </font></font><code translate="no">logic_or</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">logic_and</code><font papago-translate="splitted"><font papago-translate="translated">, 는 다른 이진 연산자와<span name="same"> 유사합니다</span>.</font><font papago-translate="translated"> 그리고나서 </font></font><code translate="no">logic_and</code><font papago-translate="splitted"><font papago-translate="translated"> 호출 </font></font><code translate="no">equality</code><font papago-translate="splitted"><font papago-translate="translated"> 피연산자의 피연산자에 대해, 그리고 우리는 나머지 표현 규칙들로 다시 연결됩니다.</font></font></p>
+<aside name="same" style="top: 5737px;">
+<p><font papago-translate="translated"><em>구문은</em> 단락 여부를 신경 쓰지 않습니다.</font><font papago-translate="translated"> 그것은 의미론적인 문제입니다.</font></p>
 </aside>
-<p>We could reuse the existing Expr.Binary class for these two new expressions
-since they have the same fields. But then <code translate="no">visitBinaryExpr()</code> would have to
-check to see if the operator is one of the logical operators and use a different
-code path to handle the short circuiting. I think it’s cleaner to define a <span name="logical-ast">new class</span> for these operators so that they get their
-own visit method.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">기존 Exper를 재사용할 수 있습니다.</font><font papago-translate="translated">이 두 새로운 표현식은 동일한 필드를 가지고 있기 때문에 이진 클래스입니다.</font><font papago-translate="translated"> 그러나 </font></font><code translate="no">visitBinaryExpr()</code><font papago-translate="splitted"><font papago-translate="translated"> 연산자가 논리 연산자 중 하나인지 확인하고 다른 코드 경로를 사용하여 단락을 처리해야 합니다.</font><font papago-translate="translated"> 이 운영자들이 자신만의 방문 방법을 가질 수 있도록<span name="logical-ast"> 새로운 클래스</span>를 정의하는 것이 더 깔끔하다고 생각합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      "Literal  : Object value",
-</pre><div class="source-file"><em>tool/GenerateAst.java</em><br/>
-in <em>main</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">도구/GenerateAst.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>메인</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="s">"Logical  : Expr left, Token operator, Expr right"</span>,
 </pre><pre class="insert-after" translate="no">      "Unary    : Token operator, Expr right",
 </pre></div>
 <div class="source-file-narrow"><em>tool/GenerateAst.java</em>, in <em>main</em>()</div>
-<aside name="logical-ast">
-<p>The generated code for the new node is in <a href="appendix-ii.html#logical-expression">Appendix II</a>.</p>
+<aside name="logical-ast" style="top: 5881px;">
+<p><font papago-translate="translated">새 노드에 대한 생성된 코드는 부록<a href="https://youhogeon-meritz.github.io/appendix-ii.html#logical-expression"> II</a>에 있습니다.</font></p>
 </aside>
-<p>To weave the new expressions into the parser, we first change the parsing code
-for assignment to call <code translate="no">or()</code>.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">새로운 표현식을 파서에 엮으려면 먼저 할당할 파싱 코드를 호출하도록 변경합니다 </font></font><code translate="no">or()</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  private Expr assignment() {
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>assignment</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>과제</em> ()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">    <span class="t">Expr</span> <span class="i">expr</span> = <span class="i">or</span>();
 </pre><pre class="insert-after" translate="no">
-
     if (match(EQUAL)) {
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>assignment</em>(), replace 1 line</div>
-<p>The code to parse a series of <code translate="no">or</code> expressions mirrors other binary operators.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>assignment</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">일련의 구문 분석 코드 </font></font><code translate="no">or</code><font papago-translate="splitted"><font papago-translate="translated"> 표현식은 다른 이진 연산자를 반영합니다.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>할당</em> 후 () 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Expr</span> <span class="i">or</span>() {
     <span class="t">Expr</span> <span class="i">expr</span> = <span class="i">and</span>();
 
@@ -390,9 +251,8 @@ add after <em>assignment</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>assignment</em>()</div>
-<p>Its operands are the next higher level of precedence, the new <code translate="no">and</code> expression.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>or</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">피연산자는 다음으로 높은 수준의 우선순위인 새로운 피연산자입니다 </font></font><code translate="no">and</code><font papago-translate="splitted"><font papago-translate="translated"> 표현.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 뒤에 추가<em> 또는</em> ()</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Expr</span> <span class="i">and</span>() {
     <span class="t">Expr</span> <span class="i">expr</span> = <span class="i">equality</span>();
 
@@ -406,10 +266,8 @@ add after <em>or</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>or</em>()</div>
-<p>That calls <code translate="no">equality()</code> for its operands, and with that, the expression parser
-is all tied back together again. We’re ready to interpret.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-add after <em>visitLiteralExpr</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">그것은 전화입니다 </font></font><code translate="no">equality()</code><font papago-translate="splitted"><font papago-translate="translated"> 그 피연산자들을 위해, 그리고 그것으로 표현 파서가 다시 연결됩니다.</font><font papago-translate="translated"> 우리는 통역할 준비가 되었습니다.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방문</em> 후 추가L<em>iteralEx</em>pr()</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Object</span> <span class="i">visitLogicalExpr</span>(<span class="t">Expr</span>.<span class="t">Logical</span> <span class="i">expr</span>) {
     <span class="t">Object</span> <span class="i">left</span> = <span class="i">evaluate</span>(<span class="i">expr</span>.<span class="i">left</span>);
@@ -424,29 +282,16 @@ add after <em>visitLiteralExpr</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, add after <em>visitLiteralExpr</em>()</div>
-<p>If you compare this to the <a href="evaluating-expressions.html">earlier chapter’s</a> <code translate="no">visitBinaryExpr()</code>
-method, you can see the difference. Here, we evaluate the left operand first. We
-look at its value to see if we can short-circuit. If not, and only then, do we
-evaluate the right operand.</p>
-<p>The other interesting piece here is deciding what actual value to return. Since
-Lox is dynamically typed, we allow operands of any type and use truthiness to
-determine what each operand represents. We apply similar reasoning to the
-result. Instead of promising to literally return <code translate="no">true</code> or <code translate="no">false</code>, a logic
-operator merely guarantees it will return a value with appropriate truthiness.</p>
-<p>Fortunately, we have values with proper truthiness right at hand<span class="em">—</span>the results
-of the operands themselves. So we use those. For example:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것을<a href="https://youhogeon-meritz.github.io/evaluating-expressions.html"> 이전 장의</a></font></font> <code translate="no">visitBinaryExpr()</code><font papago-translate="splitted"><font papago-translate="translated"> 방법, 차이점을 확인할 수 있습니다.</font><font papago-translate="translated"> 여기서는 먼저 왼쪽 피연산자를 평가합니다.</font><font papago-translate="translated"> 단락이 가능한지 확인하기 위해 그 가치를 살펴봅니다.</font><font papago-translate="translated"> 그렇지 않다면, 그때서야 올바른 피연산자를 평가할 수 있습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">여기서 또 다른 흥미로운 점은 실제 반환할 가치를 결정하는 것입니다.</font><font papago-translate="translated"> Lox는 동적으로 입력되므로 모든 유형의 피연산자를 허용하고 진실성을 사용하여 각 피연산자가 무엇을 나타내는지 결정합니다.</font><font papago-translate="translated"> 우리는 결과에 유사한 추론을 적용합니다.</font><font papago-translate="translated"> 문자 그대로 돌아오겠다고 약속하는 대신 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated">, 논리 연산자는 적절한 진실성을 가진 값을 반환할 것을 보장할 뿐입니다.</font></font></p>
+<p><font papago-translate="translated">다행히도, 우리는 적절한 진실성을 지닌 가치를 바로 눈앞에 두고 있습니다. 바로 피연산자<span class="em"></span>들의 결과입니다.</font><font papago-translate="translated"> 그래서 우리는 그것들을 사용합니다.</font><font papago-translate="translated"> 예를 들어:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">print</span> <span class="s">"hi"</span> <span class="k">or</span> <span class="n">2</span>; <span class="c">// "hi".</span>
 <span class="k">print</span> <span class="k">nil</span> <span class="k">or</span> <span class="s">"yes"</span>; <span class="c">// "yes".</span>
 </pre></div>
-<p>On the first line, <code translate="no">"hi"</code> is truthy, so the <code translate="no">or</code> short-circuits and returns
-that. On the second line, <code translate="no">nil</code> is falsey, so it evaluates and returns the
-second operand, <code translate="no">"yes"</code>.</p>
-<p>That covers all of the branching primitives in Lox. We’re ready to jump ahead to
-loops. You see what I did there? <em>Jump. Ahead.</em> Get it? See, it’s like a
-reference to<span class="ellipse"> . . . </span>oh, forget it.</p>
-<h2><a href="#while-loops" id="while-loops"><small>9 . 4</small>While Loops</a></h2>
-<p>Lox features two looping control flow statements, <code translate="no">while</code> and <code translate="no">for</code>. The <code translate="no">while</code>
-loop is the simpler one, so we’ll start there. Its grammar is the same as in C.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">첫 번째 줄에서, </font></font><code translate="no">"hi"</code><font papago-translate="splitted"><font papago-translate="translated"> 사실입니다, 그래서 </font></font><code translate="no">or</code><font papago-translate="splitted"><font papago-translate="translated"> 단기 circuits을 하고 그것을 반환합니다.</font><font papago-translate="translated"> 두 번째 줄이요. </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 거짓이므로 두 번째 피연산자를 평가하고 반환합니다, </font></font><code translate="no">"yes"</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="translated">이는 Lox의 모든 분기 프리미티브를 다룹니다.</font><font papago-translate="translated"> 우리는 루프로 나아갈 준비가 되었습니다.</font><font papago-translate="translated"> 제가 거기서 뭘 했는지 보이시나요?</font><font papago-translate="translated"> <em>점프.</em></font><font papago-translate="translated"><em> 앞서.</em></font><font papago-translate="translated"> 알았어요?</font><font papago-translate="translated"> 보세요, 이건 마치 .<span class="ellipse"> . . . .</span> 아, 잊어버려요.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/control-flow.html#while-loops" id="while-loops"><small><font papago-translate="translated">9 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">루프 중</font></font></a></h2>
+<p><font papago-translate="splitted"><font papago-translate="translated">Lox는 두 개의 반복 제어 흐름 문을 특징으로 합니다, </font></font><code translate="no">while</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated">.그 </font></font><code translate="no">while</code><font papago-translate="splitted"><font papago-translate="translated"> 루프가 더 간단한 것이므로 거기서부터 시작하겠습니다.</font><font papago-translate="translated"> 문법은 C와 동일합니다.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="i">statement</span>      → <span class="i">exprStmt</span>
                | <span class="i">ifStmt</span>
                | <span class="i">printStmt</span>
@@ -455,37 +300,27 @@ loop is the simpler one, so we’ll start there. Its grammar is the same as in C
 
 <span class="i">whileStmt</span>      → <span class="s">"while"</span> <span class="s">"("</span> <span class="i">expression</span> <span class="s">")"</span> <span class="i">statement</span> ;
 </pre></div>
-<p>We add another clause to the statement rule that points to the new rule for
-while. It takes a <code translate="no">while</code> keyword, followed by a parenthesized condition
-expression, then a statement for the body. That new grammar rule gets a <span name="while-ast">syntax tree node</span>.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 한동안 새로운 규칙을 가리키는 또 다른 조항을 문 규칙에 추가합니다.</font><font papago-translate="translated"> 시간이 걸립니다 </font></font><code translate="no">while</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드, 괄호로 묶은 조건 표현, 본문에 대한 문장.</font><font papago-translate="translated"> 그 새로운 문법 규칙은<span name="while-ast"> 구문 트리 노드</span>를 얻습니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      "Print      : Expr expression",
 </pre><pre class="insert-before" translate="no">      <span class="s">"Var        : Token name, Expr initializer"</span><span class="insert-comma">,</span>
-</pre><div class="source-file"><em>tool/GenerateAst.java</em><br/>
-in <em>main</em>()<br/>
-add <em>“,”</em> to previous line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">도구/GenerateAst.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>메인</em> ()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 이전 줄에<em> ","</em>를 추가합니다</font></font></div>
 <pre class="insert" translate="no">      <span class="s">"While      : Expr condition, Stmt body"</span>
 </pre><pre class="insert-after" translate="no">    ));
 </pre></div>
 <div class="source-file-narrow"><em>tool/GenerateAst.java</em>, in <em>main</em>(), add <em>“,”</em> to previous line</div>
-<aside name="while-ast">
-<p>The generated code for the new node is in <a href="appendix-ii.html#while-statement">Appendix II</a>.</p>
+<aside name="while-ast" style="top: 8105px;">
+<p><font papago-translate="translated">새 노드에 대한 생성된 코드는 부록<a href="https://youhogeon-meritz.github.io/appendix-ii.html#while-statement"> II</a>에 있습니다.</font></p>
 </aside>
-<p>The node stores the condition and body. Here you can see why it’s nice to have
-separate base classes for expressions and statements. The field declarations
-make it clear that the condition is an expression and the body is a statement.</p>
-<p>Over in the parser, we follow the same process we used for <code translate="no">if</code> statements.
-First, we add another case in <code translate="no">statement()</code> to detect and match the leading
-keyword.</p>
+<p><font papago-translate="translated">노드는 상태와 신체를 저장합니다.</font><font papago-translate="translated"> 여기에서 표현과 명제에 대해 별도의 기본 클래스를 갖는 것이 좋은 이유를 알 수 있습니다.</font><font papago-translate="translated"> 필드 선언은 조건이 표현이고 신체가 진술임을 분명히 합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">파서에서는 우리가 사용했던 동일한 프로세스를 따릅니다 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 진술들.</font><font papago-translate="translated"> 먼저, 우리는 또 다른 사례를 추가합니다 </font></font><code translate="no">statement()</code><font papago-translate="splitted"><font papago-translate="translated"> 주요 키워드를 감지하고 일치시킵니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    if (match(PRINT)) return printStatement();
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>statement</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>성명</em>서 ()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">if</span> (<span class="i">match</span>(<span class="i">WHILE</span>)) <span class="k">return</span> <span class="i">whileStatement</span>();
 </pre><pre class="insert-after" translate="no">    if (match(LEFT_BRACE)) return new Stmt.Block(block());
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>statement</em>()</div>
-<p>That delegates the real work to this method:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>varDeclaration</em>()</div>
+<p><font papago-translate="translated">그것이 실제 작업을 이 방법으로 위임합니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>varDeclaration</em> 뒤에 추가하기()</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Stmt</span> <span class="i">whileStatement</span>() {
     <span class="i">consume</span>(<span class="i">LEFT_PAREN</span>, <span class="s">"Expect '(' after 'while'."</span>);
     <span class="t">Expr</span> <span class="i">condition</span> = <span class="i">expression</span>();
@@ -496,10 +331,8 @@ add after <em>varDeclaration</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>varDeclaration</em>()</div>
-<p>The grammar is dead simple and this is a straight translation of it to Java.
-Speaking of translating straight to Java, here’s how we execute the new syntax:</p>
-<div class="codehilite"><div class="source-file"><em>lox/Interpreter.java</em><br/>
-add after <em>visitVarStmt</em>()</div>
+<p><font papago-translate="translated">문법은 매우 간단하며, 이것은 자바로 직접 번역한 것입니다.</font><font papago-translate="translated"> 자바로 바로 번역하는 것에 대해 말하자면, 새로운 구문을 실행하는 방법은 다음과 같습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Interpreter.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>visit</em>V<em>arStmt</em>() 방문 후 추가</font></font></div>
 <pre translate="no">  <span class="a">@Override</span>
   <span class="k">public</span> <span class="t">Void</span> <span class="i">visitWhileStmt</span>(<span class="t">Stmt</span>.<span class="t">While</span> <span class="i">stmt</span>) {
     <span class="k">while</span> (<span class="i">isTruthy</span>(<span class="i">evaluate</span>(<span class="i">stmt</span>.<span class="i">condition</span>))) {
@@ -509,16 +342,12 @@ add after <em>visitVarStmt</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Interpreter.java</em>, add after <em>visitVarStmt</em>()</div>
-<p>Like the visit method for <code translate="no">if</code>, this visitor uses the corresponding Java
-feature. This method isn’t complex, but it makes Lox much more powerful. We can
-finally write a program whose running time isn’t strictly bound by the length of
-the source code.</p>
-<h2><a href="#for-loops" id="for-loops"><small>9 . 5</small>For Loops</a></h2>
-<p>We’re down to the last control flow construct, <span name="for">Ye Olde</span>
-C-style <code translate="no">for</code> loop. I probably don’t need to remind you, but it looks like this:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">방문 방법처럼 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated">, 이 방문자는 해당 Java 기능을 사용합니다.</font><font papago-translate="translated"> 이 방법은 복잡하지 않지만 Lox를 훨씬 더 강력하게 만듭니다.</font><font papago-translate="translated"> 마침내 소스 코드의 길이에 의해 실행 시간이 엄격하게 제한되지 않는 프로그램을 작성할 수 있습니다.</font></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/control-flow.html#for-loops" id="for-loops"><small><font papago-translate="translated">9 . 5</font></small><font papago-translate="splitted"><font papago-translate="translated">루프용</font></font></a></h2>
+<p><font papago-translate="splitted"><font papago-translate="translated">마지막 제어 흐름 구조인 Y<span name="for">e Old</span>e C 스타일로 넘어갔습니다 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 루프. 굳이 상기시킬 필요는 없겠지만, 이렇게 생겼습니다:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">for</span> (<span class="k">var</span> <span class="i">i</span> = <span class="n">0</span>; <span class="i">i</span> &lt; <span class="n">10</span>; <span class="i">i</span> = <span class="i">i</span> + <span class="n">1</span>) <span class="k">print</span> <span class="i">i</span>;
 </pre></div>
-<p>In grammarese, that’s:</p>
+<p><font papago-translate="translated">문법적으로는 그렇습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">statement</span>      → <span class="i">exprStmt</span>
                | <span class="i">forStmt</span>
                | <span class="i">ifStmt</span>
@@ -530,55 +359,29 @@ C-style <code translate="no">for</code> loop. I probably don’t need to remind 
                  <span class="i">expression</span>? <span class="s">";"</span>
                  <span class="i">expression</span>? <span class="s">")"</span> <span class="i">statement</span> ;
 </pre></div>
-<aside name="for">
-<p>Most modern languages have a higher-level looping statement for iterating over
-arbitrary user-defined sequences. C# has <code translate="no">foreach</code>, Java has “enhanced for”,
-even C++ has range-based <code translate="no">for</code> statements now. Those offer cleaner syntax than
-C’s <code translate="no">for</code> statement by implicitly calling into an iteration protocol that the
-object being looped over supports.</p>
-<p>I love those. For Lox, though, we’re limited by building up the interpreter a
-chapter at a time. We don’t have objects and methods yet, so we have no way of
-defining an iteration protocol that the <code translate="no">for</code> loop could use. So we’ll stick
-with the old school C <code translate="no">for</code> loop. Think of it as “vintage”. The fixie of control
-flow statements.</p>
+<aside name="for" style="top: 9193px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">대부분의 현대 언어는 임의의 사용자 정의 시퀀스를 반복하는 더 높은 수준의 반복문을 가지고 있습니다.</font><font papago-translate="translated"> C#은 다음을 가지고 있습니다 </font></font><code translate="no">foreach</code><font papago-translate="splitted"><font papago-translate="translated">, Java는 "향상된" 용도로 사용되었으며, C++에도 범위 기반 기능이 있습니다 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 지금 진술합니다.</font><font papago-translate="translated"> 그것들은 C보다 더 깔끔한 구문을 제공합니다 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 객체가 루프오버되는 반복 프로토콜을 암묵적으로 호출하여 설명합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">난 그것들이 너무 좋다.</font><font papago-translate="translated"> 하지만 Lox의 경우, 통역사를 한 번에 한 장씩 구축하는 데 한계가 있습니다.</font><font papago-translate="translated"> 아직 객체와 메서드가 없기 때문에 반복 프로토콜을 정의할 방법이 없습니다 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 루프를 사용할 수 있습니다.</font><font papago-translate="translated"> 그래서 우리는 기존의 C 학교를 고수할 것입니다 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 루프. "빈티지"라고 생각하세요.</font><font papago-translate="translated"> 제어 흐름 문의 고정점.</font></font></p>
 </aside>
-<p>Inside the parentheses, you have three clauses separated by semicolons:</p>
+<p><font papago-translate="translated">괄호 안에는 세미콜론으로 구분된 세 개의 절이 있습니다:</font></p>
 <ol>
 <li>
-<p>The first clause is the <em>initializer</em>. It is executed exactly once, before
-anything else. It’s usually an expression, but for convenience, we also
-allow a variable declaration. In that case, the variable is scoped to the
-rest of the <code translate="no">for</code> loop<span class="em">—</span>the other two clauses and the body.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">첫 번째 조항은<em> 초기화입니다</em>.</font><font papago-translate="translated"> 그것은 무엇보다도 정확히 한 번 실행됩니다.</font><font papago-translate="translated"> 보통 표현이지만, 편의를 위해 변수 선언도 허용합니다.</font><font papago-translate="translated"> 이 경우 변수는 나머지 부분으로 범위가 지정됩니다 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 루프—다른 두 절과<span class="em"></span> 본문.</font></font></p>
 </li>
 <li>
-<p>Next is the <em>condition</em>. As in a <code translate="no">while</code> loop, this expression controls when
-to exit the loop. It’s evaluated once at the beginning of each iteration,
-including the first. If the result is truthy, it executes the loop body.
-Otherwise, it bails.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다음<em>은 조건</em>입니다.</font><font papago-translate="translated"> 마치 </font></font><code translate="no">while</code><font papago-translate="splitted"><font papago-translate="translated"> 루프, 이 표현식은 루프를 종료할 시기를 제어합니다.</font><font papago-translate="translated"> 첫 번째 반복을 포함하여 각 반복이 시작될 때마다 한 번씩 평가됩니다.</font><font papago-translate="translated"> 결과가 사실이라면 루프 본체를 실행합니다.</font><font papago-translate="translated"> 그렇지 않으면 실패합니다.</font></font></p>
 </li>
 <li>
-<p>The last clause is the <em>increment</em>. It’s an arbitrary expression that does
-some work at the end of each loop iteration. The result of the expression is
-discarded, so it must have a side effect to be useful. In practice, it
-usually increments a variable.</p>
+<p><font papago-translate="translated">마지막 조항은<em> 증가입니다</em>.</font><font papago-translate="translated"> 각 루프 반복이 끝날 때마다 작동하는 임의의 표현입니다.</font><font papago-translate="translated"> 그 표현의 결과는 버려지기 때문에, 유용하려면 부작용이 있어야 합니다.</font><font papago-translate="translated"> 실제로는 보통 변수를 증가시킵니다.</font></p>
 </li>
 </ol>
-<p>Any of these clauses can be omitted. Following the closing parenthesis is a
-statement for the body, which is typically a block.</p>
-<h3><a href="#desugaring" id="desugaring"><small>9 . 5 . 1</small>Desugaring</a></h3>
-<p>That’s a lot of machinery, but note that none of it does anything you couldn’t
-do with the statements we already have. If <code translate="no">for</code> loops didn’t support
-initializer clauses, you could just put the initializer expression before the
-<code translate="no">for</code> statement. Without an increment clause, you could simply put the increment
-expression at the end of the body yourself.</p>
-<p>In other words, Lox doesn’t <em>need</em> <code translate="no">for</code> loops, they just make some common code
-patterns more pleasant to write. These kinds of features are called <span name="sugar"><strong>syntactic sugar</strong></span>. For example, the previous <code translate="no">for</code> loop
-could be rewritten like so:</p>
-<aside name="sugar">
-<p>This delightful turn of phrase was coined by Peter J. Landin in 1964 to describe
-how some of the nice expression forms supported by languages like ALGOL were a
-sweetener sprinkled over the more fundamental<span class="em">—</span>but presumably less palatable<span class="em">—</span>lambda calculus underneath.</p><img alt="Slightly more than a spoonful of sugar." class="above" src="image/control-flow/sugar.png">
-</img></aside>
+<p><font papago-translate="translated">이 조항들 중 어느 것이든 생략할 수 있습니다.</font><font papago-translate="translated"> 다음 괄호 뒤에는 본문에 대한 문장이 있으며, 일반적으로 블록입니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/control-flow.html#desugaring" id="desugaring"><small><font papago-translate="translated">9 . 5 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">디슈가링</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">그것은 많은 기계들이지만, 우리가 이미 가지고 있는 진술로는 할 수 없는 일을 하지 않는다는 점에 유의하세요. 만약 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 루프는 이니셜라이저 절을 지원하지 않았으므로 이니셜라이저 식을 다음과 같이 입력할 수 있습니다 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 진술.</font><font papago-translate="translated"> 증분 절 없이, 직접 본문의 끝에 증분 표현식을 넣을 수 있습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다시 말해, Lox<em>는 필요하지</em> 않습니다</font></font> <code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 루프는 일반적인 코드 패턴을 더 쉽게 작성할 수 있게 해줍니다.</font><font papago-translate="translated"> 이러한 특징들을<span name="sugar"><strong> 통사 설탕</strong></span>이라고 합니다.</font><font papago-translate="translated"> 예를 들어, 이전 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 루프는 이렇게 다시 쓸 수 있습니다:</font></font></p>
+<aside name="sugar" style="top: 10253px;">
+<p><font papago-translate="translated">이 유쾌한 문구의 전환은 1964년 피터 J. 랜딘이 ALGOL과 같은 언어가 지원하는 멋진 표현 형식 중 일부가 더 근본적이지만 아마도 덜 맛깔스러운 람다<span class="em"></span><span class="em"></span> 미적분학 위에 감미료를 뿌린 것을 설명하기 위해 만들어졌습니다.</font></p><img alt="Slightly more than a spoonful of sugar." class="above" src="https://youhogeon-meritz.github.io/image/control-flow/sugar.png">
+</aside>
 <div class="codehilite"><pre translate="no">{
   <span class="k">var</span> <span class="i">i</span> = <span class="n">0</span>;
   <span class="k">while</span> (<span class="i">i</span> &lt; <span class="n">10</span>) {
@@ -587,42 +390,27 @@ sweetener sprinkled over the more fundamental<span class="em">—</span>but pres
   }
 }
 </pre></div>
-<p>This script has the exact same semantics as the previous one, though it’s not as
-easy on the eyes. Syntactic sugar features like Lox’s <code translate="no">for</code> loop make a language
-more pleasant and productive to work in. But, especially in sophisticated
-language implementations, every language feature that requires back-end support
-and optimization is expensive.</p>
-<p>We can have our cake and eat it too by <span name="caramel"><strong>desugaring</strong></span>. That funny word describes a process where
-the front end takes code using syntax sugar and translates it to a more
-primitive form that the back end already knows how to execute.</p>
-<aside name="caramel">
-<p>Oh, how I wish the accepted term for this was “caramelization”. Why introduce a
-metaphor if you aren’t going to stick with it?</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 스크립트는 이전 스크립트와 정확히 동일한 의미를 가지고 있지만, 보기에는 쉽지 않습니다.</font><font papago-translate="translated"> Lox와 같은 구문 설탕 특징 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 루프는 언어를 더 즐겁고 생산적으로 만들어 줍니다.</font><font papago-translate="translated"> 하지만, 특히 정교한 언어 구현에서는 백엔드 지원과 최적화가 필요한 모든 언어 기능이 비용이 많이 듭니다.</font></font></p>
+<p><font papago-translate="translated">우리는 케이크를 먹고<span name="caramel"><strong> 설탕을 빼</strong></span>서 먹을 수도 있습니다.</font><font papago-translate="translated"> 그 재미있는 단어는 프론트엔드가 구문 슈가를 사용하여 코드를 가져와 백엔드가 이미 실행 방법을 알고 있는 더 원시적인 형태로 번역하는 과정을 설명합니다.</font></p>
+<aside name="caramel" style="top: 10609px;">
+<p><font papago-translate="translated">오, 이 용어가 "카라멜화"였으면 좋겠어요.</font><font papago-translate="translated"> 은유를 고수하지 않을 텐데 왜 은유를 도입하나요?</font></p>
 </aside>
-<p>We’re going to desugar <code translate="no">for</code> loops to the <code translate="no">while</code> loops and other statements the
-interpreter already handles. In our simple interpreter, desugaring really
-doesn’t save us much work, but it does give me an excuse to introduce you to the
-technique. So, unlike the previous statements, we <em>won’t</em> add a new syntax tree
-node. Instead, we go straight to parsing. First, add an import we’ll need soon.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 데수가를 만들 것입니다 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 로의 루프 </font></font><code translate="no">while</code><font papago-translate="splitted"><font papago-translate="translated"> 해석자가 이미 처리하고 있는 루프 및 기타 문.</font><font papago-translate="translated"> 우리의 간단한 통역사에서, 불필요함을 없애는 것은 우리에게 많은 일을 덜어주지 않지만, 그 기술을 소개해 줄 핑계를 제공합니다.</font><font papago-translate="translated"> 따라서 이전 문장과 달리 새 구문 트리 노드를 추가하지<em> 않습니다</em>.</font><font papago-translate="translated"> 대신, 우리는 바로 구문 분석으로 넘어갑니다.</font><font papago-translate="translated"> 먼저, 곧 필요한 수입품을 추가하세요.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">import java.util.ArrayList;
 </pre><div class="source-file"><em>lox/Parser.java</em></div>
 <pre class="insert" translate="no"><span class="k">import</span> <span class="i">java.util.Arrays</span>;
 </pre><pre class="insert-after" translate="no">import java.util.List;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em></div>
-<p>Like every statement, we start parsing a <code translate="no">for</code> loop by matching its keyword.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">모든 문장과 마찬가지로, 우리는 구문 분석을 시작합니다 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드를 일치시켜 루프합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  private Stmt statement() {
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>statement</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>성명</em>서 ()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">if</span> (<span class="i">match</span>(<span class="i">FOR</span>)) <span class="k">return</span> <span class="i">forStatement</span>();
 </pre><pre class="insert-after" translate="no">    if (match(IF)) return ifStatement();
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>statement</em>()</div>
-<p>Here is where it gets interesting. The desugaring is going to happen here, so
-we’ll build this method a piece at a time, starting with the opening parenthesis
-before the clauses.</p>
-<div class="codehilite"><div class="source-file"><em>lox/Parser.java</em><br/>
-add after <em>statement</em>()</div>
+<p><font papago-translate="translated">여기서부터 흥미로워집니다.</font><font papago-translate="translated"> 여기서 분리 작업이 진행될 예정이므로, 이 방법은 절 앞의 괄호를 여는 것부터 시작하여 한 번에 하나씩 구축할 것입니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>문</em> 뒤에 () 추가</font></font></div>
 <pre translate="no">  <span class="k">private</span> <span class="t">Stmt</span> <span class="i">forStatement</span>() {
     <span class="i">consume</span>(<span class="i">LEFT_PAREN</span>, <span class="s">"Expect '(' after 'for'."</span>);
 
@@ -630,12 +418,10 @@ add after <em>statement</em>()</div>
   }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, add after <em>statement</em>()</div>
-<p>The first clause following that is the initializer.</p>
+<p><font papago-translate="translated">그 다음 첫 번째 절은 초기화입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    consume(LEFT_PAREN, "Expect '(' after 'for'.");
 
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>forStatement</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>forStatement</em>()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">    <span class="t">Stmt</span> <span class="i">initializer</span>;
     <span class="k">if</span> (<span class="i">match</span>(<span class="i">SEMICOLON</span>)) {
       <span class="i">initializer</span> = <span class="k">null</span>;
@@ -647,23 +433,15 @@ replace 1 line</div>
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>forStatement</em>(), replace 1 line</div>
-<p>If the token following the <code translate="no">(</code> is a semicolon then the initializer has been
-omitted. Otherwise, we check for a <code translate="no">var</code> keyword to see if it’s a <span name="variable">variable</span> declaration. If neither of those matched, it
-must be an expression. We parse that and wrap it in an expression statement so
-that the initializer is always of type Stmt.</p>
-<aside name="variable">
-<p>In a previous chapter, I said we can split expression and statement syntax trees
-into two separate class hierarchies because there’s no single place in the
-grammar that allows both an expression and a statement. That wasn’t <em>entirely</em>
-true, I guess.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다음 토큰이 다음과 같은 경우 </font></font><code translate="no">(</code><font papago-translate="splitted"><font papago-translate="translated"> 세미콜론입니다. 그러면 이니셜라이저가 생략되었습니다.</font><font papago-translate="translated"> 그렇지 않으면 다음을 확인합니다 </font></font><code translate="no">var</code><font papago-translate="splitted"><font papago-translate="translated"> <span name="variable">변수</span> 선언인지 확인하는 키워드.</font><font papago-translate="translated"> 둘 다 일치하지 않는다면, 그것은 표현이어야 합니다.</font><font papago-translate="translated"> 이를 구문 분석하고 초기화자가 항상 Stmt 유형이 되도록 표현식 문으로 마무리합니다.</font></font></p>
+<aside name="variable" style="top: 11625px;">
+<p><font papago-translate="translated">이전 장에서 저는 표현과 문장 구문 트리를 두 개의 별도 클래스 계층으로 나눌 수 있다고 말했습니다. 문법에서 표현과 문장을 모두 허용하는 한 자리가 없기 때문입니다.</font><font papago-translate="translated"> <em>완전히</em> 사실<em>은 아니</em>었던 것 같습니다.</font></p>
 </aside>
-<p>Next up is the condition.</p>
+<p><font papago-translate="translated">다음은 조건입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      initializer = expressionStatement();
     }
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>forStatement</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>forStatement</em>()에서</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="t">Expr</span> <span class="i">condition</span> = <span class="k">null</span>;
     <span class="k">if</span> (!<span class="i">check</span>(<span class="i">SEMICOLON</span>)) {
       <span class="i">condition</span> = <span class="i">expression</span>();
@@ -672,13 +450,10 @@ in <em>forStatement</em>()</div>
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>forStatement</em>()</div>
-<p>Again, we look for a semicolon to see if the clause has been omitted. The last
-clause is the increment.</p>
+<p><font papago-translate="translated">다시 한 번, 우리는 그 절이 생략되었는지 확인하기 위해 세미콜론을 찾습니다.</font><font papago-translate="translated"> 마지막 조항은 증가입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    consume(SEMICOLON, "Expect ';' after loop condition.");
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>forStatement</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>forStatement</em>()에서</font></font></div>
 <pre class="insert" translate="no">
-
     <span class="t">Expr</span> <span class="i">increment</span> = <span class="k">null</span>;
     <span class="k">if</span> (!<span class="i">check</span>(<span class="i">RIGHT_PAREN</span>)) {
       <span class="i">increment</span> = <span class="i">expression</span>();
@@ -687,31 +462,23 @@ in <em>forStatement</em>()</div>
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>forStatement</em>()</div>
-<p>It’s similar to the condition clause except this one is terminated by the
-closing parenthesis. All that remains is the <span name="body">body</span>.</p>
-<aside name="body">
-<p>Is it just me or does that sound morbid? “All that remained<span class="ellipse"> . . . </span>was the <em>body</em>”.</p>
+<p><font papago-translate="translated">조건 조항과 유사하지만, 이 조항은 종결 괄호로 종료됩니다.</font><font papago-translate="translated"> 남은 것은<span name="body"> 몸</span>뿐입니다.</font></p>
+<aside name="body" style="top: 12253px;">
+<p><font papago-translate="translated">저만 그런 건가요, 아니면 병적으로 들리는 건가요?</font><font papago-translate="translated"> 남은 것은<em> 몸</em>뿐<span class="ellipse"></span>이었습니다.</font></p>
 </aside>
 <div class="codehilite"><pre class="insert-before" translate="no">    consume(RIGHT_PAREN, "Expect ')' after for clauses.");
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>forStatement</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>forStatement</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="t">Stmt</span> <span class="i">body</span> = <span class="i">statement</span>();
 
     <span class="k">return</span> <span class="i">body</span>;
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>forStatement</em>()</div>
-<p>We’ve parsed all of the various pieces of the <code translate="no">for</code> loop and the resulting AST
-nodes are sitting in a handful of Java local variables. This is where the
-desugaring comes in. We take those and use them to synthesize syntax tree nodes
-that express the semantics of the <code translate="no">for</code> loop, like the hand-desugared example I
-showed you earlier.</p>
-<p>The code is a little simpler if we work backward, so we start with the increment
-clause.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 모든 다양한 조각들을 분석했습니다 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 루프와 결과적으로 생성된 AST 노드는 몇 가지 Java 로컬 변수에 포함되어 있습니다.</font><font papago-translate="translated"> 여기서 탈당근이 등장합니다.</font><font papago-translate="translated"> 우리는 그것들을 가져와서 의미론을 표현하는 구문 트리 노드를 합성하는 데 사용합니다 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 루프, 앞서 보여드린 손으로 만든 예시처럼.</font></font></p>
+<p><font papago-translate="translated">코드는 거꾸로 작업하면 조금 더 간단하므로 증분 절부터 시작합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    Stmt body = statement();
 
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>forStatement</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>forStatement</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">if</span> (<span class="i">increment</span> != <span class="k">null</span>) {
       <span class="i">body</span> = <span class="k">new</span> <span class="t">Stmt</span>.<span class="t">Block</span>(
           <span class="t">Arrays</span>.<span class="i">asList</span>(
@@ -722,26 +489,20 @@ in <em>forStatement</em>()</div>
 </pre><pre class="insert-after" translate="no">    return body;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>forStatement</em>()</div>
-<p>The increment, if there is one, executes after the body in each iteration of the
-loop. We do that by replacing the body with a little block that contains the
-original body followed by an expression statement that evaluates the increment.</p>
+<p><font papago-translate="translated">증분이 하나 있는 경우, 루프의 각 반복에서 본문 이후에 실행됩니다.</font><font papago-translate="translated"> 우리는 원래의 신체를 포함하는 작은 블록으로 신체를 교체한 후, 증가를 평가하는 표현문을 사용하여 이를 수행합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    }
 
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>forStatement</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>forStatement</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">if</span> (<span class="i">condition</span> == <span class="k">null</span>) <span class="i">condition</span> = <span class="k">new</span> <span class="t">Expr</span>.<span class="t">Literal</span>(<span class="k">true</span>);
     <span class="i">body</span> = <span class="k">new</span> <span class="t">Stmt</span>.<span class="t">While</span>(<span class="i">condition</span>, <span class="i">body</span>);
 
 </pre><pre class="insert-after" translate="no">    return body;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>forStatement</em>()</div>
-<p>Next, we take the condition and the body and build the loop using a primitive
-<code translate="no">while</code> loop. If the condition is omitted, we jam in <code translate="no">true</code> to make an infinite
-loop.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다음으로, 우리는 조건과 신체를 취하고 원시적인 방법을 사용하여 루프를 만듭니다 </font></font><code translate="no">while</code><font papago-translate="splitted"><font papago-translate="translated"> 루프. 조건이 생략되면, 우리는 참여합니다 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated"> 무한 루프를 만들기 위해.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    body = new Stmt.While(condition, body);
 
-</pre><div class="source-file"><em>lox/Parser.java</em><br/>
-in <em>forStatement</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">lox/Parser.java</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>forStatement</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">if</span> (<span class="i">initializer</span> != <span class="k">null</span>) {
       <span class="i">body</span> = <span class="k">new</span> <span class="t">Stmt</span>.<span class="t">Block</span>(<span class="t">Arrays</span>.<span class="i">asList</span>(<span class="i">initializer</span>, <span class="i">body</span>));
     }
@@ -749,15 +510,9 @@ in <em>forStatement</em>()</div>
 </pre><pre class="insert-after" translate="no">    return body;
 </pre></div>
 <div class="source-file-narrow"><em>lox/Parser.java</em>, in <em>forStatement</em>()</div>
-<p>Finally, if there is an initializer, it runs once before the entire loop. We do
-that by, again, replacing the whole statement with a block that runs the
-initializer and then executes the loop.</p>
-<p>That’s it. Our interpreter now supports C-style <code translate="no">for</code> loops and we didn’t have
-to touch the Interpreter class at all. Since we desugared to nodes the
-interpreter already knows how to visit, there is no more work to do.</p>
-<p>Finally, Lox is powerful enough to entertain us, at least for a few minutes.
-Here’s a tiny program to print the first 21 elements in the Fibonacci
-sequence:</p>
+<p><font papago-translate="translated">마지막으로, 초기화 장치가 있으면 전체 루프 앞에서 한 번 실행됩니다.</font><font papago-translate="translated"> 우리는 다시 전체 문장을 초기화기를 실행한 다음 루프를 실행하는 블록으로 대체함으로써 이를 수행합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그게 다입니다.</font><font papago-translate="translated"> 우리의 통역사는 이제 C-스타일을 지원합니다 </font></font><code translate="no">for</code><font papago-translate="splitted"><font papago-translate="translated"> 루프와 인터프리터 클래스를 전혀 터치할 필요가 없었습니다.</font><font papago-translate="translated"> 우리는 이미 노드를 무시하고 통역사가 방문하는 방법을 알고 있기 때문에 더 이상 할 일이 없습니다.</font></font></p>
+<p><font papago-translate="translated">마지막으로, Lox는 적어도 몇 분 동안 우리를 즐겁게 해줄 만큼 강력합니다.</font><font papago-translate="translated"> 피보나치 수열의 첫 21개 요소를 인쇄하는 작은 프로그램을 소개합니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">a</span> = <span class="n">0</span>;
 <span class="k">var</span> <span class="i">temp</span>;
 
@@ -768,81 +523,40 @@ sequence:</p>
 }
 </pre></div>
 <div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+<h2><a href="https://youhogeon-meritz.github.io/control-flow.html#challenges" id="challenges"><font papago-translate="translated">과제들</font></a></h2>
 <ol>
 <li>
-<p>A few chapters from now, when Lox supports first-class functions and dynamic
-dispatch, we technically won’t <em>need</em> branching statements built into the
-language. Show how conditional execution can be implemented in terms of
-those. Name a language that uses this technique for its control flow.</p>
+<p><font papago-translate="translated">지금부터 몇 장 후, Lox가 일류 함수와 동적 디스패치를 지원할 때, 우리는 기술적으로 언어에 내장된 분기문이<em> 필요</em>하지 않을 것입니다.</font><font papago-translate="translated"> 조건부 실행이 어떻게 구현될 수 있는지 보여줍니다.</font><font papago-translate="translated"> 제어 흐름을 위해 이 기법을 사용하는 언어의 이름을 말하세요.</font></p>
 </li>
 <li>
-<p>Likewise, looping can be implemented using those same tools, provided our
-interpreter supports an important optimization. What is it, and why is it
-necessary? Name a language that uses this technique for iteration.</p>
+<p><font papago-translate="translated">마찬가지로, 우리의 인터프리터가 중요한 최적화를 지원하는 경우 동일한 도구를 사용하여 루프를 구현할 수 있습니다.</font><font papago-translate="translated"> 그것은 무엇이며 왜 필요합니까?</font><font papago-translate="translated"> 이 기법을 반복에 사용하는 언어의 이름을 말하세요.</font></p>
 </li>
 <li>
-<p>Unlike Lox, most other C-style languages also support <code translate="no">break</code> and <code translate="no">continue</code>
-statements inside loops. Add support for <code translate="no">break</code> statements.</p>
-<p>The syntax is a <code translate="no">break</code> keyword followed by a semicolon. It should be a
-syntax error to have a <code translate="no">break</code> statement appear outside of any enclosing
-loop. At runtime, a <code translate="no">break</code> statement causes execution to jump to the end of
-the nearest enclosing loop and proceeds from there. Note that the <code translate="no">break</code>
-may be nested inside other blocks and <code translate="no">if</code> statements that also need to be
-exited.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">Lox와 달리 대부분의 다른 C 스타일 언어도 다음을 지원합니다 </font></font><code translate="no">break</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">continue</code><font papago-translate="splitted"><font papago-translate="translated"> 루프 내부 문장.</font><font papago-translate="translated"> 지원 추가 </font></font><code translate="no">break</code><font papago-translate="splitted"><font papago-translate="translated"> 진술들.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">구문은 </font></font><code translate="no">break</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드 뒤에 세미콜론이 붙습니다.</font><font papago-translate="translated"> 구문 오류가 있어야 합니다 </font></font><code translate="no">break</code><font papago-translate="splitted"><font papago-translate="translated"> 문은 모든 둘러싸는 루프 외부에 나타납니다.</font><font papago-translate="translated"> 실행 시, a </font></font><code translate="no">break</code><font papago-translate="splitted"><font papago-translate="translated"> 문은 실행을 가장 가까운 둘러싸 루프의 끝으로 이동시키고 거기서부터 진행합니다.</font><font papago-translate="translated"> 참고로 </font></font><code translate="no">break</code><font papago-translate="splitted"><font papago-translate="translated"> 다른 블록 내부에 중첩될 수 있습니다 </font></font><code translate="no">if</code><font papago-translate="splitted"><font papago-translate="translated"> 또한 종료해야 하는 진술.</font></font></p>
 </li>
 </ol>
 </div>
 <div class="design-note">
-<h2><a href="#design-note" id="design-note">Design Note: Spoonfuls of Syntactic Sugar</a></h2>
-<p>When you design your own language, you choose how much syntactic sugar to pour
-into the grammar. Do you make an unsweetened health food where each semantic
-operation maps to a single syntactic unit, or some decadent dessert where every
-bit of behavior can be expressed ten different ways? Successful languages
-inhabit all points along this continuum.</p>
-<p>On the extreme acrid end are those with ruthlessly minimal syntax like Lisp,
-Forth, and Smalltalk. Lispers famously claim their language “has no syntax”,
-while Smalltalkers proudly show that you can fit the entire grammar on an index
-card. This tribe has the philosophy that the <em>language</em> doesn’t need syntactic
-sugar. Instead, the minimal syntax and semantics it provides are powerful enough
-to let library code be as expressive as if it were part of the language itself.</p>
-<p>Near these are languages like C, Lua, and Go. They aim for simplicity and
-clarity over minimalism. Some, like Go, deliberately eschew both syntactic sugar
-and the kind of syntactic extensibility of the previous category. They want the
-syntax to get out of the way of the semantics, so they focus on keeping both the
-grammar and libraries simple. Code should be obvious more than beautiful.</p>
-<p>Somewhere in the middle you have languages like Java, C#, and Python. Eventually
-you reach Ruby, C++, Perl, and D<span class="em">—</span>languages which have stuffed so much syntax
-into their grammar, they are running out of punctuation characters on the
-keyboard.</p>
-<p>To some degree, location on the spectrum correlates with age. It’s relatively
-easy to add bits of syntactic sugar in later releases. New syntax is a crowd
-pleaser, and it’s less likely to break existing programs than mucking with the
-semantics. Once added, you can never take it away, so languages tend to sweeten
-with time. One of the main benefits of creating a new language from scratch is
-it gives you an opportunity to scrape off those accumulated layers of frosting
-and start over.</p>
-<p>Syntactic sugar has a bad rap among the PL intelligentsia. There’s a real fetish
-for minimalism in that crowd. There is some justification for that. Poorly
-designed, unneeded syntax raises the cognitive load without adding enough
-expressiveness to carry its weight. Since there is always pressure to cram new
-features into the language, it takes discipline and a focus on simplicity to
-avoid bloat. Once you add some syntax, you’re stuck with it, so it’s smart to be
-parsimonious.</p>
-<p>At the same time, most successful languages do have fairly complex grammars, at
-least by the time they are widely used. Programmers spend a ton of time in their
-language of choice, and a few niceties here and there really can improve the
-comfort and efficiency of their work.</p>
-<p>Striking the right balance<span class="em">—</span>choosing the right level of sweetness for your
-language<span class="em">—</span>relies on your own sense of taste.</p>
+<h2><a href="https://youhogeon-meritz.github.io/control-flow.html#design-note" id="design-note"><font papago-translate="translated">디자인 노트: 구문 설탕 한 스푼</font></a></h2>
+<p><font papago-translate="translated">자신만의 언어를 설계할 때 문법에 얼마나 많은 구문 설탕을 따를지 선택합니다.</font><font papago-translate="translated"> 각 의미 연산이 하나의 구문 단위로 매핑되는 무가당 건강식품을 만드나요, 아니면 모든 행동의 모든 부분이 열 가지 다른 방식으로 표현될 수 있는 퇴폐적인 디저트를 만드나요?</font><font papago-translate="translated"> 성공적인 언어들은 이 연속체를 따라 모든 지점에 존재합니다.</font></p>
+<p><font papago-translate="translated">극단적으로 매서운 끝에는 리스프, 포스, 스몰토크와 같이 무자비하게 최소한의 구문을 가진 사람들이 있습니다.</font><font papago-translate="translated"> 리스퍼스는 자신들의 언어가 "구문법이 없다"고 주장하는 것으로 유명하지만, 스몰토커는 인덱스 카드에 전체 문법을 맞출 수 있다는 것을 자랑스럽게 보여줍니다.</font><font papago-translate="translated"> 이 부족은<em> 언어</em>에 구문 설탕이 필요하지 않다는 철학을 가지고 있습니다.</font><font papago-translate="translated"> 대신, 라이브러리 코드가 제공하는 최소한의 구문과 의미는 마치 언어 자체의 일부처럼 표현력을 발휘할 수 있을 만큼 강력합니다.</font></p>
+<p><font papago-translate="translated">이 근처에는 C, Lua, Go와 같은 언어들이 있습니다.</font><font papago-translate="translated"> 그들은 미니멀리즘보다 단순함과 명확함을 목표로 합니다.</font><font papago-translate="translated"> Go와 같은 일부 사람들은 의도적으로 구문 설탕과 이전 범주의 구문 확장성을 모두 피합니다.</font><font papago-translate="translated"> 문법과 라이브러리를 단순하게 유지하는 데 중점을 두기 위해 구문이 의미론에서 벗어나길 원합니다.</font><font papago-translate="translated"> 코드는 아름답기보다는 분명해야 합니다.</font></p>
+<p><font papago-translate="translated">중간 어딘가에는 Java, C#, Python과 같은 언어가 있습니다.</font><font papago-translate="translated"> 결국 Ruby, C++, Perl, D 언어에 도달하게 됩니다. 이 언어들은 문법에 구문을 너무 많이 포함하고 있어서<span class="em"></span> 키보드의 구두점 문자가 부족해지고 있습니다.</font></p>
+<p><font papago-translate="translated">스펙트럼의 위치는 어느 정도 나이와 상관관계가 있습니다.</font><font papago-translate="translated"> 이후 릴리스에서는 구문 설탕을 약간 추가하는 것이 비교적 쉽습니다.</font><font papago-translate="translated"> 새로운 구문은 군중을 즐겁게 하며, 의미론을 무시하는 것보다 기존 프로그램을 깨뜨릴 가능성이 적습니다.</font><font papago-translate="translated"> 한 번 추가되면 절대 빼앗을 수 없기 때문에 언어는 시간이 지남에 따라 달콤해지는 경향이 있습니다.</font><font papago-translate="translated"> 새로운 언어를 처음부터 창조하는 주요 이점 중 하나는 쌓인 프로스팅 층을 긁어내고 다시 시작할 수 있는 기회를 제공한다는 점입니다.</font></p>
+<p><font papago-translate="translated">통사당은 PL 지식인들 사이에서 나쁜 랩을 가지고 있습니다.</font><font papago-translate="translated"> 그 군중 속에는 미니멀리즘에 대한 진정한 페티시가 있습니다.</font><font papago-translate="translated"> 그럴 만한 이유가 있습니다.</font><font papago-translate="translated"> 제대로 설계되지 않은 불필요한 구문은 그 무게를 지탱할 만큼 충분한 표현력을 추가하지 않고도 인지 부하를 증가시킵니다.</font><font papago-translate="translated"> 항상 새로운 기능을 언어에 주입해야 한다는 압박이 있기 때문에, 부종을 피하기 위해서는 규율과 단순성에 중점을 두어야 합니다.</font><font papago-translate="translated"> 구문을 추가하면 구문에 집착하게 되므로 간결하게 표현하는 것이 현명합니다.</font></p>
+<p><font papago-translate="translated">동시에 대부분의 성공적인 언어는 적어도 널리 사용될 때까지는 상당히 복잡한 문법을 가지고 있습니다.</font><font papago-translate="translated"> 프로그래머들은 자신들이 선택한 언어로 많은 시간을 보내며, 여기저기서 몇 가지 친절함을 통해 작업의 편안함과 효율성을 향상시킬 수 있습니다.</font></p>
+<p><font papago-translate="translated">적절한 균형을 맞추는 것, 즉 당신의 언어에 맞는 적절한 단맛을 선택하는 것은<span class="em"></span><span class="em"></span> 당신의 취향에 달려 있습니다.</font></p>
 </div>
 <footer>
-<a class="next" href="functions.html">
-  Next Chapter: “Functions” →
-</a>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+<a class="next" href="https://youhogeon-meritz.github.io/functions.html"><font papago-translate="translated"> 다음 장: "함수" → </font></a><font papago-translate="splitted"><font papago-translate="translated"> 로버트 니스트롬이 수작업으로 제작한 -<a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE"> © 2015 ~ 2021</a></font></font>
 </footer>
-</img></img></article>
+</article>
 </div>
-</body>
-</html>
+
+
+<div id="papagoTooltip" margin="5">
+        <h1 id="tooltipTitle">원문</h1>
+        <p id="tooltipText"></p>
+      </div>
+      </body></html>

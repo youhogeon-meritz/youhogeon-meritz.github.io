@@ -1,132 +1,94 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-787f552c-6718-484c-b178-f9f373e2860f@mhtml.blink" />
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>Types of Values · Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/style.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
-<script src="jquery-3.4.1.min.js"></script>
-<script src="script.js"></script>
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+
+<!-- Google analytics -->
+
+</head>
 <body id="top">
 <!-- <div class="scrim"></div> -->
 <nav class="wide">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="contents">
-<h3><a href="#top">Types of Values<small>18</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/types-of-values.html#top"><font papago-translate="splitted"><font papago-translate="translated">가치 유형</font></font><small>18</small></a></h3>
 <ul>
-<li><a href="#tagged-unions"><small>18.1</small> Tagged Unions</a></li>
-<li><a href="#lox-values-and-c-values"><small>18.2</small> Lox Values and C Values</a></li>
-<li><a href="#dynamically-typed-numbers"><small>18.3</small> Dynamically Typed Numbers</a></li>
-<li><a href="#two-new-types"><small>18.4</small> Two New Types</a></li>
+<li><a href="https://youhogeon-meritz.github.io/types-of-values.html#tagged-unions"><small>18.1</small><font papago-translate="splitted"><font papago-translate="translated"> 태그된 노조</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/types-of-values.html#lox-values-and-c-values"><small>18.2</small><font papago-translate="splitted"><font papago-translate="translated"> Lox 값 및 C 값</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/types-of-values.html#dynamically-typed-numbers"><small>18.3</small><font papago-translate="splitted"><font papago-translate="translated"> 동적으로 입력된 숫자</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/types-of-values.html#two-new-types"><small>18.4</small><font papago-translate="splitted"><font papago-translate="translated"> 두 가지 새로운 유형</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/types-of-values.html#challenges"><font papago-translate="translated">과제들</font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="compiling-expressions.html" title="Compiling Expressions">← Previous</a>
-<a href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑ Up</a>
-<a class="right" href="strings.html" title="Strings">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/compiling-expressions.html" title="표현식 컴파일하기" papago-attr-id="1"><font papago-translate="translated">← 이전</font></a>
+<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="바이트코드 가상 머신" papago-attr-id="2"><font papago-translate="translated">↑ 위로</font></a>
+<a class="right" href="https://youhogeon-meritz.github.io/strings.html" title="줄들" papago-attr-id="3"><font papago-translate="translated">다음 →</font></a>
 </div> </div>
 </nav>
 <nav class="narrow">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
-<a class="prev" href="compiling-expressions.html" title="Compiling Expressions">←</a>
-<a class="next" href="strings.html" title="Strings">→</a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
+<a class="prev" href="https://youhogeon-meritz.github.io/compiling-expressions.html" title="Compiling Expressions">←</a>
+<a class="next" href="https://youhogeon-meritz.github.io/strings.html" title="Strings">→</a>
 </nav>
 <div class="page">
 <div class="nav-wrapper">
 <nav class="floating">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="expandable">
-<h3><a href="#top">Types of Values<small>18</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/types-of-values.html#top"><font papago-translate="splitted"><font papago-translate="translated">가치 유형</font></font><small>18</small></a></h3>
 <ul>
-<li><a href="#tagged-unions"><small>18.1</small> Tagged Unions</a></li>
-<li><a href="#lox-values-and-c-values"><small>18.2</small> Lox Values and C Values</a></li>
-<li><a href="#dynamically-typed-numbers"><small>18.3</small> Dynamically Typed Numbers</a></li>
-<li><a href="#two-new-types"><small>18.4</small> Two New Types</a></li>
+<li><a href="https://youhogeon-meritz.github.io/types-of-values.html#tagged-unions"><small>18.1</small><font papago-translate="splitted"><font papago-translate="translated"> 태그된 노조</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/types-of-values.html#lox-values-and-c-values"><small>18.2</small><font papago-translate="splitted"><font papago-translate="translated"> Lox 값 및 C 값</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/types-of-values.html#dynamically-typed-numbers"><small>18.3</small><font papago-translate="splitted"><font papago-translate="translated"> 동적으로 입력된 숫자</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/types-of-values.html#two-new-types"><small>18.4</small><font papago-translate="splitted"><font papago-translate="translated"> 두 가지 새로운 유형</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/types-of-values.html#challenges">Challenges</a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="compiling-expressions.html" title="Compiling Expressions">← Previous</a>
-<a href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑ Up</a>
-<a class="right" href="strings.html" title="Strings">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/compiling-expressions.html" title="Compiling Expressions">←&nbsp;Previous</a>
+<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑&nbsp;Up</a>
+<a class="right" href="https://youhogeon-meritz.github.io/strings.html" title="Strings">Next&nbsp;→</a>
 </div> </div>
 <a id="expand-nav">≡</a>
 </nav>
 </div>
 <article class="chapter">
 <div class="number">18</div>
-<h1>Types of Values</h1>
+<h1><font papago-translate="translated">가치 유형</font></h1>
 <blockquote>
-<p>When you are a Bear of Very Little Brain, and you Think of Things, you find
-sometimes that a Thing which seemed very Thingish inside you is quite
-different when it gets out into the open and has other people looking at it.</p>
+<p><font papago-translate="translated">당신이 아주 작은 뇌의 곰이고 사물을 생각할 때, 때때로 당신 안에 매우 사물처럼 보였던 어떤 사물이 밖으로 나가서 다른 사람들이 그것을 바라보게 되면 완전히 달라진다는 것을 발견하게 됩니다.</font></p>
 <p><cite>A. A. Milne, <em>Winnie-the-Pooh</em></cite></p>
 </blockquote>
-<p>The past few chapters were huge, packed full of complex techniques and pages of
-code. In this chapter, there’s only one new concept to learn and a scattering of
-straightforward code. You’ve earned a respite.</p>
-<p>Lox is <span name="unityped">dynamically</span> typed. A single variable can
-hold a Boolean, number, or string at different points in time. At least, that’s
-the idea. Right now, in clox, all values are numbers. By the end of the chapter,
-it will also support Booleans and <code translate="no">nil</code>. While those aren’t super interesting,
-they force us to figure out how our value representation can dynamically handle
-different types.</p>
-<aside name="unityped">
-<p>There is a third category next to statically typed and dynamically typed:
-<strong>unityped</strong>. In that paradigm, all variables have a single type, usually a
-machine register integer. Unityped languages aren’t common today, but some
-Forths and BCPL, the language that inspired C, worked like this.</p>
-<p>As of this moment, clox is unityped.</p>
+<p><font papago-translate="translated">지난 몇 장의 장은 복잡한 기법과 코드 페이지로 가득 찬 거대한 장이었습니다.</font><font papago-translate="translated" class=""> 이 장에서는 배워야 할 새로운 개념과 간단한 코드의 분산이 하나뿐입니다.</font><font papago-translate="translated"> 휴식을 취하셨습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">Lox는<span name="unityped"> 동적</span>으로 입력됩니다.</font><font papago-translate="translated"> 단일 변수는 서로 다른 시점에 부울, 숫자 또는 문자열을 저장할 수 있습니다.</font><font papago-translate="translated"> 적어도 그 아이디어는 그렇습니다.</font><font papago-translate="translated"> 현재 clox에서는 모든 값이 숫자입니다.</font><font papago-translate="translated"> 이 장이 끝날 때쯤이면, 그것은 또한 부울리안을 지원할 것입니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">. 그다지 흥미롭지는 않지만, 우리의 가치 표현이 다양한 유형을 동적으로 처리할 수 있는 방법을 찾아야 합니다.</font></font></p>
+<aside name="unityped" style="top: 544px;">
+<p><font papago-translate="translated">정적으로 입력되고 동적으로 입력되는 세 번째 범주<strong>가 있습니다: unityped입니다.</strong></font><font papago-translate="translated"> 그 패러다임에서는 모든 변수가 단일 유형, 보통 기계 레지스터 정수를 갖습니다.</font><font papago-translate="translated"> 유니티프 언어는 오늘날 흔하지 않지만, C에 영감을 준 언어인 Fors와 BCPL은 이렇게 작동했습니다.</font></p>
+<p><font papago-translate="translated">현재 시점에서 clox는 통일되어 있습니다.</font></p>
 </aside>
-<h2><a href="#tagged-unions" id="tagged-unions"><small>18 . 1</small>Tagged Unions</a></h2>
-<p>The nice thing about working in C is that we can build our data structures from
-the raw bits up. The bad thing is that we <em>have</em> to do that. C doesn’t give you
-much for free at compile time and even less at runtime. As far as C is
-concerned, the universe is an undifferentiated array of bytes. It’s up to us to
-decide how many of those bytes to use and what they mean.</p>
-<p>In order to choose a value representation, we need to answer two key questions:</p>
+<h2><a href="https://youhogeon-meritz.github.io/types-of-values.html#tagged-unions" id="tagged-unions"><small><font papago-translate="translated">18 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">태그된 노조</font></font></a></h2>
+<p><font papago-translate="translated">C에서 일하는 것의 좋은 점은 원시 비트업에서 데이터 구조를 구축할 수 있다는 것입니다.</font><font papago-translate="translated"> 나쁜 점은 우리가 그렇게 해야<em> 한다는</em> 것입니다.</font><font papago-translate="translated"> C는 컴파일 시간에는 무료로 많은 것을 제공하지 않으며 런타임에는 더 적게 제공합니다.</font><font papago-translate="translated"> C에 관한 한, 우주는 미분화되지 않은 바이트 배열입니다.</font><font papago-translate="translated"> 그 바이트 중 몇 개를 사용할지 그리고 그것들이 무엇을 의미하는지는 우리에게 달려 있습니다.</font></p>
+<p><font papago-translate="translated">가치 표현을 선택하려면 두 가지 주요 질문에 답해야 합니다:</font></p>
 <ol>
 <li>
-<p><strong>How do we represent the type of a value?</strong> If you try to, say, multiply a
-number by <code translate="no">true</code>, we need to detect that error at runtime and report it. In
-order to do that, we need to be able to tell what a value’s type is.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><strong>값의 유형을 어떻게 표현하나요?</strong></font><font papago-translate="translated"> 예를 들어 숫자에 다음을 곱하려고 하면 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated">, 런타임에 해당 오류를 감지하고 보고해야 합니다.</font><font papago-translate="translated"> 그러기 위해서는 가치의 유형을 구분할 수 있어야 합니다.</font></font></p>
 </li>
 <li>
-<p><strong>How do we store the value itself?</strong> We need to not only be able to tell
-that three is a number, but that it’s different from the number four. I
-know, seems obvious, right? But we’re operating at a level where it’s good
-to spell these things out.</p>
+<p><font papago-translate="translated"><strong>가치 자체를 어떻게 저장하나요?</strong></font><font papago-translate="translated"> 우리는 3이 숫자일 뿐만 아니라 숫자 4와 다르다는 것을 알 수 있어야 합니다.</font><font papago-translate="translated"> 알겠어요, 당연한 것 같지 않나요?</font><font papago-translate="translated"> 하지만 우리는 이러한 것들을 철자하기 좋은 수준에서 운영하고 있습니다.</font></p>
 </li>
 </ol>
-<p>Since we’re not just designing this language but building it ourselves, when
-answering these two questions we also have to keep in mind the implementer’s
-eternal quest: to do it <em>efficiently</em>.</p>
-<p>Language hackers over the years have come up with a variety of clever ways to
-pack the above information into as few bits as possible. For now, we’ll start
-with the simplest, classic solution: a <strong>tagged union</strong>. A value contains two
-parts: a type “tag”, and a payload for the actual value. To store the value’s
-type, we define an enum for each kind of value the VM supports.</p>
+<p><font papago-translate="translated">우리는 이 언어를 단순히 설계하는 것이 아니라 직접 만들고 있기 때문에, 이 두 가지 질문에 답할 때 구현자의 영원한 탐구인<em> 효율</em>적으로 수행하는 것도 염두에 두어야 합니다.</font></p>
+<p><font papago-translate="translated">수년에 걸쳐 언어 해커들은 위의 정보를 가능한 한 적은 비트로 압축할 수 있는 다양한 영리한 방법을 고안해냈습니다.</font><font papago-translate="translated"> 지금은<strong> 가장</strong> 간단하고 고전적인 해결책인<strong> 태그가 달린 조합</strong>부터 시작하겠습니다.</font><font papago-translate="translated"> 값에는 두 부분이 포함됩니다: "태그" 유형과 실제 값에 대한 페이로드입니다.</font><font papago-translate="translated"> 값의 유형을 저장하기 위해 VM이 지원하는 각 종류의 값에 대한 열거형을 정의합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#include "common.h"
 
-</pre><div class="source-file"><em>value.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">가치.h</font></em></div>
 <pre class="insert" translate="no"><span class="k">typedef</span> <span class="k">enum</span> {
   <span class="a">VAL_BOOL</span>,
   <span class="a">VAL_NIL</span>,<span name="user-types"> </span>
@@ -136,43 +98,23 @@ type, we define an enum for each kind of value the VM supports.</p>
 </pre><pre class="insert-after" translate="no">typedef double Value;
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em></div>
-<aside name="user-types">
-<p>The cases here cover each kind of value that has <em>built-in support in the VM</em>.
-When we get to adding classes to the language, each class the user defines
-doesn’t need its own entry in this enum. As far as the VM is concerned, every
-instance of a class is the same type: “instance”.</p>
-<p>In other words, this is the VM’s notion of “type”, not the user’s.</p>
+<aside name="user-types" style="top: 1511px;">
+<p><font papago-translate="translated" class="">여기서의 사례들은 VM<em>에 내장된 지원</em>을 제공하는 각 종류의 가치를 다룹니다.</font><font papago-translate="translated" class=""> 언어에 클래스를 추가할 때, 사용자가 정의한 각 클래스는 이 항목에 고유한 항목이 필요하지 않습니다.</font><font papago-translate="translated"> VM에 관한 한, 클래스의 모든 인스턴스는 동일한 유형입니다:</font><font papago-translate="translated"> "instance"</font></p>
+<p><font papago-translate="translated">다시 말해, 이것은 사용자의 개념이 아니라 VM의 "유형" 개념입니다.</font></p>
 </aside>
-<p>For now, we have only a couple of cases, but this will grow as we add strings,
-functions, and classes to clox. In addition to the type, we also need to store
-the data for the value<span class="em">—</span>the <code translate="no">double</code> for a number, <code translate="no">true</code> or <code translate="no">false</code> for a
-Boolean. We could define a struct with fields for each possible type.</p><img alt="A struct with two fields laid next to each other in memory." src="image/types-of-values/struct.png">
-<p>But this is a waste of memory. A value can’t simultaneously be both a number and
-a Boolean. So at any point in time, only one of those fields will be used. C
-lets you optimize this by defining a <span name="sum">union</span>. A union
-looks like a struct except that all of its fields overlap in memory.</p>
-<aside name="sum">
-<p>If you’re familiar with a language in the ML family, structs and unions in C
-roughly mirror the difference between product and sum types, between tuples
-and algebraic data types.</p>
-</aside><img alt="A union with two fields overlapping in memory." src="image/types-of-values/union.png">
-<p>The size of a union is the size of its largest field. Since the fields all reuse
-the same bits, you have to be very careful when working with them. If you store
-data using one field and then access it using <span name="reinterpret">another</span>, you will reinterpret what the underlying bits
-mean.</p>
-<aside name="reinterpret">
-<p>Using a union to interpret bits as different types is the quintessence of C. It
-opens up a number of clever optimizations and lets you slice and dice each byte
-of memory in ways that memory-safe languages disallow. But it is also wildly
-unsafe and will happily saw your fingers off if you don’t watch out.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">현재로서는 몇 가지 사례만 있지만, 문자열, 함수, 클래스를 clox에 추가하면 상황이 커질 것입니다.</font><font papago-translate="translated"> 유형 외에도 가치에 대한 데이터도 저장해야 합니다<span class="em"></span>— </font></font><code translate="no">double</code><font papago-translate="splitted"><font papago-translate="translated"> 숫자에 대해, </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated"> 부울의 경우.</font><font papago-translate="translated"> 가능한 각 유형에 대해 필드가 있는 구조를 정의할 수 있습니다.</font></font></p><img alt="A struct with two fields laid next to each other in memory." src="https://youhogeon-meritz.github.io/image/types-of-values/struct.png">
+<p><font papago-translate="translated">하지만 이것은 기억의 낭비입니다.</font><font papago-translate="translated"> 값은 숫자와 불리언 둘 다 될 수 없습니다.</font><font papago-translate="translated"> 따라서 언제든지 해당 필드 중 하나만 사용됩니다.</font><font papago-translate="translated"> C를 사용하면<span name="sum"> 결합</span>을 정의하여 이를 최적화할 수 있습니다.</font><font papago-translate="translated"> 조합은 모든 분야가 메모리에서 겹치는 것을 제외하고는 구조물처럼 보입니다.</font></p>
+<aside name="sum" style="top: 1940px;">
+<p><font papago-translate="translated">ML 계열의 언어에 익숙하다면, C의 구조와 결합은 곱셈 유형과 합집합 유형, 튜플과 대수적 데이터 유형 간의 차이를 대략적으로 반영합니다.</font></p>
+</aside><img alt="A union with two fields overlapping in memory." src="https://youhogeon-meritz.github.io/image/types-of-values/union.png">
+<p><font papago-translate="translated">노조의 규모는 가장 큰 분야의 규모입니다.</font><font papago-translate="translated"> 필드가 모두 동일한 비트를 재사용하기 때문에 작업할 때 매우 주의해야 합니다.</font><font papago-translate="translated"> 한 필드를 사용하여 데이터를 저장한 다음<span name="reinterpret"> 다른</span> 필드를 사용하여 액세스하면 기본 비트의 의미를 재해석할 수 있습니다.</font></p>
+<aside name="reinterpret" style="top: 2229.5px;">
+<p><font papago-translate="translated">비트를 다양한 유형으로 해석하기 위해 유니언을 사용하는 것이 C의 정수입니다.</font><font papago-translate="translated"> 여러 가지 영리한 최적화를 열어주고 메모리 안전 언어가 허용하지 않는 방식으로 각 바이트의 메모리를 슬라이스하고 주사위를 던질 수 있게 해줍니다.</font><font papago-translate="translated"> 하지만 그것은 또한 매우 안전하지 않으며 조심하지 않으면 기꺼이 손가락을 떼게 될 것입니다.</font></p>
 </aside>
-<p>As the name “tagged union” implies, our new value representation combines these
-two parts into a single struct.</p>
+<p><font papago-translate="translated">"태그된 결합"이라는 이름에서 알 수 있듯이, 우리의 새로운 가치 표현은 이 두 부분을 하나의 구조로 결합합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">} ValueType;
 
-</pre><div class="source-file"><em>value.h</em><br/>
-add after enum <em>ValueType</em><br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum<em> ValueType</em> 후에 추가</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no"><span class="k">typedef</span> <span class="k">struct</span> {
   <span class="t">ValueType</span> <span class="i">type</span>;
   <span class="k">union</span> {
@@ -181,156 +123,89 @@ replace 1 line</div>
   } <span class="i">as</span>;<span name="as"> </span>
 } <span class="t">Value</span>;
 </pre><pre class="insert-after" translate="no">
-
 typedef struct {
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em>, add after enum <em>ValueType</em>, replace 1 line</div>
-<p>There’s a field for the type tag, and then a second field containing the union
-of all of the underlying values. On a 64-bit machine with a typical C compiler,
-the layout looks like this:</p>
-<aside name="as">
-<p>A smart language hacker gave me the idea to use “as” for the name of the union
-field because it reads nicely, almost like a cast, when you pull the various
-values out.</p>
-</aside><img alt="The full value struct, with the type and as fields next to each other in memory." src="image/types-of-values/value.png">
-<p>The four-byte type tag comes first, then the union. Most architectures prefer
-values be aligned to their size. Since the union field contains an eight-byte
-double, the compiler adds four bytes of <span name="pad">padding</span> after
-the type field to keep that double on the nearest eight-byte boundary. That
-means we’re effectively spending eight bytes on the type tag, which only needs
-to represent a number between zero and three. We could stuff the enum in a
-smaller size, but all that would do is increase the padding.</p>
-<aside name="pad">
-<p>We could move the tag field <em>after</em> the union, but that doesn’t help much
-either. Whenever we create an array of Values<span class="em">—</span>which is where most of our
-memory usage for Values will be<span class="em">—</span>the C compiler will insert that same padding
-<em>between</em> each Value to keep the doubles aligned.</p>
+<p><font papago-translate="translated">타입 태그 필드가 있고, 그 다음에 모든 기본 값의 합집합을 포함하는 두 번째 필드가 있습니다.</font><font papago-translate="translated"> 일반적인 C 컴파일러가 있는 64비트 컴퓨터의 레이아웃은 다음과 같습니다:</font></p>
+<aside name="as" style="top: 2512.5px;">
+<p><font papago-translate="translated">똑똑한 언어 해커가 조합 필드의 이름에 "as"를 사용하는 아이디어를 준 이유는 다양한 값을 꺼낼 때 마치 깁스처럼 잘 읽히기 때문입니다.</font></p>
+</aside><img alt="The full value struct, with the type and as fields next to each other in memory." src="https://youhogeon-meritz.github.io/image/types-of-values/value.png">
+<p><font papago-translate="translated">4바이트 타입 태그가 먼저 나오고, 그 다음에 유니언이 나옵니다.</font><font papago-translate="translated"> 대부분의 아키텍처는 값이 크기에 맞게 정렬되는 것을 선호합니다.</font><font papago-translate="translated"> 유니언 필드에는 8바이트의 더블이 포함되어 있으므로 컴파일러는 타입 필드 뒤에<span name="pad"> 4</span>바이트<span name="pad">의 패딩을</span> 추가하여 해당 더블을 가장 가까운 8바이트 경계에 유지합니다.</font><font papago-translate="translated"> 즉, 우리는 0에서 3 사이의 숫자만 나타내기만 하면 되는 타입 태그에 사실상 8바이트를 쓰고 있다는 뜻입니다.</font><font papago-translate="translated"> 열거형을 더 작은 크기로 채울 수 있지만 패딩만 늘릴 수 있습니다.</font></p>
+<aside name="pad" style="top: 2958px;">
+<p><font papago-translate="translated">노조<em>가 결성된 후</em> 태그 필드를 이동할 수도 있지만, 그것도 큰 도움이 되지 않습니다.</font><font papago-translate="translated"> 우리가 Values의 메모리 사용량의 대부분이 여기에 해당하는 Values 배열을 만들 때마다, C 컴파일러는 각 Valu<em>es 사이에</em> 동일한 패딩을 삽입하여 더블<span class="em"></span><span class="em"></span>을 정렬 상태로 유지합니다.</font></p>
 </aside>
-<p>So our Values are 16 bytes, which seems a little large. We’ll improve it
-<a href="optimization.html">later</a>. In the meantime, they’re still small enough to store on
-the C stack and pass around by value. Lox’s semantics allow that because the
-only types we support so far are <strong>immutable</strong>. If we pass a copy of a Value
-containing the number three to some function, we don’t need to worry about the
-caller seeing modifications to the value. You can’t “modify” three. It’s three
-forever.</p>
-<h2><a href="#lox-values-and-c-values" id="lox-values-and-c-values"><small>18 . 2</small>Lox Values and C Values</a></h2>
-<p>That’s our new value representation, but we aren’t done. Right now, the rest of
-clox assumes Value is an alias for <code translate="no">double</code>. We have code that does a straight C
-cast from one to the other. That code is all broken now. So sad.</p>
-<p>With our new representation, a Value can <em>contain</em> a double, but it’s not
-<em>equivalent</em> to it. There is a mandatory conversion step to get from one to the
-other. We need to go through the code and insert those conversions to get clox
-working again.</p>
-<p>We’ll implement these conversions as a handful of macros, one for each type and
-operation. First, to promote a native C value to a clox Value:</p>
+<p><font papago-translate="translated">그래서 우리의 값은 16바이트로, 조금 큰 것 같습니다.</font><font papago-translate="translated"> <a href="https://youhogeon-meritz.github.io/optimization.html">나중에</a> 개선하겠습니다.</font><font papago-translate="translated"> 그 동안에도 여전히 C 스택에 저장하고 값에 따라 이동할 수 있을 만큼 작습니다.</font><font papago-translate="translated"> Lox의 의미론은 지금까지 우리가 지지하는 유일한 유형이<strong> 불변</strong>이기 때문에 이를 가능하게 합니다.</font><font papago-translate="translated"> 숫자 3이 포함된 값의 복사본을 함수에 전달하면 발신자가 값을 수정하는 것을 걱정할 필요가 없습니다.</font><font papago-translate="translated"> 세 가지를 "수정"할 수는 없습니다.</font><font papago-translate="translated"> 영원히 셋입니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/types-of-values.html#lox-values-and-c-values" id="lox-values-and-c-values"><small><font papago-translate="translated">18 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">Lox 값 및 C 값</font></font></a></h2>
+<p><font papago-translate="splitted"><font papago-translate="translated">그것이 우리의 새로운 가치 표현이지만, 아직 끝나지 않았습니다.</font><font papago-translate="translated"> 현재 나머지 clox는 Value가 다음과 같은 별칭이라고 가정합니다 </font></font><code translate="no">double</code><font papago-translate="splitted"><font papago-translate="translated">. 우리는 하나에서 다른 하나로 직선 C 캐스트를 수행하는 코드를 가지고 있습니다.</font><font papago-translate="translated"> 그 코드는 이제 모두 고장났습니다.</font><font papago-translate="translated"> 너무 슬프다.</font></font></p>
+<p><font papago-translate="translated">우리의 새로운 표현에서는 a 값<em>이</em> 두 배<em>를 포함</em>할 수 있지만, 그것과<em> 동등</em>하지는 않습니다.</font><font papago-translate="translated"> 하나에서 다른 하나로 이동하려면 필수 변환 단계가 있습니다.</font><font papago-translate="translated"> 코드를 살펴보고 변환을 삽입하여 clox를 다시 작동시켜야 합니다.</font></p>
+<p><font papago-translate="translated">이러한 변환은 각 유형과 작업에 대해 하나씩 몇 가지 매크로로 구현할 것입니다.</font><font papago-translate="translated"> 먼저, 네이티브 C 값을 clox 값으로 승격합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">} Value;
-</pre><div class="source-file"><em>value.h</em><br/>
-add after struct <em>Value</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em></em>구조 값 뒤에 추가</font></font></div>
 <pre class="insert" translate="no">
-
 <span class="a">#define BOOL_VAL(value)   ((Value){VAL_BOOL, {.boolean = value}})</span>
 <span class="a">#define NIL_VAL           ((Value){VAL_NIL, {.number = 0}})</span>
 <span class="a">#define NUMBER_VAL(value) ((Value){VAL_NUMBER, {.number = value}})</span>
 </pre><pre class="insert-after" translate="no">
-
 typedef struct {
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em>, add after struct <em>Value</em></div>
-<p>Each one of these takes a C value of the appropriate type and produces a Value
-that has the correct type tag and contains the underlying value. This hoists
-statically typed values up into clox’s dynamically typed universe. In order to
-<em>do</em> anything with a Value, though, we need to unpack it and get the C value
-back out.</p>
+<p><font papago-translate="translated">이들 각각은 적절한 유형의 C 값을 취하여 올바른 유형 태그를 가지고 기본 값을 포함하는 값을 생성합니다.</font><font papago-translate="translated"> 이것은 정적으로 입력된 값들을 클록스의 동적으로 입력된 우주로 호스팅합니다.</font><font papago-translate="translated"> 하지만 어떤 값을 사용하려면 값을 풀고 C 값을 다시<em></em> 꺼내야 합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">} Value;
-</pre><div class="source-file"><em>value.h</em><br/>
-add after struct <em>Value</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em></em>구조 값 뒤에 추가</font></font></div>
 <pre class="insert" translate="no">
-
 <span class="a">#define AS_BOOL(value)    ((value).as.boolean)</span>
 <span class="a">#define AS_NUMBER(value)  ((value).as.number)</span>
 </pre><pre class="insert-after" translate="no">
-
 #define BOOL_VAL(value)   ((Value){VAL_BOOL, {.boolean = value}})
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em>, add after struct <em>Value</em></div>
-<aside name="as-null">
-<p>There’s no <code translate="no">AS_NIL</code> macro because there is only one <code translate="no">nil</code> value, so a Value with
-type <code translate="no">VAL_NIL</code> doesn’t carry any extra data.</p>
+<aside name="as-null" style="top: 4130px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">없습니다 </font></font><code translate="no">AS_NIL</code><font papago-translate="splitted"><font papago-translate="translated"> 매크로는 하나뿐이기 때문에 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 값, 따라서 유형이 있는 값 </font></font><code translate="no">VAL_NIL</code><font papago-translate="splitted"><font papago-translate="translated"> 추가 데이터를 전송하지 않습니다.</font></font></p>
 </aside>
-<p><span name="as-null">These</span> macros go in the opposite direction. Given a
-Value of the right type, they unwrap it and return the corresponding raw C
-value. The “right type” part is important! These macros directly access the
-union fields. If we were to do something like:</p>
+<p><font papago-translate="translated">이 매크로들<span name="as-null">은</span> 반대 방향으로 진행됩니다<span name="as-null">.</span></font><font papago-translate="translated"> 적절한 유형의 값이 주어지면, 그 값을 풀고 해당 원시 C 값을 반환합니다.</font><font papago-translate="translated"> "올바른 활자" 부분이 중요합니다!</font><font papago-translate="translated"> 이 매크로들은 조합 필드에 직접 접근합니다.</font><font papago-translate="translated"> 만약 우리가 이런 일을 한다면:</font></p>
 <div class="codehilite"><pre translate="no"><span class="t">Value</span> <span class="i">value</span> = <span class="a">BOOL_VAL</span>(<span class="k">true</span>);
 <span class="t">double</span> <span class="i">number</span> = <span class="a">AS_NUMBER</span>(<span class="i">value</span>);
 </pre></div>
-<p>Then we may open a smoldering portal to the Shadow Realm. It’s not safe to use
-any of the <code translate="no">AS_</code> macros unless we know the Value contains the appropriate type.
-To that end, we define a last few macros to check a Value’s type.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그런 다음 그림자 영역으로 가는 스모킹 포털을 열 수 있습니다.</font><font papago-translate="translated"> 다음 중 하나를 사용하는 것은 안전하지 않습니다 </font></font><code translate="no">AS_</code><font papago-translate="splitted"><font papago-translate="translated"> 값에 적절한 유형이 포함되어 있다는 것을 알지 못하는 한 매크로.</font><font papago-translate="translated"> 이를 위해 마지막 몇 가지 매크로를 정의하여 Value의 유형을 확인합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">} Value;
-</pre><div class="source-file"><em>value.h</em><br/>
-add after struct <em>Value</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em></em>구조 값 뒤에 추가</font></font></div>
 <pre class="insert" translate="no">
-
 <span class="a">#define IS_BOOL(value)    ((value).type == VAL_BOOL)</span>
 <span class="a">#define IS_NIL(value)     ((value).type == VAL_NIL)</span>
 <span class="a">#define IS_NUMBER(value)  ((value).type == VAL_NUMBER)</span>
 </pre><pre class="insert-after" translate="no">
-
 #define AS_BOOL(value)    ((value).as.boolean)
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em>, add after struct <em>Value</em></div>
-<p><span name="universe">These</span> macros return <code translate="no">true</code> if the Value has that
-type. Any time we call one of the <code translate="no">AS_</code> macros, we need to guard it behind a
-call to one of these first. With these eight macros, we can now safely shuttle
-data between Lox’s dynamic world and C’s static one.</p>
-<aside name="universe"><img alt="The earthly C firmament with the Lox heavens above." src="image/types-of-values/universe.png"/>
-<p>The <code translate="no">_VAL</code> macros lift a C value into the heavens. The <code translate="no">AS_</code> macros bring it
-back down.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 매크로<span name="universe"></span>들은 반환됩니다 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated"> 가치에 그런 유형이 있는 경우.</font><font papago-translate="translated"> 우리가 전화할 때마다 </font></font><code translate="no">AS_</code><font papago-translate="splitted"><font papago-translate="translated"> 매크로는 먼저 이 중 하나에 대한 호출 뒤에 보호해야 합니다.</font><font papago-translate="translated"> 이 여덟 개의 매크로를 사용하면 이제 Lox의 동적 세계와 C의 정적 세계 사이에서 데이터를 안전하게 교환할 수 있습니다.</font></font></p>
+<aside name="universe" style="top: 4598px;"><img alt="The earthly C firmament with the Lox heavens above." src="https://youhogeon-meritz.github.io/image/types-of-values/universe.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">그 </font></font><code translate="no">_VAL</code><font papago-translate="splitted"><font papago-translate="translated"> 매크로는 C 값을 하늘로 들어 올립니다.</font><font papago-translate="translated"> 그 </font></font><code translate="no">AS_</code><font papago-translate="splitted"><font papago-translate="translated"> 매크로는 그것을 다시 다운시킵니다.</font></font></p>
 </aside>
-<h2><a href="#dynamically-typed-numbers" id="dynamically-typed-numbers"><small>18 . 3</small>Dynamically Typed Numbers</a></h2>
-<p>We’ve got our value representation and the tools to convert to and from it. All
-that’s left to get clox running again is to grind through the code and fix every
-place where data moves across that boundary. This is one of those sections of
-the book that isn’t exactly mind-blowing, but I promised I’d show you every
-single line of code, so here we are.</p>
-<p>The first values we create are the constants generated when we compile number
-literals. After we convert the lexeme to a C double, we simply wrap it in a
-Value before storing it in the constant table.</p>
+<h2><a href="https://youhogeon-meritz.github.io/types-of-values.html#dynamically-typed-numbers" id="dynamically-typed-numbers"><small><font papago-translate="translated">18 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">동적으로 입력된 숫자</font></font></a></h2>
+<p><font papago-translate="translated">우리는 가치 표현과 그것을 변환하고 변환할 수 있는 도구들을 가지고 있습니다.</font><font papago-translate="translated"> 클록스를 다시 실행하기 위해 남은 것은 코드를 꼼꼼히 살펴보고 데이터가 경계를 넘어 이동하는 모든 장소를 수정하는 것뿐입니다.</font><font papago-translate="translated"> 이 부분은 책의 모든 코드 라인을 보여드리겠다고 약속드린 부분 중 하나입니다.</font></p>
+<p><font papago-translate="translated">우리가 처음으로 만드는 값은 숫자 리터럴을 컴파일할 때 생성되는 상수입니다.</font><font papago-translate="translated"> 어휘를 C 더블로 변환한 후, 상수 테이블에 저장하기 전에 단순히 값으로 감싸면 됩니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  double value = strtod(parser.previous.start, NULL);
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>number</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>숫자</em> ()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  <span class="i">emitConstant</span>(<span class="a">NUMBER_VAL</span>(<span class="i">value</span>));
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>number</em>(), replace 1 line</div>
-<p>Over in the runtime, we have a function to print values.</p>
+<p><font papago-translate="translated">런타임에는 값을 출력하는 기능이 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">void printValue(Value value) {
-</pre><div class="source-file"><em>value.c</em><br/>
-in <em>printValue</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>printValue</em>()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no"> <span class="i">printf</span>(<span class="s">"%g"</span>, <span class="a">AS_NUMBER</span>(<span class="i">value</span>));
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>value.c</em>, in <em>printValue</em>(), replace 1 line</div>
-<p>Right before we send the Value to <code translate="no">printf()</code>, we unwrap it and extract the
-double value. We’ll revisit this function shortly to add the other types, but
-let’s get our existing code working first.</p>
-<h3><a href="#unary-negation-and-runtime-errors" id="unary-negation-and-runtime-errors"><small>18 . 3 . 1</small>Unary negation and runtime errors</a></h3>
-<p>The next simplest operation is unary negation. It pops a value off the stack,
-negates it, and pushes the result. Now that we have other types of values, we
-can’t assume the operand is a number anymore. The user could just as well do:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">가치를 보내기 직전에 </font></font><code translate="no">printf()</code><font papago-translate="splitted"><font papago-translate="translated">, 우리는 그것을 풀고 이중 값을 추출합니다.</font><font papago-translate="translated"> 곧 이 함수를 다시 검토하여 다른 유형을 추가하겠지만, 먼저 기존 코드를 작동시키겠습니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/types-of-values.html#unary-negation-and-runtime-errors" id="unary-negation-and-runtime-errors"><small><font papago-translate="translated">18 . 3 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">단항 부정 및 런타임 오류</font></font></a></h3>
+<p><font papago-translate="translated">다음으로 간단한 연산은 단항 부정입니다.</font><font papago-translate="translated"> 스택에서 값을 터뜨려 무효화하고 결과를 밀어냅니다.</font><font papago-translate="translated"> 이제 다른 유형의 값이 있으므로 피연산자가 더 이상 숫자라고 가정할 수 없습니다.</font><font papago-translate="translated"> 사용자도 똑같이 할 수 있습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">print</span> -<span class="k">false</span>; <span class="c">// Uh...</span>
 </pre></div>
-<p>We need to handle that gracefully, which means it’s time for <em>runtime errors</em>.
-Before performing an operation that requires a certain type, we need to make
-sure the Value <em>is</em> that type.</p>
-<p>For unary negation, the check looks like this:</p>
+<p><font papago-translate="translated">우리는 그것을 우아하게 처리해야 합니다.<em> 즉, 실행 시간 오류</em>가 발생할 때입니다.</font><font papago-translate="translated"> 특정 유형이 필요한 작업을 수행하기 전에 값<em>이</em> 해당 유형<em>인지</em> 확인해야 합니다.</font></p>
+<p><font papago-translate="translated">단항 부정의 경우, 수표는 다음과 같습니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      case OP_DIVIDE:   BINARY_OP(/); break;
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OP_NEGATE</span>:
         <span class="k">if</span> (!<span class="a">IS_NUMBER</span>(<span class="i">peek</span>(<span class="n">0</span>))) {
           <span class="i">runtimeError</span>(<span class="s">"Operand must be a number."</span>);
@@ -341,37 +216,23 @@ replace 1 line</div>
 </pre><pre class="insert-after" translate="no">      case OP_RETURN: {
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>(), replace 1 line</div>
-<p>First, we check to see if the Value on top of the stack is a number. If it’s
-not, we report the runtime error and <span name="halt">stop</span> the
-interpreter. Otherwise, we keep going. Only after this validation do we unwrap
-the operand, negate it, wrap the result and push it.</p>
-<aside name="halt">
-<p>Lox’s approach to error-handling is rather<span class="ellipse"> . . . </span><em>spare</em>. All errors are fatal and
-immediately halt the interpreter. There’s no way for user code to recover from
-an error. If Lox were a real language, this is one of the first things I would
-remedy.</p>
+<p><font papago-translate="translated">먼저 스택 상단의 값이 숫자인지 확인합니다.</font><font papago-translate="translated"> 그렇지 않으면 런타임 오류를 보고하고 인터프리터<span name="halt">를 중지</span>합니다.</font><font papago-translate="translated"> 그렇지 않으면 계속 진행합니다.</font><font papago-translate="translated"> 이 검증이 끝난 후에야 피연산자를 풀고, 무효화하고, 결과를 감싸고, 밀어 넣습니다.</font></p>
+<aside name="halt" style="top: 5974px;">
+<p><font papago-translate="translated">오류 처리에 대한 Lox의 접근 방식은 다소<em> 여유롭습니다</em><span class="ellipse">.</span></font><font papago-translate="translated"> 모든 오류는 치명적이며 즉시 통역사를 멈추게 합니다.</font><font papago-translate="translated"> 사용자 코드가 오류를 복구할 방법이 없습니다.</font><font papago-translate="translated"> Lox가 실제 언어라면, 이것이 제가 가장 먼저 해결해야 할 문제 중 하나입니다.</font></p>
 </aside>
-<p>To access the Value, we use a new little function.</p>
-<div class="codehilite"><div class="source-file"><em>vm.c</em><br/>
-add after <em>pop</em>()</div>
+<p><font papago-translate="translated">가치에 접근하려면 새로운 작은 함수를 사용합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>팝</em> () 후 추가</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">Value</span> <span class="i">peek</span>(<span class="t">int</span> <span class="i">distance</span>) {
   <span class="k">return</span> <span class="i">vm</span>.<span class="i">stackTop</span>[-<span class="n">1</span> - <span class="i">distance</span>];
 }
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, add after <em>pop</em>()</div>
-<p>It returns a Value from the stack but doesn’t <span name="peek">pop</span> it.
-The <code translate="no">distance</code> argument is how far down from the top of the stack to look: zero
-is the top, one is one slot down, etc.</p>
-<aside name="peek">
-<p>Why not just pop the operand and then validate it? We could do that. In later
-chapters, it will be important to leave operands on the stack to ensure the
-garbage collector can find them if a collection is triggered in the middle of
-the operation. I do the same thing here mostly out of habit.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">스택에서 값을 반환하지만<span name="peek"> 터지지</span>는 않습니다.</font><font papago-translate="translated"> 그 </font></font><code translate="no">distance</code><font papago-translate="splitted"><font papago-translate="translated"> 인수는 스택의 상단에서 얼마나 멀리 떨어져 있는지를 나타냅니다: 0은 상단이고, 1은 한 슬롯 아래에 있습니다.</font></font></p>
+<aside name="peek" style="top: 6202px;">
+<p><font papago-translate="translated">왜 피연산자를 터뜨린 다음 검증하지 않나요?</font><font papago-translate="translated"> 그렇게 할 수 있습니다.</font><font papago-translate="translated"> 이후 장에서는 작업 중간에 수집이 트리거된 경우 쓰레기 수집기가 피연산자를 찾을 수 있도록 스택에 피연산자를 남겨두는 것이 중요합니다.</font><font papago-translate="translated"> 저도 대부분 습관적으로 여기서 같은 일을 합니다.</font></p>
 </aside>
-<p>We report the runtime error using a new function that we’ll get a lot of mileage
-out of over the remainder of the book.</p>
-<div class="codehilite"><div class="source-file"><em>vm.c</em><br/>
-add after <em>resetStack</em>()</div>
+<p><font papago-translate="translated">우리는 책의 나머지 부분에서 많은 마일리지를 적립할 수 있는 새로운 함수를 사용하여 런타임 오류를 보고합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>리셋</em> 후 추가St<em>ack</em>()</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">runtimeError</span>(<span class="k">const</span> <span class="t">char</span>* <span class="i">format</span>, ...) {
   <span class="t">va_list</span> <span class="i">args</span>;
   <span class="i">va_start</span>(<span class="i">args</span>, <span class="i">format</span>);
@@ -386,62 +247,28 @@ add after <em>resetStack</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, add after <em>resetStack</em>()</div>
-<p>You’ve certainly <em>called</em> variadic functions<span class="em">—</span>ones that take a varying number
-of arguments<span class="em">—</span>in C before: <code translate="no">printf()</code> is one. But you may not have <em>defined</em>
-your own. This book isn’t a C <span name="tutorial">tutorial</span>, so I’ll
-skim over it here, but basically the <code translate="no">...</code> and <code translate="no">va_list</code> stuff let us pass an
-arbitrary number of arguments to <code translate="no">runtimeError()</code>. It forwards those on to
-<code translate="no">vfprintf()</code>, which is the flavor of <code translate="no">printf()</code> that takes an explicit
-<code translate="no">va_list</code>.</p>
-<aside name="tutorial">
-<p>If you are looking for a C tutorial, I love <em><a href="https://www.cs.princeton.edu/~bwk/cbook.html">The C Programming Language</a></em>,
-usually called “K&amp;R” in honor of its authors. It’s not entirely up to date, but
-the quality of the writing more than makes up for it.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated"><span class="em"></span><span class="em"></span>이전에 C에서 다양한 인수를 사용하는 변분 함수<em>를 확실히 호출한</em> 적이 있습니다: </font></font><code translate="no">printf()</code><font papago-translate="splitted"><font papago-translate="translated"> 하나입니다.</font><font papago-translate="translated"> 하지만 당신은 자신의<em> 것을 정의</em>하지 않았을 수도 있습니다.</font><font papago-translate="translated"> 이 책은 C<span name="tutorial"> 튜토리얼</span>이 아니기 때문에 여기서 대충 훑어보겠습니다. 하지만 기본적으로 </font></font><code translate="no">...</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">va_list</code><font papago-translate="splitted"><font papago-translate="translated"> 임의의 수의 인수를 다음과 같이 전달하겠습니다 </font></font><code translate="no">runtimeError()</code><font papago-translate="splitted"><font papago-translate="translated">. 다음으로 전달합니다 </font></font><code translate="no">vfprintf()</code><font papago-translate="splitted"><font papago-translate="translated">, 어떤 맛인가요 </font></font><code translate="no">printf()</code><font papago-translate="splitted"><font papago-translate="translated"> 명시적으로 설명해야 합니다 </font></font><code translate="no">va_list</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<aside name="tutorial" style="top: 6682px;">
+<p><font papago-translate="translated">C 튜토리얼을 찾고 계신다면, 저자를 기리기 위해 보통 "K&amp;R"이라고 불리는 C 프로그래밍<em><a href="https://www.cs.princeton.edu/~bwk/cbook.html"> 언어</a></em>를 좋아합니다.</font><font papago-translate="translated"> 완전히 최신 상태는 아니지만 글의 질이 그 이상을 보완합니다.</font></p>
 </aside>
-<p>Callers can pass a format string to <code translate="no">runtimeError()</code> followed by a number of
-arguments, just like they can when calling <code translate="no">printf()</code> directly. <code translate="no">runtimeError()</code>
-then formats and prints those arguments. We won’t take advantage of that in this
-chapter, but later chapters will produce formatted runtime error messages that
-contain other data.</p>
-<p>After we show the hopefully helpful error message, we tell the user which <span name="stack">line</span> of their code was being executed when the error
-occurred. Since we left the tokens behind in the compiler, we look up the line
-in the debug information compiled into the chunk. If our compiler did its job
-right, that corresponds to the line of source code that the bytecode was
-compiled from.</p>
-<p>We look into the chunk’s debug line array using the current bytecode instruction
-index <em>minus one</em>. That’s because the interpreter advances past each instruction
-before executing it. So, at the point that we call <code translate="no">runtimeError()</code>, the failed
-instruction is the previous one.</p>
-<aside name="stack">
-<p>Just showing the immediate line where the error occurred doesn’t provide much
-context. Better would be a full stack trace. But we don’t even have functions to
-call yet, so there is no call stack to trace.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">발신자는 다음에 형식 문자열을 전달할 수 있습니다 </font></font><code translate="no">runtimeError()</code><font papago-translate="splitted"><font papago-translate="translated"> 다음에는 전화할 때처럼 여러 가지 논쟁이 이어집니다 </font></font><code translate="no">printf()</code><font papago-translate="splitted"><font papago-translate="translated"> 직접적으로. </font></font><code translate="no">runtimeError()</code><font papago-translate="splitted"><font papago-translate="translated"> 그런 다음 이러한 인수를 형식화하고 인쇄합니다.</font><font papago-translate="translated"> 이 장에서는 이 점을 활용하지 않겠지만, 이후 장에서는 다른 데이터를 포함하는 형식화된 런타임 오류 메시지를 생성할 것입니다.</font></font></p>
+<p><font papago-translate="translated">도움이 되기를 바라는 오류 메시지를 보여준 후, 오류가 발생했을 때 사용자가 실행 중인 코드<span name="stack"> 라인</span>을 알려줍니다.</font><font papago-translate="translated"> 우리가 토큰을 컴파일러에 남겨두었기 때문에, 청크에 컴파일된 디버그 정보의 줄을 찾아봅니다.</font><font papago-translate="translated"> 컴파일러가 제대로 작동했다면 바이트코드가 컴파일된 소스 코드 라인에 해당합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">현재 바이트코드 명령 인덱스<em>에서 1을 뺀</em> 값을 사용하여 청크의 디버그 라인 배열을 살펴봅니다.</font><font papago-translate="translated"> 그것은 통역사가 각 지시 사항을 실행하기 전에 앞서 나가기 때문입니다.</font><font papago-translate="translated"> 그래서 우리가 부르는 지점에서 </font></font><code translate="no">runtimeError()</code><font papago-translate="splitted"><font papago-translate="translated">, 실패한 명령어는 이전 명령어입니다.</font></font></p>
+<aside name="stack" style="top: 6946px;">
+<p><font papago-translate="translated">오류가 발생한 바로 그 선을 보여주는 것만으로는 큰 맥락을 제공하지 못합니다.</font><font papago-translate="translated"> 전체 스택 추적이 더 좋습니다.</font><font papago-translate="translated"> 하지만 아직 호출할 함수조차 없어서 추적할 호출 스택이 없습니다.</font></p>
 </aside>
-<p>In order to use <code translate="no">va_list</code> and the macros for working with it, we need to bring
-in a standard header.</p>
-<div class="codehilite"><div class="source-file"><em>vm.c</em><br/>
-add to top of file</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">사용하기 위해 </font></font><code translate="no">va_list</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 이를 처리하기 위한 매크로는 표준 헤더를 가져와야 합니다.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 파일 위에 추가</font></font></div>
 <pre class="insert" translate="no"><span class="a">#include &lt;stdarg.h&gt;</span>
 </pre><pre class="insert-after" translate="no">#include &lt;stdio.h&gt;
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, add to top of file</div>
-<p>With this, our VM can not only do the right thing when we negate numbers (like
-it used to before we broke it), but it also gracefully handles erroneous
-attempts to negate other types (which we don’t have yet, but still).</p>
-<h3><a href="#binary-arithmetic-operators" id="binary-arithmetic-operators"><small>18 . 3 . 2</small>Binary arithmetic operators</a></h3>
-<p>We have our runtime error machinery in place now, so fixing the binary operators
-is easier even though they’re more complex. We support four binary operators
-today: <code translate="no">+</code>, <code translate="no">-</code>, <code translate="no">*</code>, and <code translate="no">/</code>. The only difference between them is which
-underlying C operator they use. To minimize redundant code between the four
-operators, we wrapped up the commonality in a big preprocessor macro that takes
-the operator token as a parameter.</p>
-<p>That macro seemed like overkill a <a href="a-virtual-machine.html#binary-operators">few chapters ago</a>, but we get the benefit
-from it today. It lets us add the necessary type checking and conversions in one
-place.</p>
+<p><font papago-translate="translated">이를 통해 VM은 숫자를 무효화할 때 올바른 작업을 수행할 수 있을 뿐만 아니라 다른 유형(아직 없지만 여전히)을 무효화하려는 잘못된 시도도 우아하게 처리할 수 있습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/types-of-values.html#binary-arithmetic-operators" id="binary-arithmetic-operators"><small><font papago-translate="translated">18 . 3 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">이진 산술 연산자</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">현재 런타임 오류 기계가 설치되어 있으므로 이진 연산자를 더 복잡하더라도 수정하는 것이 더 쉽습니다.</font><font papago-translate="translated"> 오늘날 우리는 네 개의 이진 연산자를 지원합니다: </font></font><code translate="no">+</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">-</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">*</code><font papago-translate="splitted"><font papago-translate="translated">,그리고. </font></font><code translate="no">/</code><font papago-translate="splitted"><font papago-translate="translated">. 그들 사이의 유일한 차이점은 그들이 사용하는 기본 C 연산자입니다.</font><font papago-translate="translated"> 네 개의 연산자 간의 중복 코드를 최소화하기 위해, 우리는 연산자 토큰을 매개변수로 사용하는 큰 전처리 매크로로 공통성을 마무리했습니다.</font></font></p>
+<p><font papago-translate="translated">몇<a href="https://youhogeon-meritz.github.io/a-virtual-machine.html#binary-operators"> 장 전만 해도</a> 그 매크로는 과장된 것처럼 보였지만, 오늘날 우리는 그 혜택을 누리고 있습니다.</font><font papago-translate="translated"> 필요한 유형 확인 및 변환을 한 곳에 추가할 수 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define READ_CONSTANT() (vm.chunk-&gt;constants.values[READ_BYTE()])
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()<br/>
-replace 6 lines</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 6줄 교체</font></font></div>
 <pre class="insert" translate="no"><span class="a">#define BINARY_OP(valueType, op) \</span>
 <span class="a">    do { \</span>
 <span class="a">      if (!IS_NUMBER(peek(0)) || !IS_NUMBER(peek(1))) { \</span>
@@ -453,27 +280,16 @@ replace 6 lines</div>
 <span class="a">      push(valueType(a op b)); \</span>
 <span class="a">    } while (false)</span>
 </pre><pre class="insert-after" translate="no">
-
   for (;;) {
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>(), replace 6 lines</div>
-<p>Yeah, I realize that’s a monster of a macro. It’s not what I’d normally consider
-good C practice, but let’s roll with it. The changes are similar to what we did
-for unary negate. First, we check that the two operands are both numbers. If
-either isn’t, we report a runtime error and yank the ejection seat lever.</p>
-<p>If the operands are fine, we pop them both and unwrap them. Then we apply the
-given operator, wrap the result, and push it back on the stack. Note that we
-don’t wrap the result by directly using <code translate="no">NUMBER_VAL()</code>. Instead, the wrapper to
-use is passed in as a macro <span name="macro">parameter</span>. For our
-existing arithmetic operators, the result is a number, so we pass in the
-<code translate="no">NUMBER_VAL</code> macro.</p>
-<aside name="macro">
-<p>Did you know you can pass macros as parameters to macros? Now you do!</p>
+<p><font papago-translate="translated">네, 그건 정말 거대한 괴물이라는 걸 알아요.</font><font papago-translate="translated"> 평소에는 좋은 C 연습이라고 생각하지 않지만, 함께 해보겠습니다.</font><font papago-translate="translated"> 변경 사항은 우리가 단항 부정에 대해 했던 것과 유사합니다.</font><font papago-translate="translated"> 먼저, 두 피연산자가 모두 숫자인지 확인합니다.</font><font papago-translate="translated"> 둘 중 하나라도 그렇지 않으면 런타임 오류를 보고하고 배출 시트 레버를 당깁니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">피연산자가 정상이라면, 우리는 둘 다 터뜨려서 포장을 해제합니다.</font><font papago-translate="translated"> 그런 다음 주어진 연산자를 적용하고 결과를 포장한 다음 스택에 다시 밀어 넣습니다.</font><font papago-translate="translated"> 직접 사용하여 결과를 포장하지 않는다는 점에 유의하세요 </font></font><code translate="no">NUMBER_VAL()</code><font papago-translate="splitted"><font papago-translate="translated">. 대신 사용할 래퍼가 매크로<span name="macro"> 매개변수</span>로 전달됩니다.</font><font papago-translate="translated"> 기존 산술 연산자의 경우 결과는 숫자이므로 다음과 같이 전달합니다 </font></font><code translate="no">NUMBER_VAL</code><font papago-translate="splitted"><font papago-translate="translated"> 매크로.</font></font></p>
+<aside name="macro" style="top: 8230px;">
+<p><font papago-translate="translated">매크로를 매개변수로 전달할 수 있다는 것을 알고 계셨나요?</font><font papago-translate="translated"> 이제 그렇게 하세요!</font></p>
 </aside>
 <div class="codehilite"><pre class="insert-before" translate="no">      }
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()<br/>
-replace 4 lines</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 4줄 교체</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OP_ADD</span>:      <span class="a">BINARY_OP</span>(<span class="a">NUMBER_VAL</span>, +); <span class="k">break</span>;
       <span class="k">case</span> <span class="a">OP_SUBTRACT</span>: <span class="a">BINARY_OP</span>(<span class="a">NUMBER_VAL</span>, -); <span class="k">break</span>;
       <span class="k">case</span> <span class="a">OP_MULTIPLY</span>: <span class="a">BINARY_OP</span>(<span class="a">NUMBER_VAL</span>, *); <span class="k">break</span>;
@@ -481,76 +297,47 @@ replace 4 lines</div>
 </pre><pre class="insert-after" translate="no">      case OP_NEGATE:
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>(), replace 4 lines</div>
-<p>Soon, I’ll show you why we made the wrapping macro an argument.</p>
-<h2><a href="#two-new-types" id="two-new-types"><small>18 . 4</small>Two New Types</a></h2>
-<p>All of our existing clox code is back in working order. Finally, it’s time to
-add some new types. We’ve got a running numeric calculator that now does a
-number of pointless paranoid runtime type checks. We can represent other types
-internally, but there’s no way for a user’s program to ever create a Value of
-one of those types.</p>
-<p>Not until now, that is. We’ll start by adding compiler support for the three new
-literals: <code translate="no">true</code>, <code translate="no">false</code>, and <code translate="no">nil</code>. They’re all pretty simple, so we’ll do all
-three in a single batch.</p>
-<p>With number literals, we had to deal with the fact that there are billions of
-possible numeric values. We attended to that by storing the literal’s value in
-the chunk’s constant table and emitting a bytecode instruction that simply
-loaded that constant. We could do the same thing for the new types. We’d store,
-say, <code translate="no">true</code>, in the constant table, and use an <code translate="no">OP_CONSTANT</code> to read it out.</p>
-<p>But given that there are literally (heh) only three possible values we need to
-worry about with these new types, it’s gratuitous<span class="em">—</span>and <span name="small">slow!</span><span class="em">—</span>to waste a two-byte instruction and a constant
-table entry on them. Instead, we’ll define three dedicated instructions to push
-each of these literals on the stack.</p>
-<aside class="bottom" name="small">
-<p>I’m not kidding about dedicated operations for certain constant values being
-faster. A bytecode VM spends much of its execution time reading and decoding
-instructions. The fewer, simpler instructions you need for a given piece of
-behavior, the faster it goes. Short instructions dedicated to common operations
-are a classic optimization.</p>
-<p>For example, the Java bytecode instruction set has dedicated instructions for
-loading 0.0, 1.0, 2.0, and the integer values from -1 through 5. (This ends up
-being a vestigial optimization given that most mature JVMs now JIT-compile the
-bytecode to machine code before execution anyway.)</p>
+<p><font papago-translate="translated">곧, 왜 우리가 래핑 매크로를 논쟁거리로 삼았는지 보여드리겠습니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/types-of-values.html#two-new-types" id="two-new-types"><small><font papago-translate="translated">18 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">두 가지 새로운 유형</font></font></a></h2>
+<p><font papago-translate="translated">기존의 모든 clox 코드가 정상적으로 작동하고 있습니다.</font><font papago-translate="translated"> 마지막으로, 새로운 유형을 추가할 시간입니다.</font><font papago-translate="translated"> 우리는 이제 여러 가지 무의미한 편집증적 런타임 유형 검사를 수행하는 실행 중인 숫자 계산기를 가지고 있습니다.</font><font papago-translate="translated"> 내부적으로 다른 유형을 표현할 수는 있지만, 사용자의 프로그램이 이러한 유형 중 하나의 가치를 생성할 방법은 없습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">지금까지는 그렇지 않습니다.</font><font papago-translate="translated"> 먼저 세 가지 새로운 리터럴에 대한 컴파일러 지원을 추가하겠습니다: </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated">,그리고. </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">. 모두 매우 간단하므로 세 가지를 모두 한 번에 처리하겠습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">숫자 리터럴을 사용하면 수십억 개의 가능한 숫자 값이 있다는 사실을 처리해야 했습니다.</font><font papago-translate="translated"> 우리는 문자 그대로의 값을 청크의 상수 테이블에 저장하고 해당 상수를 단순히 로드하는 바이트코드 명령을 실행함으로써 이에 주목했습니다.</font><font papago-translate="translated"> 새로운 유형에 대해서도 동일한 작업을 수행할 수 있습니다.</font><font papago-translate="translated"> 우리는 저장할 것입니다, 예를 들어, </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated">, 상수 테이블에서, 그리고 </font></font><code translate="no">OP_CONSTANT</code><font papago-translate="splitted"><font papago-translate="translated"> 읽어보기.</font></font></p>
+<p><font papago-translate="translated">하지만 이 새로운 유형에 대해 걱정해야 할 가치가 문자 그대로 세 가지뿐이라는 점을 고려하면, 그것은 무상하고<span class="em"></span><span name="small"> 느립니다</span>!</font><font papago-translate="translated"><span class="em">-</span>2바이트 명령어와 상수 테이블 항목을 낭비합니다<span class="em">.</span></font><font papago-translate="translated"> 대신, 이러한 리터럴 각각을 스택에서 푸시하는 세 가지 전용 명령어를 정의하겠습니다.</font></p>
+<aside class="bottom" name="small" style="top: 8699px;">
+<p><font papago-translate="translated">특정 상수 값에 대한 전용 연산이 더 빠르다는 것은 농담이 아닙니다.</font><font papago-translate="translated"> 바이트코드 VM은 실행 시간의 대부분을 명령어 읽기 및 디코딩에 할애합니다.</font><font papago-translate="translated"> 주어진 행동에 필요한 지침이 적고 간단할수록 더 빨리 진행됩니다.</font><font papago-translate="translated"> 일반적인 작업에 전념하는 짧은 명령어는 고전적인 최적화입니다.</font></p>
+<p><font papago-translate="translated">예를 들어, Java 바이트코드 명령어 세트에는 0.0, 1.0, 2.0 및 -1에서 5까지의 정수 값을 로드하기 위한 전용 명령어가 있습니다. (대부분의 성숙한 JVM이 이제 바이트코드를 실행 전에 기계 코드로 JIT 컴파일하기 때문에 이는 결국 과거 최적화로 귀결됩니다.)</font></p>
 </aside>
 <div class="codehilite"><pre class="insert-before" translate="no">  OP_CONSTANT,
-</pre><div class="source-file"><em>chunk.h</em><br/>
-in enum <em>OpCode</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">청크.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum O<em>pCode</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="a">OP_NIL</span>,
   <span class="a">OP_TRUE</span>,
   <span class="a">OP_FALSE</span>,
 </pre><pre class="insert-after" translate="no">  OP_ADD,
 </pre></div>
 <div class="source-file-narrow"><em>chunk.h</em>, in enum <em>OpCode</em></div>
-<p>Our scanner already treats <code translate="no">true</code>, <code translate="no">false</code>, and <code translate="no">nil</code> as keywords, so we can
-skip right to the parser. With our table-based Pratt parser, we just need to
-slot parser functions into the rows associated with those keyword token types.
-We’ll use the same function in all three slots. Here:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">스캐너는 이미 다음을 처리합니다 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated">,그리고. </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 키워드로 바로 파서로 건너뛸 수 있습니다.</font><font papago-translate="translated"> 테이블 기반 프랫 파서를 사용하면 해당 키워드 토큰 유형과 관련된 행에 파서 함수를 슬롯하기만 하면 됩니다.</font><font papago-translate="translated"> 세 슬롯 모두에서 동일한 기능을 사용할 것입니다.</font><font papago-translate="translated"> 여기:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  [TOKEN_ELSE]          = {NULL,     NULL,   PREC_NONE},
-</pre><div class="source-file"><em>compiler.c</em><br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  [<span class="a">TOKEN_FALSE</span>]         = {<span class="i">literal</span>,  <span class="a">NULL</span>,   <span class="a">PREC_NONE</span>},
 </pre><pre class="insert-after" translate="no">  [TOKEN_FOR]           = {NULL,     NULL,   PREC_NONE},
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, replace 1 line</div>
-<p>Here:</p>
+<p><font papago-translate="translated" class="">여기:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  [TOKEN_THIS]          = {NULL,     NULL,   PREC_NONE},
-</pre><div class="source-file"><em>compiler.c</em><br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  [<span class="a">TOKEN_TRUE</span>]          = {<span class="i">literal</span>,  <span class="a">NULL</span>,   <span class="a">PREC_NONE</span>},
 </pre><pre class="insert-after" translate="no">  [TOKEN_VAR]           = {NULL,     NULL,   PREC_NONE},
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, replace 1 line</div>
-<p>And here:</p>
+<p><font papago-translate="translated">그리고 여기:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  [TOKEN_IF]            = {NULL,     NULL,   PREC_NONE},
-</pre><div class="source-file"><em>compiler.c</em><br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  [<span class="a">TOKEN_NIL</span>]           = {<span class="i">literal</span>,  <span class="a">NULL</span>,   <span class="a">PREC_NONE</span>},
 </pre><pre class="insert-after" translate="no">  [TOKEN_OR]            = {NULL,     NULL,   PREC_NONE},
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, replace 1 line</div>
-<p>When the parser encounters <code translate="no">false</code>, <code translate="no">nil</code>, or <code translate="no">true</code>, in prefix position, it
-calls this new parser function:</p>
-<div class="codehilite"><div class="source-file"><em>compiler.c</em><br/>
-add after <em>binary</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">파서가 만났을 때 </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated">, 또는 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated">, 접두사 위치에서는 이 새로운 파서 함수를 호출합니다:</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>이진</em> () 후에 추가</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">literal</span>() {
   <span class="k">switch</span> (<span class="i">parser</span>.<span class="i">previous</span>.<span class="i">type</span>) {
     <span class="k">case</span> <span class="a">TOKEN_FALSE</span>: <span class="i">emitByte</span>(<span class="a">OP_FALSE</span>); <span class="k">break</span>;
@@ -561,35 +348,26 @@ add after <em>binary</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after <em>binary</em>()</div>
-<p>Since <code translate="no">parsePrecedence()</code> has already consumed the keyword token, all we need to
-do is output the proper instruction. We <span name="switch">figure</span> that
-out based on the type of token we parsed. Our front end can now compile Boolean
-and nil literals to bytecode. Moving down the execution pipeline, we reach the
-interpreter.</p>
-<aside name="switch">
-<p>We could have used separate parser functions for each literal and saved
-ourselves a switch but that felt needlessly verbose to me. I think it’s mostly a
-matter of taste.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">부터 </font></font><code translate="no">parsePrecedence()</code><font papago-translate="splitted"><font papago-translate="translated"> 이미 키워드 토큰을 사용했습니다. 우리가 해야 할 일은 적절한 명령어를 출력하는 것뿐입니다.</font><font papago-translate="translated"> 우리는 우리가 분석한 토큰의 유형에 따라 그것을<span name="switch"> 계산</span>합니다.</font><font papago-translate="translated"> 이제 프론트엔드에서 Boolean 리터럴과 Nil 리터럴을 바이트코드로 컴파일할 수 있습니다.</font><font papago-translate="translated"> 실행 파이프라인을 따라 내려가면 통역사에게 도달합니다.</font></font></p>
+<aside name="switch" style="top: 9990px;">
+<p><font papago-translate="translated">각 리터럴마다 별도의 파서 함수를 사용하여 스위치를 저장할 수 있었지만, 저에게는 그것이 불필요하게 장황하게 느껴졌습니다.</font><font papago-translate="translated"> 대부분 취향의 문제라고 생각합니다.</font></p>
 </aside>
 <div class="codehilite"><pre class="insert-before" translate="no">      case OP_CONSTANT: {
         Value constant = READ_CONSTANT();
         push(constant);
         break;
       }
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OP_NIL</span>: <span class="i">push</span>(<span class="a">NIL_VAL</span>); <span class="k">break</span>;
       <span class="k">case</span> <span class="a">OP_TRUE</span>: <span class="i">push</span>(<span class="a">BOOL_VAL</span>(<span class="k">true</span>)); <span class="k">break</span>;
       <span class="k">case</span> <span class="a">OP_FALSE</span>: <span class="i">push</span>(<span class="a">BOOL_VAL</span>(<span class="k">false</span>)); <span class="k">break</span>;
 </pre><pre class="insert-after" translate="no">      case OP_ADD:      BINARY_OP(NUMBER_VAL, +); break;
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>()</div>
-<p>This is pretty self-explanatory. Each instruction summons the appropriate value
-and pushes it onto the stack. We shouldn’t forget our disassembler either.</p>
+<p><font papago-translate="translated">이것은 꽤 자명한 일입니다.</font><font papago-translate="translated"> 각 명령어는 적절한 값을 호출하여 스택에 밀어 넣습니다.</font><font papago-translate="translated"> 우리도 분해기를 잊어서는 안 됩니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    case OP_CONSTANT:
       return constantInstruction("OP_CONSTANT", chunk, offset);
-</pre><div class="source-file"><em>debug.c</em><br/>
-in <em>disassembleInstruction</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">debug.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>분해</em> 중 지침()</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OP_NIL</span>:
       <span class="k">return</span> <span class="i">simpleInstruction</span>(<span class="s">"OP_NIL"</span>, <span class="i">offset</span>);
     <span class="k">case</span> <span class="a">OP_TRUE</span>:
@@ -599,15 +377,12 @@ in <em>disassembleInstruction</em>()</div>
 </pre><pre class="insert-after" translate="no">    case OP_ADD:
 </pre></div>
 <div class="source-file-narrow"><em>debug.c</em>, in <em>disassembleInstruction</em>()</div>
-<p>With this in place, we can run this Earth-shattering program:</p>
+<p><font papago-translate="translated">이를 통해 지구를 뒤흔드는 프로그램을 실행할 수 있습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">true</span>
 </pre></div>
-<p>Except that when the interpreter tries to print the result, it blows up. We need
-to extend <code translate="no">printValue()</code> to handle the new types too:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다만, 통역사가 결과를 출력하려고 할 때는 폭발합니다.</font><font papago-translate="translated"> 우리는 확장할 필요가 있습니다 </font></font><code translate="no">printValue()</code><font papago-translate="splitted"><font papago-translate="translated"> 새로운 유형도 처리합니다:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">void printValue(Value value) {
-</pre><div class="source-file"><em>value.c</em><br/>
-in <em>printValue</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>printValue</em>()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  <span class="k">switch</span> (<span class="i">value</span>.<span class="i">type</span>) {
     <span class="k">case</span> <span class="a">VAL_BOOL</span>:
       <span class="i">printf</span>(<span class="a">AS_BOOL</span>(<span class="i">value</span>) ? <span class="s">"true"</span> : <span class="s">"false"</span>);
@@ -618,138 +393,93 @@ replace 1 line</div>
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>value.c</em>, in <em>printValue</em>(), replace 1 line</div>
-<p>There we go! Now we have some new types. They just aren’t very useful yet. Aside
-from the literals, you can’t really <em>do</em> anything with them. It will be a while
-before <code translate="no">nil</code> comes into play, but we can start putting Booleans to work in the
-logical operators.</p>
-<h3><a href="#logical-not-and-falsiness" id="logical-not-and-falsiness"><small>18 . 4 . 1</small>Logical not and falsiness</a></h3>
-<p>The simplest logical operator is our old exclamatory friend unary not.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">자, 여기 있습니다!</font><font papago-translate="translated"> 이제 새로운 유형이 몇 가지 있습니다.</font><font papago-translate="translated"> 아직 그다지 유용하지 않습니다.</font><font papago-translate="translated"> 리터럴 외에는 아무것도<em> 할</em> 수 없습니다.</font><font papago-translate="translated"> 시간이 좀 걸릴 것입니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 하지만 논리 연산자에서 불리언을 작동시키기 시작할 수 있습니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/types-of-values.html#logical-not-and-falsiness" id="logical-not-and-falsiness"><small><font papago-translate="translated">18 . 4 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">논리적 아님과 거짓</font></font></a></h3>
+<p><font papago-translate="translated">가장 간단한 논리적 연산자는 우리의 오랜 감탄사 친구 유니너리가 아닙니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">print</span> !<span class="k">true</span>; <span class="c">// "false"</span>
 </pre></div>
-<p>This new operation gets a new instruction.</p>
+<p><font papago-translate="translated">이 새로운 작업은 새로운 지침을 받습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  OP_DIVIDE,
-</pre><div class="source-file"><em>chunk.h</em><br/>
-in enum <em>OpCode</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">청크.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum O<em>pCode</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="a">OP_NOT</span>,
 </pre><pre class="insert-after" translate="no">  OP_NEGATE,
 </pre></div>
 <div class="source-file-narrow"><em>chunk.h</em>, in enum <em>OpCode</em></div>
-<p>We can reuse the <code translate="no">unary()</code> parser function we wrote for unary negation to
-compile a not expression. We just need to slot it into the parsing table.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">재사용할 수 있습니다 </font></font><code translate="no">unary()</code><font papago-translate="splitted"><font papago-translate="translated"> 우리는 not 식을 컴파일하기 위해 단항 부정을 위해 파서 함수를 작성했습니다.</font><font papago-translate="translated"> 파싱 테이블에 넣기만 하면 됩니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  [TOKEN_STAR]          = {NULL,     binary, PREC_FACTOR},
-</pre><div class="source-file"><em>compiler.c</em><br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  [<span class="a">TOKEN_BANG</span>]          = {<span class="i">unary</span>,    <span class="a">NULL</span>,   <span class="a">PREC_NONE</span>},
 </pre><pre class="insert-after" translate="no">  [TOKEN_BANG_EQUAL]    = {NULL,     NULL,   PREC_NONE},
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, replace 1 line</div>
-<p>Because I knew we were going to do this, the <code translate="no">unary()</code> function already has a
-switch on the token type to figure out which bytecode instruction to output. We
-merely add another case.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리가 이걸 할 줄 알았기 때문에 </font></font><code translate="no">unary()</code><font papago-translate="splitted"><font papago-translate="translated"> 함수는 이미 어떤 바이트코드 명령어를 출력할지 결정하기 위해 토큰 유형의 스위치를 사용하고 있습니다.</font><font papago-translate="translated"> 우리는 단지 다른 사례를 추가할 뿐입니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  switch (operatorType) {
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>unary</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>단항</em> ()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">TOKEN_BANG</span>: <span class="i">emitByte</span>(<span class="a">OP_NOT</span>); <span class="k">break</span>;
 </pre><pre class="insert-after" translate="no">    case TOKEN_MINUS: emitByte(OP_NEGATE); break;
     default: return; // Unreachable.
   }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>unary</em>()</div>
-<p>That’s it for the front end. Let’s head over to the VM and conjure this
-instruction into life.</p>
+<p><font papago-translate="translated">프런트 엔드는 여기까지입니다.</font><font papago-translate="translated"> VM으로 가서 이 지침을 생생하게 전달해 보겠습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      case OP_DIVIDE:   BINARY_OP(NUMBER_VAL, /); break;
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OP_NOT</span>:
         <span class="i">push</span>(<span class="a">BOOL_VAL</span>(<span class="i">isFalsey</span>(<span class="i">pop</span>())));
         <span class="k">break</span>;
 </pre><pre class="insert-after" translate="no">      case OP_NEGATE:
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>()</div>
-<p>Like our previous unary operator, it pops the one operand, performs the
-operation, and pushes the result. And, as we did there, we have to worry about
-dynamic typing. Taking the logical not of <code translate="no">true</code> is easy, but there’s nothing
-preventing an unruly programmer from writing something like this:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이전의 단항 연산자처럼 하나의 피연산자를 터뜨리고 연산을 수행한 다음 결과를 푸시합니다.</font><font papago-translate="translated"> 그리고 우리가 거기서 했던 것처럼, 우리는 동적 타이핑에 대해 걱정해야 합니다.</font><font papago-translate="translated"> 논리적으로 받아들이지 않기 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated"> 쉽지만, 제멋대로인 프로그래머가 이런 글을 쓰는 것을 막을 수 있는 것은 없습니다:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">print</span> !<span class="k">nil</span>;
 </pre></div>
-<p>For unary minus, we made it an error to negate anything that isn’t a <span name="negate">number</span>. But Lox, like most scripting languages, is more
-permissive when it comes to <code translate="no">!</code> and other contexts where a Boolean is expected.
-The rule for how other types are handled is called “falsiness”, and we implement
-it here:</p>
-<aside name="negate">
-<p>Now I can’t help but try to figure out what it would mean to negate other types
-of values. <code translate="no">nil</code> is probably its own negation, sort of like a weird pseudo-zero.
-Negating a string could, uh, reverse it?</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">단항 마이너스의 경우<span name="negate">, 숫자</span>가 아닌 것을 부정하는 것을 오류로 만들었습니다.</font><font papago-translate="translated"> 하지만 Lox는 대부분의 스크립팅 언어와 마찬가지로 더 관대합니다 </font></font><code translate="no">!</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 불리언이 예상되는 다른 상황들.</font><font papago-translate="translated"> 다른 유형이 처리되는 방식에 대한 규칙을 "허위"라고 하며, 여기서 이를 구현합니다:</font></font></p>
+<aside name="negate" style="top: 12086px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">이제 다른 유형의 값을 부정하는 것이 무엇을 의미하는지 알아보려고 노력하지 않을 수 없습니다. </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 아마도 그것 자체의 부정일 것입니다. 마치 이상한 의사 0처럼 말이죠.</font><font papago-translate="translated"> 문자열을 부정하면, 어, 되돌릴 수 있을까요?</font></font></p>
 </aside>
-<div class="codehilite"><div class="source-file"><em>vm.c</em><br/>
-add after <em>peek</em>()</div>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>엿보기</em> () 후 추가</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">bool</span> <span class="i">isFalsey</span>(<span class="t">Value</span> <span class="i">value</span>) {
   <span class="k">return</span> <span class="a">IS_NIL</span>(<span class="i">value</span>) || (<span class="a">IS_BOOL</span>(<span class="i">value</span>) &amp;&amp; !<span class="a">AS_BOOL</span>(<span class="i">value</span>));
 }
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, add after <em>peek</em>()</div>
-<p>Lox follows Ruby in that <code translate="no">nil</code> and <code translate="no">false</code> are falsey and every other value
-behaves like <code translate="no">true</code>. We’ve got a new instruction we can generate, so we also
-need to be able to <em>un</em>generate it in the disassembler.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">록스는 루비의 뒤를 잇고 있습니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated"> 거짓이며 다른 모든 값은 다음과 같이 작동합니다 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated">. 새로운 명령어를 생성할 수 있으므로 분해기에서 이를<em> 생성 해제</em>할 수 있어야 합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    case OP_DIVIDE:
       return simpleInstruction("OP_DIVIDE", offset);
-</pre><div class="source-file"><em>debug.c</em><br/>
-in <em>disassembleInstruction</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">debug.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>분해</em> 중 지침()</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OP_NOT</span>:
       <span class="k">return</span> <span class="i">simpleInstruction</span>(<span class="s">"OP_NOT"</span>, <span class="i">offset</span>);
 </pre><pre class="insert-after" translate="no">    case OP_NEGATE:
 </pre></div>
 <div class="source-file-narrow"><em>debug.c</em>, in <em>disassembleInstruction</em>()</div>
-<h3><a href="#equality-and-comparison-operators" id="equality-and-comparison-operators"><small>18 . 4 . 2</small>Equality and comparison operators</a></h3>
-<p>That wasn’t too bad. Let’s keep the momentum going and knock out the equality
-and comparison operators too: <code translate="no">==</code>, <code translate="no">!=</code>, <code translate="no">&lt;</code>, <code translate="no">&gt;</code>, <code translate="no">&lt;=</code>, and <code translate="no">&gt;=</code>. That covers
-all of the operators that return Boolean results except the logical operators
-<code translate="no">and</code> and <code translate="no">or</code>. Since those need to short-circuit (basically do a little
-control flow) we aren’t ready for them yet.</p>
-<p>Here are the new instructions for those operators:</p>
+<h3><a href="https://youhogeon-meritz.github.io/types-of-values.html#equality-and-comparison-operators" id="equality-and-comparison-operators"><small><font papago-translate="translated">18 . 4 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">평등 및 비교 연산자</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">나쁘지 않았습니다.</font><font papago-translate="translated"> 모멘텀을 계속 유지하면서 동등성 및 비교 연산자도 제거해 보겠습니다: </font></font><code translate="no">==</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">!=</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">&lt;</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">&gt;</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">&lt;=</code><font papago-translate="splitted"><font papago-translate="translated">,그리고. </font></font><code translate="no">&gt;=</code><font papago-translate="splitted"><font papago-translate="translated">. 이는 논리 연산자를 제외한 부울 결과를 반환하는 모든 연산자를 다룹니다 </font></font><code translate="no">and</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">or</code><font papago-translate="splitted"><font papago-translate="translated">. 그것들이 단락이 필요하기 때문에 (기본적으로 약간의 제어 흐름을 해야 하기 때문에) 우리는 아직 준비가 되지 않았습니다.</font></font></p>
+<p><font papago-translate="translated">다음은 해당 운영자를 위한 새로운 지침입니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  OP_FALSE,
-</pre><div class="source-file"><em>chunk.h</em><br/>
-in enum <em>OpCode</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">청크.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum O<em>pCode</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="a">OP_EQUAL</span>,
   <span class="a">OP_GREATER</span>,
   <span class="a">OP_LESS</span>,
 </pre><pre class="insert-after" translate="no">  OP_ADD,
 </pre></div>
 <div class="source-file-narrow"><em>chunk.h</em>, in enum <em>OpCode</em></div>
-<p>Wait, only three? What about <code translate="no">!=</code>, <code translate="no">&lt;=</code>, and <code translate="no">&gt;=</code>? We could create instructions
-for those too. Honestly, the VM would execute faster if we did, so we <em>should</em>
-do that if the goal is performance.</p>
-<p>But my main goal is to teach you about bytecode compilers. I want you to start
-internalizing the idea that the bytecode instructions don’t need to closely
-follow the user’s source code. The VM has total freedom to use whatever
-instruction set and code sequences it wants as long as they have the right
-user-visible behavior.</p>
-<p>The expression <code translate="no">a != b</code> has the same semantics as <code translate="no">!(a == b)</code>, so the compiler
-is free to compile the former as if it were the latter. Instead of a dedicated
-<code translate="no">OP_NOT_EQUAL</code> instruction, it can output an <code translate="no">OP_EQUAL</code> followed by an <code translate="no">OP_NOT</code>.
-Likewise, <code translate="no">a &lt;= b</code> is the <span name="same">same</span> as <code translate="no">!(a &gt; b)</code> and <code translate="no">a &gt;= b</code> is <code translate="no">!(a &lt; b)</code>. Thus, we only need three new instructions.</p>
-<aside class="bottom" name="same">
-<p><em>Is</em> <code translate="no">a &lt;= b</code> always the same as <code translate="no">!(a &gt; b)</code>? According to <a href="https://en.wikipedia.org/wiki/IEEE_754">IEEE 754</a>, all
-comparison operators return false when an operand is NaN. That means <code translate="no">NaN &lt;= 1</code>
-is false and <code translate="no">NaN &gt; 1</code> is also false. But our desugaring assumes the latter is
-always the negation of the former.</p>
-<p>For the book, we won’t get hung up on this, but these kinds of details will
-matter in your real language implementations.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">잠깐, 세 개만?</font><font papago-translate="translated"> 어때 </font></font><code translate="no">!=</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">&lt;=</code><font papago-translate="splitted"><font papago-translate="translated">,그리고. </font></font><code translate="no">&gt;=</code><font papago-translate="splitted"><font papago-translate="translated">? 그것들을 위한 지침도 만들 수 있습니다.</font><font papago-translate="translated"> 솔직히 말해서, VM이 그렇게 하면 더 빨리 실행될 것이기 때문에, 성능이 목표라면 그렇게<em> 해야 합니다</em>.</font></font></p>
+<p><font papago-translate="translated">하지만 제 주된 목표는 바이트코드 컴파일러에 대해 가르치는 것입니다.</font><font papago-translate="translated"> 바이트코드 지침이 사용자의 소스 코드를 면밀히 따를 필요가 없다는 생각을 내면화하기 시작했으면 합니다.</font><font papago-translate="translated"> VM은 사용자가 볼 수 있는 올바른 동작만 있으면 원하는 명령어 세트와 코드 시퀀스를 사용할 수 있는 완전한 자유를 가지고 있습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">표현 </font></font><code translate="no">a != b</code><font papago-translate="splitted"><font papago-translate="translated"> 는 다음과 같은 의미를 갖습니다 </font></font><code translate="no">!(a == b)</code><font papago-translate="splitted"><font papago-translate="translated">, 그래서 컴파일러는 전자를 후자처럼 자유롭게 컴파일할 수 있습니다.</font><font papago-translate="translated"> 전용 대신 </font></font><code translate="no">OP_NOT_EQUAL</code><font papago-translate="splitted"><font papago-translate="translated"> 명령어를 출력할 수 있습니다 </font></font><code translate="no">OP_EQUAL</code><font papago-translate="splitted"><font papago-translate="translated"> 그 다음에 </font></font><code translate="no">OP_NOT</code><font papago-translate="splitted"><font papago-translate="translated">.저도 마찬가지예요. </font></font><code translate="no">a &lt;= b</code><font papago-translate="splitted"><font papago-translate="translated"> 는 다음과<span name="same"> 같습니다</span> </font></font><code translate="no">!(a &gt; b)</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">a &gt;= b</code><font papago-translate="splitted"><font papago-translate="translated"> 이 </font></font><code translate="no">!(a &lt; b)</code><font papago-translate="splitted"><font papago-translate="translated">. 따라서 세 가지 새로운 지침만 있으면 됩니다.</font></font></p>
+<aside class="bottom" name="same" style="top: 13055px;">
+<p><font papago-translate="splitted"><em><font papago-translate="translated">이</font></em></font> <code translate="no">a &lt;= b</code><font papago-translate="splitted"><font papago-translate="translated"> 항상 같은 </font></font><code translate="no">!(a &gt; b)</code><font papago-translate="splitted"><font papago-translate="translated">? IEEE<a href="https://en.wikipedia.org/wiki/IEEE_754"> 75</a>4에 따르면, 피연산자가 NaN일 때 모든 비교 연산자는 거짓으로 반환됩니다.</font><font papago-translate="translated"> 즉 </font></font><code translate="no">NaN &lt;= 1</code><font papago-translate="splitted"><font papago-translate="translated"> 거짓입니다 </font></font><code translate="no">NaN &gt; 1</code><font papago-translate="splitted"><font papago-translate="translated"> 또한 거짓입니다.</font><font papago-translate="translated"> 하지만 우리의 분리는 후자가 항상 전자의 부정이라고 가정합니다.</font></font></p>
+<p><font papago-translate="translated">책에서는 이 문제에 얽매이지 않겠지만, 실제 언어 구현에서는 이러한 세부 사항들이 중요할 것입니다.</font></p>
 </aside>
-<p>Over in the parser, though, we do have six new operators to slot into the parse
-table. We use the same <code translate="no">binary()</code> parser function from before. Here’s the row
-for <code translate="no">!=</code>:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">하지만 파서에는 파서 테이블에 추가할 6개의 새로운 연산자가 있습니다.</font><font papago-translate="translated"> 우리는 동일하게 사용합니다 </font></font><code translate="no">binary()</code><font papago-translate="splitted"><font papago-translate="translated"> 이전의 파서 함수.</font><font papago-translate="translated"> 다음 행은 다음과 같습니다 </font></font><code translate="no">!=</code><font papago-translate="splitted"><font papago-translate="translated">:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  [TOKEN_BANG]          = {unary,    NULL,   PREC_NONE},
-</pre><div class="source-file"><em>compiler.c</em><br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  [<span class="a">TOKEN_BANG_EQUAL</span>]    = {<span class="a">NULL</span>,     <span class="i">binary</span>, <span class="a">PREC_EQUALITY</span>},
 </pre><pre class="insert-after" translate="no">  [TOKEN_EQUAL]         = {NULL,     NULL,   PREC_NONE},
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, replace 1 line</div>
-<p>The remaining five operators are a little farther down in the table.</p>
+<p><font papago-translate="translated">나머지 다섯 개의 연산자는 표에서 조금 더 아래에 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  [TOKEN_EQUAL]         = {NULL,     NULL,   PREC_NONE},
-</pre><div class="source-file"><em>compiler.c</em><br/>
-replace 5 lines</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 5줄 교체</font></font></div>
 <pre class="insert" translate="no">  [<span class="a">TOKEN_EQUAL_EQUAL</span>]   = {<span class="a">NULL</span>,     <span class="i">binary</span>, <span class="a">PREC_EQUALITY</span>},
   [<span class="a">TOKEN_GREATER</span>]       = {<span class="a">NULL</span>,     <span class="i">binary</span>, <span class="a">PREC_COMPARISON</span>},
   [<span class="a">TOKEN_GREATER_EQUAL</span>] = {<span class="a">NULL</span>,     <span class="i">binary</span>, <span class="a">PREC_COMPARISON</span>},
@@ -758,11 +488,9 @@ replace 5 lines</div>
 </pre><pre class="insert-after" translate="no">  [TOKEN_IDENTIFIER]    = {NULL,     NULL,   PREC_NONE},
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, replace 5 lines</div>
-<p>Inside <code translate="no">binary()</code> we already have a switch to generate the right bytecode for
-each token type. We add cases for the six new operators.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">안에서. </font></font><code translate="no">binary()</code><font papago-translate="splitted"><font papago-translate="translated"> 우리는 이미 각 토큰 유형에 맞는 바이트코드를 생성할 수 있는 스위치를 가지고 있습니다.</font><font papago-translate="translated"> 우리는 여섯 개의 새로운 운영자를 위한 사례를 추가합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  switch (operatorType) {
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>binary</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>이진</em> ()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">TOKEN_BANG_EQUAL</span>:    <span class="i">emitBytes</span>(<span class="a">OP_EQUAL</span>, <span class="a">OP_NOT</span>); <span class="k">break</span>;
     <span class="k">case</span> <span class="a">TOKEN_EQUAL_EQUAL</span>:   <span class="i">emitByte</span>(<span class="a">OP_EQUAL</span>); <span class="k">break</span>;
     <span class="k">case</span> <span class="a">TOKEN_GREATER</span>:       <span class="i">emitByte</span>(<span class="a">OP_GREATER</span>); <span class="k">break</span>;
@@ -772,14 +500,10 @@ in <em>binary</em>()</div>
 </pre><pre class="insert-after" translate="no">    case TOKEN_PLUS:          emitByte(OP_ADD); break;
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>binary</em>()</div>
-<p>The <code translate="no">==</code>, <code translate="no">&lt;</code>, and <code translate="no">&gt;</code> operators output a single instruction. The others output
-a pair of instructions, one to evalute the inverse operation, and then an
-<code translate="no">OP_NOT</code> to flip the result. Six operators for the price of three instructions!</p>
-<p>That means over in the VM, our job is simpler. Equality is the most general
-operation.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그 </font></font><code translate="no">==</code><font papago-translate="splitted"><font papago-translate="translated">, </font></font><code translate="no">&lt;</code><font papago-translate="splitted"><font papago-translate="translated">,그리고. </font></font><code translate="no">&gt;</code><font papago-translate="splitted"><font papago-translate="translated"> 연산자는 단일 명령어를 출력합니다.</font><font papago-translate="translated"> 다른 사람들은 한 쌍의 명령어를 출력하는데, 하나는 역 연산을 평가하기 위한 것이고, 그 다음에는 </font></font><code translate="no">OP_NOT</code><font papago-translate="splitted"><font papago-translate="translated"> 결과를 뒤집기 위해.</font><font papago-translate="translated"> 세 가지 지침의 가격으로 여섯 명의 운영자!</font></font></p>
+<p><font papago-translate="translated">즉, VM에서 우리의 작업이 더 간단하다는 뜻입니다.</font><font papago-translate="translated"> 평등은 가장 일반적인 운영입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      case OP_FALSE: push(BOOL_VAL(false)); break;
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OP_EQUAL</span>: {
         <span class="t">Value</span> <span class="i">b</span> = <span class="i">pop</span>();
         <span class="t">Value</span> <span class="i">a</span> = <span class="i">pop</span>();
@@ -789,22 +513,16 @@ in <em>run</em>()</div>
 </pre><pre class="insert-after" translate="no">      case OP_ADD:      BINARY_OP(NUMBER_VAL, +); break;
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>()</div>
-<p>You can evaluate <code translate="no">==</code> on any pair of objects, even objects of different types.
-There’s enough complexity that it makes sense to shunt that logic over to a
-separate function. That function always returns a C <code translate="no">bool</code>, so we can safely
-wrap the result in a <code translate="no">BOOL_VAL</code>. The function relates to Values, so it lives
-over in the “value” module.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">평가할 수 있습니다 </font></font><code translate="no">==</code><font papago-translate="splitted"><font papago-translate="translated"> 어떤 쌍의 물체에서도, 심지어 다양한 유형의 물체에서도.</font><font papago-translate="translated"> 그 논리를 별도의 함수로 전환하는 것이 합리적일 만큼 복잡합니다.</font><font papago-translate="translated"> 그 함수는 항상 C를 반환합니다 </font></font><code translate="no">bool</code><font papago-translate="splitted"><font papago-translate="translated">, 그래서 우리는 결과를 안전하게 포장할 수 있습니다 </font></font><code translate="no">BOOL_VAL</code><font papago-translate="splitted"><font papago-translate="translated">. 이 함수는 값과 관련이 있으므로 "값" 모듈에 적용됩니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">} ValueArray;
 
-</pre><div class="source-file"><em>value.h</em><br/>
-add after struct <em>ValueArray</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> struct<em> ValueArray</em> 뒤에 추가</font></font></div>
 <pre class="insert" translate="no"><span class="t">bool</span> <span class="i">valuesEqual</span>(<span class="t">Value</span> <span class="i">a</span>, <span class="t">Value</span> <span class="i">b</span>);
 </pre><pre class="insert-after" translate="no">void initValueArray(ValueArray* array);
 </pre></div>
 <div class="source-file-narrow"><em>value.h</em>, add after struct <em>ValueArray</em></div>
-<p>And here’s the implementation:</p>
-<div class="codehilite"><div class="source-file"><em>value.c</em><br/>
-add after <em>printValue</em>()</div>
+<p><font papago-translate="translated">그리고 여기 구현이 있습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">가치.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>print</em>V<em>alue</em>() 후에 추가</font></font></div>
 <pre translate="no"><span class="t">bool</span> <span class="i">valuesEqual</span>(<span class="t">Value</span> <span class="i">a</span>, <span class="t">Value</span> <span class="i">b</span>) {
   <span class="k">if</span> (<span class="i">a</span>.<span class="i">type</span> != <span class="i">b</span>.<span class="i">type</span>) <span class="k">return</span> <span class="k">false</span>;
   <span class="k">switch</span> (<span class="i">a</span>.<span class="i">type</span>) {
@@ -816,50 +534,29 @@ add after <em>printValue</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>value.c</em>, add after <em>printValue</em>()</div>
-<p>First, we check the types. If the Values have <span name="equal">different</span> types, they are definitely not equal. Otherwise,
-we unwrap the two Values and compare them directly.</p>
-<aside name="equal">
-<p>Some languages have “implicit conversions” where values of different types may
-be considered equal if one can be converted to the other’s type. For example,
-the number 0 is equivalent to the string “0” in JavaScript. This looseness was a
-large enough source of pain that JS added a separate “strict equality” operator,
-<code translate="no">===</code>.</p>
-<p>PHP considers the strings “1” and “01” to be equivalent because both can be
-converted to equivalent numbers, though the ultimate reason is because PHP was
-designed by a Lovecraftian eldritch god to destroy the mind.</p>
-<p>Most dynamically typed languages that have separate integer and floating-point
-number types consider values of different number types equal if the numeric
-values are the same (so, say, 1.0 is equal to 1), though even that seemingly
-innocuous convenience can bite the unwary.</p>
+<p><font papago-translate="translated">먼저 유형을 확인합니다.</font><font papago-translate="translated"> 값의 유형<span name="equal">이 다르</span>다면, 그것들은 확실히 같지 않습니다.</font><font papago-translate="translated"> 그렇지 않으면 두 값을 풀고 직접 비교합니다.</font></p>
+<aside name="equal" style="top: 14806px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">일부 언어에는 다른 유형의 값을 다른 유형으로 변환할 수 있는 "암시적 변환"이 있습니다.</font><font papago-translate="translated"> 예를 들어, 숫자 0은 JavaScript의 문자열 "0"과 동일합니다.</font><font papago-translate="translated"> 이 느슨함은 JS가 별도의 "엄격한 평등" 연산자를 추가할 정도로 충분히 큰 고통의 원인이었습니다, </font></font><code translate="no">===</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="translated" class="">PHP는 문자열 "1"과 "01"을 동등한 숫자로 변환할 수 있기 때문에 동등하다고 간주합니다. 하지만 궁극적인 이유는 PHP가 마음을 파괴하기 위해 러브크래프트의 엘드리치 신에 의해 설계되었기 때문입니다.</font></p>
+<p><font papago-translate="translated" class="">대부분의 동적으로 입력된 언어들은 숫자 값이 동일할 경우(예를 들어, 1.0은 1과 같음), 서로 다른 숫자 유형의 값을 동일하게 간주하지만, 겉보기에는 무해해 보이는 편리함조차도 경계심을 자극할 수 있습니다.</font></p>
 </aside>
-<p>For each value type, we have a separate case that handles comparing the value
-itself. Given how similar the cases are, you might wonder why we can’t simply
-<code translate="no">memcmp()</code> the two Value structs and be done with it. The problem is that
-because of padding and different-sized union fields, a Value contains unused
-bits. C gives no guarantee about what is in those, so it’s possible that two
-equal Values actually differ in memory that isn’t used.</p><img alt="The memory respresentations of two equal values that differ in unused bytes." src="image/types-of-values/memcmp.png"/>
-<p>(You wouldn’t believe how much pain I went through before learning this fact.)</p>
-<p>Anyway, as we add more types to clox, this function will grow new cases. For
-now, these three are sufficient. The other comparison operators are easier since
-they work only on numbers.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">각 값 유형마다 값 자체를 비교하는 별도의 케이스가 있습니다.</font><font papago-translate="translated"> 사례가 얼마나 유사한지를 고려할 때, 왜 우리는 단순히 </font></font><code translate="no">memcmp()</code><font papago-translate="splitted"><font papago-translate="translated"> 두 가지 가치 구조와 함께 완료됩니다.</font><font papago-translate="translated"> 문제는 패딩과 다양한 크기의 유니언 필드 때문에 값에 사용되지 않는 비트가 포함되어 있다는 것입니다.</font><font papago-translate="translated"> C는 그 안에 무엇이 있는지에 대한 보장을 제공하지 않으므로, 사용되지 않는 메모리에서 두 개의 동일한 값이 실제로 다를 수 있습니다.</font></font></p><img alt="The memory respresentations of two equal values that differ in unused bytes." src="https://youhogeon-meritz.github.io/image/types-of-values/memcmp.png">
+<p><font papago-translate="translated">(이 사실을 알기 전에 제가 얼마나 많은 고통을 겪었는지 믿을 수 없을 것입니다.)</font></p>
+<p><font papago-translate="translated">어쨌든, clox에 더 많은 유형을 추가하면 이 함수는 새로운 사례를 증가시킬 것입니다.</font><font papago-translate="translated"> 지금은 이 세 가지면 충분합니다.</font><font papago-translate="translated"> 다른 비교 연산자들은 숫자에 대해서만 작동하기 때문에 더 쉽습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">        push(BOOL_VAL(valuesEqual(a, b)));
         break;
       }
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OP_GREATER</span>:  <span class="a">BINARY_OP</span>(<span class="a">BOOL_VAL</span>, &gt;); <span class="k">break</span>;
       <span class="k">case</span> <span class="a">OP_LESS</span>:     <span class="a">BINARY_OP</span>(<span class="a">BOOL_VAL</span>, &lt;); <span class="k">break</span>;
 </pre><pre class="insert-after" translate="no">      case OP_ADD:      BINARY_OP(NUMBER_VAL, +); break;
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>()</div>
-<p>We already extended the <code translate="no">BINARY_OP</code> macro to handle operators that return
-non-numeric types. Now we get to use that. We pass in <code translate="no">BOOL_VAL</code> since the
-result value type is Boolean. Otherwise, it’s no different from plus or minus.</p>
-<p>As always, the coda to today’s aria is disassembling the new instructions.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 이미 확장했습니다 </font></font><code translate="no">BINARY_OP</code><font papago-translate="splitted"><font papago-translate="translated"> 매크로를 사용하여 비numeric 타입을 반환하는 연산자를 처리합니다.</font><font papago-translate="translated"> 이제 그것을 사용할 수 있습니다.</font><font papago-translate="translated"> 우리는 들어갑니다 </font></font><code translate="no">BOOL_VAL</code><font papago-translate="splitted"><font papago-translate="translated"> 결과 값 유형이 불리언이기 때문입니다.</font><font papago-translate="translated"> 그렇지 않으면 플러스나 마이너스와 다르지 않습니다.</font></font></p>
+<p><font papago-translate="translated">언제나 그렇듯이, 오늘날 아리아의 코다는 새로운 지침을 분해하고 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    case OP_FALSE:
       return simpleInstruction("OP_FALSE", offset);
-</pre><div class="source-file"><em>debug.c</em><br/>
-in <em>disassembleInstruction</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated" class="">debug.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated" class=""> <em>분해</em> 중 지침()</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OP_EQUAL</span>:
       <span class="k">return</span> <span class="i">simpleInstruction</span>(<span class="s">"OP_EQUAL"</span>, <span class="i">offset</span>);
     <span class="k">case</span> <span class="a">OP_GREATER</span>:
@@ -869,38 +566,30 @@ in <em>disassembleInstruction</em>()</div>
 </pre><pre class="insert-after" translate="no">    case OP_ADD:
 </pre></div>
 <div class="source-file-narrow"><em>debug.c</em>, in <em>disassembleInstruction</em>()</div>
-<p>With that, our numeric calculator has become something closer to a general
-expression evaluator. Fire up clox and type in:</p>
+<p><font papago-translate="translated">그 결과, 우리의 숫자 계산기는 일반적인 표현 평가자에 더 가까운 것이 되었습니다.</font><font papago-translate="translated"> 클록스를 발사하고 입력하세요:</font></p>
 <div class="codehilite"><pre translate="no">!(<span class="n">5</span> - <span class="n">4</span> &gt; <span class="n">3</span> * <span class="n">2</span> == !<span class="k">nil</span>)
 </pre></div>
-<p>OK, I’ll admit that’s maybe not the most <em>useful</em> expression, but we’re making
-progress. We have one missing built-in type with its own literal form: strings.
-Those are much more complex because strings can vary in size. That tiny
-difference turns out to have implications so large that we give strings <a href="strings.html">their
-very own chapter</a>.</p>
+<p><font papago-translate="translated">좋아요, 그게 가장<em> 유용</em>한 표현은 아닐 수도 있지만, 우리는 진전을 이루고 있습니다.</font><font papago-translate="translated"> 우리는 고유한 문자 형식을 가진 하나의 누락된 내장형 타입이 있습니다: 문자열입니다.</font><font papago-translate="translated"> 문자열의 크기가 달라질 수 있기 때문에 훨씬 더 복잡합니다.</font><font papago-translate="translated"> 그 작은 차이가 너무 커서 문자열에<a href="https://youhogeon-meritz.github.io/strings.html"> 고유한 장</a>을 부여할 정도로 큰 영향을 미치는 것으로 나타났습니다.</font></p>
 <div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+<h2><a href="https://youhogeon-meritz.github.io/types-of-values.html#challenges" id="challenges"><font papago-translate="translated">과제들</font></a></h2>
 <ol>
 <li>
-<p>We could reduce our binary operators even further than we did here. Which
-other instructions can you eliminate, and how would the compiler cope with
-their absence?</p>
+<p><font papago-translate="translated">이진 연산자를 여기서보다 훨씬 더 줄일 수 있습니다.</font><font papago-translate="translated"> 어떤 다른 명령어를 제거할 수 있으며, 컴파일러가 그 부재에 어떻게 대처할 수 있습니까?</font></p>
 </li>
 <li>
-<p>Conversely, we can improve the speed of our bytecode VM by adding more
-specific instructions that correspond to higher-level operations. What
-instructions would you define to speed up the kind of user code we added
-support for in this chapter?</p>
+<p><font papago-translate="translated">반대로, 상위 수준의 작업에 해당하는 더 구체적인 명령어를 추가하여 바이트코드 VM의 속도를 향상시킬 수 있습니다.</font><font papago-translate="translated"> 이 장에서 지원을 추가한 사용자 코드의 속도를 높이기 위해 어떤 지침을 정의하시겠습니까?</font></p>
 </li>
 </ol>
 </div>
 <footer>
-<a class="next" href="strings.html">
-  Next Chapter: “Strings” →
-</a>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+<a class="next" href="https://youhogeon-meritz.github.io/strings.html"><font papago-translate="translated"> 다음 장: "끈" → </font></a><font papago-translate="splitted"><font papago-translate="translated"> 로버트 니스트롬이 수작업으로 제작한 -<a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE"> © 2015 ~ 2021</a></font></font>
 </footer>
-</img></img></img></article>
+</article>
 </div>
-</body>
-</html>
+
+
+<div id="papagoTooltip" margin="5" style="display: none; z-index: 2147483647; left: 384px; top: 9213px !important;">
+        <h1 id="tooltipTitle">원문</h1>
+        <p id="tooltipText">Here:</p>
+      </div>
+      </body></html>

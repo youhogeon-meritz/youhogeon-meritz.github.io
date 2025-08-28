@@ -1,122 +1,102 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-31379aaf-332e-4d00-be2b-4e30afb33649@mhtml.blink" />
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>A Bytecode Virtual Machine · Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/style.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
-<script src="jquery-3.4.1.min.js"></script>
-<script src="script.js"></script>
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+
+<!-- Google analytics -->
+
+</head>
 <body id="top">
 <!-- <div class="scrim"></div> -->
 <nav class="wide">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="contents">
-<h2><small>III</small>A Bytecode Virtual Machine</h2>
+<h2><small><font papago-translate="translated">III</font></small><font papago-translate="splitted"><font papago-translate="translated">바이트코드 가상 머신</font></font></h2>
 <ul>
-<li><a href="chunks-of-bytecode.html"><small>14</small>Chunks of Bytecode</a></li>
-<li><a href="a-virtual-machine.html"><small>15</small>A Virtual Machine</a></li>
-<li><a href="scanning-on-demand.html"><small>16</small>Scanning on Demand</a></li>
-<li><a href="compiling-expressions.html"><small>17</small>Compiling Expressions</a></li>
-<li><a href="types-of-values.html"><small>18</small>Types of Values</a></li>
-<li><a href="strings.html"><small>19</small>Strings</a></li>
-<li><a href="hash-tables.html"><small>20</small>Hash Tables</a></li>
-<li><a href="global-variables.html"><small>21</small>Global Variables</a></li>
-<li><a href="local-variables.html"><small>22</small>Local Variables</a></li>
-<li><a href="jumping-back-and-forth.html"><small>23</small>Jumping Back and Forth</a></li>
-<li><a href="calls-and-functions.html"><small>24</small>Calls and Functions</a></li>
-<li><a href="closures.html"><small>25</small>Closures</a></li>
-<li><a href="garbage-collection.html"><small>26</small>Garbage Collection</a></li>
-<li><a href="classes-and-instances.html"><small>27</small>Classes and Instances</a></li>
-<li><a href="methods-and-initializers.html"><small>28</small>Methods and Initializers</a></li>
-<li><a href="superclasses.html"><small>29</small>Superclasses</a></li>
-<li><a href="optimization.html"><small>30</small>Optimization</a></li>
+<li><a href="https://youhogeon-meritz.github.io/chunks-of-bytecode.html"><small>14</small><font papago-translate="splitted"><font papago-translate="translated">바이트코드 덩어리</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/a-virtual-machine.html"><small>15</small><font papago-translate="splitted"><font papago-translate="translated">가상 머신</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/scanning-on-demand.html"><small>16</small><font papago-translate="splitted"><font papago-translate="translated">온디맨드 스캔</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/compiling-expressions.html"><small>17</small><font papago-translate="splitted"><font papago-translate="translated">표현식 컴파일하기</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/types-of-values.html"><small>18</small><font papago-translate="splitted"><font papago-translate="translated">가치 유형</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/strings.html"><small>19</small><font papago-translate="splitted"><font papago-translate="translated">줄들</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/hash-tables.html"><small>20</small><font papago-translate="splitted"><font papago-translate="translated">해시 테이블</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/global-variables.html"><small>21</small><font papago-translate="splitted"><font papago-translate="translated">글로벌 변수</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/local-variables.html"><small>22</small><font papago-translate="splitted"><font papago-translate="translated">지역 변수</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/jumping-back-and-forth.html"><small>23</small><font papago-translate="splitted"><font papago-translate="translated">앞뒤로 뛰기</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/calls-and-functions.html"><small>24</small><font papago-translate="splitted"><font papago-translate="translated">호출 및 기능</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/closures.html"><small>25</small><font papago-translate="splitted"><font papago-translate="translated">폐쇄</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/garbage-collection.html"><small>26</small><font papago-translate="splitted"><font papago-translate="translated">쓰레기 수거</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/classes-and-instances.html"><small>27</small><font papago-translate="splitted"><font papago-translate="translated">클래스 및 인스턴스</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html"><small>28</small><font papago-translate="splitted"><font papago-translate="translated">메서드 및 초기화</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/superclasses.html"><small>29</small><font papago-translate="splitted"><font papago-translate="translated">슈퍼클래스</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/optimization.html"><small>30</small><font papago-translate="splitted"><font papago-translate="translated">최적화</font></font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="inheritance.html" title="Inheritance">← Previous</a>
-<a href="contents.html" title="Table of Contents">↑ Up</a>
-<a class="right" href="chunks-of-bytecode.html" title="Chunks of Bytecode">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/inheritance.html" title="상속" papago-attr-id="1"><font papago-translate="translated">← 이전</font></a>
+<a href="https://youhogeon-meritz.github.io/contents.html" title="목차." papago-attr-id="2"><font papago-translate="translated">↑ 위로</font></a>
+<a class="right" href="https://youhogeon-meritz.github.io/chunks-of-bytecode.html" title="바이트코드 덩어리" papago-attr-id="3"><font papago-translate="translated">다음 →</font></a>
 </div> </div>
 </nav>
 <nav class="narrow">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
-<a class="prev" href="inheritance.html" title="Inheritance">←</a>
-<a class="next" href="chunks-of-bytecode.html" title="Chunks of Bytecode">→</a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
+<a class="prev" href="https://youhogeon-meritz.github.io/inheritance.html" title="Inheritance">←</a>
+<a class="next" href="https://youhogeon-meritz.github.io/chunks-of-bytecode.html" title="Chunks of Bytecode">→</a>
 </nav>
 <div class="page">
 <div class="nav-wrapper">
 <nav class="floating">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="expandable">
-<h2><small>III</small>A Bytecode Virtual Machine</h2>
+<h2><small>III</small><font papago-translate="splitted"><font papago-translate="translated">바이트코드 가상 머신</font></font></h2>
 <ul>
-<li><a href="chunks-of-bytecode.html"><small>14</small>Chunks of Bytecode</a></li>
-<li><a href="a-virtual-machine.html"><small>15</small>A Virtual Machine</a></li>
-<li><a href="scanning-on-demand.html"><small>16</small>Scanning on Demand</a></li>
-<li><a href="compiling-expressions.html"><small>17</small>Compiling Expressions</a></li>
-<li><a href="types-of-values.html"><small>18</small>Types of Values</a></li>
-<li><a href="strings.html"><small>19</small>Strings</a></li>
-<li><a href="hash-tables.html"><small>20</small>Hash Tables</a></li>
-<li><a href="global-variables.html"><small>21</small>Global Variables</a></li>
-<li><a href="local-variables.html"><small>22</small>Local Variables</a></li>
-<li><a href="jumping-back-and-forth.html"><small>23</small>Jumping Back and Forth</a></li>
-<li><a href="calls-and-functions.html"><small>24</small>Calls and Functions</a></li>
-<li><a href="closures.html"><small>25</small>Closures</a></li>
-<li><a href="garbage-collection.html"><small>26</small>Garbage Collection</a></li>
-<li><a href="classes-and-instances.html"><small>27</small>Classes and Instances</a></li>
-<li><a href="methods-and-initializers.html"><small>28</small>Methods and Initializers</a></li>
-<li><a href="superclasses.html"><small>29</small>Superclasses</a></li>
-<li><a href="optimization.html"><small>30</small>Optimization</a></li>
+<li><a href="https://youhogeon-meritz.github.io/chunks-of-bytecode.html"><small>14</small><font papago-translate="splitted"><font papago-translate="translated">바이트코드 덩어리</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/a-virtual-machine.html"><small>15</small><font papago-translate="splitted"><font papago-translate="translated">가상 머신</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/scanning-on-demand.html"><small>16</small><font papago-translate="splitted"><font papago-translate="translated">온디맨드 스캔</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/compiling-expressions.html"><small>17</small><font papago-translate="splitted"><font papago-translate="translated">표현식 컴파일하기</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/types-of-values.html"><small>18</small><font papago-translate="splitted"><font papago-translate="translated">가치 유형</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/strings.html"><small>19</small><font papago-translate="splitted"><font papago-translate="translated">줄들</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/hash-tables.html"><small>20</small><font papago-translate="splitted"><font papago-translate="translated">해시 테이블</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/global-variables.html"><small>21</small><font papago-translate="splitted"><font papago-translate="translated">글로벌 변수</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/local-variables.html"><small>22</small><font papago-translate="splitted"><font papago-translate="translated">지역 변수</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/jumping-back-and-forth.html"><small>23</small><font papago-translate="splitted"><font papago-translate="translated">앞뒤로 뛰기</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/calls-and-functions.html"><small>24</small><font papago-translate="splitted"><font papago-translate="translated">호출 및 기능</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/closures.html"><small>25</small><font papago-translate="splitted"><font papago-translate="translated">폐쇄</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/garbage-collection.html"><small>26</small><font papago-translate="splitted"><font papago-translate="translated">쓰레기 수거</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/classes-and-instances.html"><small>27</small><font papago-translate="splitted"><font papago-translate="translated">클래스 및 인스턴스</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html"><small>28</small><font papago-translate="splitted"><font papago-translate="translated">메서드 및 초기화</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/superclasses.html"><small>29</small><font papago-translate="splitted"><font papago-translate="translated">슈퍼클래스</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/optimization.html"><small>30</small><font papago-translate="splitted"><font papago-translate="translated">최적화</font></font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="inheritance.html" title="Inheritance">← Previous</a>
-<a href="contents.html" title="Table of Contents">↑ Up</a>
-<a class="right" href="chunks-of-bytecode.html" title="Chunks of Bytecode">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/inheritance.html" title="Inheritance">←&nbsp;Previous</a>
+<a href="https://youhogeon-meritz.github.io/contents.html" title="Table of Contents">↑&nbsp;Up</a>
+<a class="right" href="https://youhogeon-meritz.github.io/chunks-of-bytecode.html" title="Chunks of Bytecode">Next&nbsp;→</a>
 </div> </div>
 <a id="expand-nav">≡</a>
 </nav>
 </div>
 <article class="chapter">
-<div class="number">III</div>
-<h1 class="part">A Bytecode Virtual Machine</h1>
-<p>Our Java interpreter, jlox, taught us many of the fundamentals of programming
-languages, but we still have much to learn. First, if you run any interesting
-Lox programs in jlox, you’ll discover it’s achingly slow. The style of
-interpretation it uses<span class="em">—</span>walking the AST directly<span class="em">—</span>is good enough for <em>some</em>
-real-world uses, but leaves a lot to be desired for a general-purpose scripting
-language.</p>
-<p>Also, we implicitly rely on runtime features of the JVM itself. We take for
-granted that things like <code translate="no">instanceof</code> in Java work <em>somehow</em>. And we never for a
-second worry about memory management because the JVM’s garbage collector takes
-care of it for us.</p>
-<p>When we were focused on high-level concepts, it was fine to gloss over those.
-But now that we know our way around an interpreter, it’s time to dig down to
-those lower layers and build our own virtual machine from scratch using nothing
-more than the C standard library<span class="ellipse"> . . . </span></p>
+<div class="number"><font papago-translate="translated" class="">III</font></div>
+<h1 class="part"><font papago-translate="translated">바이트코드 가상 머신</font></h1>
+<p><font papago-translate="translated">자바 인터프리터인 jlox는 프로그래밍 언어의 많은 기초를 가르쳐 주었지만, 아직 배울 것이 많습니다.</font><font papago-translate="translated"> 먼저, Jlox에서 흥미로운 Lox 프로그램을 실행하면 매우 느리다는 것을 알게 될 것입니다.</font><font papago-translate="translated"> AST를 직접 걷는 방식은 실제 사용에는 충분하지만 범용 스크립트<em></em><span class="em"></span><span class="em"></span> 언어에는 아쉬운 점이 많습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">또한, 우리는 암묵적으로 JVM 자체의 런타임 기능에 의존합니다.</font><font papago-translate="translated"> 우리는 다음과 같은 것들을 당연하게 여깁니다 </font></font><code translate="no">instanceof</code><font papago-translate="splitted"><font papago-translate="translated"> <em>자바</em> 작업<em>에서 어떻게든</em>.</font><font papago-translate="translated"> 그리고 우리는 메모리 관리에 대해 잠시도 걱정하지 않습니다. 왜냐하면 JVM의 쓰레기 수집가가 그것을 대신 처리해주기 때문입니다.</font></font></p>
+<p><font papago-translate="translated">우리가 고차원적인 개념에 집중할 때, 그것들을 얼버무려도 괜찮았습니다.</font><font papago-translate="translated" class="papago-selected"> 하지만 이제 통역사를 찾는 방법을 알게 되었으니 이제는 C 표준 라이브러리를 사용하여 하위 계층까지 파고들어 처음부터 가상 머신을 구축할 때<span class="ellipse">입니다. . .</span></font></p>
 <footer>
-<a class="next" href="chunks-of-bytecode.html">
-  Next Chapter: “Chunks of Bytecode” →
-</a>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+<a class="next" href="https://youhogeon-meritz.github.io/chunks-of-bytecode.html"><font papago-translate="translated"> 다음 장: "바이트코드의 청크" → </font></a><font papago-translate="splitted"><font papago-translate="translated"> 로버트 니스트롬이 수작업으로 제작한 -<a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE"> © 2015 ~ 2021</a></font></font>
 </footer>
 </article>
 </div>
-</body>
-</html>
+
+
+<div id="papagoTooltip" margin="5" style="display: none;">
+        <h1 id="tooltipTitle">원문</h1>
+        <p id="tooltipText"></p>
+      </div>
+      </body></html>

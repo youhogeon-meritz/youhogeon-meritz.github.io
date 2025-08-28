@@ -1,207 +1,146 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>Methods and Initializers · Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/style.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
-<script src="jquery-3.4.1.min.js"></script>
-<script src="script.js"></script>
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+
+<!-- Google analytics -->
+
+</head>
 <body id="top">
 <!-- <div class="scrim"></div> -->
 <nav class="wide">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="contents">
-<h3><a href="#top">Methods and Initializers<small>28</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#top"><font papago-translate="splitted"><font papago-translate="translated">메서드 및 초기화</font></font><small>28</small></a></h3>
 <ul>
-<li><a href="#method-declarations"><small>28.1</small> Method Declarations</a></li>
-<li><a href="#method-references"><small>28.2</small> Method References</a></li>
-<li><a href="#this"><small>28.3</small> This</a></li>
-<li><a href="#instance-initializers"><small>28.4</small> Instance Initializers</a></li>
-<li><a href="#optimized-invocations"><small>28.5</small> Optimized Invocations</a></li>
+<li><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#method-declarations"><small>28.1</small><font papago-translate="splitted"><font papago-translate="translated"> 방법 선언</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#method-references"><small>28.2</small><font papago-translate="splitted"><font papago-translate="translated"> 방법 참조</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#this"><small>28.3</small><font papago-translate="splitted"><font papago-translate="translated"> 이것.</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#instance-initializers"><small>28.4</small><font papago-translate="splitted"><font papago-translate="translated"> 인스턴스 초기화</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#optimized-invocations"><small>28.5</small><font papago-translate="splitted"><font papago-translate="translated"> 최적화된 호출</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
-<li class="end-part"><a href="#design-note"><small>note</small>Novelty Budget</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#challenges"><font papago-translate="translated">과제들</font></a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#design-note"><small><font papago-translate="translated">메모</font></small><font papago-translate="splitted"><font papago-translate="translated">참신성 예산</font></font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="classes-and-instances.html" title="Classes and Instances">← Previous</a>
-<a href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑ Up</a>
-<a class="right" href="superclasses.html" title="Superclasses">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/classes-and-instances.html" title="클래스 및 인스턴스" papago-attr-id="1"><font papago-translate="translated">← 이전</font></a>
+<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="바이트코드 가상 머신" papago-attr-id="2"><font papago-translate="translated">↑ 위로</font></a>
+<a class="right" href="https://youhogeon-meritz.github.io/superclasses.html" title="슈퍼클래스" papago-attr-id="3"><font papago-translate="translated">다음 →</font></a>
 </div> </div>
 </nav>
 <nav class="narrow">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
-<a class="prev" href="classes-and-instances.html" title="Classes and Instances">←</a>
-<a class="next" href="superclasses.html" title="Superclasses">→</a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
+<a class="prev" href="https://youhogeon-meritz.github.io/classes-and-instances.html" title="Classes and Instances">←</a>
+<a class="next" href="https://youhogeon-meritz.github.io/superclasses.html" title="Superclasses">→</a>
 </nav>
 <div class="page">
 <div class="nav-wrapper">
-<nav class="floating">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<nav class="floating pinned">
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="expandable">
-<h3><a href="#top">Methods and Initializers<small>28</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#top"><font papago-translate="splitted"><font papago-translate="translated">메서드 및 초기화</font></font><small>28</small></a></h3>
 <ul>
-<li><a href="#method-declarations"><small>28.1</small> Method Declarations</a></li>
-<li><a href="#method-references"><small>28.2</small> Method References</a></li>
-<li><a href="#this"><small>28.3</small> This</a></li>
-<li><a href="#instance-initializers"><small>28.4</small> Instance Initializers</a></li>
-<li><a href="#optimized-invocations"><small>28.5</small> Optimized Invocations</a></li>
+<li><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#method-declarations"><small>28.1</small><font papago-translate="splitted"><font papago-translate="translated"> 방법 선언</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#method-references"><small>28.2</small><font papago-translate="splitted"><font papago-translate="translated"> 방법 참조</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#this"><small>28.3</small><font papago-translate="splitted"><font papago-translate="translated"> 이것.</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#instance-initializers"><small>28.4</small><font papago-translate="splitted"><font papago-translate="translated"> 인스턴스 초기화</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#optimized-invocations"><small>28.5</small><font papago-translate="splitted"><font papago-translate="translated"> 최적화된 호출</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
-<li class="end-part"><a href="#design-note"><small>note</small>Novelty Budget</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#design-note"><small>note</small><font papago-translate="splitted"><font papago-translate="translated">참신성 예산</font></font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="classes-and-instances.html" title="Classes and Instances">← Previous</a>
-<a href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑ Up</a>
-<a class="right" href="superclasses.html" title="Superclasses">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/classes-and-instances.html" title="Classes and Instances">←&nbsp;Previous</a>
+<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑&nbsp;Up</a>
+<a class="right" href="https://youhogeon-meritz.github.io/superclasses.html" title="Superclasses">Next&nbsp;→</a>
 </div> </div>
 <a id="expand-nav">≡</a>
 </nav>
 </div>
 <article class="chapter">
 <div class="number">28</div>
-<h1>Methods and Initializers</h1>
+<h1><font papago-translate="translated">메서드 및 초기화</font></h1>
 <blockquote>
-<p>When you are on the dancefloor, there is nothing to do but dance.</p>
+<p><font papago-translate="translated">댄스 플로어에 있을 때는 춤 외에는 할 일이 없습니다.</font></p>
 <p><cite>Umberto Eco, <em>The Mysterious Flame of Queen Loana</em></cite></p>
 </blockquote>
-<p>It is time for our virtual machine to bring its nascent objects to life with
-behavior. That means methods and method calls. And, since they are a special
-kind of method, initializers too.</p>
-<p>All of this is familiar territory from our previous jlox interpreter. What’s new
-in this second trip is an important optimization we’ll implement to make method
-calls over seven times faster than our baseline performance. But before we get
-to that fun, we gotta get the basic stuff working.</p>
-<h2><a href="#method-declarations" id="method-declarations"><small>28 . 1</small>Method Declarations</a></h2>
-<p>We can’t optimize method calls before we have method calls, and we can’t call
-methods without having methods to call, so we’ll start with declarations.</p>
-<h3><a href="#representing-methods" id="representing-methods"><small>28 . 1 . 1</small>Representing methods</a></h3>
-<p>We usually start in the compiler, but let’s knock the object model out first
-this time. The runtime representation for methods in clox is similar to that of
-jlox. Each class stores a hash table of methods. Keys are method names, and each
-value is an ObjClosure for the body of the method.</p>
+<p><font papago-translate="translated">이제 가상 머신이 초기 객체를 행동으로 되살릴 때입니다.</font><font papago-translate="translated"> 그것은 메서드와 메서드 호출을 의미합니다.</font><font papago-translate="translated"> 그리고, 그것들은 특별한 종류의 방법이기 때문에 초기화기도 있습니다.</font></p>
+<p><font papago-translate="translated">이 모든 것은 이전 Jlox 통역사의 익숙한 영역입니다.</font><font papago-translate="translated"> 이번 두 번째 여행에서 새로운 점은 기본 성능보다 7배 이상 빠르게 메서드 호출을 수행할 수 있도록 구현할 중요한 최적화입니다.</font><font papago-translate="translated"> 하지만 그 재미에 도달하기 전에 기본적인 것들을 제대로 작동시켜야 합니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#method-declarations" id="method-declarations"><small><font papago-translate="translated">28 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">방법 선언</font></font></a></h2>
+<p><font papago-translate="translated">메서드 호출이 있기 전에는 메서드 호출을 최적화할 수 없으며, 메서드 호출 없이 메서드 호출을 할 수 없으므로 선언문부터 시작하겠습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#representing-methods" id="representing-methods"><small><font papago-translate="translated">28 . 1 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">표현 방법</font></font></a></h3>
+<p><font papago-translate="translated">우리는 보통 컴파일러에서 시작하지만, 이번에는 먼저 객체 모델을 제거해 보겠습니다.</font><font papago-translate="translated"> clox에서 메서드의 런타임 표현은 jlox의 런타임 표현과 유사합니다.</font><font papago-translate="translated"> 각 클래스는 메서드의 해시 테이블을 저장합니다.</font><font papago-translate="translated"> 키는 메서드 이름이며, 각 값은 메서드 본문의 ObjClosure입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">typedef struct {
   Obj obj;
   ObjString* name;
-</pre><div class="source-file"><em>object.h</em><br/>
-in struct <em>ObjClass</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 구조 Ob<em>jClass</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="t">Table</span> <span class="i">methods</span>;
 </pre><pre class="insert-after" translate="no">} ObjClass;
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em>, in struct <em>ObjClass</em></div>
-<p>A brand new class begins with an empty method table.</p>
+<p><font papago-translate="translated">새로운 수업은 빈 메서드 테이블로 시작됩니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  klass-&gt;name = name;<span name="klass"> </span>
-</pre><div class="source-file"><em>object.c</em><br/>
-in <em>newClass</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>newClass</em>()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="i">initTable</span>(&amp;<span class="i">klass</span>-&gt;<span class="i">methods</span>);
 </pre><pre class="insert-after" translate="no">  return klass;
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, in <em>newClass</em>()</div>
-<p>The ObjClass struct owns the memory for this table, so when the memory manager
-deallocates a class, the table should be freed too.</p>
+<p><font papago-translate="translated">ObjClass 구조는 이 테이블의 메모리를 소유하고 있으므로 메모리 관리자가 클래스를 할당 해제할 때 테이블도 해제해야 합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    case OBJ_CLASS: {
-</pre><div class="source-file"><em>memory.c</em><br/>
-in <em>freeObject</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">메모리.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>free</em>O<em>bject</em>()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="t">ObjClass</span>* <span class="i">klass</span> = (<span class="t">ObjClass</span>*)<span class="i">object</span>;
       <span class="i">freeTable</span>(&amp;<span class="i">klass</span>-&gt;<span class="i">methods</span>);
 </pre><pre class="insert-after" translate="no">      FREE(ObjClass, object);
 </pre></div>
 <div class="source-file-narrow"><em>memory.c</em>, in <em>freeObject</em>()</div>
-<p>Speaking of memory managers, the GC needs to trace through classes into the
-method table. If a class is still reachable (likely through some instance),
-then all of its methods certainly need to stick around too.</p>
+<p><font papago-translate="translated">메모리 관리자에 대해 말하자면, GC는 메서드 테이블로 클래스를 추적해야 합니다.</font><font papago-translate="translated"> 클래스가 여전히 도달할 수 있다면(아마도 어떤 경우를 통해), 모든 메서드도 반드시 유지되어야 합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      markObject((Obj*)klass-&gt;name);
-</pre><div class="source-file"><em>memory.c</em><br/>
-in <em>blackenObject</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">메모리.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>blacken</em>O<em>bject</em>()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="i">markTable</span>(&amp;<span class="i">klass</span>-&gt;<span class="i">methods</span>);
 </pre><pre class="insert-after" translate="no">      break;
 </pre></div>
 <div class="source-file-narrow"><em>memory.c</em>, in <em>blackenObject</em>()</div>
-<p>We use the existing <code translate="no">markTable()</code> function, which traces through the key string
-and value in each table entry.</p>
-<p>Storing a class’s methods is pretty familiar coming from jlox. The different
-part is how that table gets populated. Our previous interpreter had access to
-the entire AST node for the class declaration and all of the methods it
-contained. At runtime, the interpreter simply walked that list of declarations.</p>
-<p>Now every piece of information the compiler wants to shunt over to the runtime
-has to squeeze through the interface of a flat series of bytecode instructions.
-How do we take a class declaration, which can contain an arbitrarily large set
-of methods, and represent it as bytecode? Let’s hop over to the compiler and
-find out.</p>
-<h3><a href="#compiling-method-declarations" id="compiling-method-declarations"><small>28 . 1 . 2</small>Compiling method declarations</a></h3>
-<p>The last chapter left us with a compiler that parses classes but allows only an
-empty body. Now we insert a little code to compile a series of method
-declarations between the braces.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">기존 제품을 사용합니다 </font></font><code translate="no">markTable()</code><font papago-translate="splitted"><font papago-translate="translated"> 각 테이블 항목의 키 문자열과 값을 추적하는 함수.</font></font></p>
+<p><font papago-translate="translated">클래스의 메서드를 저장하는 것은 jlox에서 꽤 익숙합니다.</font><font papago-translate="translated"> 다른 부분은 그 테이블이 어떻게 채워지는지입니다.</font><font papago-translate="translated"> 이전 통역사는 클래스 선언과 그 안에 포함된 모든 메서드를 위해 전체 AST 노드에 접근할 수 있었습니다.</font><font papago-translate="translated"> 런타임에 통역사는 선언 목록을 그냥 걸었습니다.</font></p>
+<p><font papago-translate="translated">이제 컴파일러가 런타임으로 션트하려는 모든 정보는 평평한 바이트코드 명령어 시리즈의 인터페이스를 통과해야 합니다.</font><font papago-translate="translated"> 임의로 큰 메서드 집합을 포함할 수 있는 클래스 선언을 바이트코드로 표현하려면 어떻게 해야 하나요?</font><font papago-translate="translated"> 컴파일러로 가서 알아보겠습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#compiling-method-declarations" id="compiling-method-declarations"><small><font papago-translate="translated">28 . 1 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">메서드 선언 컴파일하기</font></font></a></h3>
+<p><font papago-translate="translated">마지막 장에서는 클래스를 구문 분석하지만 빈 본문만 허용하는 컴파일러를 남겼습니다.</font><font papago-translate="translated"> 이제 괄호 사이의 일련의 메서드 선언을 컴파일하기 위해 작은 코드를 삽입합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  consume(TOKEN_LEFT_BRACE, "Expect '{' before class body.");
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>classDeclaration</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>class</em>D<em>eclaration</em>에서 ()</font></font></div>
 <pre class="insert" translate="no">  <span class="k">while</span> (!<span class="i">check</span>(<span class="a">TOKEN_RIGHT_BRACE</span>) &amp;&amp; !<span class="i">check</span>(<span class="a">TOKEN_EOF</span>)) {
     <span class="i">method</span>();
   }
 </pre><pre class="insert-after" translate="no">  consume(TOKEN_RIGHT_BRACE, "Expect '}' after class body.");
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>classDeclaration</em>()</div>
-<p>Lox doesn’t have field declarations, so anything before the closing brace at the
-end of the class body must be a method. We stop compiling methods when we hit
-that final curly or if we reach the end of the file. The latter check ensures
-our compiler doesn’t get stuck in an infinite loop if the user accidentally
-forgets the closing brace.</p>
-<p>The tricky part with compiling a class declaration is that a class may declare
-any number of methods. Somehow the runtime needs to look up and bind all of
-them. That would be a lot to pack into a single <code translate="no">OP_CLASS</code> instruction. Instead,
-the bytecode we generate for a class declaration will split the process into a
-<span name="series"><em>series</em></span> of instructions. The compiler already emits
-an <code translate="no">OP_CLASS</code> instruction that creates a new empty ObjClass object. Then it
-emits instructions to store the class in a variable with its name.</p>
-<aside name="series">
-<p>We did something similar for closures. The <code translate="no">OP_CLOSURE</code> instruction needs to
-know the type and index for each captured upvalue. We encoded that using a
-series of pseudo-instructions following the main <code translate="no">OP_CLOSURE</code> instruction<span class="em">—</span>basically a variable number of operands. The VM processes all of those extra
-bytes immediately when interpreting the <code translate="no">OP_CLOSURE</code> instruction.</p>
-<p>Here our approach is a little different because from the VM’s perspective, each
-instruction to define a method is a separate stand-alone operation. Either
-approach would work. A variable-sized pseudo-instruction is possibly marginally
-faster, but class declarations are rarely in hot loops, so it doesn’t matter
-much.</p>
+<p><font papago-translate="translated">Lox에는 필드 선언이 없으므로 클래스 본문의 끝에 있는 마무리 괄호 앞에 있는 모든 것이 메서드여야 합니다.</font><font papago-translate="translated"> 마지막 컬리를 누르거나 파일의 끝에 도달하면 메서드 컴파일을 중지합니다.</font><font papago-translate="translated"> 후자의 검사는 사용자가 실수로 닫는 괄호를 잊어버렸을 때 컴파일러가 무한 루프에 갇히지 않도록 보장합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">클래스 선언을 작성할 때 까다로운 부분은 클래스가 임의의 수의 메서드를 선언할 수 있다는 것입니다.</font><font papago-translate="translated"> 어떻게든 런타임이 모든 것을 조회하고 바인딩해야 합니다.</font><font papago-translate="translated"> 하나로 묶기에는 많은 양이 들 것입니다 </font></font><code translate="no">OP_CLASS</code><font papago-translate="splitted"><font papago-translate="translated"> 설명.</font><font papago-translate="translated"> 대신 클래스 선언을 위해 생성하는 바이트코드는 프로세스를 일련<span name="series"><em></em></span>의 지침으로 나눕니다.</font><font papago-translate="translated"> 컴파일러가 이미 다음을 방출합니다 </font></font><code translate="no">OP_CLASS</code><font papago-translate="splitted"><font papago-translate="translated"> 새로운 빈 ObjClass 객체를 생성하는 명령어.</font><font papago-translate="translated"> 그런 다음 클래스 이름이 있는 변수에 클래스를 저장하라는 지침을 방출합니다.</font></font></p>
+<aside name="series" style="top: 2420px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 폐업에 대해서도 비슷한 조치를 취했습니다.</font><font papago-translate="translated"> 그 </font></font><code translate="no">OP_CLOSURE</code><font papago-translate="splitted"><font papago-translate="translated"> 명령어는 캡처된 각 업값의 유형과 인덱스를 알아야 합니다.</font><font papago-translate="translated"> 우리는 주요 명령어를 따르는 일련의 유사 명령어를 사용하여 그것을 인코딩했습니다 </font></font><code translate="no">OP_CLOSURE</code><font papago-translate="splitted"><font papago-translate="translated"> 명령—basically 가변<span class="em"></span> 피연산자 수를 나타냅니다.</font><font papago-translate="translated"> VM은 해석할 때 모든 추가 바이트를 즉시 처리합니다 </font></font><code translate="no">OP_CLOSURE</code><font papago-translate="splitted"><font papago-translate="translated"> 설명.</font></font></p>
+<p><font papago-translate="translated">여기서 우리의 접근 방식은 조금 다릅니다. 왜냐하면 VM의 관점에서 볼 때, 메서드를 정의하는 각 명령어는 별도의 독립적인 작업이기 때문입니다.</font><font papago-translate="translated"> 어느 쪽이든 효과가 있을 것입니다.</font><font papago-translate="translated"> 가변 크기의 의사 명령어는 약간 더 빠를 수 있지만, 클래스 선언은 핫 루프에 있는 경우가 드물기 때문에 큰 문제가 되지 않습니다.</font></p>
 </aside>
-<p>Now, for each method declaration, we emit a new <code translate="no">OP_METHOD</code> instruction that
-adds a single method to that class. When all of the <code translate="no">OP_METHOD</code> instructions
-have executed, we’re left with a fully formed class. While the user sees a class
-declaration as a single atomic operation, the VM implements it as a series of
-mutations.</p>
-<p>To define a new method, the VM needs three things:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이제 각 메서드 선언에 대해 새로운 것을 방출합니다 </font></font><code translate="no">OP_METHOD</code><font papago-translate="splitted"><font papago-translate="translated"> 해당 클래스에 단일 메서드를 추가하는 명령어.</font><font papago-translate="translated"> 모든 것이 </font></font><code translate="no">OP_METHOD</code><font papago-translate="splitted"><font papago-translate="translated"> 지침이 실행되면 완전히 형성된 클래스가 남게 됩니다.</font><font papago-translate="translated"> 사용자는 클래스 선언을 단일 원자 연산으로 간주하지만, VM은 이를 일련의 돌연변이로 구현합니다.</font></font></p>
+<p><font papago-translate="translated">새로운 메서드를 정의하려면 VM에 세 가지가 필요합니다:</font></p>
 <ol>
 <li>
-<p>The name of the method.</p>
+<p><font papago-translate="translated">메서드의 이름입니다.</font></p>
 </li>
 <li>
-<p>The closure for the method body.</p>
+<p><font papago-translate="translated">메서드 본문의 폐쇄.</font></p>
 </li>
 <li>
-<p>The class to bind the method to.</p>
+<p><font papago-translate="translated">메서드를 바인딩할 클래스입니다.</font></p>
 </li>
 </ol>
-<p>We’ll incrementally write the compiler code to see how those all get through to
-the runtime, starting here:</p>
-<div class="codehilite"><div class="source-file"><em>compiler.c</em><br/>
-add after <em>function</em>()</div>
+<p><font papago-translate="translated">컴파일러 코드를 점진적으로 작성하여 이 모든 것이 런타임에 어떻게 도달하는지 살펴보겠습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>함수</em> () 후에 추가</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">method</span>() {
   <span class="i">consume</span>(<span class="a">TOKEN_IDENTIFIER</span>, <span class="s">"Expect method name."</span>);
   <span class="t">uint8_t</span> <span class="i">constant</span> = <span class="i">identifierConstant</span>(&amp;<span class="i">parser</span>.<span class="i">previous</span>);
@@ -209,120 +148,83 @@ add after <em>function</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after <em>function</em>()</div>
-<p>Like <code translate="no">OP_GET_PROPERTY</code> and other instructions that need names at runtime, the
-compiler adds the method name token’s lexeme to the constant table, getting back
-a table index. Then we emit an <code translate="no">OP_METHOD</code> instruction with that index as the
-operand. That’s the name. Next is the method body:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">맘에 들다 </font></font><code translate="no">OP_GET_PROPERTY</code><font papago-translate="splitted"><font papago-translate="translated"> 런타임 시 이름이 필요한 다른 명령어들은 컴파일러가 메서드 이름 토큰의 어휘소를 상수 테이블에 추가하여 테이블 인덱스를 가져옵니다.</font><font papago-translate="translated"> 그러면 우리는 다음을 방출합니다 </font></font><code translate="no">OP_METHOD</code><font papago-translate="splitted"><font papago-translate="translated"> 해당 인덱스를 피연산자로 사용하는 명령어.</font><font papago-translate="translated"> 그게 바로 그 이름입니다.</font><font papago-translate="translated"> 다음은 메서드 본문입니다:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  uint8_t constant = identifierConstant(&amp;parser.previous);
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>method</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방법</em> ()에서</font></font></div>
 <pre class="insert" translate="no">
-
   <span class="t">FunctionType</span> <span class="i">type</span> = <span class="a">TYPE_FUNCTION</span>;
   <span class="i">function</span>(<span class="i">type</span>);
 </pre><pre class="insert-after" translate="no">  emitBytes(OP_METHOD, constant);
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>method</em>()</div>
-<p>We use the same <code translate="no">function()</code> helper that we wrote for compiling function
-declarations. That utility function compiles the subsequent parameter list and
-function body. Then it emits the code to create an ObjClosure and leave it on
-top of the stack. At runtime, the VM will find the closure there.</p>
-<p>Last is the class to bind the method to. Where can the VM find that?
-Unfortunately, by the time we reach the <code translate="no">OP_METHOD</code> instruction, we don’t know
-where it is. It <span name="global">could</span> be on the stack, if the user
-declared the class in a local scope. But a top-level class declaration ends up
-with the ObjClass in the global variable table.</p>
-<aside name="global">
-<p>If Lox supported declaring classes only at the top level, the VM could assume
-that any class could be found by looking it up directly from the global
-variable table. Alas, because we support local classes, we need to handle that
-case too.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 동일하게 사용합니다 </font></font><code translate="no">function()</code><font papago-translate="splitted"><font papago-translate="translated"> 함수 선언을 컴파일하기 위해 작성한 도우미.</font><font papago-translate="translated"> 그 유틸리티 함수는 후속 매개변수 목록과 함수 본문을 컴파일합니다.</font><font papago-translate="translated"> 그런 다음 코드를 방출하여 ObjClosure를 생성하고 스택 위에 그대로 둡니다.</font><font papago-translate="translated"> 런타임에 VM은 그곳에서 닫힘을 찾을 것입니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">마지막으로 메서드를 바인딩할 클래스입니다.</font><font papago-translate="translated"> VM은 어디에서 찾을 수 있나요?</font><font papago-translate="translated"> 안타깝게도, 우리가 도착할 때쯤에는 </font></font><code translate="no">OP_METHOD</code><font papago-translate="splitted"><font papago-translate="translated"> 지시 사항, 우리는 그것이 어디에 있는지 모릅니다.</font><font papago-translate="translated"> 사용자가 로컬 범위에서 클래스를 선언한 경우 스택에 있을<span name="global"> 수 있습니다</span>.</font><font papago-translate="translated"> 하지만 최상위 클래스 선언은 글로벌 변수 테이블에서 ObjClass로 이어집니다.</font></font></p>
+<aside name="global" style="top: 3436px;">
+<p><font papago-translate="translated">Lox가 최상위 수준에서만 클래스 선언을 지원한다면, VM은 글로벌 변수 테이블에서 직접 찾아보면 모든 클래스를 찾을 수 있다고 가정할 수 있습니다.</font><font papago-translate="translated"> 아, 저희는 지역 수업을 지원하기 때문에 그 경우도 처리해야 합니다.</font></p>
 </aside>
-<p>Fear not. The compiler does know the <em>name</em> of the class. We can capture it
-right after we consume its token.</p>
+<p><font papago-translate="translated">두려워하지 마세요.</font><font papago-translate="translated"> 컴파일러는 클래스<em>의 이름</em>을 알고 있습니다.</font><font papago-translate="translated"> 토큰을 소비한 후 바로 캡처할 수 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  consume(TOKEN_IDENTIFIER, "Expect class name.");
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>classDeclaration</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>class</em>D<em>eclaration</em>에서 ()</font></font></div>
 <pre class="insert" translate="no">  <span class="t">Token</span> <span class="i">className</span> = <span class="i">parser</span>.<span class="i">previous</span>;
 </pre><pre class="insert-after" translate="no">  uint8_t nameConstant = identifierConstant(&amp;parser.previous);
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>classDeclaration</em>()</div>
-<p>And we know that no other declaration with that name could possibly shadow the
-class. So we do the easy fix. Before we start binding methods, we emit whatever
-code is necessary to load the class back on top of the stack.</p>
+<p><font papago-translate="translated">그리고 우리는 그 이름을 가진 다른 어떤 선언도 수업을 숨길 수 없다는 것을 알고 있습니다.</font><font papago-translate="translated"> 그래서 우리는 쉬운 수정을 합니다.</font><font papago-translate="translated"> 바인딩 메서드를 시작하기 전에 클래스를 스택 위에 다시 로드하는 데 필요한 모든 코드를 방출합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  defineVariable(nameConstant);
 
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>classDeclaration</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>class</em>D<em>eclaration</em>에서 ()</font></font></div>
 <pre class="insert" translate="no">  <span class="i">namedVariable</span>(<span class="i">className</span>, <span class="k">false</span>);
 </pre><pre class="insert-after" translate="no">  consume(TOKEN_LEFT_BRACE, "Expect '{' before class body.");
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>classDeclaration</em>()</div>
-<p>Right before compiling the class body, we <span name="load">call</span>
-<code translate="no">namedVariable()</code>. That helper function generates code to load a variable with
-the given name onto the stack. Then we compile the methods.</p>
-<aside name="load">
-<p>The preceding call to <code translate="no">defineVariable()</code> pops the class, so it seems silly to
-call <code translate="no">namedVariable()</code> to load it right back onto the stack. Why not simply
-leave it on the stack in the first place? We could, but in the <a href="superclasses.html">next
-chapter</a> we will insert code between these two calls to support
-inheritance. At that point, it will be simpler if the class isn’t sitting around
-on the stack.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">클래스 본문을 작성하기 직전<span name="load">에 다음과 같이 전화합니다</span></font></font>
+<code translate="no">namedVariable()</code><font papago-translate="splitted"><font papago-translate="translated">. 그 도우미 함수는 주어진 이름을 가진 변수를 스택에 로드하기 위한 코드를 생성합니다.</font><font papago-translate="translated"> 그런 다음 메서드를 컴파일합니다.</font></font></p>
+<aside name="load" style="top: 3888px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">이전 호출 </font></font><code translate="no">defineVariable()</code><font papago-translate="splitted"><font papago-translate="translated"> 수업이 시작되었으니 전화하는 것이 어리석은 것 같습니다 </font></font><code translate="no">namedVariable()</code><font papago-translate="splitted"><font papago-translate="translated"> 스택에 다시 로드합니다.</font><font papago-translate="translated"> 애초에 그냥 스택에 두면 어떨까요?</font><font papago-translate="translated"> 그럴 수도 있지만<a href="https://youhogeon-meritz.github.io/superclasses.html">, 다음 장</a>에서는 상속을 지원하기 위해 이 두 호출 사이에 코드를 삽입할 것입니다.</font><font papago-translate="translated"> 그 시점에서, 수업이 스택 위에 놓여 있지 않으면 더 간단해질 것입니다.</font></font></p>
 </aside>
-<p>This means that when we execute each <code translate="no">OP_METHOD</code> instruction, the stack has the
-method’s closure on top with the class right under it. Once we’ve reached the
-end of the methods, we no longer need the class and tell the VM to pop it off
-the stack.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 우리가 각각을 실행할 때를 의미합니다 </font></font><code translate="no">OP_METHOD</code><font papago-translate="splitted"><font papago-translate="translated"> 명령어 스택에는 메서드의 닫힘이 바로 그 아래 클래스와 함께 있습니다.</font><font papago-translate="translated"> 메서드의 끝에 도달하면 더 이상 클래스가 필요 없고 VM에게 스택에서 꺼내라고 지시할 필요가 없습니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  consume(TOKEN_RIGHT_BRACE, "Expect '}' after class body.");
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>classDeclaration</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>class</em>D<em>eclaration</em>에서 ()</font></font></div>
 <pre class="insert" translate="no">  <span class="i">emitByte</span>(<span class="a">OP_POP</span>);
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>classDeclaration</em>()</div>
-<p>Putting all of that together, here is an example class declaration to throw at
-the compiler:</p>
+<p><font papago-translate="translated">이 모든 것을 종합하면 컴파일러에게 던질 클래스 선언의 예시가 있습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Brunch</span> {
   <span class="i">bacon</span>() {}
   <span class="i">eggs</span>() {}
 }
 </pre></div>
-<p>Given that, here is what the compiler generates and how those instructions
-affect the stack at runtime:</p><img alt="The series of bytecode instructions for a class declaration with two methods." src="image/methods-and-initializers/method-instructions.png">
-<p>All that remains for us is to implement the runtime for that new <code translate="no">OP_METHOD</code>
-instruction.</p>
-<h3><a href="#executing-method-declarations" id="executing-method-declarations"><small>28 . 1 . 3</small>Executing method declarations</a></h3>
-<p>First we define the opcode.</p>
+<p><font papago-translate="translated">이를 감안할 때 컴파일러가 생성하는 내용과 런타임 시 스택에 미치는 영향은 다음과 같습니다:</font></p><img alt="The series of bytecode instructions for a class declaration with two methods." src="https://youhogeon-meritz.github.io/image/methods-and-initializers/method-instructions.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">우리에게 남은 것은 그 새로운 실행 시간을 구현하는 것뿐입니다 </font></font><code translate="no">OP_METHOD</code><font papago-translate="splitted"><font papago-translate="translated"> 설명.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#executing-method-declarations" id="executing-method-declarations"><small><font papago-translate="translated">28 . 1 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">메서드 선언 실행</font></font></a></h3>
+<p><font papago-translate="translated">먼저 옵코드를 정의합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  OP_CLASS,
-</pre><div class="source-file"><em>chunk.h</em><br/>
-in enum <em>OpCode</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">청크.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum O<em>pCode</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="a">OP_METHOD</span>
 </pre><pre class="insert-after" translate="no">} OpCode;
 </pre></div>
 <div class="source-file-narrow"><em>chunk.h</em>, in enum <em>OpCode</em></div>
-<p>We disassemble it like other instructions that have string constant operands.</p>
+<p><font papago-translate="translated">문자열 상수 피연산자가 있는 다른 명령어처럼 분해합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    case OP_CLASS:
       return constantInstruction("OP_CLASS", chunk, offset);
-</pre><div class="source-file"><em>debug.c</em><br/>
-in <em>disassembleInstruction</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">debug.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>분해</em> 중 지침()</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OP_METHOD</span>:
       <span class="k">return</span> <span class="i">constantInstruction</span>(<span class="s">"OP_METHOD"</span>, <span class="i">chunk</span>, <span class="i">offset</span>);
 </pre><pre class="insert-after" translate="no">    default:
 </pre></div>
 <div class="source-file-narrow"><em>debug.c</em>, in <em>disassembleInstruction</em>()</div>
-<p>And over in the interpreter, we add a new case too.</p>
+<p><font papago-translate="translated">그리고 통역사에서는 새로운 사례도 추가합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">        break;
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OP_METHOD</span>:
         <span class="i">defineMethod</span>(<span class="a">READ_STRING</span>());
         <span class="k">break</span>;
 </pre><pre class="insert-after" translate="no">    }
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>()</div>
-<p>There, we read the method name from the constant table and pass it here:</p>
-<div class="codehilite"><div class="source-file"><em>vm.c</em><br/>
-add after <em>closeUpvalues</em>()</div>
+<p><font papago-translate="translated">거기서 우리는 상수 테이블에서 메서드 이름을 읽고 여기에 전달합니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>closeUpvalues</em>() 후에 추가</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">defineMethod</span>(<span class="t">ObjString</span>* <span class="i">name</span>) {
   <span class="t">Value</span> <span class="i">method</span> = <span class="i">peek</span>(<span class="n">0</span>);
   <span class="t">ObjClass</span>* <span class="i">klass</span> = <span class="a">AS_CLASS</span>(<span class="i">peek</span>(<span class="n">1</span>));
@@ -331,44 +233,23 @@ add after <em>closeUpvalues</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, add after <em>closeUpvalues</em>()</div>
-<p>The method closure is on top of the stack, above the class it will be bound to.
-We read those two stack slots and store the closure in the class’s method table.
-Then we pop the closure since we’re done with it.</p>
-<p>Note that we don’t do any runtime type checking on the closure or class object.
-That <code translate="no">AS_CLASS()</code> call is safe because the compiler itself generated the code
-that causes the class to be in that stack slot. The VM <span name="verify">trusts</span> its own compiler.</p>
-<aside name="verify">
-<p>The VM trusts that the instructions it executes are valid because the <em>only</em> way
-to get code to the bytecode interpreter is by going through clox’s own compiler.
-Many bytecode VMs, like the JVM and CPython, support executing bytecode that has
-been compiled separately. That leads to a different security story. Maliciously
-crafted bytecode could crash the VM or worse.</p>
-<p>To prevent that, the JVM does a bytecode verification pass before it executes
-any loaded code. CPython says it’s up to the user to ensure any bytecode they
-run is safe.</p>
+<p><font papago-translate="translated">메서드 클로저는 스택 위에 있으며, 바인딩될 클래스 위에 있습니다.</font><font papago-translate="translated"> 우리는 그 두 개의 스택 슬롯을 읽고 클래스의 메서드 테이블에 클로저를 저장합니다.</font><font papago-translate="translated"> 그런 다음 종료를 완료했으니 종료합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">클로저나 클래스 객체에 대해서는 런타임 유형 검사를 하지 않습니다.</font><font papago-translate="translated"> 그거 </font></font><code translate="no">AS_CLASS()</code><font papago-translate="splitted"><font papago-translate="translated"> 컴파일러 자체가 클래스를 스택 슬롯에 배치하는 코드를 생성했기 때문에 호출은 안전합니다.</font><font papago-translate="translated"> VM<span name="verify">은</span> 자체 컴파일러<span name="verify">를 신뢰합니다</span>.</font></font></p>
+<aside name="verify" style="top: 5792px;">
+<p><font papago-translate="translated">VM은 실행하는 명령어가 유효하다고 신뢰합니다. 왜냐하면 코드를 바이트코드 인터프리터로 가져오는<em> 유일</em>한 방법은 clox의 자체 컴파일러를 통해서만 가능하기 때문입니다.</font><font papago-translate="translated"> JVM과 CPython과 같은 많은 바이트코드 VM은 별도로 컴파일된 바이트코드 실행을 지원합니다.</font><font papago-translate="translated"> 그것은 다른 보안 이야기로 이어집니다.</font><font papago-translate="translated"> 악의적으로 조작된 바이트코드는 VM을 크래시시키거나 더 악화시킬 수 있습니다.</font></p>
+<p><font papago-translate="translated">이를 방지하기 위해 JVM은 로드된 코드를 실행하기 전에 바이트코드 검증 패스를 수행합니다.</font><font papago-translate="translated"> CPython은 실행 중인 바이트코드가 안전한지 확인하는 것은 사용자에게 달려 있다고 말합니다.</font></p>
 </aside>
-<p>After the series of <code translate="no">OP_METHOD</code> instructions is done and the <code translate="no">OP_POP</code> has popped
-the class, we will have a class with a nicely populated method table, ready to
-start doing things. The next step is pulling those methods back out and using
-them.</p>
-<h2><a href="#method-references" id="method-references"><small>28 . 2</small>Method References</a></h2>
-<p>Most of the time, methods are accessed and immediately called, leading to this
-familiar syntax:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">시리즈가 끝난 후 </font></font><code translate="no">OP_METHOD</code><font papago-translate="splitted"><font papago-translate="translated"> 지침이 완료되면 </font></font><code translate="no">OP_POP</code><font papago-translate="splitted"><font papago-translate="translated"> 수업을 시작했으니, 우리는 잘 채워진 메서드 테이블로 수업을 진행할 것입니다. 이제 바로 시작할 준비가 되었습니다.</font><font papago-translate="translated"> 다음 단계는 이러한 방법들을 다시 꺼내서 사용하는 것입니다.</font></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#method-references" id="method-references"><small><font papago-translate="translated">28 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">방법 참조</font></font></a></h2>
+<p><font papago-translate="translated">대부분의 경우 메서드에 액세스하고 즉시 호출하여 익숙한 구문으로 이어집니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">instance</span>.<span class="i">method</span>(<span class="i">argument</span>);
 </pre></div>
-<p>But remember, in Lox and some other languages, those two steps are distinct and
-can be separated.</p>
+<p><font papago-translate="translated">하지만 Lox와 일부 다른 언어에서는 이 두 단계가 서로 다르기 때문에 분리할 수 있다는 점을 기억하세요.</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">closure</span> = <span class="i">instance</span>.<span class="i">method</span>;
 <span class="i">closure</span>(<span class="i">argument</span>);
 </pre></div>
-<p>Since users <em>can</em> separate the operations, we have to implement them separately.
-The first step is using our existing dotted property syntax to access a method
-defined on the instance’s class. That should return some kind of object that the
-user can then call like a function.</p>
-<p>The obvious approach is to look up the method in the class’s method table and
-return the ObjClosure associated with that name. But we also need to remember
-that when you access a method, <code translate="no">this</code> gets bound to the instance the method was
-accessed from. Here’s the example from <a href="classes.html#methods-on-classes">when we added methods to jlox</a>:</p>
+<p><font papago-translate="translated">사용자가 작업을 분리<em>할 수</em> 있으므로 별도로 구현해야 합니다.</font><font papago-translate="translated"> 첫 번째 단계는 기존의 점선 속성 구문을 사용하여 인스턴스 클래스에 정의된 메서드에 액세스하는 것입니다.</font><font papago-translate="translated"> 사용자가 함수처럼 호출할 수 있는 어떤 종류의 객체를 반환해야 합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">명백한 접근 방식은 수업의 메서드 테이블에서 메서드를 찾아 해당 이름과 관련된 ObjClosure를 반환하는 것입니다.</font><font papago-translate="translated"> 하지만 메서드에 액세스할 때도 기억해야 합니다, </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드에 액세스한 인스턴스에 바인딩됩니다.</font><font papago-translate="translated"> <a href="https://youhogeon-meritz.github.io/classes.html#methods-on-classes">다음</a>은<a href="https://youhogeon-meritz.github.io/classes.html#methods-on-classes"> Jlox에 메서드를 추가했을 때</a>의 예입니다:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Person</span> {
   <span class="i">sayName</span>() {
     <span class="k">print</span> <span class="k">this</span>.<span class="i">name</span>;
@@ -381,30 +262,17 @@ accessed from. Here’s the example from <a href="classes.html#methods-on-classe
 <span class="k">var</span> <span class="i">method</span> = <span class="i">jane</span>.<span class="i">sayName</span>;
 <span class="i">method</span>(); <span class="c">// ?</span>
 </pre></div>
-<p>This should print “Jane”, so the object returned by <code translate="no">.sayName</code> somehow needs to
-remember the instance it was accessed from when it later gets called. In jlox,
-we implemented that “memory” using the interpreter’s existing heap-allocated
-Environment class, which handled all variable storage.</p>
-<p>Our bytecode VM has a more complex architecture for storing state. <a href="local-variables.html#representing-local-variables">Local
-variables and temporaries</a> are on the stack, <a href="global-variables.html#variable-declarations">globals</a> are in a hash
-table, and variables in closures use <a href="closures.html#upvalues">upvalues</a>. That necessitates a somewhat
-more complex solution for tracking a method’s receiver in clox, and a new
-runtime type.</p>
-<h3><a href="#bound-methods" id="bound-methods"><small>28 . 2 . 1</small>Bound methods</a></h3>
-<p>When the user executes a method access, we’ll find the closure for that method
-and wrap it in a new <span name="bound">“bound method”</span> object that tracks
-the instance that the method was accessed from. This bound object can be called
-later like a function. When invoked, the VM will do some shenanigans to wire up
-<code translate="no">this</code> to point to the receiver inside the method’s body.</p>
-<aside name="bound">
-<p>I took the name “bound method” from CPython. Python behaves similar to Lox here,
-and I used its implementation for inspiration.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것은 "제인"을 출력해야 하므로 객체는 다음과 같이 반환됩니다 </font></font><code translate="no">.sayName</code><font papago-translate="splitted"><font papago-translate="translated"> 나중에 호출되었을 때 액세스된 인스턴스를 어떻게든 기억해야 합니다.</font><font papago-translate="translated"> Jlox에서는 모든 변수 저장을 처리하는 인터프리터의 기존 힙 할당 환경 클래스를 사용하여 해당 "메모리"를 구현했습니다.</font></font></p>
+<p><font papago-translate="translated">우리 바이트코드 VM은 상태 저장을 위한 더 복잡한 아키텍처를 가지고 있습니다.</font><font papago-translate="translated"> <a href="https://youhogeon-meritz.github.io/local-variables.html#representing-local-variables">로컬 변수와 임시 변수</a>는 스택에 있고<a href="https://youhogeon-meritz.github.io/global-variables.html#variable-declarations">, 전역 변수</a>는 해시 테이블에 있으며, 닫힌 변수는<a href="https://youhogeon-meritz.github.io/closures.html#upvalues"> 업값</a>을 사용합니다<a href="https://youhogeon-meritz.github.io/local-variables.html#representing-local-variables">.</a></font><font papago-translate="translated"> 이를 위해서는 메서드의 수신기를 clox에서 추적하기 위한 다소 복잡한 솔루션과 새로운 런타임 유형이 필요합니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#bound-methods" id="bound-methods"><small><font papago-translate="translated">28 . 2 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">제한 방법</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">사용자가 메서드 접근을 실행하면 해당 메서드의 폐쇄를 찾아 메서드가 접근한 인스턴스를 추적하는 새로운<span name="bound"> "바운드 메서드</span>" 객체로 감싸게 됩니다.</font><font papago-translate="translated"> 이 바인딩된 객체는 나중에 함수처럼 호출할 수 있습니다.</font><font papago-translate="translated"> 호출되면 VM은 몇 가지 셰니건을 수행하여 와이어를 연결합니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드 본체 내부의 수신기를 가리킵니다.</font></font></p>
+<aside name="bound" style="top: 7128px;">
+<p><font papago-translate="translated">저는 CPython에서 "결합 방법"이라는 이름을 따왔습니다.</font><font papago-translate="translated"> 파이썬은 여기서 Lox와 유사하게 작동하며, 저는 그 구현을 영감을 얻기 위해 사용했습니다.</font></p>
 </aside>
-<p>Here’s the new object type:</p>
+<p><font papago-translate="translated">다음은 새로운 객체 유형입니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">} ObjInstance;
 
-</pre><div class="source-file"><em>object.h</em><br/>
-add after struct <em>ObjInstance</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 구조 Ob<em>jInstance</em> 뒤에 추가</font></font></div>
 <pre class="insert" translate="no"><span class="k">typedef</span> <span class="k">struct</span> {
   <span class="t">Obj</span> <span class="i">obj</span>;
   <span class="t">Value</span> <span class="i">receiver</span>;
@@ -414,49 +282,41 @@ add after struct <em>ObjInstance</em></div>
 </pre><pre class="insert-after" translate="no">ObjClass* newClass(ObjString* name);
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em>, add after struct <em>ObjInstance</em></div>
-<p>It wraps the receiver and the method closure together. The receiver’s type is
-Value even though methods can be called only on ObjInstances. Since the VM
-doesn’t care what kind of receiver it has anyway, using Value means we don’t
-have to keep converting the pointer back to a Value when it gets passed to more
-general functions.</p>
-<p>The new struct implies the usual boilerplate you’re used to by now. A new case
-in the object type enum:</p>
+<p><font papago-translate="translated">수신기와 메서드 클로저를 함께 감쌉니다.</font><font papago-translate="translated"> 메서드는 ObjInstance에서만 호출할 수 있지만 수신기의 유형은 Value입니다.</font><font papago-translate="translated"> VM은 어차피 어떤 종류의 수신기를 가지고 있든 상관없기 때문에 Value를 사용하면 포인터가 더 일반적인 함수로 전달될 때 다시 Value로 변환할 필요가 없습니다.</font></p>
+<p><font papago-translate="translated">새로운 구조는 지금쯤 익숙해진 일반적인 보일러 플레이트를 의미합니다.</font><font papago-translate="translated"> 객체 유형 열거의 새로운 사례:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">typedef enum {
-</pre><div class="source-file"><em>object.h</em><br/>
-in enum <em>ObjType</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum Ob<em>jType</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="a">OBJ_BOUND_METHOD</span>,
 </pre><pre class="insert-after" translate="no">  OBJ_CLASS,
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em>, in enum <em>ObjType</em></div>
-<p>A macro to check a value’s type:</p>
+<p><font papago-translate="translated">값의 유형을 확인하는 매크로:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define OBJ_TYPE(value)        (AS_OBJ(value)-&gt;type)
 
-</pre><div class="source-file"><em>object.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">객체.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define IS_BOUND_METHOD(value) isObjType(value, OBJ_BOUND_METHOD)</span>
 </pre><pre class="insert-after" translate="no">#define IS_CLASS(value)        isObjType(value, OBJ_CLASS)
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em></div>
-<p>Another macro to cast the value to an ObjBoundMethod pointer:</p>
+<p><font papago-translate="translated">값을 ObjBoundMethod 포인터에 캐스팅하는 또 다른 매크로:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">#define IS_STRING(value)       isObjType(value, OBJ_STRING)
 
-</pre><div class="source-file"><em>object.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">객체.h</font></em></div>
 <pre class="insert" translate="no"><span class="a">#define AS_BOUND_METHOD(value) ((ObjBoundMethod*)AS_OBJ(value))</span>
 </pre><pre class="insert-after" translate="no">#define AS_CLASS(value)        ((ObjClass*)AS_OBJ(value))
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em></div>
-<p>A function to create a new ObjBoundMethod:</p>
+<p><font papago-translate="translated">새로운 ObjBoundMethod를 생성하는 함수:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">} ObjBoundMethod;
 
-</pre><div class="source-file"><em>object.h</em><br/>
-add after struct <em>ObjBoundMethod</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 구조 후 Ob<em>jBoundMethod</em> 추가</font></font></div>
 <pre class="insert" translate="no"><span class="t">ObjBoundMethod</span>* <span class="i">newBoundMethod</span>(<span class="t">Value</span> <span class="i">receiver</span>,
                                <span class="t">ObjClosure</span>* <span class="i">method</span>);
 </pre><pre class="insert-after" translate="no">ObjClass* newClass(ObjString* name);
 </pre></div>
 <div class="source-file-narrow"><em>object.h</em>, add after struct <em>ObjBoundMethod</em></div>
-<p>And an implementation of that function here:</p>
-<div class="codehilite"><div class="source-file"><em>object.c</em><br/>
-add after <em>allocateObject</em>()</div>
+<p><font papago-translate="translated">그리고 여기서 그 기능의 구현:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>할당</em> 후 추가O<em>bject</em>()</font></font></div>
 <pre translate="no"><span class="t">ObjBoundMethod</span>* <span class="i">newBoundMethod</span>(<span class="t">Value</span> <span class="i">receiver</span>,
                                <span class="t">ObjClosure</span>* <span class="i">method</span>) {
   <span class="t">ObjBoundMethod</span>* <span class="i">bound</span> = <span class="a">ALLOCATE_OBJ</span>(<span class="t">ObjBoundMethod</span>,
@@ -467,23 +327,18 @@ add after <em>allocateObject</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, add after <em>allocateObject</em>()</div>
-<p>The constructor-like function simply stores the given closure and receiver. When
-the bound method is no longer needed, we free it.</p>
+<p><font papago-translate="translated">생성자 유사 함수는 주어진 클로저와 수신기를 간단히 저장합니다.</font><font papago-translate="translated"> 결합 방법이 더 이상 필요하지 않을 때, 우리는 그것을 해제합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  switch (object-&gt;type) {
-</pre><div class="source-file"><em>memory.c</em><br/>
-in <em>freeObject</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">메모리.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>free</em>O<em>bject</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OBJ_BOUND_METHOD</span>:
       <span class="a">FREE</span>(<span class="t">ObjBoundMethod</span>, <span class="i">object</span>);
       <span class="k">break</span>;
 </pre><pre class="insert-after" translate="no">    case OBJ_CLASS: {
 </pre></div>
 <div class="source-file-narrow"><em>memory.c</em>, in <em>freeObject</em>()</div>
-<p>The bound method has a couple of references, but it doesn’t <em>own</em> them, so it
-frees nothing but itself. However, those references do get traced by the garbage
-collector.</p>
+<p><font papago-translate="translated">바운드 메서드에는 몇 가지 참조가 있지만<em>, 이</em> 참조는<em> 소유하지</em> 않으므로 자신만을 자유롭게 합니다.</font><font papago-translate="translated"> 그러나 이러한 참조는 쓰레기 수집가에 의해 추적됩니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  switch (object-&gt;type) {
-</pre><div class="source-file"><em>memory.c</em><br/>
-in <em>blackenObject</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">메모리.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>blacken</em>O<em>bject</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OBJ_BOUND_METHOD</span>: {
       <span class="t">ObjBoundMethod</span>* <span class="i">bound</span> = (<span class="t">ObjBoundMethod</span>*)<span class="i">object</span>;
       <span class="i">markValue</span>(<span class="i">bound</span>-&gt;<span class="i">receiver</span>);
@@ -493,52 +348,33 @@ in <em>blackenObject</em>()</div>
 </pre><pre class="insert-after" translate="no">    case OBJ_CLASS: {
 </pre></div>
 <div class="source-file-narrow"><em>memory.c</em>, in <em>blackenObject</em>()</div>
-<p>This <span name="trace">ensures</span> that a handle to a method keeps the
-receiver around in memory so that <code translate="no">this</code> can still find the object when you
-invoke the handle later. We also trace the method closure.</p>
-<aside name="trace">
-<p>Tracing the method closure isn’t really necessary. The receiver is an
-ObjInstance, which has a pointer to its ObjClass, which has a table for all of
-the methods. But it feels dubious to me in some vague way to have ObjBoundMethod
-rely on that.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이렇게 하면 메서드의 핸들이 수신기를 메모리에 유지하여 다음과 같이 유지<span name="trace">할 수 있습니다</span> </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 나중에 핸들을 호출해도 여전히 객체를 찾을 수 있습니다.</font><font papago-translate="translated"> 우리는 또한 방법 폐쇄를 추적합니다.</font></font></p>
+<aside name="trace" style="top: 8960px;">
+<p><font papago-translate="translated">방법 폐쇄를 추적하는 것은 실제로 필요하지 않습니다.</font><font papago-translate="translated"> 수신기는 ObjInstance로, 모든 메서드에 대한 테이블이 있는 ObjClass 포인터를 가지고 있습니다.</font><font papago-translate="translated"> 하지만 ObjBoundMethod가 그것에 의존하게 하는 것은 다소 모호한 방식으로 느껴집니다.</font></p>
 </aside>
-<p>The last operation all objects support is printing.</p>
+<p><font papago-translate="translated">모든 객체가 지원하는 마지막 작업은 인쇄입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  switch (OBJ_TYPE(value)) {
-</pre><div class="source-file"><em>object.c</em><br/>
-in <em>printObject</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">객체.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>print</em>O<em>bject</em>()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OBJ_BOUND_METHOD</span>:
       <span class="i">printFunction</span>(<span class="a">AS_BOUND_METHOD</span>(<span class="i">value</span>)-&gt;<span class="i">method</span>-&gt;<span class="i">function</span>);
       <span class="k">break</span>;
 </pre><pre class="insert-after" translate="no">    case OBJ_CLASS:
 </pre></div>
 <div class="source-file-narrow"><em>object.c</em>, in <em>printObject</em>()</div>
-<p>A bound method prints exactly the same way as a function. From the user’s
-perspective, a bound method <em>is</em> a function. It’s an object they can call. We
-don’t expose that the VM implements bound methods using a different object type.</p>
-<aside name="party"><img alt="A party hat." src="image/methods-and-initializers/party-hat.png">
-</img></aside>
-<p>Put on your <span name="party">party</span> hat because we just reached a little
-milestone. ObjBoundMethod is the very last runtime type to add to clox. You’ve
-written your last <code translate="no">IS_</code> and <code translate="no">AS_</code> macros. We’re only a few chapters from the end
-of the book, and we’re getting close to a complete VM.</p>
-<h3><a href="#accessing-methods" id="accessing-methods"><small>28 . 2 . 2</small>Accessing methods</a></h3>
-<p>Let’s get our new object type doing something. Methods are accessed using the
-same “dot” property syntax we implemented in the last chapter. The compiler
-already parses the right expressions and emits <code translate="no">OP_GET_PROPERTY</code> instructions
-for them. The only changes we need to make are in the runtime.</p>
-<p>When a property access instruction executes, the instance is on top of the
-stack. The instruction’s job is to find a field or method with the given name
-and replace the top of the stack with the accessed property.</p>
-<p>The interpreter already handles fields, so we simply extend the
-<code translate="no">OP_GET_PROPERTY</code> case with another section.</p>
+<p><font papago-translate="translated">바운드 메서드는 함수와 정확히 동일한 방식으로 인쇄됩니다.</font><font papago-translate="translated"> 사용자의 관점에서 바운드 메서드<em>는</em> 함수<em>입니다</em>.</font><font papago-translate="translated"> 그들이 부를 수 있는 물건입니다.</font><font papago-translate="translated"> VM이 다른 객체 유형을 사용하여 바인딩 메서드를 구현한다는 사실을 노출하지 않습니다.</font></p>
+<aside name="party" style="top: 9324px;"><img alt="A party hat." src="https://youhogeon-meritz.github.io/image/methods-and-initializers/party-hat.png">
+</aside>
+<p><font papago-translate="splitted"><font papago-translate="translated"><span name="party">우리</span>가 방금 작은 이정표에 도달했으니<span name="party"> 파티</span> 모자를 써보세요.</font><font papago-translate="translated"> ObjBoundMethod는 clox에 마지막으로 추가된 런타임 유형입니다.</font><font papago-translate="translated"> 당신은 마지막 글을 썼습니다 </font></font><code translate="no">IS_</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">AS_</code><font papago-translate="splitted"><font papago-translate="translated"> 매크로.</font><font papago-translate="translated"> 책의 끝에서 몇 장 남지 않았고, 완전한 VM에 가까워지고 있습니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#accessing-methods" id="accessing-methods"><small><font papago-translate="translated">28 . 2 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">접근 방법</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">새로운 객체 유형을 실행해 보겠습니다.</font><font papago-translate="translated"> 메서드는 지난 장에서 구현한 것과 동일한 "점" 속성 구문을 사용하여 액세스할 수 있습니다.</font><font papago-translate="translated"> 컴파일러는 이미 올바른 표현을 구문 분석하고 방출합니다 </font></font><code translate="no">OP_GET_PROPERTY</code><font papago-translate="splitted"><font papago-translate="translated"> 그들을 위한 지침.</font><font papago-translate="translated"> 우리가 해야 할 유일한 변경 사항은 실행 시간입니다.</font></font></p>
+<p><font papago-translate="translated">속성 접근 명령이 실행되면 인스턴스가 스택 위에 있습니다.</font><font papago-translate="translated"> 이 명령어의 작업은 주어진 이름을 가진 필드나 메서드를 찾아 스택의 상단을 액세스된 속성으로 교체하는 것입니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">통역사가 이미 필드를 처리하고 있으므로 간단히 확장할 수 있습니다 </font></font><code translate="no">OP_GET_PROPERTY</code><font papago-translate="splitted"><font papago-translate="translated"> 다른 섹션의 경우.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">          pop(); // Instance.
           push(value);
           break;
         }
 
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()<br/>
-replace 2 lines</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 두 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">        <span class="k">if</span> (!<span class="i">bindMethod</span>(<span class="i">instance</span>-&gt;<span class="i">klass</span>, <span class="i">name</span>)) {
           <span class="k">return</span> <span class="a">INTERPRET_RUNTIME_ERROR</span>;
         }
@@ -546,18 +382,10 @@ replace 2 lines</div>
 </pre><pre class="insert-after" translate="no">      }
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>(), replace 2 lines</div>
-<p>We insert this after the code to look up a field on the receiver instance.
-Fields take priority over and shadow methods, so we look for a field first. If
-the instance does not have a field with the given property name, then the name
-may refer to a method.</p>
-<p>We take the instance’s class and pass it to a new <code translate="no">bindMethod()</code> helper. If that
-function finds a method, it places the method on the stack and returns <code translate="no">true</code>.
-Otherwise it returns <code translate="no">false</code> to indicate a method with that name couldn’t be
-found. Since the name also wasn’t a field, that means we have a runtime error,
-which aborts the interpreter.</p>
-<p>Here is the good stuff:</p>
-<div class="codehilite"><div class="source-file"><em>vm.c</em><br/>
-add after <em>callValue</em>()</div>
+<p><font papago-translate="translated">코드 뒤에 이것을 삽입하여 수신기 인스턴스의 필드를 찾습니다.</font><font papago-translate="translated"> 필드가 우선시되고 그림자 메서드가 적용되므로 먼저 필드를 찾습니다.</font><font papago-translate="translated"> 인스턴스에 지정된 속성 이름을 가진 필드가 없는 경우, 해당 이름은 메서드를 참조할 수 있습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">인스턴스의 클래스를 가져와서 새 클래스로 전달합니다 </font></font><code translate="no">bindMethod()</code><font papago-translate="splitted"><font papago-translate="translated"> 도우미.</font><font papago-translate="translated"> 해당 함수가 메서드를 찾으면 메서드를 스택에 배치하고 반환합니다 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated">. 그렇지 않으면 반환됩니다 </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated"> 해당 이름의 메서드를 찾을 수 없음을 나타냅니다.</font><font papago-translate="translated"> 이름도 필드가 아니었기 때문에 런타임 오류가 발생하여 인터프리터가 중단됩니다.</font></font></p>
+<p><font papago-translate="translated">좋은 점은 다음과 같습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>호출</em> 후 추가 값()</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">bool</span> <span class="i">bindMethod</span>(<span class="t">ObjClass</span>* <span class="i">klass</span>, <span class="t">ObjString</span>* <span class="i">name</span>) {
   <span class="t">Value</span> <span class="i">method</span>;
   <span class="k">if</span> (!<span class="i">tableGet</span>(&amp;<span class="i">klass</span>-&gt;<span class="i">methods</span>, <span class="i">name</span>, &amp;<span class="i">method</span>)) {
@@ -573,12 +401,8 @@ add after <em>callValue</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, add after <em>callValue</em>()</div>
-<p>First we look for a method with the given name in the class’s method table. If
-we don’t find one, we report a runtime error and bail out. Otherwise, we take
-the method and wrap it in a new ObjBoundMethod. We grab the receiver from its
-home on top of the stack. Finally, we pop the instance and replace the top of
-the stack with the bound method.</p>
-<p>For example:</p>
+<p><font papago-translate="translated">먼저 수업의 메서드 테이블에서 주어진 이름을 가진 메서드를 찾습니다.</font><font papago-translate="translated"> 찾지 못하면 런타임 오류를 보고하고 구제합니다.</font><font papago-translate="translated"> 그렇지 않으면, 우리는 그 방법을 새로운 ObjBoundMethod로 포장합니다.</font><font papago-translate="translated"> 우리는 수신기를 스택 위에 있는 집에서 가져옵니다.</font><font papago-translate="translated"> 마지막으로 인스턴스를 팝업하고 스택 상단을 바운드 메서드로 교체합니다.</font></p>
+<p><font papago-translate="translated">예를 들어:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Brunch</span> {
   <span class="i">eggs</span>() {}
 }
@@ -586,23 +410,15 @@ the stack with the bound method.</p>
 <span class="k">var</span> <span class="i">brunch</span> = <span class="t">Brunch</span>();
 <span class="k">var</span> <span class="i">eggs</span> = <span class="i">brunch</span>.<span class="i">eggs</span>;
 </pre></div>
-<p>Here is what happens when the VM executes the <code translate="no">bindMethod()</code> call for the
-<code translate="no">brunch.eggs</code> expression:</p><img alt="The stack changes caused by bindMethod()." src="image/methods-and-initializers/bind-method.png">
-<p>That’s a lot of machinery under the hood, but from the user’s perspective, they
-simply get a function that they can call.</p>
-<h3><a href="#calling-methods" id="calling-methods"><small>28 . 2 . 3</small>Calling methods</a></h3>
-<p>Users can declare methods on classes, access them on instances, and get bound
-methods onto the stack. They just can’t <span name="do"><em>do</em></span> anything
-useful with those bound method objects. The operation we’re missing is calling
-them. Calls are implemented in <code translate="no">callValue()</code>, so we add a case there for the new
-object type.</p>
-<aside name="do">
-<p>A bound method <em>is</em> a first-class value, so they can store it in variables, pass
-it to functions, and otherwise do “value”-y stuff with it.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">VM이 실행될 때 일어나는 일은 다음과 같습니다 </font></font><code translate="no">bindMethod()</code><font papago-translate="splitted"><font papago-translate="translated"> 요청 </font></font><code translate="no">brunch.eggs</code><font papago-translate="splitted"><font papago-translate="translated"> 표현:</font></font></p><img alt="The stack changes caused by bindMethod()." src="https://youhogeon-meritz.github.io/image/methods-and-initializers/bind-method.png">
+<p><font papago-translate="translated">후드 아래에는 많은 기계가 있지만 사용자의 관점에서 보면 단순히 호출할 수 있는 기능을 얻을 수 있습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#calling-methods" id="calling-methods"><small><font papago-translate="translated">28 . 2 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">호출 방법</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">사용자는 클래스에서 메서드를 선언하고 인스턴스에서 메서드에 액세스하며 바인딩 메서드를 스택에 가져올 수 있습니다.</font><font papago-translate="translated"> 그들은 그 제한된 메서드 객체들에 대해 아무것도 유용<span name="do"><em>하게 할</em></span> 수 없습니다.</font><font papago-translate="translated"> 우리가 놓치고 있는 작업은 그들에게 전화하는 것입니다.</font><font papago-translate="translated"> 호출은 다음에서 구현됩니다 </font></font><code translate="no">callValue()</code><font papago-translate="splitted"><font papago-translate="translated">, 그래서 우리는 새로운 객체 유형에 대한 사례를 추가합니다.</font></font></p>
+<aside name="do" style="top: 11619px;">
+<p><font papago-translate="translated">바운드 메서드는 일급 값<em>이므로</em> 변수에 저장하고 함수에 전달한 다음 "value"-y 작업을 수행할 수 있습니다.</font></p>
 </aside>
 <div class="codehilite"><pre class="insert-before" translate="no">    switch (OBJ_TYPE(callee)) {
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>callValue</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>callValue</em>()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OBJ_BOUND_METHOD</span>: {
         <span class="t">ObjBoundMethod</span>* <span class="i">bound</span> = <span class="a">AS_BOUND_METHOD</span>(<span class="i">callee</span>);
         <span class="k">return</span> <span class="i">call</span>(<span class="i">bound</span>-&gt;<span class="i">method</span>, <span class="i">argCount</span>);
@@ -610,10 +426,7 @@ in <em>callValue</em>()</div>
 </pre><pre class="insert-after" translate="no">      case OBJ_CLASS: {
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>callValue</em>()</div>
-<p>We pull the raw closure back out of the ObjBoundMethod and use the existing
-<code translate="no">call()</code> helper to begin an invocation of that closure by pushing a CallFrame
-for it onto the call stack. That’s all it takes to be able to run this Lox
-program:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 ObjBoundMethod에서 원시 폐쇄를 다시 꺼내 기존 방식을 사용합니다 </font></font><code translate="no">call()</code><font papago-translate="splitted"><font papago-translate="translated"> 호출기를 호출 스택에 밀어넣어 해당 폐쇄를 호출하기 시작하는 도우미.</font><font papago-translate="translated"> 이 Lox 프로그램을 실행하는 데 필요한 것은 이것뿐입니다:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Scone</span> {
   <span class="i">topping</span>(<span class="i">first</span>, <span class="i">second</span>) {
     <span class="k">print</span> <span class="s">"scone with "</span> + <span class="i">first</span> + <span class="s">" and "</span> + <span class="i">second</span>;
@@ -623,67 +436,32 @@ program:</p>
 <span class="k">var</span> <span class="i">scone</span> = <span class="t">Scone</span>();
 <span class="i">scone</span>.<span class="i">topping</span>(<span class="s">"berries"</span>, <span class="s">"cream"</span>);
 </pre></div>
-<p>That’s three big steps. We can declare, access, and invoke methods. But
-something is missing. We went to all that trouble to wrap the method closure in
-an object that binds the receiver, but when we invoke the method, we don’t use
-that receiver at all.</p>
-<h2><a href="#this" id="this"><small>28 . 3</small>This</a></h2>
-<p>The reason bound methods need to keep hold of the receiver is so that it can be
-accessed inside the body of the method. Lox exposes a method’s receiver through
-<code translate="no">this</code> expressions. It’s time for some new syntax. The lexer already treats
-<code translate="no">this</code> as a special token type, so the first step is wiring that token up in the
-parse table.</p>
+<p><font papago-translate="translated">그것은 세 가지 큰 단계입니다.</font><font papago-translate="translated"> 우리는 메서드를 선언하고, 접근하고, 호출할 수 있습니다.</font><font papago-translate="translated"> 하지만 뭔가 부족합니다.</font><font papago-translate="translated"> 우리는 메서드 클로저를 수신기를 묶는 객체로 감싸기 위해 모든 어려움을 겪었지만, 메서드를 호출할 때는 해당 수신기를 전혀 사용하지 않습니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#this" id="this"><small><font papago-translate="translated">28 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">이것.</font></font></a></h2>
+<p><font papago-translate="splitted"><font papago-translate="translated">제한된 메서드가 수신기를 유지해야 하는 이유는 메서드 본문 내에서 액세스할 수 있기 때문입니다.</font><font papago-translate="translated"> Lox는 메서드의 수신기를 다음을 통해 노출합니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 표현.</font><font papago-translate="translated"> 새로운 구문이 필요할 때입니다.</font><font papago-translate="translated"> 렉서는 이미 다음을 처리합니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 특별한 토큰 유형으로서 첫 번째 단계는 구문 분석 테이블에 해당 토큰을 연결하는 것입니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  [TOKEN_SUPER]         = {NULL,     NULL,   PREC_NONE},
-</pre><div class="source-file"><em>compiler.c</em><br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  [<span class="a">TOKEN_THIS</span>]          = {<span class="i">this_</span>,    <span class="a">NULL</span>,   <span class="a">PREC_NONE</span>},
 </pre><pre class="insert-after" translate="no">  [TOKEN_TRUE]          = {literal,  NULL,   PREC_NONE},
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, replace 1 line</div>
-<aside name="this">
-<p>The underscore at the end of the name of the parser function is because <code translate="no">this</code>
-is a reserved word in C++ and we support compiling clox as C++.</p>
+<aside name="this" style="top: 12646px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">파서 함수의 이름 끝에 있는 밑줄은 다음과 같습니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 는 C++에서 예약된 단어이며, C++로 clox를 컴파일하는 것을 지원합니다.</font></font></p>
 </aside>
-<p>When the parser encounters a <code translate="no">this</code> in prefix position, it dispatches to a new
-parser function.</p>
-<div class="codehilite"><div class="source-file"><em>compiler.c</em><br/>
-add after <em>variable</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">파서가 a를 만났을 때 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 접두사 위치에서는 새로운 파서 함수로 이동합니다.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>변수</em> () 뒤에 더하기</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">this_</span>(<span class="t">bool</span> <span class="i">canAssign</span>) {
   <span class="i">variable</span>(<span class="k">false</span>);
 }<span name="this"> </span>
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after <em>variable</em>()</div>
-<p>We’ll apply the same implementation technique for <code translate="no">this</code> in clox that we used in
-jlox. We treat <code translate="no">this</code> as a lexically scoped local variable whose value gets
-magically initialized. Compiling it like a local variable means we get a lot of
-behavior for free. In particular, closures inside a method that reference <code translate="no">this</code>
-will do the right thing and capture the receiver in an upvalue.</p>
-<p>When the parser function is called, the <code translate="no">this</code> token has just been consumed and
-is stored as the previous token. We call our existing <code translate="no">variable()</code> function
-which compiles identifier expressions as variable accesses. It takes a single
-Boolean parameter for whether the compiler should look for a following <code translate="no">=</code>
-operator and parse a setter. You can’t assign to <code translate="no">this</code>, so we pass <code translate="no">false</code> to
-disallow that.</p>
-<p>The <code translate="no">variable()</code> function doesn’t care that <code translate="no">this</code> has its own token type and
-isn’t an identifier. It is happy to treat the lexeme “this” as if it were a
-variable name and then look it up using the existing scope resolution machinery.
-Right now, that lookup will fail because we never declared a variable whose name
-is “this”. It’s time to think about where the receiver should live in memory.</p>
-<p>At least until they get captured by closures, clox stores every local variable
-on the VM’s stack. The compiler keeps track of which slots in the function’s
-stack window are owned by which local variables. If you recall, the compiler
-sets aside stack slot zero by declaring a local variable whose name is an empty
-string.</p>
-<p>For function calls, that slot ends up holding the function being called. Since
-the slot has no name, the function body never accesses it. You can guess where
-this is going. For <em>method</em> calls, we can repurpose that slot to store the
-receiver. Slot zero will store the instance that <code translate="no">this</code> is bound to. In order to
-compile <code translate="no">this</code> expressions, the compiler simply needs to give the correct name
-to that local variable.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">동일한 구현 기법을 적용하겠습니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 우리가 jlox에서 사용했던 clox에서.</font><font papago-translate="translated"> 우리는 대접합니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 값이 마법처럼 초기화되는 어휘 범위의 로컬 변수로서.</font><font papago-translate="translated"> 로컬 변수처럼 컴파일하면 무료로 많은 동작을 얻을 수 있습니다.</font><font papago-translate="translated"> 특히 참조하는 방법 내부의 폐쇄 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 올바른 작업을 수행하여 수신기를 업값으로 캡처합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">파서 함수가 호출될 때 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 토큰이 방금 소비되어 이전 토큰으로 저장됩니다.</font><font papago-translate="translated"> 우리는 기존의 </font></font><code translate="no">variable()</code><font papago-translate="splitted"><font papago-translate="translated"> 식별자 표현식을 변수 접근으로 컴파일하는 함수.</font><font papago-translate="translated"> 컴파일러가 다음을 찾아야 하는지 여부는 단일 부울 매개변수를 사용합니다 </font></font><code translate="no">=</code><font papago-translate="splitted"><font papago-translate="translated"> 세터를 연산하고 구문 분석합니다.</font><font papago-translate="translated"> 할당할 수 없습니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated">, 그래서 우리는 통과합니다 </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated"> 그것을 허용하지 않습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그 </font></font><code translate="no">variable()</code><font papago-translate="splitted"><font papago-translate="translated"> 함수는 다음과 같은 것을 신경 쓰지 않습니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 고유한 토큰 유형이 있으며 식별자가 아닙니다.</font><font papago-translate="translated"> 어휘 "이것"을 변수 이름처럼 취급한 다음 기존의 범위 해상도 기계를 사용하여 찾아보는 것은 행복합니다.</font><font papago-translate="translated"> 현재로서는 이름이 "이것"인 변수를 선언하지 않았기 때문에 해당 조회가 실패할 것입니다.</font><font papago-translate="translated"> 수신자가 기억 속에서 어디에 살아야 할지 생각할 때입니다.</font></font></p>
+<p><font papago-translate="translated">적어도 클로저에 포착될 때까지 clox는 VM의 스택에 모든 로컬 변수를 저장합니다.</font><font papago-translate="translated"> 컴파일러는 함수의 스택 창에서 어떤 슬롯이 어떤 로컬 변수에 의해 소유되는지 추적합니다.</font><font papago-translate="translated"> 기억하시겠지만, 컴파일러는 빈 문자열인 로컬 변수를 선언하여 스택 슬롯 0을 따로 설정합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">함수 호출의 경우, 해당 슬롯은 호출 중인 함수를 유지하게 됩니다.</font><font papago-translate="translated"> 슬롯에 이름이 없기 때문에 기능 본체가 액세스하지 않습니다.</font><font papago-translate="translated"> 이게 어디로 가는지 짐작할 수 있습니다.</font><font papago-translate="translated"> <em>메서드</em> 호출의 경우 해당 슬롯을 재사용하여 수신기를 저장할 수 있습니다.</font><font papago-translate="translated"> 슬롯 0에는 다음과 같은 인스턴스가 저장됩니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 는 다음과 같습니다.</font><font papago-translate="translated"> 컴파일하기 위해 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 컴파일러는 해당 로컬 변수에 올바른 이름을 붙이기만 하면 됩니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  local-&gt;isCaptured = false;
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>initCompiler</em>()<br/>
-replace 2 lines</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>initCompiler</em>()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 두 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  <span class="k">if</span> (<span class="i">type</span> != <span class="a">TYPE_FUNCTION</span>) {
     <span class="i">local</span>-&gt;<span class="i">name</span>.<span class="i">start</span> = <span class="s">"this"</span>;
     <span class="i">local</span>-&gt;<span class="i">name</span>.<span class="i">length</span> = <span class="n">4</span>;
@@ -694,10 +472,7 @@ replace 2 lines</div>
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>initCompiler</em>(), replace 2 lines</div>
-<p>We want to do this only for methods. Function declarations don’t have a <code translate="no">this</code>.
-And, in fact, they <em>must not</em> declare a variable named “this”, so that if you
-write a <code translate="no">this</code> expression inside a function declaration which is itself inside a
-method, the <code translate="no">this</code> correctly resolves to the outer method’s receiver.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">우리는 이것을 오직 방법들만을 위해 하고 싶습니다.</font><font papago-translate="translated"> 함수 선언에는 다음이 없습니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated">. 그리고 사실, 그들은 "이것"이라는 변수를 선언<em>해서는 안 됩니다</em>. 그래서 만약 당신이 다음과 같이 쓴다면 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드 내부에 있는 함수 선언 내부의 표현, 즉 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 외부 메서드의 수신기에 올바르게 해결됩니다.</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Nested</span> {
   <span class="i">method</span>() {
     <span class="k">fun</span> <span class="i">function</span>() {
@@ -710,110 +485,70 @@ method, the <code translate="no">this</code> correctly resolves to the outer met
 
 <span class="t">Nested</span>().<span class="i">method</span>();
 </pre></div>
-<p>This program should print “Nested instance”. To decide what name to give to
-local slot zero, the compiler needs to know whether it’s compiling a function or
-method declaration, so we add a new case to our FunctionType enum to distinguish
-methods.</p>
+<p><font papago-translate="translated">이 프로그램은 "Nested 인스턴스"를 출력해야 합니다.</font><font papago-translate="translated"> 로컬 슬롯 0에 어떤 이름을 붙일지 결정하려면 컴파일러가 함수 또는 메서드 선언을 컴파일하고 있는지 알아야 하므로 함수에 새 케이스를 추가합니다</font><font papago-translate="translated">메서드를 구분하려면 enum을 입력합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  TYPE_FUNCTION,
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in enum <em>FunctionType</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 열거<em> 함수</em>에서</font><font papago-translate="translated"><em>유형</em></font></font></div>
 <pre class="insert" translate="no">  <span class="a">TYPE_METHOD</span>,
 </pre><pre class="insert-after" translate="no">  TYPE_SCRIPT
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in enum <em>FunctionType</em></div>
-<p>When we compile a method, we use that type.</p>
+<p><font papago-translate="translated">메서드를 컴파일할 때는 해당 유형을 사용합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  uint8_t constant = identifierConstant(&amp;parser.previous);
 
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>method</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방법</em> ()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  <span class="t">FunctionType</span> <span class="i">type</span> = <span class="a">TYPE_METHOD</span>;
 </pre><pre class="insert-after" translate="no">  function(type);
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>method</em>(), replace 1 line</div>
-<p>Now we can correctly compile references to the special “this” variable, and the
-compiler will emit the right <code translate="no">OP_GET_LOCAL</code> instructions to access it. Closures
-can even capture <code translate="no">this</code> and store the receiver in upvalues. Pretty cool.</p>
-<p>Except that at runtime, the receiver isn’t actually <em>in</em> slot zero. The
-interpreter isn’t holding up its end of the bargain yet. Here is the fix:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이제 우리는 특별한 "이" 변수에 대한 참조를 올바르게 컴파일할 수 있으며, 컴파일러는 오른쪽을 방출할 것입니다 </font></font><code translate="no">OP_GET_LOCAL</code><font papago-translate="splitted"><font papago-translate="translated"> 접근 지침.</font><font papago-translate="translated"> 폐쇄는 심지어 포획할 수도 있습니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 수신기를 업값에 저장합니다.</font><font papago-translate="translated"> 꽤 멋지네요.</font></font></p>
+<p><font papago-translate="translated">런타임 시 수신기가 실제로 슬롯<em></em> 0에 있지 않다는 점을 제외하고는 말입니다.</font><font papago-translate="translated"> 통역사는 아직 계약 종료를 미루고 있지 않습니다.</font><font papago-translate="translated"> 다음은 해결책입니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      case OBJ_BOUND_METHOD: {
         ObjBoundMethod* bound = AS_BOUND_METHOD(callee);
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>callValue</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>callValue</em>()에서</font></font></div>
 <pre class="insert" translate="no">        <span class="i">vm</span>.<span class="i">stackTop</span>[-<span class="i">argCount</span> - <span class="n">1</span>] = <span class="i">bound</span>-&gt;<span class="i">receiver</span>;
 </pre><pre class="insert-after" translate="no">        return call(bound-&gt;method, argCount);
       }
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>callValue</em>()</div>
-<p>When a method is called, the top of the stack contains all of the arguments, and
-then just under those is the closure of the called method. That’s where slot
-zero in the new CallFrame will be. This line of code inserts the receiver into
-that slot. For example, given a method call like this:</p>
+<p><font papago-translate="translated">메서드가 호출될 때 스택의 상단에는 모든 인수가 포함되어 있으며, 그 바로 아래에는 호출된 메서드의 닫힘이 있습니다.</font><font papago-translate="translated"> 새로운 CallFrame의 슬롯 0이 바로 여기에 있습니다.</font><font papago-translate="translated"> 이 코드 라인은 수신기를 해당 슬롯에 삽입합니다.</font><font papago-translate="translated"> 예를 들어, 다음과 같은 메서드 호출이 주어졌을 때:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">scone</span>.<span class="i">topping</span>(<span class="s">"berries"</span>, <span class="s">"cream"</span>);
 </pre></div>
-<p>We calculate the slot to store the receiver like so:</p><img alt="Skipping over the argument stack slots to find the slot containing the closure." src="image/methods-and-initializers/closure-slot.png"/>
-<p>The <code translate="no">-argCount</code> skips past the arguments and the <code translate="no">- 1</code> adjusts for the fact that
-<code translate="no">stackTop</code> points just <em>past</em> the last used stack slot.</p>
-<h3><a href="#misusing-this" id="misusing-this"><small>28 . 3 . 1</small>Misusing this</a></h3>
-<p>Our VM now supports users <em>correctly</em> using <code translate="no">this</code>, but we also need to make
-sure it properly handles users <em>mis</em>using <code translate="no">this</code>. Lox says it is a compile
-error for a <code translate="no">this</code> expression to appear outside of the body of a method. These
-two wrong uses should be caught by the compiler:</p>
+<p><font papago-translate="translated">수신기를 이렇게 저장할 슬롯을 계산합니다:</font></p><img alt="Skipping over the argument stack slots to find the slot containing the closure." src="https://youhogeon-meritz.github.io/image/methods-and-initializers/closure-slot.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">그 </font></font><code translate="no">-argCount</code><font papago-translate="splitted"><font papago-translate="translated"> 인수를 건너뛰고 </font></font><code translate="no">- 1</code><font papago-translate="splitted"><font papago-translate="translated"> 다음과 같은 사실을 조정합니다 </font></font><code translate="no">stackTop</code><font papago-translate="splitted"><font papago-translate="translated"> 마지막으로 사용한 스택 슬롯을<em> 조금 넘는</em> 지점들.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#misusing-this" id="misusing-this"><small><font papago-translate="translated">28 . 3 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">이것을 오용하기</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">이제 VM은 사용자<em></em>가 올바르게 사용할 수 있도록 지원합니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated">, 그러나 우리는 또한 사용자<em>가 오</em>용하는 것을 제대로 처리하는지 확인해야 합니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated">. Lox는 이것이 a에 대한 컴파일 오류라고 말합니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드의 본문 외부에 나타나는 표현.</font><font papago-translate="translated"> 이 두 가지 잘못된 사용은 컴파일러가 잡아야 합니다:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">print</span> <span class="k">this</span>; <span class="c">// At top level.</span>
 
 <span class="k">fun</span> <span class="i">notMethod</span>() {
   <span class="k">print</span> <span class="k">this</span>; <span class="c">// In a function.</span>
 }
 </pre></div>
-<p>So how does the compiler know if it’s inside a method? The obvious answer is to
-look at the FunctionType of the current Compiler. We did just add an enum case
-there to treat methods specially. However, that wouldn’t correctly handle code
-like the earlier example where you are inside a function which is, itself,
-nested inside a method.</p>
-<p>We could try to resolve “this” and then report an error if it wasn’t found in
-any of the surrounding lexical scopes. That would work, but would require us to
-shuffle around a bunch of code, since right now the code for resolving a
-variable implicitly considers it a global access if no declaration is found.</p>
-<p>In the next chapter, we will need information about the nearest enclosing class.
-If we had that, we could use it here to determine if we are inside a method. So
-we may as well make our future selves’ lives a little easier and put that
-machinery in place now.</p>
+<p><font papago-translate="translated">그래서 컴파일러는 그것이 메서드 내부에 있는지 어떻게 알 수 있나요?</font><font papago-translate="translated"> 명백한 답은 함수를 살펴보는 것입니다</font><font papago-translate="translated">현재 컴파일러의 유형.</font><font papago-translate="translated"> 방법을 특별히 다루기 위해 열거형 케이스를 추가했습니다.</font><font papago-translate="translated"> 그러나 이는 메서드 내부에 중첩된 함수 내부에 있는 이전 예제와 같은 코드를 올바르게 처리하지 못할 것입니다.</font></p>
+<p><font papago-translate="translated">"이것"을 해결한 다음 주변 어휘 범위에서 오류가 발견되지 않으면 보고할 수 있습니다.</font><font papago-translate="translated"> 그것은 효과가 있을 것이지만, 변수를 해결하기 위한 코드가 선언문을 찾지 못하면 암묵적으로 전역 접근으로 간주하기 때문에 여러 코드를 섞어야 할 것입니다.</font></p>
+<p><font papago-translate="translated">다음 장에서는 가장 가까운 인클로저 클래스에 대한 정보가 필요합니다.</font><font papago-translate="translated"> 만약 우리가 그것을 가지고 있다면, 여기서 우리가 방법 안에 있는지 확인하는 데 사용할 수 있을 것입니다.</font><font papago-translate="translated"> 그래서 우리는 미래의 삶을 조금 더 편안하게 만들고 지금 그 기계를 설치하는 것이 좋습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">Compiler* current = NULL;
-</pre><div class="source-file"><em>compiler.c</em><br/>
-add after variable <em>current</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 가변<em> 전류</em> 후에 추가</font></font></div>
 <pre class="insert" translate="no"><span class="t">ClassCompiler</span>* <span class="i">currentClass</span> = <span class="a">NULL</span>;
 </pre><pre class="insert-after" translate="no">
-
 static Chunk* currentChunk() {
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after variable <em>current</em></div>
-<p>This module variable points to a struct representing the current, innermost
-class being compiled. The new type looks like this:</p>
+<p><font papago-translate="translated">이 모듈 변수는 컴파일 중인 현재 가장 안쪽 클래스를 나타내는 구조를 가리킵니다.</font><font papago-translate="translated"> 새로운 유형은 다음과 같습니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">} Compiler;
-</pre><div class="source-file"><em>compiler.c</em><br/>
-add after struct <em>Compiler</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 구조<em> 컴파일</em>러 뒤에 추가</font></font></div>
 <pre class="insert" translate="no">
-
 <span class="k">typedef</span> <span class="k">struct</span> <span class="t">ClassCompiler</span> {
   <span class="k">struct</span> <span class="t">ClassCompiler</span>* <span class="i">enclosing</span>;
 } <span class="t">ClassCompiler</span>;
 </pre><pre class="insert-after" translate="no">
-
 Parser parser;
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after struct <em>Compiler</em></div>
-<p>Right now we store only a pointer to the ClassCompiler for the enclosing class,
-if any. Nesting a class declaration inside a method in some other class is an
-uncommon thing to do, but Lox supports it. Just like the Compiler struct, this
-means ClassCompiler forms a linked list from the current innermost class being
-compiled out through all of the enclosing classes.</p>
-<p>If we aren’t inside any class declaration at all, the module variable
-<code translate="no">currentClass</code> is <code translate="no">NULL</code>. When the compiler begins compiling a class, it pushes
-a new ClassCompiler onto that implicit linked stack.</p>
+<p><font papago-translate="translated">현재로서는 포함된 클래스에 대한 클래스 컴파일러 포인터만 저장하고 있습니다(있는 경우).</font><font papago-translate="translated"> 다른 클래스의 메서드에 클래스 선언을 포함시키는 것은 드문 일이지만, Lox는 이를 지원합니다.</font><font papago-translate="translated"> 컴파일러 구조와 마찬가지로, 이는 ClassCompiler가 현재 가장 안쪽에 있는 클래스가 모든 포함된 클래스를 통해 컴파일되는 링크 목록을 형성한다는 것을 의미합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">클래스 선언에 전혀 포함되지 않은 경우 모듈 변수 </font></font><code translate="no">currentClass</code><font papago-translate="splitted"><font papago-translate="translated"> 이 </font></font><code translate="no">NULL</code><font papago-translate="splitted"><font papago-translate="translated">. 컴파일러가 클래스를 컴파일하기 시작하면 새로운 클래스 컴파일러를 해당 암묵적으로 연결된 스택에 푸시합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  defineVariable(nameConstant);
 
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>classDeclaration</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>class</em>D<em>eclaration</em>에서 ()</font></font></div>
 <pre class="insert" translate="no">  <span class="t">ClassCompiler</span> <span class="i">classCompiler</span>;
   <span class="i">classCompiler</span>.<span class="i">enclosing</span> = <span class="i">currentClass</span>;
   <span class="i">currentClass</span> = &amp;<span class="i">classCompiler</span>;
@@ -821,25 +556,17 @@ in <em>classDeclaration</em>()</div>
 </pre><pre class="insert-after" translate="no">  namedVariable(className, false);
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>classDeclaration</em>()</div>
-<p>The memory for the ClassCompiler struct lives right on the C stack, a handy
-capability we get by writing our compiler using recursive descent. At the end of
-the class body, we pop that compiler off the stack and restore the enclosing
-one.</p>
+<p><font papago-translate="translated">ClassCompiler 구조의 메모리는 재귀적 하강법을 사용하여 컴파일러를 작성함으로써 얻을 수 있는 편리한 기능인 C 스택에 바로 저장되어 있습니다.</font><font papago-translate="translated"> 클래스 본문이 끝나면, 우리는 그 컴파일러를 스택에서 꺼내어 둘러싸는 컴파일러를 복원합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  emitByte(OP_POP);
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>classDeclaration</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>class</em>D<em>eclaration</em>에서 ()</font></font></div>
 <pre class="insert" translate="no">
-
   <span class="i">currentClass</span> = <span class="i">currentClass</span>-&gt;<span class="i">enclosing</span>;
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>classDeclaration</em>()</div>
-<p>When an outermost class body ends, <code translate="no">enclosing</code> will be <code translate="no">NULL</code>, so this resets
-<code translate="no">currentClass</code> to <code translate="no">NULL</code>. Thus, to see if we are inside a class<span class="em">—</span>and therefore
-inside a method<span class="em">—</span>we simply check that module variable.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">가장 바깥쪽 클래스 본문이 끝나면, </font></font><code translate="no">enclosing</code><font papago-translate="splitted"><font papago-translate="translated"> 될 것이다 </font></font><code translate="no">NULL</code><font papago-translate="splitted"><font papago-translate="translated">, 그래서 이것은 초기화됩니다 </font></font><code translate="no">currentClass</code><font papago-translate="splitted"><font papago-translate="translated"> 로. </font></font><code translate="no">NULL</code><font papago-translate="splitted"><font papago-translate="translated">. 따라서 우리가 클래스 내에 있는지, 따라서 메서드 내부에 있는지 확인하기 위해 단순히 해당 모듈<span class="em"></span><span class="em"></span> 변수를 확인합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">static void this_(bool canAssign) {
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>this_</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>이</em>_()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="k">if</span> (<span class="i">currentClass</span> == <span class="a">NULL</span>) {
     <span class="i">error</span>(<span class="s">"Can't use 'this' outside of a class."</span>);
     <span class="k">return</span>;
@@ -848,58 +575,39 @@ in <em>this_</em>()</div>
 </pre><pre class="insert-after" translate="no">  variable(false);
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>this_</em>()</div>
-<p>With that, <code translate="no">this</code> outside of a class is correctly forbidden. Now our methods
-really feel like <em>methods</em> in the object-oriented sense. Accessing the receiver
-lets them affect the instance you called the method on. We’re getting there!</p>
-<h2><a href="#instance-initializers" id="instance-initializers"><small>28 . 4</small>Instance Initializers</a></h2>
-<p>The reason object-oriented languages tie state and behavior together<span class="em">—</span>one of
-the core tenets of the paradigm<span class="em">—</span>is to ensure that objects are always in a
-valid, meaningful state. When the only way to touch an object’s state is <span name="through">through</span> its methods, the methods can make sure nothing
-goes awry. But that presumes the object is <em>already</em> in a proper state. What
-about when it’s first created?</p>
-<aside name="through">
-<p>Of course, Lox does let outside code directly access and modify an instance’s
-fields without going through its methods. This is unlike Ruby and Smalltalk,
-which completely encapsulate state inside objects. Our toy scripting language,
-alas, isn’t so principled.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그것으로, </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 수업 외 활동은 올바르게 금지됩니다.</font><font papago-translate="translated"> 이제 우리의 방법들은 객체 지향적인 의미<em>에서 정말로 방법</em>처럼 느껴집니다.</font><font papago-translate="translated"> 수신기에 접근하면 메서드를 호출한 인스턴스에 영향을 미칩니다.</font><font papago-translate="translated"> 도착했습니다!</font></font></p>
+<h2><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#instance-initializers" id="instance-initializers"><small><font papago-translate="translated">28 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">인스턴스 초기화</font></font></a></h2>
+<p><font papago-translate="translated">객체 지향 언어가 상태와 행동을 연결하는 이유는 패러다임의 핵심 원칙 중 하나로, 객체가 항상 유효하고 의미<span class="em"></span><span class="em"></span> 있는 상태에 있도록 하기 위해서입니다.</font><font papago-translate="translated"> 물체의 상태를 터치하는 유일한 방법이 방법일 때, 방법들은<span name="through"></span> 아무 문제도 일으키지 않도록 보장할 수 있습니다.</font><font papago-translate="translated"> 하지만 그것은 물체가<em> 이미</em> 적절한 상태에 있다고 가정합니다.</font><font papago-translate="translated"> 처음 만들어졌을 때는 어떻게 되나요?</font></p>
+<aside name="through" style="top: 17290px;">
+<p><font papago-translate="translated">물론 Lox는 외부 코드가 인스턴스의 메서드를 거치지 않고 직접 필드에 접근하고 수정할 수 있도록 허용합니다.</font><font papago-translate="translated"> 이것은 객체 내부의 상태를 완전히 캡슐화하는 루비와 스몰토크와는 다릅니다.</font><font papago-translate="translated"> 우리의 장난감 스크립팅 언어는 그다지 원칙적이지 않습니다.</font></p>
 </aside>
-<p>Object-oriented languages ensure that brand new objects are properly set up
-through constructors, which both produce a new instance and initialize its
-state. In Lox, the runtime allocates new raw instances, and a class may declare
-an initializer to set up any fields. Initializers work mostly like normal
-methods, with a few tweaks:</p>
+<p><font papago-translate="translated">객체 지향 언어는 새로운 인스턴스를 생성하고 상태를 초기화하는 생성자를 통해 새로운 객체가 올바르게 설정되도록 보장합니다.</font><font papago-translate="translated"> Lox에서는 런타임이 새로운 원시 인스턴스를 할당하고, 클래스가 초기화를 선언하여 필드를 설정할 수 있습니다.</font><font papago-translate="translated"> 초기화는 주로 일반적인 방법과 유사하게 작동하며 몇 가지 조정이 필요합니다:</font></p>
 <ol>
 <li>
-<p>The runtime automatically invokes the initializer method whenever an
-instance of a class is created.</p>
+<p><font papago-translate="translated">런타임은 클래스 인스턴스가 생성될 때마다 초기화 메서드를 자동으로 호출합니다.</font></p>
 </li>
 <li>
-<p>The caller that constructs an instance always gets the instance <span name="return">back</span> after the initializer finishes, regardless of what
-the initializer function itself returns. The initializer method doesn’t need
-to explicitly return <code translate="no">this</code>.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">인스턴스를 구성하는 호출자는 초기화 함수 자체가 무엇을 반환하는지에 관계없이 항상 초기화가 완료된 후 인스턴스<span name="return">를 반환</span>받습니다.</font><font papago-translate="translated"> 초기화 메서드는 명시적으로 반환할 필요가 없습니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
 </li>
 <li>
-<p>In fact, an initializer is <em>prohibited</em> from returning any value at all
-since the value would never be seen anyway.</p>
+<p><font papago-translate="translated">사실, 초기화 장치는 값을 전혀 볼 수 없기 때문에 어떤 값도 반환하는<em> 것이 금지</em>되어 있습니다.</font></p>
 </li>
 </ol>
-<aside name="return">
-<p>It’s as if the initializer is implicitly wrapped in a bundle of code like this:</p>
+<aside name="return" style="top: 17626px;">
+<p><font papago-translate="translated">마치 이니셜라이저가 암묵적으로 다음과 같은 코드 묶음으로 감겨 있는 것과 같습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">fun</span> <span class="i">create</span>(<span class="i">klass</span>) {
   <span class="k">var</span> <span class="i">obj</span> = <span class="i">newInstance</span>(<span class="i">klass</span>);
   <span class="i">obj</span>.<span class="i">init</span>();
   <span class="k">return</span> <span class="i">obj</span>;
 }
 </pre></div>
-<p>Note how the value returned by <code translate="no">init()</code> is discarded.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">값이 반환되는 방식에 주목하세요 </font></font><code translate="no">init()</code><font papago-translate="splitted"><font papago-translate="translated"> 폐기됩니다.</font></font></p>
 </aside>
-<p>Now that we support methods, to add initializers, we merely need to implement
-those three special rules. We’ll go in order.</p>
-<h3><a href="#invoking-initializers" id="invoking-initializers"><small>28 . 4 . 1</small>Invoking initializers</a></h3>
-<p>First, automatically calling <code translate="no">init()</code> on new instances:</p>
+<p><font papago-translate="translated">이제 메서드를 지원하므로 초기화기를 추가하려면 이 세 가지 특별 규칙만 구현하면 됩니다.</font><font papago-translate="translated"> 순서대로 진행하겠습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#invoking-initializers" id="invoking-initializers"><small><font papago-translate="translated">28 . 4 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">이니셜라이저 호출</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">먼저, 자동으로 호출하기 </font></font><code translate="no">init()</code><font papago-translate="splitted"><font papago-translate="translated"> 새로운 사례에서:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">        vm.stackTop[-argCount - 1] = OBJ_VAL(newInstance(klass));
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>callValue</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>callValue</em>()에서</font></font></div>
 <pre class="insert" translate="no">        <span class="t">Value</span> <span class="i">initializer</span>;
         <span class="k">if</span> (<span class="i">tableGet</span>(&amp;<span class="i">klass</span>-&gt;<span class="i">methods</span>, <span class="i">vm</span>.<span class="i">initString</span>,
                      &amp;<span class="i">initializer</span>)) {
@@ -908,26 +616,18 @@ in <em>callValue</em>()</div>
 </pre><pre class="insert-after" translate="no">        return true;
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>callValue</em>()</div>
-<p>After the runtime allocates the new instance, we look for an <code translate="no">init()</code> method on
-the class. If we find one, we initiate a call to it. This pushes a new CallFrame
-for the initializer’s closure. Say we run this program:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">런타임이 새 인스턴스를 할당한 후, 우리는 </font></font><code translate="no">init()</code><font papago-translate="splitted"><font papago-translate="translated"> 수업 방법.</font><font papago-translate="translated"> 하나를 찾으면 호출을 시작합니다.</font><font papago-translate="translated"> 이렇게 하면 초기화기의 종료를 위한 새로운 CallFrame이 만들어집니다.</font><font papago-translate="translated"> 이 프로그램을 실행한다고 가정해 보겠습니다:</font></font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Brunch</span> {
   <span class="i">init</span>(<span class="i">food</span>, <span class="i">drink</span>) {}
 }
 
 <span class="t">Brunch</span>(<span class="s">"eggs"</span>, <span class="s">"coffee"</span>);
 </pre></div>
-<p>When the VM executes the call to <code translate="no">Brunch()</code>, it goes like this:</p><img alt="The aligned stack windows for the Brunch() call and the corresponding init() method it forwards to." src="image/methods-and-initializers/init-call-frame.png"/>
-<p>Any arguments passed to the class when we called it are still sitting on the
-stack above the instance. The new CallFrame for the <code translate="no">init()</code> method shares that
-stack window, so those arguments implicitly get forwarded to the initializer.</p>
-<p>Lox doesn’t require a class to define an initializer. If omitted, the runtime
-simply returns the new uninitialized instance. However, if there is no <code translate="no">init()</code>
-method, then it doesn’t make any sense to pass arguments to the class when
-creating the instance. We make that an error.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">VM이 호출을 실행할 때 </font></font><code translate="no">Brunch()</code><font papago-translate="splitted"><font papago-translate="translated">,그건 이런 식이다:</font></font></p><img alt="The aligned stack windows for the Brunch() call and the corresponding init() method it forwards to." src="https://youhogeon-meritz.github.io/image/methods-and-initializers/init-call-frame.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">클래스를 호출할 때 클래스에 전달된 모든 인수는 인스턴스 위의 스택에 여전히 남아 있습니다.</font><font papago-translate="translated"> 새로운 콜프레임 </font></font><code translate="no">init()</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드는 해당 스택 창을 공유하므로, 이러한 인수는 암묵적으로 초기화자에게 전달됩니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">Lox는 초기화자를 정의하는 데 클래스가 필요하지 않습니다.</font><font papago-translate="translated"> 생략하면 런타임은 단순히 초기화되지 않은 새로운 인스턴스를 반환합니다.</font><font papago-translate="translated"> 그러나 만약 없다면 </font></font><code translate="no">init()</code><font papago-translate="splitted"><font papago-translate="translated"> 메서드는 인스턴스를 만들 때 클래스에 인수를 전달하는 것이 의미가 없습니다.</font><font papago-translate="translated"> 우리는 그것을 실수로 만듭니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">          return call(AS_CLOSURE(initializer), argCount);
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>callValue</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>callValue</em>()에서</font></font></div>
 <pre class="insert" translate="no">        } <span class="k">else</span> <span class="k">if</span> (<span class="i">argCount</span> != <span class="n">0</span>) {
           <span class="i">runtimeError</span>(<span class="s">"Expected 0 arguments but got %d."</span>,
                        <span class="i">argCount</span>);
@@ -935,84 +635,53 @@ in <em>callValue</em>()</div>
 </pre><pre class="insert-after" translate="no">        }
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>callValue</em>()</div>
-<p>When the class <em>does</em> provide an initializer, we also need to ensure that the
-number of arguments passed matches the initializer’s arity. Fortunately, the
-<code translate="no">call()</code> helper does that for us already.</p>
-<p>To call the initializer, the runtime looks up the <code translate="no">init()</code> method by name. We
-want that to be fast since it happens every time an instance is constructed.
-That means it would be good to take advantage of the string interning we’ve
-already implemented. To do that, the VM creates an ObjString for “init” and
-reuses it. The string lives right in the VM struct.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">클래스가 이니셜라이저를 제공<em>할</em> 때, 전달된 인수의 수가 이니셜라이저의 arity와 일치하는지 확인해야 합니다.</font><font papago-translate="translated"> 다행히도 </font></font><code translate="no">call()</code><font papago-translate="splitted"><font papago-translate="translated"> 도우미가 이미 그렇게 해줍니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">초기화를 호출하려면 런타임이 </font></font><code translate="no">init()</code><font papago-translate="splitted"><font papago-translate="translated"> 이름별 방법.</font><font papago-translate="translated"> 인스턴스가 구성될 때마다 발생하기 때문에 우리는 그것이 빠르기를 원합니다.</font><font papago-translate="translated"> 즉, 우리가 이미 구현한 문자열 인터닝을 활용하는 것이 좋을 것입니다.</font><font papago-translate="translated"> 이를 위해 VM은 "init"을 위한 ObjString을 생성하고 재사용합니다.</font><font papago-translate="translated"> 문자열은 VM 구조에 바로 저장됩니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  Table strings;
-</pre><div class="source-file"><em>vm.h</em><br/>
-in struct <em>VM</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">VM.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em></em>구조 VM에서</font></font></div>
 <pre class="insert" translate="no">  <span class="t">ObjString</span>* <span class="i">initString</span>;
 </pre><pre class="insert-after" translate="no">  ObjUpvalue* openUpvalues;
 </pre></div>
 <div class="source-file-narrow"><em>vm.h</em>, in struct <em>VM</em></div>
-<p>We create and intern the string when the VM boots up.</p>
+<p><font papago-translate="translated">VM이 부팅될 때 문자열을 생성하고 삽입합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  initTable(&amp;vm.strings);
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>initVM</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>initVM</em>()에서</font></font></div>
 <pre class="insert" translate="no">
-
   <span class="i">vm</span>.<span class="i">initString</span> = <span class="i">copyString</span>(<span class="s">"init"</span>, <span class="n">4</span>);
 </pre><pre class="insert-after" translate="no">
-
   defineNative("clock", clockNative);
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>initVM</em>()</div>
-<p>We want it to stick around, so the GC considers it a root.</p>
+<p><font papago-translate="translated">우리는 그것이 계속 유지되기를 원하므로 GC는 그것을 뿌리로 간주합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  markCompilerRoots();
-</pre><div class="source-file"><em>memory.c</em><br/>
-in <em>markRoots</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">메모리.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>마크루츠</em>()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="i">markObject</span>((<span class="t">Obj</span>*)<span class="i">vm</span>.<span class="i">initString</span>);
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>memory.c</em>, in <em>markRoots</em>()</div>
-<p>Look carefully. See any bug waiting to happen? No? It’s a subtle one. The
-garbage collector now reads <code translate="no">vm.initString</code>. That field is initialized from the
-result of calling <code translate="no">copyString()</code>. But copying a string allocates memory, which
-can trigger a GC. If the collector ran at just the wrong time, it would read
-<code translate="no">vm.initString</code> before it had been initialized. So, first we zero the field out.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">주의 깊게 보세요.</font><font papago-translate="translated"> 어떤 버그가 발생하기를 기다리고 있나요?</font><font papago-translate="translated"> 그렇지 않나요? 미묘한 문제입니다.</font><font papago-translate="translated"> 쓰레기 수집가는 이제 다음을 읽습니다 </font></font><code translate="no">vm.initString</code><font papago-translate="splitted"><font papago-translate="translated">. 해당 필드는 호출 결과에서 초기화됩니다 </font></font><code translate="no">copyString()</code><font papago-translate="splitted"><font papago-translate="translated">. 하지만 문자열을 복사하면 메모리가 할당되어 GC가 트리거될 수 있습니다.</font><font papago-translate="translated"> 수집가가 잘못된 시간에 실행되면 다음과 같이 읽힐 것입니다 </font></font><code translate="no">vm.initString</code><font papago-translate="splitted"><font papago-translate="translated"> 초기화되기 전에.</font><font papago-translate="translated"> 그래서 먼저 필드를 제로로 만듭니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  initTable(&amp;vm.strings);
 
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>initVM</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>initVM</em>()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="i">vm</span>.<span class="i">initString</span> = <span class="a">NULL</span>;
 </pre><pre class="insert-after" translate="no">  vm.initString = copyString("init", 4);
 
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>initVM</em>()</div>
-<p>We clear the pointer when the VM shuts down since the next line will free it.</p>
+<p><font papago-translate="translated">VM이 종료되면 다음 줄이 포인터를 해제하기 때문에 포인터를 지웁니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  freeTable(&amp;vm.strings);
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>freeVM</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>무료</em> VM()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="i">vm</span>.<span class="i">initString</span> = <span class="a">NULL</span>;
 </pre><pre class="insert-after" translate="no">  freeObjects();
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>freeVM</em>()</div>
-<p>OK, that lets us call initializers.</p>
-<h3><a href="#initializer-return-values" id="initializer-return-values"><small>28 . 4 . 2</small>Initializer return values</a></h3>
-<p>The next step is ensuring that constructing an instance of a class with an
-initializer always returns the new instance, and not <code translate="no">nil</code> or whatever the body
-of the initializer returns. Right now, if a class defines an initializer, then
-when an instance is constructed, the VM pushes a call to that initializer onto
-the CallFrame stack. Then it just keeps on trucking.</p>
-<p>The user’s invocation on the class to create the instance will complete whenever
-that initializer method returns, and will leave on the stack whatever value the
-initializer puts there. That means that unless the user takes care to put
-<code translate="no">return this;</code> at the end of the initializer, no instance will come out. Not
-very helpful.</p>
-<p>To fix this, whenever the front end compiles an initializer method, it will emit
-different bytecode at the end of the body to return <code translate="no">this</code> from the method
-instead of the usual implicit <code translate="no">nil</code> most functions return. In order to do
-<em>that</em>, the compiler needs to actually know when it is compiling an initializer.
-We detect that by checking to see if the name of the method we’re compiling is
-“init”.</p>
+<p><font papago-translate="translated">좋아요, 그러면 초기화 장치를 호출할 수 있습니다.</font></p>
+<h3><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#initializer-return-values" id="initializer-return-values"><small><font papago-translate="translated">28 . 4 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">초기화 반환 값</font></font></a></h3>
+<p><font papago-translate="splitted"><font papago-translate="translated">다음 단계는 initializer를 사용하여 클래스의 인스턴스를 구성하는 것이 항상 새 인스턴스를 반환하는 것이 아니라 항상 새로운 인스턴스를 반환하는지 확인하는 것입니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 또는 초기화 장치의 본체가 반환되는 모든 것.</font><font papago-translate="translated"> 현재 클래스가 이니셜라이저를 정의하면 인스턴스가 생성되면 VM이 해당 이니셜라이저에 대한 호출을 CallFrame 스택으로 푸시합니다.</font><font papago-translate="translated"> 그러면 트럭 운송만 계속됩니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">사용자가 클래스에서 인스턴스를 생성하도록 호출하면 해당 초기화 메서드가 돌아올 때마다 완료되며, 초기화 메서드가 어떤 값을 넣든 스택에 남습니다.</font><font papago-translate="translated"> 즉, 사용자가 주의하지 않는 한 </font></font><code translate="no">return this;</code><font papago-translate="splitted"><font papago-translate="translated"> 초기화가 끝나면 인스턴스가 나오지 않습니다.</font><font papago-translate="translated"> 별로 도움이 되지 않습니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 문제를 해결하기 위해, 앞쪽 끝이 초기화 방법을 컴파일할 때마다 본체 끝에서 서로 다른 바이트코드를 방출하여 다시 돌아오게 됩니다 </font></font><code translate="no">this</code><font papago-translate="splitted"><font papago-translate="translated"> 일반적인 암시 대신 방법에서 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 대부분의 함수가 반환됩니다.</font><font papago-translate="translated"> <em>이</em>를 위해서는 컴파일러가 이니셜라이저를 컴파일할 때 실제로 알아야 합니다.</font><font papago-translate="translated"> 컴파일하는 메서드의 이름이 "init"인지 확인하여 이를 감지합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  FunctionType type = TYPE_METHOD;
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>method</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>방법</em> ()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="k">if</span> (<span class="i">parser</span>.<span class="i">previous</span>.<span class="i">length</span> == <span class="n">4</span> &amp;&amp;
       <span class="i">memcmp</span>(<span class="i">parser</span>.<span class="i">previous</span>.<span class="i">start</span>, <span class="s">"init"</span>, <span class="n">4</span>) == <span class="n">0</span>) {
     <span class="i">type</span> = <span class="a">TYPE_INITIALIZER</span>;
@@ -1021,20 +690,16 @@ in <em>method</em>()</div>
 </pre><pre class="insert-after" translate="no">  function(type);
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>method</em>()</div>
-<p>We define a new function type to distinguish initializers from other methods.</p>
+<p><font papago-translate="translated">우리는 초기화기를 다른 방법들과 구별하기 위해 새로운 함수 유형을 정의합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  TYPE_FUNCTION,
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in enum <em>FunctionType</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 열거<em> 함수</em>에서</font><font papago-translate="translated"><em>유형</em></font></font></div>
 <pre class="insert" translate="no">  <span class="a">TYPE_INITIALIZER</span>,
 </pre><pre class="insert-after" translate="no">  TYPE_METHOD,
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in enum <em>FunctionType</em></div>
-<p>Whenever the compiler emits the implicit return at the end of a body, we check
-the type to decide whether to insert the initializer-specific behavior.</p>
+<p><font papago-translate="translated">컴파일러가 본문의 끝에서 암시적 반환을 방출할 때마다, 우리는 타입을 확인하여 초기화자별 동작을 삽입할지 여부를 결정합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">static void emitReturn() {
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>emitReturn</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>emit</em>R<em>eturn</em>()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  <span class="k">if</span> (<span class="i">current</span>-&gt;<span class="i">type</span> == <span class="a">TYPE_INITIALIZER</span>) {
     <span class="i">emitBytes</span>(<span class="a">OP_GET_LOCAL</span>, <span class="n">0</span>);
   } <span class="k">else</span> {
@@ -1044,20 +709,13 @@ replace 1 line</div>
 </pre><pre class="insert-after" translate="no">  emitByte(OP_RETURN);
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>emitReturn</em>(), replace 1 line</div>
-<p>In an initializer, instead of pushing <code translate="no">nil</code> onto the stack before returning,
-we load slot zero, which contains the instance. This <code translate="no">emitReturn()</code> function is
-also called when compiling a <code translate="no">return</code> statement without a value, so this also
-correctly handles cases where the user does an early return inside the
-initializer.</p>
-<h3><a href="#incorrect-returns-in-initializers" id="incorrect-returns-in-initializers"><small>28 . 4 . 3</small>Incorrect returns in initializers</a></h3>
-<p>The last step, the last item in our list of special features of initializers, is
-making it an error to try to return anything <em>else</em> from an initializer. Now
-that the compiler tracks the method type, this is straightforward.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">초기화기에서 푸시하는 대신 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 돌아가기 전에 스택에 인스턴스가 포함된 슬롯 0을 로드합니다.</font><font papago-translate="translated"> 이것. </font></font><code translate="no">emitReturn()</code><font papago-translate="splitted"><font papago-translate="translated"> 함수는 컴파일할 때도 호출됩니다 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 값이 없는 문장은 사용자가 초기화기 내부에서 조기 반환을 하는 경우도 올바르게 처리합니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#incorrect-returns-in-initializers" id="incorrect-returns-in-initializers"><small><font papago-translate="translated">28 . 4 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">초기화기의 잘못된 반환</font></font></a></h3>
+<p><font papago-translate="translated">마지막 단계인 초기화 기능 목록의 마지막 항목은 초기화 기능에서<em> 다른</em> 항목을 반환하려는 시도를 오류로 만드는 것입니다.</font><font papago-translate="translated"> 이제 컴파일러가 메서드 유형을 추적하므로 간단합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  if (match(TOKEN_SEMICOLON)) {
     emitReturn();
   } else {
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>returnStatement</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>답례</em>문()으로</font></font></div>
 <pre class="insert" translate="no">    <span class="k">if</span> (<span class="i">current</span>-&gt;<span class="i">type</span> == <span class="a">TYPE_INITIALIZER</span>) {
       <span class="i">error</span>(<span class="s">"Can't return a value from an initializer."</span>);
     }
@@ -1065,11 +723,8 @@ in <em>returnStatement</em>()</div>
 </pre><pre class="insert-after" translate="no">    expression();
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>returnStatement</em>()</div>
-<p>We report an error if a <code translate="no">return</code> statement in an initializer has a value. We
-still go ahead and compile the value afterwards so that the compiler doesn’t get
-confused by the trailing expression and report a bunch of cascaded errors.</p>
-<p>Aside from inheritance, which we’ll get to <a href="superclasses.html">soon</a>, we now have a
-fairly full-featured class system working in clox.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">다음과 같은 경우 오류를 보고합니다 </font></font><code translate="no">return</code><font papago-translate="splitted"><font papago-translate="translated"> 이니셜라이저의 문에는 값이 있습니다.</font><font papago-translate="translated"> 컴파일러가 후행 표현식에 혼동되지 않도록 나중에 값을 컴파일하고 계단식 오류를 많이 보고합니다.</font></font></p>
+<p><font papago-translate="translated">상속 외에도<a href="https://youhogeon-meritz.github.io/superclasses.html"> 곧</a> 알게 될 것이지만, 이제 우리는 상당히 완전한 기능을 갖춘 클래스 시스템이 clox에서 작동하고 있습니다.</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">CoffeeMaker</span> {
   <span class="i">init</span>(<span class="i">coffee</span>) {
     <span class="k">this</span>.<span class="i">coffee</span> = <span class="i">coffee</span>;
@@ -1086,56 +741,26 @@ fairly full-featured class system working in clox.</p>
 <span class="k">var</span> <span class="i">maker</span> = <span class="t">CoffeeMaker</span>(<span class="s">"coffee and chicory"</span>);
 <span class="i">maker</span>.<span class="i">brew</span>();
 </pre></div>
-<p>Pretty fancy for a C program that would fit on an old <span name="floppy">floppy</span> disk.</p>
-<aside name="floppy">
-<p>I acknowledge that “floppy disk” may no longer be a useful size reference for
-current generations of programmers. Maybe I should have said “a few tweets” or
-something.</p>
+<p><font papago-translate="translated">오래된<span name="floppy"> 플로피</span> 디스크에 들어갈 수 있는 C 프로그램치고는 꽤 화려합니다.</font></p>
+<aside name="floppy" style="top: 22135.5px;">
+<p><font papago-translate="translated">저는 "플로피 디스크"가 현재 세대의 프로그래머들에게 더 이상 유용한 크기 참조가 아닐 수도 있다는 점을 인정합니다.</font><font papago-translate="translated"> "트윗 몇 개" 같은 말을 했어야 했나 봐요.</font></p>
 </aside>
-<h2><a href="#optimized-invocations" id="optimized-invocations"><small>28 . 5</small>Optimized Invocations</a></h2>
-<p>Our VM correctly implements the language’s semantics for method calls and
-initializers. We could stop here. But the main reason we are building an entire
-second implementation of Lox from scratch is to execute faster than our old Java
-interpreter. Right now, method calls even in clox are slow.</p>
-<p>Lox’s semantics define a method invocation as two operations<span class="em">—</span>accessing the
-method and then calling the result. Our VM must support those as separate
-operations because the user <em>can</em> separate them. You can access a method without
-calling it and then invoke the bound method later. Nothing we’ve implemented so
-far is unnecessary.</p>
-<p>But <em>always</em> executing those as separate operations has a significant cost.
-Every single time a Lox program accesses and invokes a method, the runtime
-heap allocates a new ObjBoundMethod, initializes its fields, then pulls them
-right back out. Later, the GC has to spend time freeing all of those ephemeral
-bound methods.</p>
-<p>Most of the time, a Lox program accesses a method and then immediately calls it.
-The bound method is created by one bytecode instruction and then consumed by the
-very next one. In fact, it’s so immediate that the compiler can even textually
-<em>see</em> that it’s happening<span class="em">—</span>a dotted property access followed by an opening
-parenthesis is most likely a method call.</p>
-<p>Since we can recognize this pair of operations at compile time, we have the
-opportunity to emit a <span name="super">new, special</span> instruction that
-performs an optimized method call.</p>
-<p>We start in the function that compiles dotted property expressions.</p>
-<aside class="bottom" name="super">
-<p>If you spend enough time watching your bytecode VM run, you’ll notice it often
-executes the same series of bytecode instructions one after the other. A classic
-optimization technique is to define a new single instruction called a
-<strong>superinstruction</strong> that fuses those into a single instruction with the same
-behavior as the entire sequence.</p>
-<p>One of the largest performance drains in a bytecode interpreter is the overhead
-of decoding and dispatching each instruction. Fusing several instructions into
-one eliminates some of that.</p>
-<p>The challenge is determining <em>which</em> instruction sequences are common enough to
-benefit from this optimization. Every new superinstruction claims an opcode for
-its own use and there are only so many of those to go around. Add too many, and
-you’ll need a larger encoding for opcodes, which then increases code size and
-makes decoding <em>all</em> instructions slower.</p>
+<h2><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#optimized-invocations" id="optimized-invocations"><small><font papago-translate="translated">28 . 5</font></small><font papago-translate="splitted"><font papago-translate="translated">최적화된 호출</font></font></a></h2>
+<p><font papago-translate="translated">우리의 VM은 메서드 호출 및 초기화를 위해 언어의 의미를 올바르게 구현합니다.</font><font papago-translate="translated"> 여기서 멈출 수 있습니다.</font><font papago-translate="translated"> 하지만 우리가 Lox의 두 번째 구현 전체를 처음부터 구축하는 주된 이유는 이전 Java 인터프리터보다 더 빠르게 실행하기 위해서입니다.</font><font papago-translate="translated"> 지금은 클록스에서도 메서드 호출이 느립니다.</font></p>
+<p><font papago-translate="translated">Lox의 의미론은 메서드 호출을 메서드에 접근한 다음<span class="em"></span> 결과를 호출하는 두 가지 작업으로 정의합니다.</font><font papago-translate="translated"> 사용자가 이를 분리<em>할 수</em> 있으므로 VM은 별도의 작업으로 지원해야 합니다.</font><font papago-translate="translated"> 메서드를 호출하지 않고 접근한 다음 나중에 바인딩 메서드를 호출할 수 있습니다.</font><font papago-translate="translated"> 지금까지 우리가 시행한 것은 아무것도 불필요합니다.</font></p>
+<p><font papago-translate="translated">하지만<em> 항상</em> 그것들을 별도의 작업으로 실행하는 데는 상당한 비용이 듭니다.</font><font papago-translate="translated"> Lox 프로그램이 메서드에 접근하여 호출할 때마다 런타임 힙은 새로운 ObjBoundMethod를 할당하고 필드를 초기화한 다음 바로 꺼냅니다.</font><font papago-translate="translated"> 나중에 GC는 모든 일시적인 제한 방법을 해제하는 데 시간을 투자해야 합니다.</font></p>
+<p><font papago-translate="translated">대부분의 경우 Lox 프로그램은 메서드에 액세스한 다음 즉시 메서드를 호출합니다.</font><font papago-translate="translated"> 바인딩 메서드는 하나의 바이트코드 명령어에 의해 생성된 후 바로 다음 명령어에 의해 소비됩니다.</font><font papago-translate="translated"> 사실, 컴파일러가 텍스트로 그것이 일어나고 있음<em>을 확인</em>할 수 있을 정도로 매우 즉각적입니다. 점선 속성 접근 후 괄호를 여는 것이 메서드<span class="em"></span> 호출일 가능성이 높습니다.</font></p>
+<p><font papago-translate="translated">컴파일 시 이 쌍의 연산을 인식할 수 있기 때문에 최적화된 메서드 호출을 수행하는<span name="super"> 새로운 특수</span> 명령을 실행할 수 있는 기회가 있습니다.</font></p>
+<p><font papago-translate="translated">점선 속성 표현식을 컴파일하는 함수에서 시작합니다.</font></p>
+<aside class="bottom" name="super" style="top: 22396.5px;">
+<p><font papago-translate="translated">바이트코드 VM이 실행되는 것을 충분히 지켜보면, 동일한 바이트코드 명령어 시리즈를 차례로 실행하는 경우가 많다는 것을 알 수 있습니다.</font><font papago-translate="translated"> 고전적인 최적화 기법은<strong> 전체</strong> 시퀀스와 동일한 동작을 가진 단일 명령어로 이를 융합하는<strong> 새로운</strong> 단일 명령어<strong>인 슈퍼 명령어</strong>를 정의하는 것입니다.</font></p>
+<p><font papago-translate="translated">바이트코드 인터프리터에서 가장 큰 성능 저하 중 하나는 각 명령어를 디코딩하고 디스패치하는 오버헤드입니다.</font><font papago-translate="translated"> 여러 지침을 하나로 융합하면 그 중 일부가 제거됩니다.</font></p>
+<p><font papago-translate="translated">문제는 이러한 최적화의 이점을 누릴 수 있을 만큼 충분히 일반적<em>인</em> 명령어 시퀀스<em>를</em> 결정하는 것입니다.</font><font papago-translate="translated"> 모든 새로운 슈퍼 명령어는 자체적으로 사용할 수 있는 오피코드를 요구하며, 그 중에서도 사용할 수 있는 것은 매우 많습니다.</font><font papago-translate="translated"> 너무 많이 추가하면 opcode에 더 큰 인코딩이 필요하므로 코드 크기가 커지고<em> 모든</em> 명령어 디코딩 속도가 느려집니다.</font></p>
 </aside>
 <div class="codehilite"><pre class="insert-before" translate="no">  if (canAssign &amp;&amp; match(TOKEN_EQUAL)) {
     expression();
     emitBytes(OP_SET_PROPERTY, name);
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>dot</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>점</em> ()로</font></font></div>
 <pre class="insert" translate="no">  } <span class="k">else</span> <span class="k">if</span> (<span class="i">match</span>(<span class="a">TOKEN_LEFT_PAREN</span>)) {
     <span class="t">uint8_t</span> <span class="i">argCount</span> = <span class="i">argumentList</span>();
     <span class="i">emitBytes</span>(<span class="a">OP_INVOKE</span>, <span class="i">name</span>);
@@ -1143,42 +768,33 @@ in <em>dot</em>()</div>
 </pre><pre class="insert-after" translate="no">  } else {
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>dot</em>()</div>
-<p>After the compiler has parsed the property name, we look for a left parenthesis.
-If we match one, we switch to a new code path. There, we compile the argument
-list exactly like we do when compiling a call expression. Then we emit a single
-new <code translate="no">OP_INVOKE</code> instruction. It takes two operands:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">컴파일러가 속성 이름을 구문 분석한 후, 왼쪽 괄호를 찾습니다.</font><font papago-translate="translated"> 하나를 맞추면 새로운 코드 경로로 전환됩니다.</font><font papago-translate="translated"> 거기서 우리는 호출 표현식을 작성할 때와 똑같이 인수 목록을 작성합니다.</font><font papago-translate="translated"> 그런 다음 우리는 하나의 새로운 것을 방출합니다 </font></font><code translate="no">OP_INVOKE</code><font papago-translate="splitted"><font papago-translate="translated"> 설명.</font><font papago-translate="translated"> 두 개의 피연산자가 필요합니다:</font></font></p>
 <ol>
 <li>
-<p>The index of the property name in the constant table.</p>
+<p><font papago-translate="translated">상수 테이블에 있는 속성 이름의 인덱스입니다.</font></p>
 </li>
 <li>
-<p>The number of arguments passed to the method.</p>
+<p><font papago-translate="translated">메서드에 전달된 인수 수입니다.</font></p>
 </li>
 </ol>
-<p>In other words, this single instruction combines the operands of the
-<code translate="no">OP_GET_PROPERTY</code> and <code translate="no">OP_CALL</code> instructions it replaces, in that order. It
-really is a fusion of those two instructions. Let’s define it.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">즉, 이 단일 명령어는 다음의 피연산자를 결합합니다 </font></font><code translate="no">OP_GET_PROPERTY</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">OP_CALL</code><font papago-translate="splitted"><font papago-translate="translated"> 해당 순서대로 대체되는 지침.</font><font papago-translate="translated"> 그것은 정말로 그 두 가지 지침을 융합한 것입니다.</font><font papago-translate="translated"> 정의해 보겠습니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  OP_CALL,
-</pre><div class="source-file"><em>chunk.h</em><br/>
-in enum <em>OpCode</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">청크.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum O<em>pCode</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="a">OP_INVOKE</span>,
 </pre><pre class="insert-after" translate="no">  OP_CLOSURE,
 </pre></div>
 <div class="source-file-narrow"><em>chunk.h</em>, in enum <em>OpCode</em></div>
-<p>And add it to the disassembler:</p>
+<p><font papago-translate="translated">그리고 분해기에 추가합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    case OP_CALL:
       return byteInstruction("OP_CALL", chunk, offset);
-</pre><div class="source-file"><em>debug.c</em><br/>
-in <em>disassembleInstruction</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">debug.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>분해</em> 중 지침()</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OP_INVOKE</span>:
       <span class="k">return</span> <span class="i">invokeInstruction</span>(<span class="s">"OP_INVOKE"</span>, <span class="i">chunk</span>, <span class="i">offset</span>);
 </pre><pre class="insert-after" translate="no">    case OP_CLOSURE: {
 </pre></div>
 <div class="source-file-narrow"><em>debug.c</em>, in <em>disassembleInstruction</em>()</div>
-<p>This is a new, special instruction format, so it needs a little custom
-disassembly logic.</p>
-<div class="codehilite"><div class="source-file"><em>debug.c</em><br/>
-add after <em>constantInstruction</em>()</div>
+<p><font papago-translate="translated">이것은 새로운 특수 명령 형식이므로 약간의 맞춤형 분해 논리가 필요합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">debug.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>상수</em> 뒤에 더하기</font><font papago-translate="translated"><em>지침</em>()</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">int</span> <span class="i">invokeInstruction</span>(<span class="k">const</span> <span class="t">char</span>* <span class="i">name</span>, <span class="t">Chunk</span>* <span class="i">chunk</span>,
                                 <span class="t">int</span> <span class="i">offset</span>) {
   <span class="t">uint8_t</span> <span class="i">constant</span> = <span class="i">chunk</span>-&gt;<span class="i">code</span>[<span class="i">offset</span> + <span class="n">1</span>];
@@ -1190,12 +806,9 @@ add after <em>constantInstruction</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>debug.c</em>, add after <em>constantInstruction</em>()</div>
-<p>We read the two operands and then print out both the method name and the
-argument count. Over in the interpreter’s bytecode dispatch loop is where the
-real action begins.</p>
+<p><font papago-translate="translated">두 피연산자를 읽은 다음 메서드 이름과 인수 개수를 모두 출력합니다.</font><font papago-translate="translated"> 통역사의 바이트코드 디스패치 루프에서 실제 작업이 시작됩니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      }
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OP_INVOKE</span>: {
         <span class="t">ObjString</span>* <span class="i">method</span> = <span class="a">READ_STRING</span>();
         <span class="t">int</span> <span class="i">argCount</span> = <span class="a">READ_BYTE</span>();
@@ -1208,17 +821,10 @@ in <em>run</em>()</div>
 </pre><pre class="insert-after" translate="no">      case OP_CLOSURE: {
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>()</div>
-<p>Most of the work happens in <code translate="no">invoke()</code>, which we’ll get to. Here, we look up the
-method name from the first operand and then read the argument count operand.
-Then we hand off to <code translate="no">invoke()</code> to do the heavy lifting. That function returns
-<code translate="no">true</code> if the invocation succeeds. As usual, a <code translate="no">false</code> return means a runtime
-error occurred. We check for that here and abort the interpreter if disaster has
-struck.</p>
-<p>Finally, assuming the invocation succeeded, then there is a new CallFrame on the
-stack, so we refresh our cached copy of the current frame in <code translate="no">frame</code>.</p>
-<p>The interesting work happens here:</p>
-<div class="codehilite"><div class="source-file"><em>vm.c</em><br/>
-add after <em>callValue</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">대부분의 작업은 다음에서 이루어집니다 </font></font><code translate="no">invoke()</code><font papago-translate="splitted"><font papago-translate="translated">, 우리가 도달하게 될 것입니다.</font><font papago-translate="translated"> 여기서는 첫 번째 피연산자에서 메서드 이름을 찾은 다음 인수 개수 피연산자를 읽습니다.</font><font papago-translate="translated"> 그리고 나서 우리는 다음에게 전달합니다 </font></font><code translate="no">invoke()</code><font papago-translate="splitted"><font papago-translate="translated"> 무거운 리프팅을 하기 위해.</font><font papago-translate="translated"> 그 함수는 반환됩니다 </font></font><code translate="no">true</code><font papago-translate="splitted"><font papago-translate="translated"> 호출이 성공하면.</font><font papago-translate="translated"> 평소처럼, a </font></font><code translate="no">false</code><font papago-translate="splitted"><font papago-translate="translated"> 반환은 런타임 오류가 발생했음을 의미합니다.</font><font papago-translate="translated"> 여기에서 이를 확인하고 재난이 발생하면 통역사를 중단합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">마지막으로 호출이 성공했다고 가정하면 스택에 새로운 콜프레임이 있으므로 현재 프레임의 캐시된 복사본을 다음에서 새로 고칩니다 </font></font><code translate="no">frame</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="translated">흥미로운 작업이 여기서 일어납니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>호출</em> 후 추가 값()</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">bool</span> <span class="i">invoke</span>(<span class="t">ObjString</span>* <span class="i">name</span>, <span class="t">int</span> <span class="i">argCount</span>) {
   <span class="t">Value</span> <span class="i">receiver</span> = <span class="i">peek</span>(<span class="i">argCount</span>);
   <span class="t">ObjInstance</span>* <span class="i">instance</span> = <span class="a">AS_INSTANCE</span>(<span class="i">receiver</span>);
@@ -1226,17 +832,11 @@ add after <em>callValue</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, add after <em>callValue</em>()</div>
-<p>First we grab the receiver off the stack. The arguments passed to the method are
-above it on the stack, so we peek that many slots down. Then it’s a simple
-matter to cast the object to an instance and invoke the method on it.</p>
-<p>That does assume the object <em>is</em> an instance. As with <code translate="no">OP_GET_PROPERTY</code>
-instructions, we also need to handle the case where a user incorrectly tries to
-call a method on a value of the wrong type.</p>
+<p><font papago-translate="translated">먼저 수신기를 스택에서 꺼냅니다.</font><font papago-translate="translated"> 메서드에 전달된 인수는 스택 위에 있으므로 많은 슬롯이 아래로 내려간 것을 확인할 수 있습니다.</font><font papago-translate="translated"> 그런 다음 객체를 인스턴스에 캐스팅하고 메서드를 호출하는 것은 간단한 문제입니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그것은 그 객체<em>가</em> 인스턴스라고 가정합니다.</font><font papago-translate="translated"> 마찬가지로 </font></font><code translate="no">OP_GET_PROPERTY</code><font papago-translate="splitted"><font papago-translate="translated"> 사용자가 잘못된 유형의 값으로 메서드를 잘못 호출하려는 경우도 처리해야 합니다.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  Value receiver = peek(argCount);
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>invoke</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>호출</em> ()에서</font></font></div>
 <pre class="insert" translate="no">
-
   <span class="k">if</span> (!<span class="a">IS_INSTANCE</span>(<span class="i">receiver</span>)) {
     <span class="i">runtimeError</span>(<span class="s">"Only instances have methods."</span>);
     <span class="k">return</span> <span class="k">false</span>;
@@ -1245,15 +845,11 @@ in <em>invoke</em>()</div>
 </pre><pre class="insert-after" translate="no">  ObjInstance* instance = AS_INSTANCE(receiver);
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>invoke</em>()</div>
-<p><span name="helper">That’s</span> a runtime error, so we report that and bail
-out. Otherwise, we get the instance’s class and jump over to this other new
-utility function:</p>
-<aside name="helper">
-<p>As you can guess by now, we split this code into a separate function because
-we’re going to reuse it later<span class="em">—</span>in this case for <code translate="no">super</code> calls.</p>
+<p><font papago-translate="translated">이는 런타임 오류이므로 이를 보고하고 구제합니다<span name="helper">.</span></font><font papago-translate="translated"> 그렇지 않으면 인스턴스의 클래스를 가져와서 다른 새로운 유틸리티 함수로 넘어갑니다:</font></p>
+<aside name="helper" style="top: 25107.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">지금쯤 짐작할 수 있듯이, 이 코드는 나중에 재사용할 예정이기 때문에 별도의 함수로 나눕니다. 이 경우<span class="em"></span>에는 다음과 같은 용도로 사용할 수 있습니다 </font></font><code translate="no">super</code><font papago-translate="splitted"><font papago-translate="translated"> 호출.</font></font></p>
 </aside>
-<div class="codehilite"><div class="source-file"><em>vm.c</em><br/>
-add after <em>callValue</em>()</div>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>호출</em> 후 추가 값()</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">bool</span> <span class="i">invokeFromClass</span>(<span class="t">ObjClass</span>* <span class="i">klass</span>, <span class="t">ObjString</span>* <span class="i">name</span>,
                             <span class="t">int</span> <span class="i">argCount</span>) {
   <span class="t">Value</span> <span class="i">method</span>;
@@ -1265,39 +861,18 @@ add after <em>callValue</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, add after <em>callValue</em>()</div>
-<p>This function combines the logic of how the VM implements <code translate="no">OP_GET_PROPERTY</code> and
-<code translate="no">OP_CALL</code> instructions, in that order. First we look up the method by name in
-the class’s method table. If we don’t find one, we report that runtime error and
-exit.</p>
-<p>Otherwise, we take the method’s closure and push a call to it onto the CallFrame
-stack. We don’t need to heap allocate and initialize an ObjBoundMethod. In fact,
-we don’t even need to <span name="juggle">juggle</span> anything on the stack.
-The receiver and method arguments are already right where they need to be.</p>
-<aside name="juggle">
-<p>This is a key reason <em>why</em> we use stack slot zero to store the receiver<span class="em">—</span>it’s
-how the caller already organizes the stack for a method call. An efficient
-calling convention is an important part of a bytecode VM’s performance story.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이 함수는 VM이 구현하는 방식의 논리를 결합합니다 </font></font><code translate="no">OP_GET_PROPERTY</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">OP_CALL</code><font papago-translate="splitted"><font papago-translate="translated"> 지침, 그 순서대로.</font><font papago-translate="translated"> 먼저 수업의 방법 표에서 이름별 방법을 찾아봅니다.</font><font papago-translate="translated"> 찾지 못하면 해당 런타임 오류를 보고하고 종료합니다.</font></font></p>
+<p><font papago-translate="translated">그렇지 않으면 메서드의 종료를 가져와 호출을 CallFrame 스택에 푸시합니다.</font><font papago-translate="translated"> 우리는 ObjBoundMethod를 힙 할당하고 초기화할 필요가 없습니다.</font><font papago-translate="translated"> 사실, 우리는 스택에서 아무것도<span name="juggle"> 저글링할</span> 필요가 없습니다.</font><font papago-translate="translated"> 수신자와 메서드 인수는 이미 필요한 위치에 있습니다.</font></p>
+<aside name="juggle" style="top: 25527.5px;">
+<p><font papago-translate="translated">이것이 우리가 수신기를 저장하기 위해 스택 슬롯 0을 사용<em>하는</em> 주요 이유입니다. 이는 발신자가 메서드<span class="em"></span> 호출을 위해 스택을 이미 정리하는 방식입니다.</font><font papago-translate="translated"> 효율적인 호출 규칙은 바이트코드 VM의 성능 스토리에서 중요한 부분입니다.</font></p>
 </aside>
-<p>If you fire up the VM and run a little program that calls methods now, you
-should see the exact same behavior as before. But, if we did our job right, the
-<em>performance</em> should be much improved. I wrote a little microbenchmark that
-does a batch of 10,000 method calls. Then it tests how many of these batches it
-can execute in 10 seconds. On my computer, without the new <code translate="no">OP_INVOKE</code>
-instruction, it got through 1,089 batches. With this new optimization, it
-finished 8,324 batches in the same time. That’s <em>7.6 times faster</em>, which is a
-huge improvement when it comes to programming language optimization.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">지금 VM을 부팅하고 메서드를 호출하는 작은 프로그램을 실행하면 이전과 똑같은 동작을 볼 수 있습니다.</font><font papago-translate="translated"> 하지만 우리가 일을 제대로 했다면<em> 성능</em>이 훨씬 향상될 것입니다.</font><font papago-translate="translated"> 저는 10,000개의 메서드 호출을 일괄 처리하는 작은 마이크로벤치마크를 작성했습니다.</font><font papago-translate="translated"> 그런 다음 10초 안에 몇 개의 배치를 실행할 수 있는지 테스트합니다.</font><font papago-translate="translated"> 내 컴퓨터에서 새 것 없이 </font></font><code translate="no">OP_INVOKE</code><font papago-translate="splitted"><font papago-translate="translated"> 명령어는 1,089개의 배치를 통과했습니다.</font><font papago-translate="translated"> 이 새로운 최적화를 통해 8,324개의 배치를 동시에 완료했습니다.</font><font papago-translate="translated"> 이는<em> 프로그래밍</em> 언어 최적화 측면에서 7<em>.6배 빠른 속도</em>로, 크게 향상된 성능입니다.</font></font></p>
 <p><span name="pat"></span></p>
-<aside name="pat">
-<p>We shouldn’t pat ourselves on the back <em>too</em> firmly. This performance
-improvement is relative to our own unoptimized method call implementation which
-was quite slow. Doing a heap allocation for every single method call isn’t going
-to win any races.</p>
-</aside><img alt="Bar chart comparing the two benchmark results." src="image/methods-and-initializers/benchmark.png"/>
-<h3><a href="#invoking-fields" id="invoking-fields"><small>28 . 5 . 1</small>Invoking fields</a></h3>
-<p>The fundamental creed of optimization is: “Thou shalt not break correctness.”
-<span name="monte">Users</span> like it when a language implementation gives
-them an answer faster, but only if it’s the <em>right</em> answer. Alas, our
-implementation of faster method invocations fails to uphold that principle:</p>
+<aside name="pat" style="top: 25789.5px;">
+<p><font papago-translate="translated">우리는 자신의 등을<em></em> 너무 세게 두드려서는 안 됩니다.</font><font papago-translate="translated"> 이 성능 향상은 상당히 느렸던 최적화되지 않은 메서드 호출 구현에 비해 상대적입니다.</font><font papago-translate="translated"> 매 메서드 호출마다 힙 할당을 한다고 해서 어떤 레이스에서도 이길 수 있는 것은 아닙니다.</font></p>
+</aside><img alt="Bar chart comparing the two benchmark results." src="https://youhogeon-meritz.github.io/image/methods-and-initializers/benchmark.png">
+<h3><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#invoking-fields" id="invoking-fields"><small><font papago-translate="translated">28 . 5 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">호출 필드</font></font></a></h3>
+<p><font papago-translate="translated">최적화의 기본 신조는 다음과 같습니다: "정확성을 깨지 말아야 한다."</font><font papago-translate="translated"> <span name="monte">사용자들은</span> 언어 구현이 더 빠른 답변을 제공할 때를 좋아하지만<em>, 그것</em>이<em> 올바른</em> 답변일 때만 좋아합니다<span name="monte">.</span></font><font papago-translate="translated"> 안타깝게도, 우리의 더 빠른 메서드 호출 구현은 그 원칙을 지키지 못하고 있습니다:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">class</span> <span class="t">Oops</span> {
   <span class="i">init</span>() {
     <span class="k">fun</span> <span class="i">f</span>() {
@@ -1311,27 +886,15 @@ implementation of faster method invocations fails to uphold that principle:</p>
 <span class="k">var</span> <span class="i">oops</span> = <span class="t">Oops</span>();
 <span class="i">oops</span>.<span class="i">field</span>();
 </pre></div>
-<p>The last line looks like a method call. The compiler thinks that it is and
-dutifully emits an <code translate="no">OP_INVOKE</code> instruction for it. However, it’s not. What is
-actually happening is a <em>field</em> access that returns a function which then gets
-called. Right now, instead of executing that correctly, our VM reports a runtime
-error when it can’t find a method named “field”.</p>
-<aside name="monte">
-<p>There are cases where users may be satisfied when a program sometimes returns
-the wrong answer in return for running significantly faster or with a better
-bound on the performance. These are the field of <a href="https://en.wikipedia.org/wiki/Monte_Carlo_algorithm"><strong>Monte Carlo
-algorithms</strong></a>. For some use cases, this is a good trade-off.</p>
-<p>The important part, though, is that the user is <em>choosing</em> to apply one of these
-algorithms. We language implementers can’t unilaterally decide to sacrifice
-their program’s correctness.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">마지막 줄은 메서드 호출처럼 보입니다.</font><font papago-translate="translated"> 컴파일러는 그렇게 생각하고 성실하게 다음을 방출합니다 </font></font><code translate="no">OP_INVOKE</code><font papago-translate="splitted"><font papago-translate="translated"> 그것에 대한 지침.</font><font papago-translate="translated"> 하지만 그렇지 않습니다.</font><font papago-translate="translated"> 실제로 일어나는 일은 함수를 반환하고 호출되는<em> 필드</em> 액세스입니다.</font><font papago-translate="translated"> 현재 VM은 이를 올바르게 실행하는 대신 "필드"라는 메서드를 찾을 수 없을 때 런타임 오류를 보고합니다.</font></font></p>
+<aside name="monte" style="top: 26084px;">
+<p><font papago-translate="translated">프로그램이 때때로 잘못된 답을 반환할 때 사용자들이 만족할 수 있는 경우가 있습니다. 그 대가로 훨씬 더 빠르게 실행되거나 성능에 대한 더 나은 제한이 있을 수 있습니다.</font><font papago-translate="translated"> <a href="https://en.wikipedia.org/wiki/Monte_Carlo_algorithm"><strong>이것</strong></a>들은 몬테<a href="https://en.wikipedia.org/wiki/Monte_Carlo_algorithm"><strong>카를로 알고리즘</strong></a> 분야입니다.</font><font papago-translate="translated"> 일부 사용 사례의 경우, 이것은 좋은 절충안입니다.</font></p>
+<p><font papago-translate="translated">하지만 중요한 부분은 사용자가 이러한 알고리즘 중 하나를 적용<em>하기로 선택</em>했다는 점입니다.</font><font papago-translate="translated"> 우리 언어 구현자들은 일방적으로 프로그램의 정확성을 희생하기로 결정할 수 없습니다.</font></p>
 </aside>
-<p>Earlier, when we implemented <code translate="no">OP_GET_PROPERTY</code>, we handled both field and method
-accesses. To squash this new bug, we need to do the same thing for <code translate="no">OP_INVOKE</code>.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이전에 구현했을 때 </font></font><code translate="no">OP_GET_PROPERTY</code><font papago-translate="splitted"><font papago-translate="translated">, 우리는 현장 접근과 방법 접근을 모두 처리했습니다.</font><font papago-translate="translated"> 이 새로운 버그를 제거하려면 다음과 같은 작업을 수행해야 합니다 </font></font><code translate="no">OP_INVOKE</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  ObjInstance* instance = AS_INSTANCE(receiver);
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>invoke</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>호출</em> ()에서</font></font></div>
 <pre class="insert" translate="no">
-
   <span class="t">Value</span> <span class="i">value</span>;
   <span class="k">if</span> (<span class="i">tableGet</span>(&amp;<span class="i">instance</span>-&gt;<span class="i">fields</span>, <span class="i">name</span>, &amp;<span class="i">value</span>)) {
     <span class="i">vm</span>.<span class="i">stackTop</span>[-<span class="i">argCount</span> - <span class="n">1</span>] = <span class="i">value</span>;
@@ -1341,188 +904,74 @@ in <em>invoke</em>()</div>
 </pre><pre class="insert-after" translate="no">  return invokeFromClass(instance-&gt;klass, name, argCount);
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>invoke</em>()</div>
-<p>Pretty simple fix. Before looking up a method on the instance’s class, we look
-for a field with the same name. If we find a field, then we store it on the
-stack in place of the receiver, <em>under</em> the argument list. This is how
-<code translate="no">OP_GET_PROPERTY</code> behaves since the latter instruction executes before a
-subsequent parenthesized list of arguments has been evaluated.</p>
-<p>Then we try to call that field’s value like the callable that it hopefully is.
-The <code translate="no">callValue()</code> helper will check the value’s type and call it as appropriate
-or report a runtime error if the field’s value isn’t a callable type like a
-closure.</p>
-<p>That’s all it takes to make our optimization fully safe. We do sacrifice a
-little performance, unfortunately. But that’s the price you have to pay
-sometimes. You occasionally get frustrated by optimizations you <em>could</em> do if
-only the language wouldn’t allow some annoying corner case. But, as language
-<span name="designer">implementers</span>, we have to play the game we’re given.</p>
-<aside name="designer">
-<p>As language <em>designers</em>, our role is very different. If we do control the
-language itself, we may sometimes choose to restrict or change the language in
-ways that enable optimizations. Users want expressive languages, but they also
-want fast implementations. Sometimes it is good language design to sacrifice a
-little power if you can give them perf in return.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">꽤 간단한 해결책입니다.</font><font papago-translate="translated"> 인스턴스 클래스에서 메서드를 찾기 전에 동일한 이름을 가진 필드를 찾습니다.</font><font papago-translate="translated"> 필드를 찾으면 인수 목록<em> 아래</em>에 수신기 대신 스택에 저장합니다.</font><font papago-translate="translated"> 이렇게 </font></font><code translate="no">OP_GET_PROPERTY</code><font papago-translate="splitted"><font papago-translate="translated"> 후속 괄호화된 인수 목록이 평가되기 전에 후자의 명령어가 실행되기 때문에 동작합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그런 다음 해당 필드의 값을 호출 가능한 값과 같이 부르려고 합니다.</font><font papago-translate="translated"> 그 </font></font><code translate="no">callValue()</code><font papago-translate="splitted"><font papago-translate="translated"> 도우미는 값의 유형을 확인하고 적절하게 호출하거나 필드의 값이 클로저와 같은 호출 가능한 유형이 아닌 경우 런타임 오류를 보고합니다.</font></font></p>
+<p><font papago-translate="translated">최적화를 완전히 안전하게 만들기 위해 필요한 것은 그것뿐입니다.</font><font papago-translate="translated"> 안타깝게도 저희는 작은 성과를 희생합니다.</font><font papago-translate="translated"> 하지만 그것이 때때로 지불해야 하는 대가입니다.</font><font papago-translate="translated"> 언어가 성가신 구석진 경우만 허용하지 않는다면 할<em> 수</em> 있는 최적화에 좌절감을 느낄 때가 있습니다.</font><font papago-translate="translated"> 하지만 언어<span name="designer"> 구현자</span>로서 우리는 주어진 게임을 해야 합니다.</font></p>
+<aside name="designer" style="top: 27176px;">
+<p><font papago-translate="translated">언어<em> 디자이너</em>로서 우리의 역할은 매우 다릅니다.</font><font papago-translate="translated"> 언어 자체를 제어하면 최적화를 가능하게 하는 방식으로 언어를 제한하거나 변경할 수도 있습니다.</font><font papago-translate="translated"> 사용자들은 표현력 있는 언어를 원하지만, 빠른 구현도 원합니다.</font><font papago-translate="translated"> 때로는 그 대가로 성능을 발휘할 수 있다면 약간의 힘을 희생하는 것이 좋은 언어 설계입니다.</font></p>
 </aside>
-<p>The code we wrote here follows a typical pattern in optimization:</p>
+<p><font papago-translate="translated">여기서 작성한 코드는 최적화의 일반적인 패턴을 따릅니다:</font></p>
 <ol>
 <li>
-<p>Recognize a common operation or sequence of operations that is performance
-critical. In this case, it is a method access followed by a call.</p>
+<p><font papago-translate="translated">성능에 중요한 공통 작업 또는 일련의 작업을 인식합니다.</font><font papago-translate="translated"> 이 경우 메서드 접근 후 호출이 이어집니다.</font></p>
 </li>
 <li>
-<p>Add an optimized implementation of that pattern. That’s our <code translate="no">OP_INVOKE</code>
-instruction.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">해당 패턴의 최적화된 구현을 추가합니다.</font><font papago-translate="translated"> 그게 우리의 </font></font><code translate="no">OP_INVOKE</code><font papago-translate="splitted"><font papago-translate="translated"> 설명.</font></font></p>
 </li>
 <li>
-<p>Guard the optimized code with some conditional logic that validates that the
-pattern actually applies. If it does, stay on the fast path. Otherwise, fall
-back to a slower but more robust unoptimized behavior. Here, that means
-checking that we are actually calling a method and not accessing a field.</p>
+<p><font papago-translate="translated">패턴이 실제로 적용되는지 확인하는 조건부 논리로 최적화된 코드를 보호하세요.</font><font papago-translate="translated"> 그렇다면, 빠른 길을 유지하세요.</font><font papago-translate="translated"> 그렇지 않으면, 느리지만 더 견고한 최적화되지 않은 행동으로 되돌아갑니다.</font><font papago-translate="translated"> 여기서 이는 실제로 메서드를 호출하고 필드에 액세스하지 않는지 확인하는 것을 의미합니다.</font></p>
 </li>
 </ol>
-<p>As your language work moves from getting the implementation working <em>at all</em> to
-getting it to work <em>faster</em>, you will find yourself spending more and more
-time looking for patterns like this and adding guarded optimizations for them.
-Full-time VM engineers spend much of their careers in this loop.</p>
-<p>But we can stop here for now. With this, clox now supports most of the features
-of an object-oriented programming language, and with respectable performance.</p>
+<p><font papago-translate="translated">언어 작업이 구현 작업을<em> 전혀</em> 수행하지 않고<em> 더 빠르게</em> 진행됨에 따라, 이러한 패턴을 찾고 이를 위한 보안 최적화를 추가하는 데 점점 더 많은 시간을 할애하게 될 것입니다.</font><font papago-translate="translated"> 정규직 VM 엔지니어들은 대부분의 경력을 이 루프에서 보냅니다.</font></p>
+<p><font papago-translate="translated">하지만 지금은 여기서 멈출 수 있습니다.</font><font papago-translate="translated"> 이를 통해 clox는 이제 객체 지향 프로그래밍 언어의 대부분의 기능과 뛰어난 성능을 지원합니다.</font></p>
 <div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+<h2><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#challenges" id="challenges"><font papago-translate="translated">과제들</font></a></h2>
 <ol>
 <li>
-<p>The hash table lookup to find a class’s <code translate="no">init()</code> method is constant time,
-but still fairly slow. Implement something faster. Write a benchmark and
-measure the performance difference.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">해시 테이블 조회를 통해 클래스를 찾습니다 </font></font><code translate="no">init()</code><font papago-translate="splitted"><font papago-translate="translated"> 방법은 일정한 시간이지만 여전히 상당히 느립니다.</font><font papago-translate="translated"> 더 빠르게 구현하세요.</font><font papago-translate="translated"> 벤치마크를 작성하고 성능 차이를 측정합니다.</font></font></p>
 </li>
 <li>
-<p>In a dynamically typed language like Lox, a single callsite may invoke a
-variety of methods on a number of classes throughout a program’s execution.
-Even so, in practice, most of the time a callsite ends up calling the exact
-same method on the exact same class for the duration of the run. Most calls
-are actually not polymorphic even if the language says they can be.</p>
-<p>How do advanced language implementations optimize based on that observation?</p>
+<p><font papago-translate="translated">Lox와 같이 동적으로 입력된 언어에서는 단일 호출 사이트가 프로그램 실행 동안 여러 클래스에서 다양한 메서드를 호출할 수 있습니다.</font><font papago-translate="translated"> 그럼에도 불구하고 실제로는 대부분의 경우 호출 사이트가 실행 기간 동안 동일한 클래스에서 동일한 메서드를 호출하게 됩니다.</font><font papago-translate="translated"> 대부분의 통화는 언어에서 가능하다고 해도 실제로는 다형성이 아닙니다.</font></p>
+<p><font papago-translate="translated">고급 언어 구현은 이러한 관찰을 바탕으로 어떻게 최적화됩니까?</font></p>
 </li>
 <li>
-<p>When interpreting an <code translate="no">OP_INVOKE</code> instruction, the VM has to do two hash
-table lookups. First, it looks for a field that could shadow a method, and
-only if that fails does it look for a method. The former check is rarely
-useful<span class="em">—</span>most fields do not contain functions. But it is <em>necessary</em>
-because the language says fields and methods are accessed using the same
-syntax, and fields shadow methods.</p>
-<p>That is a language <em>choice</em> that affects the performance of our
-implementation. Was it the right choice? If Lox were your language, what
-would you do?</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">해석할 때 </font></font><code translate="no">OP_INVOKE</code><font papago-translate="splitted"><font papago-translate="translated"> 명령어에 따르면, VM은 두 번의 해시 테이블 조회를 수행해야 합니다.</font><font papago-translate="translated"> 먼저, 메서드를 숨길 수 있는 필드를 찾고, 그것이 실패할 경우에만 메서드를 찾습니다.</font><font papago-translate="translated"> 이전 검사는 거의 유용하지 않습니다. 대부분의 필드에는<span class="em"></span> 함수가 포함되어 있지 않습니다.</font><font papago-translate="translated"> 하지만 필드와 메서드는 동일한 구문을 사용하여 액세스되고 필드는 섀도<em></em> 메서드를 사용한다고 언어에서 말하고 있기 때문에 필요합니다.</font></font></p>
+<p><font papago-translate="translated">그것은 우리의 구현 성능에 영향을 미치는 언어<em> 선택입니다</em>.</font><font papago-translate="translated"> 올바른 선택이었나요?</font><font papago-translate="translated"> Lox가 당신의 언어라면, 당신은 무엇을 하시겠습니까?</font></p>
 </li>
 </ol>
 </div>
 <div class="design-note">
-<h2><a href="#design-note" id="design-note">Design Note: Novelty Budget</a></h2>
-<p>I still remember the first time I wrote a tiny BASIC program on a TRS-80 and
-made a computer do something it hadn’t done before. It felt like a superpower.
-The first time I cobbled together just enough of a parser and interpreter to let
-me write a tiny program in <em>my own language</em> that made a computer do a thing was
-like some sort of higher-order meta-superpower. It was and remains a wonderful
-feeling.</p>
-<p>I realized I could design a language that looked and behaved however I chose. It
-was like I’d been going to a private school that required uniforms my whole life
-and then one day transferred to a public school where I could wear whatever I
-wanted. I don’t need to use curly braces for blocks? I can use something other
-than an equals sign for assignment? I can do objects without classes? Multiple
-inheritance <em>and</em> multimethods? A dynamic language that overloads statically, by
-arity?</p>
-<p>Naturally, I took that freedom and ran with it. I made the weirdest, most
-arbitrary language design decisions. Apostrophes for generics. No commas between
-arguments. Overload resolution that can fail at runtime. I did things
-differently just for difference’s sake.</p>
-<p>This is a very fun experience that I highly recommend. We need more weird,
-avant-garde programming languages. I want to see more art languages. I still
-make oddball toy languages for fun sometimes.</p>
-<p><em>However</em>, if your goal is success where “success” is defined as a large number
-of users, then your priorities must be different. In that case, your primary
-goal is to have your language loaded into the brains of as many people as
-possible. That’s <em>really hard</em>. It takes a lot of human effort to move a
-language’s syntax and semantics from a computer into trillions of neurons.</p>
-<p>Programmers are naturally conservative with their time and cautious about what
-languages are worth uploading into their wetware. They don’t want to waste their
-time on a language that ends up not being useful to them. As a language
-designer, your goal is thus to give them as much language power as you can with
-as little required learning as possible.</p>
-<p>One natural approach is <em>simplicity</em>. The fewer concepts and features your
-language has, the less total volume of stuff there is to learn. This is one of
-the reasons minimal <span name="dynamic">scripting</span> languages often find
-success even though they aren’t as powerful as the big industrial languages<span class="em">—</span>they are easier to get started with, and once they are in someone’s brain, the
-user wants to keep using them.</p>
-<aside name="dynamic">
-<p>In particular, this is a big advantage of dynamically typed languages. A static
-language requires you to learn <em>two</em> languages<span class="em">—</span>the runtime semantics and the
-static type system<span class="em">—</span>before you can get to the point where you are making the
-computer do stuff. Dynamic languages require you to learn only the former.</p>
-<p>Eventually, programs get big enough that the value of static analysis pays for
-the effort to learn that second static language, but the value proposition isn’t
-as obvious at the outset.</p>
+<h2><a href="https://youhogeon-meritz.github.io/methods-and-initializers.html#design-note" id="design-note"><font papago-translate="translated">디자인 노트:</font><font papago-translate="translated"> 참신성 예산</font></a></h2>
+<p><font papago-translate="translated">TRS-80에 작은 BASIC 프로그램을 처음 작성하고 컴퓨터가 이전에 하지 않았던 일을 하게 만들었을 때가 아직도 기억납니다.</font><font papago-translate="translated"> 마치 초능력처럼 느껴졌습니다.</font><font papago-translate="translated"> 제<em>가</em> 처음으로 파서와 통역사를 충분히 조합해서 제<em> 언어</em>로 작은 프로그램을 작성할 수 있게 했을 때는 일종의 고차원 메타 초능력 같은 것이었습니다.</font><font papago-translate="translated"> 그것은 정말 멋진 감정이었고 지금도 여전히 남아 있습니다.</font></p>
+<p><font papago-translate="translated">저는 제가 선택한 대로 보이고 행동하는 언어를 디자인할 수 있다는 것을 깨달았습니다.</font><font papago-translate="translated"> 마치 평생 교복을 입어야 하는 사립학교에 갔다가 어느 날 공립학교로 전학 온 것 같았어요.</font><font papago-translate="translated"> 블록에 곱슬 교정기를 사용할 필요가 없나요?</font><font papago-translate="translated"> 과제에 등호가 아닌 다른 것을 사용할 수 있습니까?</font><font papago-translate="translated"> 수업 없이도 객체를 할 수 있습니까?</font><font papago-translate="translated"> 다중 상속<em> 및</em> 다중 방법?</font><font papago-translate="translated"> 정적으로 과부하가 걸리는 역동적인 언어는?</font></p>
+<p><font papago-translate="translated">당연히 저는 그 자유를 가지고 달려갔습니다.</font><font papago-translate="translated"> 저는 가장 이상하고 자의적인 언어 설계 결정을 내렸습니다.</font><font papago-translate="translated"> 제네릭을 위한 아포스트로피.</font><font papago-translate="translated"> 인수 사이에 쉼표가 없습니다.</font><font papago-translate="translated"> 실행 시 실패할 수 있는 과부하 해결.</font><font papago-translate="translated"> 저는 단지 차이를 위해 다르게 일했습니다.</font></p>
+<p><font papago-translate="translated">이것은 제가 강력히 추천하는 매우 재미있는 경험입니다.</font><font papago-translate="translated"> 우리는 더 이상하고 전위적인 프로그래밍 언어가 필요합니다.</font><font papago-translate="translated"> 더 많은 예술 언어를 보고 싶습니다.</font><font papago-translate="translated"> 저는 여전히 가끔 재미로 이상한 장난감 언어를 만듭니다.</font></p>
+<p><font papago-translate="translated"><em>그러나</em> "성공"이 많은 사용자로 정의되는 경우 목표가 성공이라면 우선순위는 달라야 합니다<em>.</em></font><font papago-translate="translated"> 이 경우, 당신의 주요 목표는 가능한 한 많은 사람들의 뇌에 당신의 언어를 주입하는 것입니다.</font><font papago-translate="translated"> <em>정말 어렵습니다</em>.</font><font papago-translate="translated"> 언어의 구문과 의미를 컴퓨터에서 수조 개의 뉴런으로 옮기는 데는 많은 인간의 노력이 필요합니다.</font></p>
+<p><font papago-translate="translated">프로그래머들은 자연스럽게 시간을 절약하고 웨트웨어에 업로드할 가치가 있는 언어에 대해 신중하게 생각합니다.</font><font papago-translate="translated"> 그들은 결국 자신들에게 유용하지 않은 언어에 시간을 낭비하고 싶지 않습니다.</font><font papago-translate="translated"> 언어 디자이너로서 여러분의 목표는 가능한 한 적은 학습량으로 최대한 많은 언어 능력을 제공하는 것입니다.</font></p>
+<p><font papago-translate="translated">자연스러운 접근 방식 중 하나는<em> 단순</em>함입니다.</font><font papago-translate="translated"> 당신의 언어에 개념과 특징이 적을수록 배울 수 있는 내용의 총량이 줄어듭니다.</font><font papago-translate="translated"> 이것이 작은<span name="dynamic"> 스크립팅</span> 언어가 큰 산업 언어만큼 강력하지는 않지만 성공을 거두는 이유 중 하나입니다. 이 언어들은 시작하기가 더 쉽고, 일단 누군가의 머릿속에 들어가면 사용자는<span class="em"></span> 계속 사용하고 싶어합니다.</font></p>
+<aside name="dynamic" style="top: 29250px;">
+<p><font papago-translate="translated">특히, 이것은 동적으로 입력되는 언어의 큰 장점입니다.</font><font papago-translate="translated"> 정적 언어는 컴퓨터가<span class="em"></span><span class="em"></span> 일을 하도록 만들기 전에 런타임 의미론과 정적 유형 시스템<em>이라는 두</em> 가지 언어를 배워야 합니다.</font><font papago-translate="translated"> 동적 언어는 전자만 배우면 됩니다.</font></p>
+<p><font papago-translate="translated">결국 프로그램이 충분히 커져서 정적 분석의 가치가 그 두 번째 정적 언어를 배우기 위한 노력의 대가를 치르게 되지만, 그 가치 제안은 처음부터 명확하지 않습니다.</font></p>
 </aside>
-<p>The problem with simplicity is that simply cutting features often sacrifices
-power and expressiveness. There is an art to finding features that punch above
-their weight, but often minimal languages simply do less.</p>
-<p>There is another path that avoids much of that problem. The trick is to realize
-that a user doesn’t have to load your entire language into their head, <em>just the
-part they don’t already have in there</em>. As I mentioned in an <a href="parsing-expressions.html#design-note">earlier design
-note</a>, learning is about transferring the <em>delta</em> between what they
-already know and what they need to know.</p>
-<p>Many potential users of your language already know some other programming
-language. Any features your language shares with that language are essentially
-“free” when it comes to learning. It’s already in their head, they just have to
-recognize that your language does the same thing.</p>
-<p>In other words, <em>familiarity</em> is another key tool to lower the adoption cost of
-your language. Of course, if you fully maximize that attribute, the end result
-is a language that is completely identical to some existing one. That’s not a
-recipe for success, because at that point there’s no incentive for users to
-switch to your language at all.</p>
-<p>So you do need to provide some compelling differences. Some things your language
-can do that other languages can’t, or at least can’t do as well. I believe this
-is one of the fundamental balancing acts of language design: similarity to other
-languages lowers learning cost, while divergence raises the compelling
-advantages.</p>
-<p>I think of this balancing act in terms of a <span name="idiosyncracy"><strong>novelty
-budget</strong></span>, or as Steve Klabnik calls it, a “<a href="https://words.steveklabnik.com/the-language-strangeness-budget">strangeness budget</a>”. Users
-have a low threshold for the total amount of new stuff they are willing to
-accept to learn a new language. Exceed that, and they won’t show up.</p>
-<aside name="idiosyncracy">
-<p>A related concept in psychology is <a href="https://en.wikipedia.org/wiki/Idiosyncrasy_credit"><strong>idiosyncrasy credit</strong></a>, the
-idea that other people in society grant you a finite amount of deviations from
-social norms. You earn credit by fitting in and doing in-group things, which you
-can then spend on oddball activities that might otherwise raise eyebrows. In
-other words, demonstrating that you are “one of the good ones” gives you license
-to raise your freak flag, but only so far.</p>
+<p><font papago-translate="translated">단순함의 문제는 단순히 특징을 자르는 것이 종종 힘과 표현력을 희생한다는 것입니다.</font><font papago-translate="translated"> 자신의 무게를 초과하는 기능을 찾는 기술이 있지만, 종종 최소한의 언어는 단순히 덜 효과적입니다.</font></p>
+<p><font papago-translate="translated">그 문제를 많이 피할 수 있는 또 다른 길이 있습니다.</font><font papago-translate="translated"> 요령은 사용자가 당신의 언어 전체를 머릿속에 담을 필요가 없다는 것을 깨닫는 것입니다<em>. 단지 그들이 아직 가지고 있지 않은 부분일 뿐</em>입니다.</font><font papago-translate="translated"> <a href="https://youhogeon-meritz.github.io/parsing-expressions.html#design-note">앞서 디자인 노트</a>에서 언급했듯이 학습은 이미 알고 있는 것과 알아야 할 것 사이의<em> 델타</em>를 전달하는 것입니다.</font></p>
+<p><font papago-translate="translated">당신의 언어를 사용하는 많은 잠재적 사용자들은 이미 다른 프로그래밍 언어를 알고 있습니다.</font><font papago-translate="translated"> 해당 언어와 공유하는 모든 기능은 학습에 있어 본질적으로 "자유"입니다.</font><font papago-translate="translated"> 이미 그들의 머릿속에 있으며, 그들은 당신의 언어가 같은 역할을 한다는 것을 인식하기만 하면 됩니다.</font></p>
+<p><font papago-translate="translated">다시 말해<em>, 친숙함은</em> 언어 채택 비용을 낮추는 또 다른 핵심 도구입니다.</font><font papago-translate="translated"> 물론, 그 속성을 완전히 극대화하면, 최종 결과는 기존의 어떤 언어와 완전히 동일한 언어가 됩니다.</font><font papago-translate="translated"> 그것은 성공의 비결이 아닙니다. 왜냐하면 그 시점에서는 사용자들이 당신의 언어로 전환할 유인이 전혀 없기 때문입니다.</font></p>
+<p><font papago-translate="translated">따라서 몇 가지 설득력 있는 차이점을 제공해야 합니다.</font><font papago-translate="translated"> 당신의 언어가 다른 언어가 할 수 없거나 적어도 할 수 없는 일들도 있습니다.</font><font papago-translate="translated"> 저는 이것이 언어 디자인의 근본적인 균형을 맞추는 행위 중 하나라고 믿습니다: 다른 언어와의 유사성은 학습 비용을 낮추는 반면, 다양성은 매력적인 장점을 높여줍니다.</font></p>
+<p><font papago-translate="translated"><span name="idiosyncracy"><strong>저</strong></span>는<span name="idiosyncracy"><strong> 이</strong></span> 균형 잡힌 행동을<span name="idiosyncracy"><strong> 참신한 예산</strong></span>, 또는 스티브 클라브니크가 "<a href="https://words.steveklabnik.com/the-language-strangeness-budget">기</a>묘한<a href="https://words.steveklabnik.com/the-language-strangeness-budget"> 예산</a>"이라고 부르는 관점에서 생각합니다.</font><font papago-translate="translated"> 사용자는 새로운 언어를 배우기 위해 기꺼이 받아들일 수 있는 새로운 콘텐츠의 총량에 대한 임계값이 낮습니다.</font><font papago-translate="translated"> 그 이상이면 나타나지 않습니다.</font></p>
+<aside name="idiosyncracy" style="top: 29922px;">
+<p><font papago-translate="translated">심리학에서 관련된 개념 중 하나는<a href="https://en.wikipedia.org/wiki/Idiosyncrasy_credit"><strong> 특이한 신용입니다</strong></a>. 이는 사회의 다른 사람들이 사회적 규범에서 유한한 정도의 일탈을 허용한다는 개념입니다.</font><font papago-translate="translated"> 그룹 내 활동에 참여하고 이를 통해 크레딧을 얻을 수 있으며, 그렇지 않으면 눈살을 찌푸리게 할 수 있는 홀수볼 활동에 지출할 수 있습니다.</font><font papago-translate="translated"> 다시 말해, 당신이 "좋은 사람 중 한 명"이라는 것을 증명하는 것은 당신의 괴짜 깃발을 올릴 수 있는 허가를 주지만, 지금까지는 그렇지 않습니다.</font></p>
 </aside>
-<p>Anytime you add something new to your language that other languages don’t have,
-or anytime your language does something other languages do in a different way,
-you spend some of that budget. That’s OK<span class="em">—</span>you <em>need</em> to spend it to make your
-language compelling. But your goal is to spend it <em>wisely</em>. For each feature or
-difference, ask yourself how much compelling power it adds to your language and
-then evaluate critically whether it pays its way. Is the change so valuable that
-it is worth blowing some of your novelty budget?</p>
-<p>In practice, I find this means that you end up being pretty conservative with
-syntax and more adventurous with semantics. As fun as it is to put on a new
-change of clothes, swapping out curly braces with some other block delimiter is
-very unlikely to add much real power to the language, but it does spend some
-novelty. It’s hard for syntax differences to carry their weight.</p>
-<p>On the other hand, new semantics can significantly increase the power of the
-language. Multimethods, mixins, traits, reflection, dependent types, runtime
-metaprogramming, etc. can radically level up what a user can do with the
-language.</p>
-<p>Alas, being conservative like this is not as fun as just changing everything.
-But it’s up to you to decide whether you want to chase mainstream success or not
-in the first place. We don’t all need to be radio-friendly pop bands. If you
-want your language to be like free jazz or drone metal and are happy with the
-proportionally smaller (but likely more devoted) audience size, go for it.</p>
+<p><font papago-translate="translated">다른 언어에 없는 새로운 것을 추가하거나 다른 언어가 다른 방식으로 무언가를 할 때마다 그 예산의 일부를 지출하게 됩니다.</font><font papago-translate="translated"> 괜찮아요. 언어를<em></em><span class="em"></span> 매력적으로 만들려면 돈을 써야 해요.</font><font papago-translate="translated"> 하지만 당신의 목표는<em> 그것</em>을<em> 현명하게</em> 사용하는 것입니다.</font><font papago-translate="translated"> 각 특징이나 차이점에 대해 언어에 얼마나 강력한 힘을 더하는지 스스로에게 물어본 다음, 그 힘이 제대로 발휘되는지 비판적으로 평가하세요.</font><font papago-translate="translated"> 그 변화가 당신의 참신한 예산 중 일부를 날려버릴 만큼 가치가 있습니까?</font></p>
+<p><font papago-translate="translated">실제로 구문에 대해서는 꽤 보수적이고 의미론에 대해서는 더 모험심이 강하다는 뜻입니다.</font><font papago-translate="translated"> 새로운 옷을 갈아입는 것만큼이나 재미있는 일이지만, 곱슬 교정기를 다른 블록 구분 기호로 교체하는 것은 언어에 큰 힘을 더할 가능성은 매우 낮지만, 약간의 새로움을 소비하기도 합니다.</font><font papago-translate="translated"> 구문 차이가 그 무게를 지탱하기 어렵습니다.</font></p>
+<p><font papago-translate="translated">반면에, 새로운 의미론은 언어의 힘을 크게 증가시킬 수 있습니다.</font><font papago-translate="translated"> 다중 메서드, 믹스인, 특성, 반영, 종속 유형, 런타임 메타프로그래밍 등은 사용자가 언어로 할 수 있는 작업을 근본적으로 향상시킬 수 있습니다.</font></p>
+<p><font papago-translate="translated">아, 이렇게 보수적으로 행동하는 것은 단순히 모든 것을 바꾸는 것만큼 재미있지는 않습니다.</font><font papago-translate="translated"> 하지만 애초에 주류 성공을 추구할지 말지는 당신에게 달려 있습니다.</font><font papago-translate="translated"> 우리 모두가 라디오 친화적인 팝 밴드가 될 필요는 없습니다.</font><font papago-translate="translated"> 당신의 언어가 프리 재즈나 드론 메탈처럼 되고 싶고, 비례적으로 더 작지만 더 헌신적인 관객 수에 만족한다면, 선택해 보세요.</font></p>
 </div>
 <footer>
-<a class="next" href="superclasses.html">
-  Next Chapter: “Superclasses” →
-</a>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+<a class="next" href="https://youhogeon-meritz.github.io/superclasses.html"><font papago-translate="translated"> 다음 장: "슈퍼클래스" → </font></a><font papago-translate="splitted"><font papago-translate="translated"> 로버트 니스트롬이 수작업으로 제작한 -<a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE"> © 2015 ~ 2021</a></font></font>
 </footer>
-</img></img></article>
+</article>
 </div>
-</body>
-</html>
+
+
+</body></html>

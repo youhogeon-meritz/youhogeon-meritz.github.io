@@ -1,258 +1,148 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>Local Variables · Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="style.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/style.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
-<script src="jquery-3.4.1.min.js"></script>
-<script src="script.js"></script>
-<!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+
+<!-- Google analytics -->
+
+</head>
 <body id="top">
 <!-- <div class="scrim"></div> -->
 <nav class="wide">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="contents">
-<h3><a href="#top">Local Variables<small>22</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/local-variables.html#top"><font papago-translate="splitted"><font papago-translate="translated">지역 변수</font></font><small>22</small></a></h3>
 <ul>
-<li><a href="#representing-local-variables"><small>22.1</small> Representing Local Variables</a></li>
-<li><a href="#block-statements"><small>22.2</small> Block Statements</a></li>
-<li><a href="#declaring-local-variables"><small>22.3</small> Declaring Local Variables</a></li>
-<li><a href="#using-locals"><small>22.4</small> Using Locals</a></li>
+<li><a href="https://youhogeon-meritz.github.io/local-variables.html#representing-local-variables"><small>22.1</small><font papago-translate="splitted"><font papago-translate="translated"> 지역 변수 표현</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/local-variables.html#block-statements"><small>22.2</small><font papago-translate="splitted"><font papago-translate="translated"> 블록 문</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/local-variables.html#declaring-local-variables"><small>22.3</small><font papago-translate="splitted"><font papago-translate="translated"> 지역 변수 선언</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/local-variables.html#using-locals"><small>22.4</small><font papago-translate="splitted"><font papago-translate="translated"> 현지인 사용</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/local-variables.html#challenges"><font papago-translate="translated">과제들</font></a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="global-variables.html" title="Global Variables">← Previous</a>
-<a href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑ Up</a>
-<a class="right" href="jumping-back-and-forth.html" title="Jumping Back and Forth">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/global-variables.html" title="글로벌 변수" papago-attr-id="1"><font papago-translate="translated">← 이전</font></a>
+<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="바이트코드 가상 머신" papago-attr-id="2"><font papago-translate="translated">↑ 위로</font></a>
+<a class="right" href="https://youhogeon-meritz.github.io/jumping-back-and-forth.html" title="앞뒤로 뛰기" papago-attr-id="3"><font papago-translate="translated">다음 →</font></a>
 </div> </div>
 </nav>
 <nav class="narrow">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
-<a class="prev" href="global-variables.html" title="Global Variables">←</a>
-<a class="next" href="jumping-back-and-forth.html" title="Jumping Back and Forth">→</a>
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
+<a class="prev" href="https://youhogeon-meritz.github.io/global-variables.html" title="Global Variables">←</a>
+<a class="next" href="https://youhogeon-meritz.github.io/jumping-back-and-forth.html" title="Jumping Back and Forth">→</a>
 </nav>
 <div class="page">
 <div class="nav-wrapper">
-<nav class="floating">
-<a href="/"><img src="image/logotype.png" title="Crafting Interpreters"/></a>
+<nav class="floating pinned">
+<a href="https://youhogeon-meritz.github.io/"><img src="https://youhogeon-meritz.github.io/image/logotype.png" title="Crafting Interpreters"></a>
 <div class="expandable">
-<h3><a href="#top">Local Variables<small>22</small></a></h3>
+<h3><a href="https://youhogeon-meritz.github.io/local-variables.html#top"><font papago-translate="splitted"><font papago-translate="translated">지역 변수</font></font><small>22</small></a></h3>
 <ul>
-<li><a href="#representing-local-variables"><small>22.1</small> Representing Local Variables</a></li>
-<li><a href="#block-statements"><small>22.2</small> Block Statements</a></li>
-<li><a href="#declaring-local-variables"><small>22.3</small> Declaring Local Variables</a></li>
-<li><a href="#using-locals"><small>22.4</small> Using Locals</a></li>
+<li><a href="https://youhogeon-meritz.github.io/local-variables.html#representing-local-variables"><small>22.1</small><font papago-translate="splitted"><font papago-translate="translated"> 지역 변수 표현</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/local-variables.html#block-statements"><small>22.2</small><font papago-translate="splitted"><font papago-translate="translated"> 블록 문</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/local-variables.html#declaring-local-variables"><small>22.3</small><font papago-translate="splitted"><font papago-translate="translated"> 지역 변수 선언</font></font></a></li>
+<li><a href="https://youhogeon-meritz.github.io/local-variables.html#using-locals"><small>22.4</small><font papago-translate="splitted"><font papago-translate="translated"> 현지인 사용</font></font></a></li>
 <li class="divider"></li>
-<li class="end-part"><a href="#challenges">Challenges</a></li>
+<li class="end-part"><a href="https://youhogeon-meritz.github.io/local-variables.html#challenges">Challenges</a></li>
 </ul>
 <div class="prev-next">
-<a class="left" href="global-variables.html" title="Global Variables">← Previous</a>
-<a href="a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑ Up</a>
-<a class="right" href="jumping-back-and-forth.html" title="Jumping Back and Forth">Next →</a>
+<a class="left" href="https://youhogeon-meritz.github.io/global-variables.html" title="Global Variables">←&nbsp;Previous</a>
+<a href="https://youhogeon-meritz.github.io/a-bytecode-virtual-machine.html" title="A Bytecode Virtual Machine">↑&nbsp;Up</a>
+<a class="right" href="https://youhogeon-meritz.github.io/jumping-back-and-forth.html" title="Jumping Back and Forth">Next&nbsp;→</a>
 </div> </div>
 <a id="expand-nav">≡</a>
 </nav>
 </div>
 <article class="chapter">
 <div class="number">22</div>
-<h1>Local Variables</h1>
+<h1><font papago-translate="translated">지역 변수</font></h1>
 <blockquote>
-<p>And as imagination bodies forth<br/>
-The forms of things unknown, the poet’s pen<br/>
-Turns them to shapes and gives to airy nothing<br/>
-A local habitation and a name.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">그리고 상상력이 발휘됨에 따라</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 알려지지 않은 것들의 형태, 시인의 펜</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 모양으로 바꾸고 공기를 불어넣는 것은 아무것도 주지 않습니다</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 지역 거주지와 이름.</font></font></p>
 <p><cite>William Shakespeare, <em>A Midsummer Night’s Dream</em></cite></p>
 </blockquote>
-<p>The <a href="global-variables.html">last chapter</a> introduced variables to clox, but only of the <span name="global">global</span> variety. In this chapter, we’ll extend that to
-support blocks, block scope, and local variables. In jlox, we managed to pack
-all of that and globals into one chapter. For clox, that’s two chapters worth of
-work partially because, frankly, everything takes more effort in C.</p>
-<aside name="global">
-<p>There’s probably some dumb “think globally, act locally” joke here, but I’m
-struggling to find it.</p>
+<p><font papago-translate="translated"><a href="https://youhogeon-meritz.github.io/global-variables.html">마지막 장에서는</a> 변수를 clox에 도입했지만<span name="global">, 글로벌</span> 변수만 도입했습니다.</font><font papago-translate="translated"> 이 장에서는 이를 블록, 블록 범위 및 로컬 변수를 지원하도록 확장하겠습니다.</font><font papago-translate="translated"> Jlox에서는 이 모든 것과 글로벌을 하나의 챕터로 묶는 데 성공했습니다.</font><font papago-translate="translated"> clox의 경우, 솔직히 말해서 모든 것이 C에서 더 많은 노력이 필요하기 때문에 부분적으로 두 장의 작업 가치가 있습니다.</font></p>
+<aside name="global" style="top: 448px;">
+<p><font papago-translate="translated">여기에는 아마도 "전 세계적으로 생각하고 현지에서 행동하라"는 어리석은 농담이 있을 거예요. 하지만 저는 그것을 찾기가 힘들어요.</font></p>
 </aside>
-<p>But an even more important reason is that our approach to local variables will
-be quite different from how we implemented globals. Global variables are late
-bound in Lox. “Late” in this context means “resolved after compile time”. That’s
-good for keeping the compiler simple, but not great for performance. Local
-variables are one of the most-used <span name="params">parts</span> of a
-language. If locals are slow, <em>everything</em> is slow. So we want a strategy for
-local variables that’s as efficient as possible.</p>
-<aside name="params">
-<p>Function parameters are also heavily used. They work like local variables too,
-so we’ll use the same implementation technique for them.</p>
+<p><font papago-translate="translated">하지만 더 중요한 이유는 우리가 지역 변수에 접근하는 방식이 글로벌을 구현하는 방식과 상당히 다를 것이기 때문입니다.</font><font papago-translate="translated"> 글로벌 변수는 Lox에서 늦게 바운드됩니다.</font><font papago-translate="translated"> 이 문맥에서 "늦음"은 "컴파일 시간 이후에 해결됨"을 의미합니다.</font><font papago-translate="translated"> 컴파일러를 단순하게 유지하는 데는 좋지만 성능에는 좋지 않습니다.</font><font papago-translate="translated"> 지역 변수는 언어에서 가장 많이 사용<span name="params">되는 부분</span> 중 하나입니다.</font><font papago-translate="translated"> 현지인들이 느리면<em> 모든 것</em>이 느려<em>집니다</em>.</font><font papago-translate="translated"> 그래서 우리는 가능한 한 효율적인 지역 변수 전략을 원합니다.</font></p>
+<aside name="params" style="top: 688px;">
+<p><font papago-translate="translated">함수 매개변수도 많이 사용됩니다.</font><font papago-translate="translated"> 로컬 변수와 마찬가지로 작동하므로 동일한 구현 기법을 사용합니다.</font></p>
 </aside>
-<p>Fortunately, lexical scoping is here to help us. As the name implies, lexical
-scope means we can resolve a local variable just by looking at the text of the
-program<span class="em">—</span>locals are <em>not</em> late bound. Any processing work we do in the
-compiler is work we <em>don’t</em> have to do at runtime, so our implementation of
-local variables will lean heavily on the compiler.</p>
-<h2><a href="#representing-local-variables" id="representing-local-variables"><small>22 . 1</small>Representing Local Variables</a></h2>
-<p>The nice thing about hacking on a programming language in modern times is
-there’s a long lineage of other languages to learn from. So how do C and Java
-manage their local variables? Why, on the stack, of course! They typically use
-the native stack mechanisms supported by the chip and OS. That’s a little too
-low level for us, but inside the virtual world of clox, we have our own stack we
-can use.</p>
-<p>Right now, we only use it for holding on to <strong>temporaries</strong><span class="em">—</span>short-lived blobs
-of data that we need to remember while computing an expression. As long as we
-don’t get in the way of those, we can stuff our local variables onto the stack
-too. This is great for performance. Allocating space for a new local requires
-only incrementing the <code translate="no">stackTop</code> pointer, and freeing is likewise a decrement.
-Accessing a variable from a known stack slot is an indexed array lookup.</p>
-<p>We do need to be careful, though. The VM expects the stack to behave like, well,
-a stack. We have to be OK with allocating new locals only on the top of the
-stack, and we have to accept that we can discard a local only when nothing is
-above it on the stack. Also, we need to make sure temporaries don’t interfere.</p>
-<p>Conveniently, the design of Lox is in <span name="harmony">harmony</span> with
-these constraints. New locals are always created by declaration statements.
-Statements don’t nest inside expressions, so there are never any temporaries on
-the stack when a statement begins executing. Blocks are strictly nested. When a
-block ends, it always takes the innermost, most recently declared locals with
-it. Since those are also the locals that came into scope last, they should be on
-top of the stack where we need them.</p>
-<aside name="harmony">
-<p>This alignment obviously isn’t coincidental. I designed Lox to be amenable to
-single-pass compilation to stack-based bytecode. But I didn’t have to tweak the
-language too much to fit in those restrictions. Most of its design should feel
-pretty natural.</p>
-<p>This is in large part because the history of languages is deeply tied to
-single-pass compilation and<span class="em">—</span>to a lesser degree<span class="em">—</span>stack-based architectures.
-Lox’s block scoping follows a tradition stretching back to BCPL. As programmers,
-our intuition of what’s “normal” in a language is informed even today by the
-hardware limitations of yesteryear.</p>
+<p><font papago-translate="translated">다행히도 어휘 범위가 우리를 돕기 위해 여기 있습니다.</font><font papago-translate="translated"> 이름에서 알 수 있듯이, 어휘 범위는 프로그램의 텍스트만 봐도 로컬 변수를 해결할 수 있음을 의미합니다. 로컬<span class="em"></span> 변수는 늦게 제한<em>되지 않습니다</em>.</font><font papago-translate="translated"> 컴파일러에서 수행하는 모든 처리 작업은 런타임에 수행<em>할</em> 필요<em>가</em> 없으므로 로컬 변수의 구현은 컴파일러에 크게 의존하게 됩니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/local-variables.html#representing-local-variables" id="representing-local-variables"><small><font papago-translate="translated">22 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">지역 변수 표현</font></font></a></h2>
+<p><font papago-translate="translated">현대 프로그래밍 언어 해킹의 좋은 점은 배울 수 있는 다른 언어의 계통이 길다는 것입니다.</font><font papago-translate="translated"> 그렇다면 C와 Java는 로컬 변수를 어떻게 관리하나요?</font><font papago-translate="translated"> 물론, 왜, 스택 위에!</font><font papago-translate="translated"> 그들은 일반적으로 칩과 운영 체제에서 지원하는 기본 스택 메커니즘을 사용합니다.</font><font papago-translate="translated"> 그건 우리에게 너무 낮은 수준이지만, 가상의 클록스 세계 안에는 우리가 사용할 수 있는 스택이 있습니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">현재 우리는<span class="em"></span> 표현식을 계산할 때 기억해야 할 짧은 데이터 덩어리인<strong> 일시적인 데이터</strong>를 보유하는 데만 이를 사용합니다.</font><font papago-translate="translated"> 우리가 그것들을 방해하지 않는 한, 우리의 지역 변수들도 스택에 채울 수 있습니다.</font><font papago-translate="translated"> 이것은 성능에 매우 좋습니다.</font><font papago-translate="translated"> 새 로컬에 공간을 할당하려면 다음을 증가시키기만 하면 됩니다 </font></font><code translate="no">stackTop</code><font papago-translate="splitted"><font papago-translate="translated"> 포인터, 그리고 자유도 마찬가지로 감소입니다.</font><font papago-translate="translated"> 알려진 스택 슬롯에서 변수에 접근하는 것은 인덱싱된 배열 조회입니다.</font></font></p>
+<p><font papago-translate="translated">하지만 우리는 조심해야 합니다.</font><font papago-translate="translated"> VM은 스택이 스택처럼 작동할 것으로 예상합니다.</font><font papago-translate="translated"> 스택 상단에만 새로운 로컬을 할당하는 것은 괜찮아야 하며, 스택 위에 아무것도 없을 때만 로컬을 폐기할 수 있다는 점을 받아들여야 합니다.</font><font papago-translate="translated"> 또한, 임시 공간이 방해받지 않도록 해야 합니다.</font></p>
+<p><font papago-translate="translated">편리하게도 Lox의 디자인은 이러한 제약 조건과<span name="harmony"> 조화</span>를 이룹니다.</font><font papago-translate="translated"> 새로운 지역 주민들은 항상 선언문에 의해 만들어집니다.</font><font papago-translate="translated"> 문은 식 안에 자리 잡지 않기 때문에 문이 실행되기 시작할 때 스택에 임시 공간이 없습니다.</font><font papago-translate="translated"> 블록은 엄격하게 중첩되어 있습니다.</font><font papago-translate="translated"> 블록이 끝나면 항상 가장 안쪽, 가장 최근에 신고된 지역 주민들이 블록을 가지고 있습니다.</font><font papago-translate="translated"> 그들도 마지막으로 범위에 들어간 현지인들이기 때문에, 우리가 필요로 하는 곳에 그들이 있어야 합니다.</font></p>
+<aside name="harmony" style="top: 1456px;">
+<p><font papago-translate="translated">이 정렬은 분명히 우연이 아닙니다.</font><font papago-translate="translated"> 저는 Lox를 스택 기반 바이트코드로 단일 패스 컴파일할 수 있도록 설계했습니다.</font><font papago-translate="translated"> 하지만 이러한 제한에 맞추기 위해 언어를 너무 많이 조정할 필요는 없었습니다.</font><font papago-translate="translated"> 대부분의 디자인은 꽤 자연스럽게 느껴져야 합니다.</font></p>
+<p><font papago-translate="translated">이는 대부분 언어의 역사가 단일 패스 컴파일과 스택 기반<span class="em"></span><span class="em"></span> 아키텍처와 깊이 연관되어 있기 때문입니다.</font><font papago-translate="translated"> Lox의 블록 범위는 BCPL로 거슬러 올라가는 전통을 따릅니다.</font><font papago-translate="translated"> 프로그래머로서 언어에서 "정상적인" 것이 무엇인지에 대한 직관은 과거의 하드웨어 한계로 인해 오늘날에도 알려지게 됩니다.</font></p>
 </aside>
-<p>Step through this example program and watch how the local variables come in and
-go out of scope:</p><img alt="A series of local variables come into and out of scope in a stack-like fashion." src="image/local-variables/scopes.png">
-<p>See how they fit a stack perfectly? It seems that the stack will work for
-storing locals at runtime. But we can go further than that. Not only do we know
-<em>that</em> they will be on the stack, but we can even pin down precisely <em>where</em>
-they will be on the stack. Since the compiler knows exactly which local
-variables are in scope at any point in time, it can effectively simulate the
-stack during compilation and note <span name="fn">where</span> in the stack each
-variable lives.</p>
-<p>We’ll take advantage of this by using these stack offsets as operands for the
-bytecode instructions that read and store local variables. This makes working
-with locals deliciously fast<span class="em">—</span>as simple as indexing into an array.</p>
-<aside name="fn">
-<p>In this chapter, locals start at the bottom of the VM’s stack array and are
-indexed from there. When we add <a href="calls-and-functions.html">functions</a>, that scheme gets a little more
-complex. Each function needs its own region of the stack for its parameters and
-local variables. But, as we’ll see, that doesn’t add as much complexity as you
-might expect.</p>
+<p><font papago-translate="translated">이 예제 프로그램을 살펴보고 지역 변수가 어떻게 들어오고 범위를 벗어나는지 확인하세요:</font></p><img alt="A series of local variables come into and out of scope in a stack-like fashion." src="https://youhogeon-meritz.github.io/image/local-variables/scopes.png">
+<p><font papago-translate="translated">그들이 어떻게 스택을 완벽하게 맞추는지 보세요?</font><font papago-translate="translated"> 스택이 런타임에 로컬을 저장하는 데 작동할 것 같습니다.</font><font papago-translate="translated"> 하지만 우리는 그 이상으로 나아갈 수 있습니다.</font><font papago-translate="translated"> 우리는 그것들이 스택에 있을 것이라는 것을 알고 있을 뿐만 아니라<em></em>, 그들<em>이</em> 스택<em>에서 어디에</em> 있을지 정확히 파악할 수도 있습니다.</font><font papago-translate="translated"> 컴파일러는 어느 시점에서든 어떤 로컬 변수가 범위 내에 있는지 정확히 알고 있기 때문에 컴파일 중에 스택을 효과적으로 시뮬레이션하고 각 변수가 스택<span name="fn"> 내</span> 어디에 있는지 기록할 수 있습니다.</font></p>
+<p><font papago-translate="translated">우리는 이러한 스택 오프셋을 로컬 변수를 읽고 저장하는 바이트코드 명령어의 피연산자로 사용하여 이를 활용할 것입니다.</font><font papago-translate="translated"> 이렇게 하면 현지인들과 작업하는 속도가 매우 빠릅니다.<span class="em"></span> 마치 배열로 인덱싱하는 것처럼 간단합니다.</font></p>
+<aside name="fn" style="top: 2275.5px;">
+<p><font papago-translate="translated">이 장에서는 로컬이 VM의 스택 배열 하단에서 시작하여 거기서부터 인덱싱됩니다.</font><font papago-translate="translated"> <a href="https://youhogeon-meritz.github.io/calls-and-functions.html">함수</a>를 추가하면 그 체계가 조금 더 복잡해집니다.</font><font papago-translate="translated"> 각 함수는 매개변수와 지역 변수를 위해 스택의 고유 영역이 필요합니다.</font><font papago-translate="translated"> 하지만 보시다시피 예상보다 복잡성이 크게 증가하지는 않습니다.</font></p>
 </aside>
-<p>There’s a lot of state we need to track in the compiler to make this whole thing
-go, so let’s get started there. In jlox, we used a linked chain of “environment”
-HashMaps to track which local variables were currently in scope. That’s sort of
-the classic, schoolbook way of representing lexical scope. For clox, as usual,
-we’re going a little closer to the metal. All of the state lives in a new
-struct.</p>
+<p><font papago-translate="translated">이 모든 것을 실행하려면 컴파일러에서 추적해야 할 상태가 많이 있으므로 시작해 보겠습니다.</font><font papago-translate="translated"> Jlox에서는 "환경" 해시맵의 연결된 체인을 사용하여 현재 범위에 있는 지역 변수를 추적했습니다.</font><font papago-translate="translated"> 그것이 어휘 범위를 나타내는 고전적이고 교과서적인 방식입니다.</font><font papago-translate="translated"> 클록스의 경우, 평소와 마찬가지로 금속에 조금 더 가까워지고 있습니다.</font><font papago-translate="translated"> 모든 주는 새로운 구조 속에서 살고 있습니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">} ParseRule;
-</pre><div class="source-file"><em>compiler.c</em><br/>
-add after struct <em>ParseRule</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 구조 구문 분석<em> 규칙</em> 뒤에 추가</font></font></div>
 <pre class="insert" translate="no">
-
 <span class="k">typedef</span> <span class="k">struct</span> {
   <span class="t">Local</span> <span class="i">locals</span>[<span class="a">UINT8_COUNT</span>];
   <span class="t">int</span> <span class="i">localCount</span>;
   <span class="t">int</span> <span class="i">scopeDepth</span>;
 } <span class="t">Compiler</span>;
 </pre><pre class="insert-after" translate="no">
-
 Parser parser;
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after struct <em>ParseRule</em></div>
-<p>We have a simple, flat array of all locals that are in scope during each point in
-the compilation process. They are <span name="order">ordered</span> in the array
-in the order that their declarations appear in the code. Since the instruction
-operand we’ll use to encode a local is a single byte, our VM has a hard limit on
-the number of locals that can be in scope at once. That means we can also give
-the locals array a fixed size.</p>
-<aside name="order">
-<p>We’re writing a single-pass compiler, so it’s not like we have <em>too</em> many other
-options for how to order them in the array.</p>
+<p><font papago-translate="translated">우리는 컴파일 과정의 각 지점에서 범위 내에 있는 모든 지역 주민들의 간단하고 평평한 배열을 가지고 있습니다.</font><font papago-translate="translated"> 그들은 선언문이 코드에 나타나는 순서대로 배열<span name="order"> 순서</span>대로<span name="order"> 정렬</span>됩니다.</font><font papago-translate="translated"> 로컬을 인코딩하는 데 사용할 명령어 피연산자가 단일 바이트이기 때문에, 우리의 VM은 한 번에 범위 내에 있을 수 있는 로컬 수에 큰 제한이 있습니다.</font><font papago-translate="translated"> 즉, 로컬 배열에 고정된 크기를 제공할 수도 있습니다.</font></p>
+<aside name="order" style="top: 2791.5px;">
+<p><font papago-translate="translated">우리는 단일 패스 컴파일러를 작성하고 있기 때문에 배열에서 그것들을 주문하는 방법에 대한 다른 옵션이<em> 너무</em> 많지는 않습니다.</font></p>
 </aside>
 <div class="codehilite"><pre class="insert-before" translate="no">#define DEBUG_TRACE_EXECUTION
-</pre><div class="source-file"><em>common.h</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">일반적인.h</font></em></div>
 <pre class="insert" translate="no">
-
 <span class="a">#define UINT8_COUNT (UINT8_MAX + 1)</span>
 </pre><pre class="insert-after" translate="no">
-
 #endif
 </pre></div>
 <div class="source-file-narrow"><em>common.h</em></div>
-<p>Back in the Compiler struct, the <code translate="no">localCount</code> field tracks how many locals are
-in scope<span class="em">—</span>how many of those array slots are in use. We also track the “scope
-depth”. This is the number of blocks surrounding the current bit of code we’re
-compiling.</p>
-<p>Our Java interpreter used a chain of maps to keep each block’s variables
-separate from other blocks’. This time, we’ll simply number variables with the
-level of nesting where they appear. Zero is the global scope, one is the first
-top-level block, two is inside that, you get the idea. We use this to track
-which block each local belongs to so that we know which locals to discard when a
-block ends.</p>
-<p>Each local in the array is one of these:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">컴파일러 구조로 돌아가서 </font></font><code translate="no">localCount</code><font papago-translate="splitted"><font papago-translate="translated"> 필드는 얼마나 많은 로컬이 범위 내에 있는지, 즉 사용 중인 배열<span class="em"></span> 슬롯의 수를 추적합니다.</font><font papago-translate="translated"> 우리는 또한 "범위 깊이"를 추적합니다.</font><font papago-translate="translated"> 현재 컴파일 중인 코드 비트를 둘러싼 블록 수입니다.</font></font></p>
+<p><font papago-translate="translated">자바 인터프리터는 각 블록의 변수를 다른 블록과 분리하여 유지하기 위해 일련의 맵을 사용했습니다.</font><font papago-translate="translated"> 이번에는 단순히 변수가 나타나는 위치에 둥지를 틀 정도로 숫자를 매길 것입니다.</font><font papago-translate="translated"> 제로는 글로벌 범위이고, 하나는 첫 번째 최상위 블록이며, 두 개는 그 안에 있습니다. 그러면 이해가 됩니다.</font><font papago-translate="translated"> 이를 사용하여 각 로컬이 속한 블록을 추적하여 블록이 끝날 때 어떤 로컬을 폐기할지 알 수 있습니다.</font></p>
+<p><font papago-translate="translated">배열의 각 로컬은 다음 중 하나입니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">} ParseRule;
-</pre><div class="source-file"><em>compiler.c</em><br/>
-add after struct <em>ParseRule</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 구조 구문 분석<em> 규칙</em> 뒤에 추가</font></font></div>
 <pre class="insert" translate="no">
-
 <span class="k">typedef</span> <span class="k">struct</span> {
   <span class="t">Token</span> <span class="i">name</span>;
   <span class="t">int</span> <span class="i">depth</span>;
 } <span class="t">Local</span>;
 </pre><pre class="insert-after" translate="no">
-
 typedef struct {
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after struct <em>ParseRule</em></div>
-<p>We store the name of the variable. When we’re resolving an identifier, we
-compare the identifier’s lexeme with each local’s name to find a match. It’s
-pretty hard to resolve a variable if you don’t know its name. The <code translate="no">depth</code> field
-records the scope depth of the block where the local variable was declared.
-That’s all the state we need for now.</p>
-<p>This is a very different representation from what we had in jlox, but it still
-lets us answer all of the same questions our compiler needs to ask of the
-lexical environment. The next step is figuring out how the compiler <em>gets</em> at
-this state. If we were <span name="thread">principled</span> engineers, we’d
-give each function in the front end a parameter that accepts a pointer to a
-Compiler. We’d create a Compiler at the beginning and carefully thread it
-through each function call<span class="ellipse"> . . . </span>but that would mean a lot of boring changes to
-the code we already wrote, so here’s a global variable instead:</p>
-<aside name="thread">
-<p>In particular, if we ever want to use our compiler in a multi-threaded
-application, possibly with multiple compilers running in parallel, then using a
-global variable is a <em>bad</em> idea.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">변수의 이름을 저장합니다.</font><font papago-translate="translated"> 식별자를 해결할 때, 우리는 식별자의 어휘를 각 지역 이름과 비교하여 일치하는 것을 찾습니다.</font><font papago-translate="translated"> 변수의 이름을 모르면 변수를 해결하기가 꽤 어렵습니다.</font><font papago-translate="translated"> 그 </font></font><code translate="no">depth</code><font papago-translate="splitted"><font papago-translate="translated"> 필드는 로컬 변수가 선언된 블록의 범위 깊이를 기록합니다.</font><font papago-translate="translated"> 지금은 그것이 우리가 필요한 모든 상태입니다.</font></font></p>
+<p><font papago-translate="translated">이것은 우리가 jlox에서 했던 것과는 매우 다른 표현이지만, 여전히 컴파일러가 어휘 환경에 대해 묻는 모든 질문에 답할 수 있게 해줍니다.</font><font papago-translate="translated"> 다음 단계는 컴파일러가 이<em></em> 상태에 도달하는 방법을 알아내는 것입니다.</font><font papago-translate="translated"> <span name="thread">우리</span>가<span name="thread"> 원칙</span>적인 엔지니어라면, 프론트엔드의 각 함수에 컴파일러 포인터를 받아들이는 매개변수를 부여할 것입니다.</font><font papago-translate="translated"> 처음에 컴파일러를 만들어서 각 함수 호출을 신중하게 처리할 것입니다<span class="ellipse">. 하지만</span> 이는 이미 작성한 코드에 많은 지루한 변경 사항이 있다는 것을 의미하므로 대신 글로벌 변수를 소개합니다:</font></p>
+<aside name="thread" style="top: 3747.5px;">
+<p><font papago-translate="translated">특히, 여러 컴파일러가 병렬로 실행되는 다중 스레드 애플리케이션에서 컴파일러를 사용하려면 전역 변수를 사용하는 것이<em> 좋지</em> 않습니다.</font></p>
 </aside>
 <div class="codehilite"><pre class="insert-before" translate="no">Parser parser;
-</pre><div class="source-file"><em>compiler.c</em><br/>
-add after variable <em>parser</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 변수<em> 파서</em> 뒤에 추가하기</font></font></div>
 <pre class="insert" translate="no"><span class="t">Compiler</span>* <span class="i">current</span> = <span class="a">NULL</span>;
 </pre><pre class="insert-after" translate="no">Chunk* compilingChunk;
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after variable <em>parser</em></div>
-<p>Here’s a little function to initialize the compiler:</p>
-<div class="codehilite"><div class="source-file"><em>compiler.c</em><br/>
-add after <em>emitConstant</em>()</div>
+<p><font papago-translate="translated">컴파일러를 초기화하는 작은 함수는 다음과 같습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>emitConstant</em>() 다음에 추가</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">initCompiler</span>(<span class="t">Compiler</span>* <span class="i">compiler</span>) {
   <span class="i">compiler</span>-&gt;<span class="i">localCount</span> = <span class="n">0</span>;
   <span class="i">compiler</span>-&gt;<span class="i">scopeDepth</span> = <span class="n">0</span>;
@@ -260,43 +150,30 @@ add after <em>emitConstant</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after <em>emitConstant</em>()</div>
-<p>When we first start up the VM, we call it to get everything into a clean state.</p>
+<p><font papago-translate="translated">VM을 처음 시작할 때 모든 것을 깨끗한 상태로 만들기 위해 호출합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  initScanner(source);
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>compile</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>컴파일</em> ()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="t">Compiler</span> <span class="i">compiler</span>;
   <span class="i">initCompiler</span>(&amp;<span class="i">compiler</span>);
 </pre><pre class="insert-after" translate="no">  compilingChunk = chunk;
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>compile</em>()</div>
-<p>Our compiler has the data it needs, but not the operations on that data. There’s
-no way to create and destroy scopes, or add and resolve variables. We’ll add
-those as we need them. First, let’s start building some language features.</p>
-<h2><a href="#block-statements" id="block-statements"><small>22 . 2</small>Block Statements</a></h2>
-<p>Before we can have any local variables, we need some local scopes. These come
-from two things: function bodies and <span name="block">blocks</span>. Functions
-are a big chunk of work that we’ll tackle in <a href="calls-and-functions.html">a later chapter</a>, so
-for now we’re only going to do blocks. As usual, we start with the syntax. The
-new grammar we’ll introduce is:</p>
+<p><font papago-translate="translated">우리 컴파일러는 필요한 데이터는 가지고 있지만, 그 데이터에 대한 연산은 가지고 있지 않습니다.</font><font papago-translate="translated"> 스코프를 생성하고 파괴하거나 변수를 추가하고 해결할 방법이 없습니다.</font><font papago-translate="translated"> 필요에 따라 추가하겠습니다.</font><font papago-translate="translated"> 먼저, 몇 가지 언어 기능을 구축하기 시작하겠습니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/local-variables.html#block-statements" id="block-statements"><small><font papago-translate="translated">22 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">블록 문</font></font></a></h2>
+<p><font papago-translate="translated">지역 변수를 갖기 전에 지역 범위가 필요합니다.</font><font papago-translate="translated"> 이것들은 두 가지에서 나옵니다: 기능 본체와<span name="block"> 블록입니다</span>.</font><font papago-translate="translated"> 함수는<a href="https://youhogeon-meritz.github.io/calls-and-functions.html"> 나중 장</a>에서 다룰 큰 작업의 일부이므로 지금은 블록만 수행하겠습니다.</font><font papago-translate="translated"> 평소처럼 구문부터 시작합니다.</font><font papago-translate="translated"> 우리가 소개할 새로운 문법은:</font></p>
 <div class="codehilite"><pre translate="no"><span class="i">statement</span>      → <span class="i">exprStmt</span>
                | <span class="i">printStmt</span>
                | <span class="i">block</span> ;
 
 <span class="i">block</span>          → <span class="s">"{"</span> <span class="i">declaration</span>* <span class="s">"}"</span> ;
 </pre></div>
-<aside name="block">
-<p>When you think about it, “block” is a weird name. Used metaphorically, “block”
-usually means a small indivisible unit, but for some reason, the Algol 60
-committee decided to use it to refer to a <em>compound</em> structure<span class="em">—</span>a series of
-statements. It could be worse, I suppose. Algol 58 called <code translate="no">begin</code> and <code translate="no">end</code>
-“statement parentheses”.</p><img alt="A cinder block." class="above" src="image/local-variables/block.png">
-</img></aside>
-<p>Blocks are a kind of statement, so the rule for them goes in the <code translate="no">statement</code>
-production. The corresponding code to compile one looks like this:</p>
+<aside name="block" style="top: 4515.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">생각해보면, "차단"이라는 단어는 이상한 이름입니다.</font><font papago-translate="translated"> 은유적으로 사용되는 "블록"은 일반적으로 나눌 수 없는 작은 단위를 의미하지만, 어떤 이유에서인지 알골 60 위원회는<em> 이</em>를<em> 복합</em> 구조, 즉 일련<span class="em"></span>의 진술을 지칭하는 데 사용하기로 결정했습니다.</font><font papago-translate="translated"> 더 나쁠 수도 있습니다.</font><font papago-translate="translated"> 알골 58호 호출 </font></font><code translate="no">begin</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">end</code><font papago-translate="splitted"><font papago-translate="translated"> "문 괄호"</font></font></p><img alt="A cinder block." class="above" src="https://youhogeon-meritz.github.io/image/local-variables/block.png">
+</aside>
+<p><font papago-translate="splitted"><font papago-translate="translated">블록은 일종의 문장이므로 블록에 대한 규칙은 다음과 같습니다 </font></font><code translate="no">statement</code><font papago-translate="splitted"><font papago-translate="translated"> 생산.</font><font papago-translate="translated"> 하나를 컴파일하는 해당 코드는 다음과 같습니다:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  if (match(TOKEN_PRINT)) {
     printStatement();
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>statement</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>성명</em>서 ()에서</font></font></div>
 <pre class="insert" translate="no">  } <span class="k">else</span> <span class="k">if</span> (<span class="i">match</span>(<span class="a">TOKEN_LEFT_BRACE</span>)) {
     <span class="i">beginScope</span>();
     <span class="i">block</span>();
@@ -304,13 +181,11 @@ in <em>statement</em>()</div>
 </pre><pre class="insert-after" translate="no">  } else {
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>statement</em>()</div>
-<p>After <span name="helper">parsing</span> the initial curly brace, we use this
-helper function to compile the rest of the block:</p>
-<aside name="helper">
-<p>This function will come in handy later for compiling function bodies.</p>
+<p><font papago-translate="translated">초기 컬리 브레이스<span name="helper">를 파싱</span>한 후, 이 헬퍼 함수를 사용하여 나머지 블록을 컴파일합니다:</font></p>
+<aside name="helper" style="top: 4971.5px;">
+<p><font papago-translate="translated">이 함수는 나중에 함수 본문을 컴파일하는 데 유용할 것입니다.</font></p>
 </aside>
-<div class="codehilite"><div class="source-file"><em>compiler.c</em><br/>
-add after <em>expression</em>()</div>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> 식<em></em> () 뒤에 추가</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">block</span>() {
   <span class="k">while</span> (!<span class="i">check</span>(<span class="a">TOKEN_RIGHT_BRACE</span>) &amp;&amp; !<span class="i">check</span>(<span class="a">TOKEN_EOF</span>)) {
     <span class="i">declaration</span>();
@@ -320,68 +195,39 @@ add after <em>expression</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after <em>expression</em>()</div>
-<p>It keeps parsing declarations and statements until it hits the closing brace. As
-we do with any loop in the parser, we also check for the end of the token
-stream. This way, if there’s a malformed program with a missing closing curly,
-the compiler doesn’t get stuck in a loop.</p>
-<p>Executing a block simply means executing the statements it contains, one after
-the other, so there isn’t much to compiling them. The semantically interesting
-thing blocks do is create scopes. Before we compile the body of a block, we call
-this function to enter a new local scope:</p>
-<div class="codehilite"><div class="source-file"><em>compiler.c</em><br/>
-add after <em>endCompiler</em>()</div>
+<p><font papago-translate="translated">선언문과 문장을 마무리 괄호에 맞출 때까지 계속 구문 분석합니다.</font><font papago-translate="translated"> 파서의 모든 루프와 마찬가지로 토큰 스트림의 끝도 확인합니다.</font><font papago-translate="translated"> 이렇게 하면 컴파일러가 루프에 갇히지 않고 종료 컬이 누락된 비정형 프로그램이 있습니다.</font></p>
+<p><font papago-translate="translated">블록을 실행한다는 것은 단순히 블록에 포함된 문장들을 차례로 실행하는 것을 의미하므로, 이를 컴파일하는 데 큰 도움이 되지 않습니다.</font><font papago-translate="translated"> 블록이 의미적으로 흥미로운 일을 하는 것은 스코프를 만드는 것입니다.</font><font papago-translate="translated"> 블록의 본문을 컴파일하기 전에 이 함수를 호출하여 새로운 로컬 범위를 입력합니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>endCompiler</em>() 뒤에 추가</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">beginScope</span>() {
   <span class="i">current</span>-&gt;<span class="i">scopeDepth</span>++;
 }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after <em>endCompiler</em>()</div>
-<p>In order to “create” a scope, all we do is increment the current depth. This is
-certainly much faster than jlox, which allocated an entire new HashMap for
-each one. Given <code translate="no">beginScope()</code>, you can probably guess what <code translate="no">endScope()</code> does.</p>
-<div class="codehilite"><div class="source-file"><em>compiler.c</em><br/>
-add after <em>beginScope</em>()</div>
+<p><font papago-translate="splitted"><font papago-translate="translated">범위를 "생성"하기 위해 우리가 하는 일은 현재 깊이를 증가시키는 것뿐입니다.</font><font papago-translate="translated"> 이것은 확실히 각각의 해시맵에 대해 완전히 새로운 해시맵을 할당한 jlox보다 훨씬 빠릅니다.</font><font papago-translate="translated"> 정해진 </font></font><code translate="no">beginScope()</code><font papago-translate="splitted"><font papago-translate="translated">, 아마 짐작할 수 있을 겁니다 </font></font><code translate="no">endScope()</code><font papago-translate="splitted"><font papago-translate="translated"> 한다.</font></font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>beginScope</em>() 다음에 추가</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">endScope</span>() {
   <span class="i">current</span>-&gt;<span class="i">scopeDepth</span>--;
 }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after <em>beginScope</em>()</div>
-<p>That’s it for blocks and scopes<span class="em">—</span>more or less<span class="em">—</span>so we’re ready to stuff some
-variables into them.</p>
-<h2><a href="#declaring-local-variables" id="declaring-local-variables"><small>22 . 3</small>Declaring Local Variables</a></h2>
-<p>Usually we start with parsing here, but our compiler already supports parsing
-and compiling variable declarations. We’ve got <code translate="no">var</code> statements, identifier
-expressions and assignment in there now. It’s just that the compiler assumes
-all variables are global. So we don’t need any new parsing support, we just need
-to hook up the new scoping semantics to the existing code.</p><img alt="The code flow within varDeclaration()." src="image/local-variables/declaration.png">
-<p>Variable declaration parsing begins in <code translate="no">varDeclaration()</code> and relies on a couple
-of other functions. First, <code translate="no">parseVariable()</code> consumes the identifier token for
-the variable name, adds its lexeme to the chunk’s constant table as a string,
-and then returns the constant table index where it was added. Then, after
-<code translate="no">varDeclaration()</code> compiles the initializer, it calls <code translate="no">defineVariable()</code> to emit
-the bytecode for storing the variable’s value in the global variable hash table.</p>
-<p>Both of those helpers need a few changes to support local variables. In
-<code translate="no">parseVariable()</code>, we add:</p>
+<p><font papago-translate="translated">블록과 스코프에 대한 내용은 여기까지이므로<span class="em"></span><span class="em"></span> 변수를 입력할 준비가 되었습니다.</font></p>
+<h2><a href="https://youhogeon-meritz.github.io/local-variables.html#declaring-local-variables" id="declaring-local-variables"><small><font papago-translate="translated">22 . 3</font></small><font papago-translate="splitted"><font papago-translate="translated">지역 변수 선언</font></font></a></h2>
+<p><font papago-translate="splitted"><font papago-translate="translated">일반적으로 우리는 여기서 파싱으로 시작하지만, 우리 컴파일러는 이미 변수 선언을 파싱하고 컴파일하는 것을 지원합니다.</font><font papago-translate="translated"> 우리는 </font></font><code translate="no">var</code><font papago-translate="splitted"><font papago-translate="translated"> 진술, 식별자 표현 및 과제가 지금 거기에 있습니다.</font><font papago-translate="translated"> 컴파일러는 모든 변수가 전역 변수라고 가정할 뿐입니다.</font><font papago-translate="translated"> 그래서 우리는 새로운 구문 분석 지원이 필요하지 않고, 새로운 범위 지정 의미론을 기존 코드에 연결하기만 하면 됩니다.</font></font></p><img alt="The code flow within varDeclaration()." src="https://youhogeon-meritz.github.io/image/local-variables/declaration.png">
+<p><font papago-translate="splitted"><font papago-translate="translated">변수 선언 구문 분석은 다음에서 시작됩니다 </font></font><code translate="no">varDeclaration()</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고 몇 가지 다른 기능에 의존합니다.</font><font papago-translate="translated"> 첫번째, </font></font><code translate="no">parseVariable()</code><font papago-translate="splitted"><font papago-translate="translated"> 변수 이름에 대한 식별자 토큰을 소비하고, 그 어휘를 문자열로 청크의 상수 테이블에 추가한 다음, 추가된 상수 테이블 인덱스를 반환합니다.</font><font papago-translate="translated"> 그 후에 </font></font><code translate="no">varDeclaration()</code><font papago-translate="splitted"><font papago-translate="translated"> 이니셜라이저를 컴파일하면 호출됩니다 </font></font><code translate="no">defineVariable()</code><font papago-translate="splitted"><font papago-translate="translated"> 변수 값을 글로벌 변수 해시 테이블에 저장하기 위한 바이트코드를 방출합니다.</font></font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">두 도우미 모두 지역 변수를 지원하기 위해 몇 가지 변경 사항이 필요합니다 </font></font><code translate="no">parseVariable()</code><font papago-translate="splitted"><font papago-translate="translated">, 추가합니다:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  consume(TOKEN_IDENTIFIER, errorMessage);
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>parseVariable</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>parseVariable</em>()에서</font></font></div>
 <pre class="insert" translate="no">
-
   <span class="i">declareVariable</span>();
   <span class="k">if</span> (<span class="i">current</span>-&gt;<span class="i">scopeDepth</span> &gt; <span class="n">0</span>) <span class="k">return</span> <span class="n">0</span>;
 
 </pre><pre class="insert-after" translate="no">  return identifierConstant(&amp;parser.previous);
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>parseVariable</em>()</div>
-<p>First, we “declare” the variable. I’ll get to what that means in a second. After
-that, we exit the function if we’re in a local scope. At runtime, locals aren’t
-looked up by name. There’s no need to stuff the variable’s name into the
-constant table, so if the declaration is inside a local scope, we return a dummy
-table index instead.</p>
-<p>Over in <code translate="no">defineVariable()</code>, we need to emit the code to store a local variable
-if we’re in a local scope. It looks like this:</p>
+<p><font papago-translate="translated">먼저, 변수를 "선언"합니다.</font><font papago-translate="translated"> 곧 그게 무슨 뜻인지 말씀드리겠습니다.</font><font papago-translate="translated"> 그 후, 우리가 로컬 범위에 있는 경우 함수를 종료합니다.</font><font papago-translate="translated"> 런타임에는 현지인의 이름이 조회되지 않습니다.</font><font papago-translate="translated"> 변수의 이름을 상수 테이블에 입력할 필요가 없으므로 선언이 로컬 범위 내에 있는 경우 더미 테이블 인덱스를 대신 반환합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">오버 인 </font></font><code translate="no">defineVariable()</code><font papago-translate="splitted"><font papago-translate="translated">, 로컬 범위에 있는 경우 로컬 변수를 저장하려면 코드를 전송해야 합니다.</font><font papago-translate="translated"> 다음과 같이 보입니다:</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">static void defineVariable(uint8_t global) {
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>defineVariable</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>정의</em> 변수()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="k">if</span> (<span class="i">current</span>-&gt;<span class="i">scopeDepth</span> &gt; <span class="n">0</span>) {
     <span class="k">return</span>;
   }
@@ -389,21 +235,13 @@ in <em>defineVariable</em>()</div>
 </pre><pre class="insert-after" translate="no">  emitBytes(OP_DEFINE_GLOBAL, global);
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>defineVariable</em>()</div>
-<p>Wait, what? Yup. That’s it. There is no code to create a local variable at
-runtime. Think about what state the VM is in. It has already executed the code
-for the variable’s initializer (or the implicit <code translate="no">nil</code> if the user omitted an
-initializer), and that value is sitting right on top of the stack as the only
-remaining temporary. We also know that new locals are allocated at the top of
-the stack<span class="ellipse"> . . . </span>right where that value already is. Thus, there’s nothing to do. The
-temporary simply <em>becomes</em> the local variable. It doesn’t get much more
-efficient than that.</p>
-<p><span name="locals"></span></p><img alt="Walking through the bytecode execution showing that each initializer's result ends up in the local's slot." src="image/local-variables/local-slots.png"/>
-<aside name="locals">
-<p>The code on the left compiles to the sequence of instructions on the right.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">무엇이 기다리니?</font><font papago-translate="translated"> 네. 그게 다예요.</font><font papago-translate="translated"> 런타임 시 로컬 변수를 생성할 코드가 없습니다.</font><font papago-translate="translated"> VM이 어떤 상태에 있는지 생각해 보세요.</font><font papago-translate="translated"> 이미 변수의 초기화 코드(또는 암시적 코드)를 실행했습니다 </font></font><code translate="no">nil</code><font papago-translate="splitted"><font papago-translate="translated"> 사용자가 초기화를 생략한 경우), 그리고 그 값이 스택 바로 위에 남아 있는 유일한 임시 값입니다.</font><font papago-translate="translated"> 우리는 또한 새로운 지역 주민들이 스택의 맨 위<span class="ellipse">에</span> 할당된다는 것을 알고 있습니다<span class="ellipse">. 그</span> 값이 이미 있는 바로 그 위치에 있습니다<span class="ellipse">.</span></font><font papago-translate="translated"> 따라서 할 일이 없습니다.</font><font papago-translate="translated"> 임시 변수는 단순히 지역 변수<em>가 됩니다</em>.</font><font papago-translate="translated"> 그것보다 훨씬 더 효율적이지는 않습니다.</font></font></p>
+<p><span name="locals"></span></p><img alt="Walking through the bytecode execution showing that each initializer's result ends up in the local's slot." src="https://youhogeon-meritz.github.io/image/local-variables/local-slots.png">
+<aside name="locals" style="top: 7194px;">
+<p><font papago-translate="translated">왼쪽의 코드는 오른쪽의 지시 순서에 맞춰 컴파일됩니다.</font></p>
 </aside>
-<p>OK, so what’s “declaring” about? Here’s what that does:</p>
-<div class="codehilite"><div class="source-file"><em>compiler.c</em><br/>
-add after <em>identifierConstant</em>()</div>
+<p><font papago-translate="translated">좋아요, "선언"이란 무엇인가요?</font><font papago-translate="translated"> 이것이 하는 일은 다음과 같습니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>식별자</em> 뒤에 추가<em>Constant</em>()</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">declareVariable</span>() {
   <span class="k">if</span> (<span class="i">current</span>-&gt;<span class="i">scopeDepth</span> == <span class="n">0</span>) <span class="k">return</span>;
 
@@ -412,15 +250,9 @@ add after <em>identifierConstant</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after <em>identifierConstant</em>()</div>
-<p>This is the point where the compiler records the existence of the variable. We
-only do this for locals, so if we’re in the top-level global scope, we just bail
-out. Because global variables are late bound, the compiler doesn’t keep track of
-which declarations for them it has seen.</p>
-<p>But for local variables, the compiler does need to remember that the variable
-exists. That’s what declaring it does<span class="em">—</span>it adds it to the compiler’s list of
-variables in the current scope. We implement that using another new function.</p>
-<div class="codehilite"><div class="source-file"><em>compiler.c</em><br/>
-add after <em>identifierConstant</em>()</div>
+<p><font papago-translate="translated">이것이 컴파일러가 변수의 존재를 기록하는 지점입니다.</font><font papago-translate="translated"> 우리는 지역 주민들만을 위해 이 일을 하기 때문에, 최고 수준의 글로벌 범위 내에 있다면 그냥 구제금융을 받습니다.</font><font papago-translate="translated"> 글로벌 변수가 늦게 바인딩되기 때문에 컴파일러는 어떤 선언문을 보았는지 추적하지 않습니다.</font></p>
+<p><font papago-translate="translated">하지만 로컬 변수의 경우 컴파일러는 변수가 존재한다는 사실을 기억해야 합니다.</font><font papago-translate="translated"> 이것이 현재<span class="em"></span> 범위의 컴파일러 변수 목록에 추가한다고 선언하는 것입니다.</font><font papago-translate="translated"> 우리는 그것을 또 다른 새로운 기능을 사용하여 구현합니다.</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>식별자</em> 뒤에 추가<em>Constant</em>()</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">addLocal</span>(<span class="t">Token</span> <span class="i">name</span>) {
   <span class="t">Local</span>* <span class="i">local</span> = &amp;<span class="i">current</span>-&gt;<span class="i">locals</span>[<span class="i">current</span>-&gt;<span class="i">localCount</span>++];
   <span class="i">local</span>-&gt;<span class="i">name</span> = <span class="i">name</span>;
@@ -428,29 +260,15 @@ add after <em>identifierConstant</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after <em>identifierConstant</em>()</div>
-<p>This initializes the next available Local in the compiler’s array of variables.
-It stores the variable’s <span name="lexeme">name</span> and the depth of the
-scope that owns the variable.</p>
-<aside name="lexeme">
-<p>Worried about the lifetime of the string for the variable’s name? The Local
-directly stores a copy of the Token struct for the identifier. Tokens store a
-pointer to the first character of their lexeme and the lexeme’s length. That
-pointer points into the original source string for the script or REPL entry
-being compiled.</p>
-<p>As long as that string stays around during the entire compilation process<span class="em">—</span>which it must since, you know, we’re compiling it<span class="em">—</span>then all of the tokens
-pointing into it are fine.</p>
+<p><font papago-translate="translated">이렇게 하면 컴파일러의 변수 배열에서 다음으로 사용 가능한 로컬을 초기화할 수 있습니다.</font><font papago-translate="translated"> 변수<span name="lexeme">의 이름</span>과 변수를 소유한 범위의 깊이를 저장합니다.</font></p>
+<aside name="lexeme" style="top: 8013.5px;">
+<p><font papago-translate="translated">변수 이름 문자열의 수명이 걱정되나요?</font><font papago-translate="translated"> 로컬은 식별자에 대한 토큰 구조의 복사본을 직접 저장합니다.</font><font papago-translate="translated"> 토큰은 어휘의 첫 번째 문자와 어휘의 길이에 대한 포인터를 저장합니다.</font><font papago-translate="translated"> 해당 포인터는 컴파일 중인 스크립트 또는 REPL 항목의 원본 소스 문자열을 가리킵니다.</font></p>
+<p><font papago-translate="translated">그 문자열이 전체 컴파일 과정 동안 유지되기만 하면, 우리가 컴파일하고 있기 때문에 그 문자열을 가리키는 모든 토큰은<span class="em"></span><span class="em"></span> 괜찮습니다.</font></p>
 </aside>
-<p>Our implementation is fine for a correct Lox program, but what about invalid
-code? Let’s aim to be robust. The first error to handle is not really the user’s
-fault, but more a limitation of the VM. The instructions to work with local
-variables refer to them by slot index. That index is stored in a single-byte
-operand, which means the VM only supports up to 256 local variables in scope at
-one time.</p>
-<p>If we try to go over that, not only could we not refer to them at runtime, but
-the compiler would overwrite its own locals array, too. Let’s prevent that.</p>
+<p><font papago-translate="translated">우리의 구현은 올바른 Lox 프로그램에는 괜찮지만, 유효하지 않은 코드는 어떻습니까?</font><font papago-translate="translated"> 강건해지는 것을 목표로 합시다.</font><font papago-translate="translated"> 처리해야 할 첫 번째 오류는 실제로 사용자의 잘못이 아니라 VM의 한계입니다.</font><font papago-translate="translated"> 로컬 변수를 다루는 지침은 슬롯 인덱스를 기준으로 이를 참조합니다.</font><font papago-translate="translated"> 이 인덱스는 단일 바이트 피연산자에 저장되므로 VM은 한 번에 최대 256개의 로컬 변수만 지원합니다.</font></p>
+<p><font papago-translate="translated">이를 검토하려고 하면 런타임에 참조할 수 없을 뿐만 아니라 컴파일러가 자체 로컬 배열도 덮어쓸 수 있습니다.</font><font papago-translate="translated"> 그것을 방지합시다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">static void addLocal(Token name) {
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>addLocal</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> ad<em>dLocal</em>()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="k">if</span> (<span class="i">current</span>-&gt;<span class="i">localCount</span> == <span class="a">UINT8_COUNT</span>) {
     <span class="i">error</span>(<span class="s">"Too many local variables in function."</span>);
     <span class="k">return</span>;
@@ -459,22 +277,17 @@ in <em>addLocal</em>()</div>
 </pre><pre class="insert-after" translate="no">  Local* local = &amp;current-&gt;locals[current-&gt;localCount++];
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>addLocal</em>()</div>
-<p>The next case is trickier. Consider:</p>
+<p><font papago-translate="translated">다음 경우는 더 까다롭습니다.</font><font papago-translate="translated"> 고려:</font></p>
 <div class="codehilite"><pre translate="no">{
   <span class="k">var</span> <span class="i">a</span> = <span class="s">"first"</span>;
   <span class="k">var</span> <span class="i">a</span> = <span class="s">"second"</span>;
 }
 </pre></div>
-<p>At the top level, Lox allows redeclaring a variable with the same name as a
-previous declaration because that’s useful for the REPL. But inside a local
-scope, that’s a pretty <span name="rust">weird</span> thing to do. It’s likely
-to be a mistake, and many languages, including our own Lox, enshrine that
-assumption by making this an error.</p>
-<aside name="rust">
-<p>Interestingly, the Rust programming language <em>does</em> allow this, and idiomatic
-code relies on it.</p>
+<p><font papago-translate="translated">최상위 레벨에서 Lox는 이전 선언과 동일한 이름의 변수를 재선언할 수 있게 해줍니다. 이는 REPL에 유용하기 때문입니다.</font><font papago-translate="translated"> 하지만 지역 범위 내에서는 꽤<span name="rust"> 이상</span>한 일입니다.</font><font papago-translate="translated"> 그것은 실수일 가능성이 높으며, 우리의 Lox를 포함한 많은 언어들은 이러한 가정을 오류로 간주합니다.</font></p>
+<aside name="rust" style="top: 8665.5px;">
+<p><font papago-translate="translated">흥미롭게도 러스트 프로그래밍 언어는 이를 허용<em>하며</em> 관용적인 코드는 이를 기반으로 합니다.</font></p>
 </aside>
-<p>Note that the above program is different from this one:</p>
+<p><font papago-translate="translated">위의 프로그램은 이 프로그램과 다릅니다:</font></p>
 <div class="codehilite"><pre translate="no">{
   <span class="k">var</span> <span class="i">a</span> = <span class="s">"outer"</span>;
   {
@@ -482,14 +295,10 @@ code relies on it.</p>
   }
 }
 </pre></div>
-<p>It’s OK to have two variables with the same name in <em>different</em> scopes, even
-when the scopes overlap such that both are visible at the same time. That’s
-shadowing, and Lox does allow that. It’s only an error to have two variables
-with the same name in the <em>same</em> local scope.</p>
-<p>We detect that error like so:</p>
+<p><font papago-translate="translated">서로 다른 범위에 같은 이름을 가진 두 변수가 있어도 괜찮습니다. 비록 범위가 겹쳐서 두 변수가 동시<em></em>에 보일지라도 말입니다.</font><font papago-translate="translated"> 그것은 그림자이며, Lox는 그것을 허용합니다.</font><font papago-translate="translated"> 동일한 로컬<em></em> 범위에 같은 이름을 가진 두 변수가 있는 것은 오류일 뿐입니다.</font></p>
+<p><font papago-translate="translated">우리는 그 오류를 이렇게 감지합니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  Token* name = &amp;parser.previous;
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>declareVariable</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>decarate</em>V<em>ariable</em>()에서</font></font></div>
 <pre class="insert" translate="no">  <span class="k">for</span> (<span class="t">int</span> <span class="i">i</span> = <span class="i">current</span>-&gt;<span class="i">localCount</span> - <span class="n">1</span>; <span class="i">i</span> &gt;= <span class="n">0</span>; <span class="i">i</span>--) {
     <span class="t">Local</span>* <span class="i">local</span> = &amp;<span class="i">current</span>-&gt;<span class="i">locals</span>[<span class="i">i</span>];
     <span class="k">if</span> (<span class="i">local</span>-&gt;<span class="i">depth</span> != -<span class="n">1</span> &amp;&amp; <span class="i">local</span>-&gt;<span class="i">depth</span> &lt; <span class="i">current</span>-&gt;<span class="i">scopeDepth</span>) {
@@ -505,49 +314,33 @@ in <em>declareVariable</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>declareVariable</em>()</div>
-<aside name="negative">
-<p>Don’t worry about that odd <code translate="no">depth != -1</code> part yet. We’ll get to what that’s
-about later.</p>
+<aside name="negative" style="top: 9176.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">그 이상한 것에 대해 걱정하지 마세요 </font></font><code translate="no">depth != -1</code><font papago-translate="splitted"><font papago-translate="translated"> 아직 헤어지지 않았습니다.</font><font papago-translate="translated"> 그 내용은 나중에 설명하겠습니다.</font></font></p>
 </aside>
-<p>Local variables are appended to the array when they’re declared, which means the
-current scope is always at the end of the array. When we declare a new variable,
-we start at the end and work backward, looking for an existing variable with the
-same name. If we find one in the current scope, we report the error. Otherwise,
-if we reach the beginning of the array or a variable owned by another scope,
-then we know we’ve checked all of the existing variables in the scope.</p>
-<p>To see if two identifiers are the same, we use this:</p>
-<div class="codehilite"><div class="source-file"><em>compiler.c</em><br/>
-add after <em>identifierConstant</em>()</div>
+<p><font papago-translate="translated">로컬 변수는 선언될 때 배열에 추가되며, 이는 현재 범위가 항상 배열의 끝에 있음을 의미합니다.</font><font papago-translate="translated"> 새로운 변수를 선언할 때, 우리는 마지막에 시작하여 같은 이름을 가진 기존 변수를 찾기 위해 뒤로 이동합니다.</font><font papago-translate="translated"> 현재 범위에서 하나를 찾으면 오류를 보고합니다.</font><font papago-translate="translated"> 그렇지 않으면 배열의 시작이나 다른 범위가 소유한 변수에 도달하면 범위 내의 모든 기존 변수를 확인한 것으로 알고 있습니다.</font></p>
+<p><font papago-translate="translated">두 식별자가 동일한지 확인하려면 다음을 사용합니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>식별자</em> 뒤에 추가<em>Constant</em>()</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">bool</span> <span class="i">identifiersEqual</span>(<span class="t">Token</span>* <span class="i">a</span>, <span class="t">Token</span>* <span class="i">b</span>) {
   <span class="k">if</span> (<span class="i">a</span>-&gt;<span class="i">length</span> != <span class="i">b</span>-&gt;<span class="i">length</span>) <span class="k">return</span> <span class="k">false</span>;
   <span class="k">return</span> <span class="i">memcmp</span>(<span class="i">a</span>-&gt;<span class="i">start</span>, <span class="i">b</span>-&gt;<span class="i">start</span>, <span class="i">a</span>-&gt;<span class="i">length</span>) == <span class="n">0</span>;
 }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after <em>identifierConstant</em>()</div>
-<p>Since we know the lengths of both lexemes, we check that first. That will fail
-quickly for many non-equal strings. If the <span name="hash">lengths</span> are
-the same, we check the characters using <code translate="no">memcmp()</code>. To get to <code translate="no">memcmp()</code>, we
-need an include.</p>
-<aside name="hash">
-<p>It would be a nice little optimization if we could check their hashes, but
-tokens aren’t full LoxStrings, so we haven’t calculated their hashes yet.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">두 어휘의 길이를 알고 있으므로 먼저 확인합니다.</font><font papago-translate="translated"> 그것은 많은 비동등 문자열에 대해 빠르게 실패할 것입니다.</font><font papago-translate="translated"> <span name="hash">길이가</span> 같으면 다음을 사용하여 문자를 확인합니다 </font></font><code translate="no">memcmp()</code><font papago-translate="splitted"><font papago-translate="translated">. 에 도달하려면 </font></font><code translate="no">memcmp()</code><font papago-translate="splitted"><font papago-translate="translated">, 포함이 필요합니다.</font></font></p>
+<aside name="hash" style="top: 9769.5px;">
+<p><font papago-translate="translated">해시를 확인할 수 있다면 작은 최적화가 좋겠지만, 토큰이 LoxStrings로 가득 차 있지 않아서 아직 해시를 계산하지 못했습니다.</font></p>
 </aside>
 <div class="codehilite"><pre class="insert-before" translate="no">#include &lt;stdlib.h&gt;
-</pre><div class="source-file"><em>compiler.c</em></div>
+</pre><div class="source-file"><em><font papago-translate="translated">컴파일러.c</font></em></div>
 <pre class="insert" translate="no"><span class="a">#include &lt;string.h&gt;</span>
 </pre><pre class="insert-after" translate="no">
-
 #include "common.h"
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em></div>
-<p>With this, we’re able to bring variables into being. But, like ghosts, they
-linger on beyond the scope where they are declared. When a block ends, we need
-to put them to rest.</p>
+<p><font papago-translate="translated">이를 통해 변수를 구현할 수 있습니다.</font><font papago-translate="translated"> 하지만 유령처럼 그들은 선언된 범위를 넘어 계속 남아 있습니다.</font><font papago-translate="translated"> 블록이 끝나면, 우리는 그들을 멈추게 해야 합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  current-&gt;scopeDepth--;
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>endScope</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>endScope</em>()에서</font></font></div>
 <pre class="insert" translate="no">
-
   <span class="k">while</span> (<span class="i">current</span>-&gt;<span class="i">localCount</span> &gt; <span class="n">0</span> &amp;&amp;
          <span class="i">current</span>-&gt;<span class="i">locals</span>[<span class="i">current</span>-&gt;<span class="i">localCount</span> - <span class="n">1</span>].<span class="i">depth</span> &gt;
             <span class="i">current</span>-&gt;<span class="i">scopeDepth</span>) {
@@ -557,31 +350,16 @@ in <em>endScope</em>()</div>
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>endScope</em>()</div>
-<p>When we pop a scope, we walk backward through the local array looking for any
-variables declared at the scope depth we just left. We discard them by simply
-decrementing the length of the array.</p>
-<p>There is a runtime component to this too. Local variables occupy slots on the
-stack. When a local variable goes out of scope, that slot is no longer needed
-and should be freed. So, for each variable that we discard, we also emit an
-<code translate="no">OP_POP</code> <span name="pop">instruction</span> to pop it from the stack.</p>
-<aside name="pop">
-<p>When multiple local variables go out of scope at once, you get a series of
-<code translate="no">OP_POP</code> instructions that get interpreted one at a time. A simple optimization
-you could add to your Lox implementation is a specialized <code translate="no">OP_POPN</code> instruction
-that takes an operand for the number of slots to pop and pops them all at once.</p>
+<p><font papago-translate="translated">스코프를 열면 방금 남긴 스코프 깊이에서 선언된 변수를 찾기 위해 로컬 배열을 뒤로 걸어갑니다.</font><font papago-translate="translated"> 배열의 길이를 단순히 줄여서 버립니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이것에도 런타임 구성 요소가 있습니다.</font><font papago-translate="translated"> 로컬 변수는 스택의 슬롯을 차지합니다.</font><font papago-translate="translated"> 로컬 변수가 범위를 벗어나면 해당 슬롯은 더 이상 필요하지 않으므로 해제해야 합니다.</font><font papago-translate="translated"> 그래서 우리가 버리는 각 변수에 대해, 우리는 또한 </font></font><code translate="no">OP_POP</code> <font papago-translate="splitted"><font papago-translate="translated">스택에서 터뜨리라는<span name="pop"> 지침.</span></font></font></p>
+<aside name="pop" style="top: 10413.5px;">
+<p><font papago-translate="splitted"><font papago-translate="translated">여러 지역 변수가 한 번에 범위를 벗어날 때, 일련의 </font></font><code translate="no">OP_POP</code><font papago-translate="splitted"><font papago-translate="translated"> 하나씩 해석되는 지침.</font><font papago-translate="translated"> Lox 구현에 추가할 수 있는 간단한 최적화는 다음과 같습니다 </font></font><code translate="no">OP_POPN</code><font papago-translate="splitted"><font papago-translate="translated"> 슬롯 수를 한 번에 모두 터뜨리기 위해 피연산자가 필요한 명령어입니다.</font></font></p>
 </aside>
-<h2><a href="#using-locals" id="using-locals"><small>22 . 4</small>Using Locals</a></h2>
-<p>We can now compile and execute local variable declarations. At runtime, their
-values are sitting where they should be on the stack. Let’s start using them.
-We’ll do both variable access and assignment at the same time since they touch
-the same functions in the compiler.</p>
-<p>We already have code for getting and setting global variables, and<span class="em">—</span>like good
-little software engineers<span class="em">—</span>we want to reuse as much of that existing code as
-we can. Something like this:</p>
+<h2><a href="https://youhogeon-meritz.github.io/local-variables.html#using-locals" id="using-locals"><small><font papago-translate="translated">22 . 4</font></small><font papago-translate="splitted"><font papago-translate="translated">현지인 사용</font></font></a></h2>
+<p><font papago-translate="translated">이제 로컬 변수 선언을 컴파일하고 실행할 수 있습니다.</font><font papago-translate="translated"> 런타임 시, 그 값들은 스택에 있어야 할 위치에 있습니다.</font><font papago-translate="translated"> 사용을 시작하겠습니다.</font><font papago-translate="translated"> 컴파일러에서 동일한 함수를 터치하기 때문에 변수 접근과 할당을 동시에 수행합니다.</font></p>
+<p><font papago-translate="translated">우리는 이미 글로벌 변수를 얻고 설정하는 코드를 가지고 있으며, 훌륭한 작은 소프트웨어 엔지니어들처럼 기존<span class="em"></span><span class="em"></span> 코드를 최대한 재사용하고 싶습니다.</font><font papago-translate="translated"> 이런 식으로:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">static void namedVariable(Token name, bool canAssign) {
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>namedVariable</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>명명</em>된 변수()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  <span class="t">uint8_t</span> <span class="i">getOp</span>, <span class="i">setOp</span>;
   <span class="t">int</span> <span class="i">arg</span> = <span class="i">resolveLocal</span>(<span class="i">current</span>, &amp;<span class="i">name</span>);
   <span class="k">if</span> (<span class="i">arg</span> != -<span class="n">1</span>) {
@@ -593,40 +371,28 @@ replace 1 line</div>
     <span class="i">setOp</span> = <span class="a">OP_SET_GLOBAL</span>;
   }
 </pre><pre class="insert-after" translate="no">
-
   if (canAssign &amp;&amp; match(TOKEN_EQUAL)) {
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>namedVariable</em>(), replace 1 line</div>
-<p>Instead of hardcoding the bytecode instructions emitted for variable access and
-assignment, we use a couple of C variables. First, we try to find a local
-variable with the given name. If we find one, we use the instructions for
-working with locals. Otherwise, we assume it’s a global variable and use the
-existing bytecode instructions for globals.</p>
-<p>A little further down, we use those variables to emit the right instructions.
-For assignment:</p>
+<p><font papago-translate="translated">변수 접근 및 할당을 위해 방출되는 바이트코드 명령어를 하드코딩하는 대신, 우리는 몇 가지 C 변수를 사용합니다.</font><font papago-translate="translated"> 먼저, 주어진 이름을 가진 지역 변수를 찾으려고 합니다.</font><font papago-translate="translated"> 만약 우리가 하나를 찾으면, 현지인들과 함께 작업하는 지침을 사용합니다.</font><font papago-translate="translated"> 그렇지 않으면, 우리는 그것이 전역 변수라고 가정하고 전역 변수에 대한 기존 바이트코드 지침을 사용합니다.</font></p>
+<p><font papago-translate="translated">조금 더 내려가면, 우리는 그 변수들을 사용하여 올바른 지침을 제시합니다.</font><font papago-translate="translated"> 과제:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  if (canAssign &amp;&amp; match(TOKEN_EQUAL)) {
     expression();
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>namedVariable</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>명명</em>된 변수()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">    <span class="i">emitBytes</span>(<span class="i">setOp</span>, (<span class="t">uint8_t</span>)<span class="i">arg</span>);
 </pre><pre class="insert-after" translate="no">  } else {
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>namedVariable</em>(), replace 1 line</div>
-<p>And for access:</p>
+<p><font papago-translate="translated">그리고 접근을 위해:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    emitBytes(setOp, (uint8_t)arg);
   } else {
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>namedVariable</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>명명</em>된 변수()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">    <span class="i">emitBytes</span>(<span class="i">getOp</span>, (<span class="t">uint8_t</span>)<span class="i">arg</span>);
 </pre><pre class="insert-after" translate="no">  }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>namedVariable</em>(), replace 1 line</div>
-<p>The real heart of this chapter, the part where we resolve a local variable, is
-here:</p>
-<div class="codehilite"><div class="source-file"><em>compiler.c</em><br/>
-add after <em>identifiersEqual</em>()</div>
+<p><font papago-translate="translated">이 장의 진정한 핵심은 지역 변수를 해결하는 부분입니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>식별자</em> 뒤에 추가동일()</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">int</span> <span class="i">resolveLocal</span>(<span class="t">Compiler</span>* <span class="i">compiler</span>, <span class="t">Token</span>* <span class="i">name</span>) {
   <span class="k">for</span> (<span class="t">int</span> <span class="i">i</span> = <span class="i">compiler</span>-&gt;<span class="i">localCount</span> - <span class="n">1</span>; <span class="i">i</span> &gt;= <span class="n">0</span>; <span class="i">i</span>--) {
     <span class="t">Local</span>* <span class="i">local</span> = &amp;<span class="i">compiler</span>-&gt;<span class="i">locals</span>[<span class="i">i</span>];
@@ -639,36 +405,20 @@ add after <em>identifiersEqual</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after <em>identifiersEqual</em>()</div>
-<p>For all that, it’s straightforward. We walk the list of locals that are
-currently in scope. If one has the same name as the identifier token, the
-identifier must refer to that variable. We’ve found it! We walk the array
-backward so that we find the <em>last</em> declared variable with the identifier. That
-ensures that inner local variables correctly shadow locals with the same name in
-surrounding scopes.</p>
-<p>At runtime, we load and store locals using the stack slot index, so that’s what
-the compiler needs to calculate after it resolves the variable. Whenever a
-variable is declared, we append it to the locals array in Compiler. That means
-the first local variable is at index zero, the next one is at index one, and so
-on. In other words, the locals array in the compiler has the <em>exact</em> same layout
-as the VM’s stack will have at runtime. The variable’s index in the locals array
-is the same as its stack slot. How convenient!</p>
-<p>If we make it through the whole array without finding a variable with the given
-name, it must not be a local. In that case, we return <code translate="no">-1</code> to signal that it
-wasn’t found and should be assumed to be a global variable instead.</p>
-<h3><a href="#interpreting-local-variables" id="interpreting-local-variables"><small>22 . 4 . 1</small>Interpreting local variables</a></h3>
-<p>Our compiler is emitting two new instructions, so let’s get them working. First
-is loading a local variable:</p>
+<p><font papago-translate="translated">그럼에도 불구하고, 그것은 간단합니다.</font><font papago-translate="translated"> 우리는 현재 범위 내에 있는 현지인 목록을 작성합니다.</font><font papago-translate="translated"> 식별자 토큰과 이름이 같은 경우 식별자는 해당 변수를 참조해야 합니다.</font><font papago-translate="translated"> 찾았습니다!</font><font papago-translate="translated"> 배열을 뒤로 걸어 식별자가 있는<em> 마지막</em> 선언 변수를 찾습니다.</font><font papago-translate="translated"> 이를 통해 내부 로컬 변수가 주변 범위에서 동일한 이름을 가진 로컬을 올바르게 음영 처리할 수 있습니다.</font></p>
+<p><font papago-translate="translated">런타임 시 스택 슬롯 인덱스를 사용하여 로컬을 로드하고 저장하므로 컴파일러가 변수를 해결한 후 계산해야 합니다.</font><font papago-translate="translated"> 변수가 선언될 때마다 컴파일러의 로컬 배열에 변수를 추가합니다.</font><font papago-translate="translated"> 이는 첫 번째 지역 변수가 인덱스 0에 있고, 다음 변수가 인덱스 1에 있다는 것을 의미합니다.</font><font papago-translate="translated"> 다시 말해, 컴파일러의 로컬 배열은 런타임 시 VM의 스택과<em> 정확히</em> 동일한 레이아웃을 갖습니다.</font><font papago-translate="translated"> 로컬 배열에서 변수의 인덱스는 스택 슬롯과 동일합니다.</font><font papago-translate="translated"> 얼마나 편리한가!</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">주어진 이름을 가진 변수를 찾지 않고 전체 배열을 통과한다면, 그것은 로컬이 되어서는 안 됩니다.</font><font papago-translate="translated"> 이 경우, 우리는 반환합니다 </font></font><code translate="no">-1</code><font papago-translate="splitted"><font papago-translate="translated"> 발견되지 않았으며 대신 전역 변수로 가정해야 한다는 신호를 보냅니다.</font></font></p>
+<h3><a href="https://youhogeon-meritz.github.io/local-variables.html#interpreting-local-variables" id="interpreting-local-variables"><small><font papago-translate="translated">22 . 4 . 1</font></small><font papago-translate="splitted"><font papago-translate="translated">지역 변수 해석</font></font></a></h3>
+<p><font papago-translate="translated">우리 컴파일러가 두 개의 새로운 명령어를 방출하고 있으니, 이제 실행해 보겠습니다.</font><font papago-translate="translated"> 첫 번째는 로컬 변수를 로드하는 것입니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  OP_POP,
-</pre><div class="source-file"><em>chunk.h</em><br/>
-in enum <em>OpCode</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">청크.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum O<em>pCode</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="a">OP_GET_LOCAL</span>,
 </pre><pre class="insert-after" translate="no">  OP_GET_GLOBAL,
 </pre></div>
 <div class="source-file-narrow"><em>chunk.h</em>, in enum <em>OpCode</em></div>
-<p>And its implementation:</p>
+<p><font papago-translate="translated">그리고 그 구현:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      case OP_POP: pop(); break;
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OP_GET_LOCAL</span>: {
         <span class="t">uint8_t</span> <span class="i">slot</span> = <span class="a">READ_BYTE</span>();
         <span class="i">push</span>(<span class="i">vm</span>.<span class="i">stack</span>[<span class="i">slot</span>]);<span name="slot"> </span>
@@ -677,29 +427,20 @@ in <em>run</em>()</div>
 </pre><pre class="insert-after" translate="no">      case OP_GET_GLOBAL: {
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>()</div>
-<p>It takes a single-byte operand for the stack slot where the local lives. It
-loads the value from that index and then pushes it on top of the stack where
-later instructions can find it.</p>
-<aside name="slot">
-<p>It seems redundant to push the local’s value onto the stack since it’s already
-on the stack lower down somewhere. The problem is that the other bytecode
-instructions only look for data at the <em>top</em> of the stack. This is the core
-aspect that makes our bytecode instruction set <em>stack</em>-based.
-<a href="a-virtual-machine.html#design-note">Register-based</a> bytecode instruction sets avoid this stack juggling at the
-cost of having larger instructions with more operands.</p>
+<p><font papago-translate="translated">로컬이 위치한 스택 슬롯에는 단일 바이트 피연산자가 필요합니다.</font><font papago-translate="translated"> 그 인덱스에서 값을 로드한 다음 나중에 지침에서 찾을 수 있는 스택 위에 밀어 넣습니다.</font></p>
+<aside name="slot" style="top: 12592.5px;">
+<p><font papago-translate="translated">로컬 값을 스택 아래 어딘가에 이미 있기 때문에 스택에 푸시하는 것은 중복되는 것 같습니다.</font><font papago-translate="translated"> 문제는 다른 바이트코드 명령어들이 스택<em> 상단</em>에서만 데이터를 찾는다는 것입니다.</font><font papago-translate="translated"> 이것이 우리 바이트코드 명령어 세트<em>를 스택</em> 기반으로 만드는 핵심 측면입니다.</font><font papago-translate="translated"> <a href="https://youhogeon-meritz.github.io/a-virtual-machine.html#design-note">레지스터 기반</a> 바이트코드 명령어 세트<a href="https://youhogeon-meritz.github.io/a-virtual-machine.html#design-note">는</a> 더 많은 피연산자를 가진 더 큰 명령어를 사용하는 대가로 이러한 스택 저글링을 방지합니다<a href="https://youhogeon-meritz.github.io/a-virtual-machine.html#design-note">.</a></font></p>
 </aside>
-<p>Next is assignment:</p>
+<p><font papago-translate="translated">다음은 과제입니다:</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  OP_GET_LOCAL,
-</pre><div class="source-file"><em>chunk.h</em><br/>
-in enum <em>OpCode</em></div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">청크.h</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> enum O<em>pCode</em>에서</font></font></div>
 <pre class="insert" translate="no">  <span class="a">OP_SET_LOCAL</span>,
 </pre><pre class="insert-after" translate="no">  OP_GET_GLOBAL,
 </pre></div>
 <div class="source-file-narrow"><em>chunk.h</em>, in enum <em>OpCode</em></div>
-<p>You can probably predict the implementation.</p>
+<p><font papago-translate="translated">구현을 예측할 수 있을 것입니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      }
-</pre><div class="source-file"><em>vm.c</em><br/>
-in <em>run</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">vm.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>런</em> ()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="k">case</span> <span class="a">OP_SET_LOCAL</span>: {
         <span class="t">uint8_t</span> <span class="i">slot</span> = <span class="a">READ_BYTE</span>();
         <span class="i">vm</span>.<span class="i">stack</span>[<span class="i">slot</span>] = <span class="i">peek</span>(<span class="n">0</span>);
@@ -708,15 +449,10 @@ in <em>run</em>()</div>
 </pre><pre class="insert-after" translate="no">      case OP_GET_GLOBAL: {
 </pre></div>
 <div class="source-file-narrow"><em>vm.c</em>, in <em>run</em>()</div>
-<p>It takes the assigned value from the top of the stack and stores it in the stack
-slot corresponding to the local variable. Note that it doesn’t pop the value
-from the stack. Remember, assignment is an expression, and every expression
-produces a value. The value of an assignment expression is the assigned value
-itself, so the VM just leaves the value on the stack.</p>
-<p>Our disassembler is incomplete without support for these two new instructions.</p>
+<p><font papago-translate="translated">스택 상단에서 할당된 값을 가져와 로컬 변수에 해당하는 스택 슬롯에 저장합니다.</font><font papago-translate="translated"> 스택에서 값을 터뜨리지 않는다는 점에 유의하세요.</font><font papago-translate="translated"> 기억하세요, 과제는 하나의 표현이며, 모든 표현은 가치를 만들어냅니다.</font><font papago-translate="translated"> 할당 표현식의 값은 할당된 값 자체이므로 VM은 해당 값을 스택에 그대로 둡니다.</font></p>
+<p><font papago-translate="translated">우리의 분해기는 이 두 가지 새로운 지침을 지원하지 않으면 불완전합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">      return simpleInstruction("OP_POP", offset);
-</pre><div class="source-file"><em>debug.c</em><br/>
-in <em>disassembleInstruction</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">debug.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>분해</em> 중 지침()</font></font></div>
 <pre class="insert" translate="no">    <span class="k">case</span> <span class="a">OP_GET_LOCAL</span>:
       <span class="k">return</span> <span class="i">byteInstruction</span>(<span class="s">"OP_GET_LOCAL"</span>, <span class="i">chunk</span>, <span class="i">offset</span>);
     <span class="k">case</span> <span class="a">OP_SET_LOCAL</span>:
@@ -724,20 +460,11 @@ in <em>disassembleInstruction</em>()</div>
 </pre><pre class="insert-after" translate="no">    case OP_GET_GLOBAL:
 </pre></div>
 <div class="source-file-narrow"><em>debug.c</em>, in <em>disassembleInstruction</em>()</div>
-<p>The compiler compiles local variables to direct slot access. The local
-variable’s name never leaves the compiler to make it into the chunk at all.
-That’s great for performance, but not so great for introspection. When we
-disassemble these instructions, we can’t show the variable’s name like we could
-with globals. Instead, we just show the slot number.</p>
-<aside name="debug">
-<p>Erasing local variable names in the compiler is a real issue if we ever want to
-implement a debugger for our VM. When users step through code, they expect to
-see the values of local variables organized by their names. To support that,
-we’d need to output some additional information that tracks the name of each
-local variable at each stack slot.</p>
+<p><font papago-translate="translated">컴파일러는 로컬 변수를 직접 슬롯 접근 방식으로 컴파일합니다.</font><font papago-translate="translated"> 로컬 변수의 이름은 컴파일러가 청크에 전혀 들어가지 않도록 합니다.</font><font papago-translate="translated"> 그것은 성능에는 좋지만, 자기 성찰에는 그다지 좋지 않습니다.</font><font papago-translate="translated"> 이 명령어들을 분해할 때, 변수의 이름을 글로벌처럼 보여줄 수 없습니다.</font><font papago-translate="translated"> 대신 슬롯 번호만 표시합니다.</font></p>
+<aside name="debug" style="top: 13696.5px;">
+<p><font papago-translate="translated">컴파일러에서 로컬 변수 이름을 지우는 것은 VM에 디버거를 구현하려는 경우 정말 큰 문제입니다.</font><font papago-translate="translated"> 사용자들이 코드를 살펴볼 때, 그들은 자신의 이름으로 구성된 지역 변수의 값을 보게 될 것으로 기대합니다.</font><font papago-translate="translated"> 이를 지원하려면 각 스택 슬롯에서 각 로컬 변수의 이름을 추적하는 추가 정보를 출력해야 합니다.</font></p>
 </aside>
-<div class="codehilite"><div class="source-file"><em>debug.c</em><br/>
-add after <em>simpleInstruction</em>()</div>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">debug.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>단순 지시</em> 후에 추가하기()</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">int</span> <span class="i">byteInstruction</span>(<span class="k">const</span> <span class="t">char</span>* <span class="i">name</span>, <span class="t">Chunk</span>* <span class="i">chunk</span>,
                            <span class="t">int</span> <span class="i">offset</span>) {
   <span class="t">uint8_t</span> <span class="i">slot</span> = <span class="i">chunk</span>-&gt;<span class="i">code</span>[<span class="i">offset</span> + <span class="n">1</span>];
@@ -746,16 +473,12 @@ add after <em>simpleInstruction</em>()</div>
 }
 </pre></div>
 <div class="source-file-narrow"><em>debug.c</em>, add after <em>simpleInstruction</em>()</div>
-<h3><a href="#another-scope-edge-case" id="another-scope-edge-case"><small>22 . 4 . 2</small>Another scope edge case</a></h3>
-<p>We already sunk some time into handling a couple of weird edge cases around
-scopes. We made sure shadowing works correctly. We report an error if two
-variables in the same local scope have the same name. For reasons that aren’t
-entirely clear to me, variable scoping seems to have a lot of these wrinkles.
-I’ve never seen a language where it feels completely <span name="elegant">elegant</span>.</p>
-<aside name="elegant">
-<p>No, not even Scheme.</p>
+<h3><a href="https://youhogeon-meritz.github.io/local-variables.html#another-scope-edge-case" id="another-scope-edge-case"><small><font papago-translate="translated">22 . 4 . 2</font></small><font papago-translate="splitted"><font papago-translate="translated">또 다른 스코프 엣지 케이스</font></font></a></h3>
+<p><font papago-translate="translated">우리는 이미 스코프 주변의 몇 가지 이상한 엣지 케이스를 처리하는 데 시간을 투자했습니다.</font><font papago-translate="translated"> 우리는 섀도잉이 제대로 작동하는지 확인했습니다.</font><font papago-translate="translated"> 동일한 로컬 범위에 있는 두 변수의 이름이 같으면 오류를 보고합니다.</font><font papago-translate="translated"> 저에게 완전히 명확하지 않은 이유들로 인해, 가변적인 범위 설정은 이러한 주름이 많은 것 같습니다.</font><font papago-translate="translated"> 언어가<span name="elegant"> 완전히 우아</span>하게 느껴지는 것을 본 적이 없습니다.</font></p>
+<aside name="elegant" style="top: 13953.5px;">
+<p><font papago-translate="translated">아니요, 심지어 계획도 아닙니다.</font></p>
 </aside>
-<p>We’ve got one more edge case to deal with before we end this chapter. Recall this strange beastie we first met in <a href="resolving-and-binding.html#resolving-variable-declarations">jlox’s implementation of variable resolution</a>:</p>
+<p><font papago-translate="translated">이 장을 마치기 전에 처리해야 할 엣지 케이스가 하나 더 있습니다.</font><font papago-translate="translated"> <a href="https://youhogeon-meritz.github.io/resolving-and-binding.html#resolving-variable-declarations">Jlox의 가변 해상도 구현</a>에서 처음 만난 이 이상한 짐승을 기억하세요:</font></p>
 <div class="codehilite"><pre translate="no">{
   <span class="k">var</span> <span class="i">a</span> = <span class="s">"outer"</span>;
   {
@@ -763,121 +486,74 @@ I’ve never seen a language where it feels completely <span name="elegant">eleg
   }
 }
 </pre></div>
-<p>We slayed it then by splitting a variable’s declaration into two phases, and
-we’ll do that again here:</p><img alt="An example variable declaration marked 'declared uninitialized' before the variable name and 'ready for use' after the initializer." src="image/local-variables/phases.png"/>
-<p>As soon as the variable declaration begins<span class="em">—</span>in other words, before its
-initializer<span class="em">—</span>the name is declared in the current scope. The variable exists,
-but in a special “uninitialized” state. Then we compile the initializer. If at
-any point in that expression we resolve an identifier that points back to this
-variable, we’ll see that it is not initialized yet and report an error. After we
-finish compiling the initializer, we mark the variable as initialized and ready
-for use.</p>
-<p>To implement this, when we declare a local, we need to indicate the
-“uninitialized” state somehow. We could add a new field to Local, but let’s be a
-little more parsimonious with memory. Instead, we’ll set the variable’s scope
-depth to a special sentinel value, <code translate="no">-1</code>.</p>
+<p><font papago-translate="translated">그런 다음 변수의 선언을 두 단계로 나누어 절단했으며, 여기서 다시 그렇게 할 것입니다:</font></p><img alt="An example variable declaration marked 'declared uninitialized' before the variable name and 'ready for use' after the initializer." src="https://youhogeon-meritz.github.io/image/local-variables/phases.png">
+<p><font papago-translate="translated">변수 선언이 시작되자마자, 즉 초기화 전에 현재<span class="em"></span><span class="em"></span> 범위에서 이름이 선언됩니다.</font><font papago-translate="translated"> 변수는 존재하지만, 특별한 "초기화되지 않은" 상태에 있습니다.</font><font papago-translate="translated"> 그런 다음 초기화기를 컴파일합니다.</font><font papago-translate="translated"> 해당 표현식의 어느 시점에서든 이 변수를 가리키는 식별자를 해결하면 아직 초기화되지 않은 것을 확인하고 오류를 보고하게 됩니다.</font><font papago-translate="translated"> 초기화기를 컴파일한 후 변수를 초기화되어 사용 준비가 완료된 것으로 표시합니다.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">이를 구현하려면 로컬을 선언할 때 "초기화되지 않은" 상태를 어떻게든 표시해야 합니다.</font><font papago-translate="translated"> Local에 새로운 필드를 추가할 수도 있지만, 메모리에 대해 좀 더 간결하게 설명해 보겠습니다.</font><font papago-translate="translated"> 대신 변수의 범위 깊이를 특별한 감시 값으로 설정합니다, </font></font><code translate="no">-1</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  local-&gt;name = name;
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>addLocal</em>()<br/>
-replace 1 line</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> ad<em>dLocal</em>()에서</font></font><br><font papago-translate="splitted"><font papago-translate="translated"> 한 줄 바꾸기</font></font></div>
 <pre class="insert" translate="no">  <span class="i">local</span>-&gt;<span class="i">depth</span> = -<span class="n">1</span>;
 </pre><pre class="insert-after" translate="no">}
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>addLocal</em>(), replace 1 line</div>
-<p>Later, once the variable’s initializer has been compiled, we mark it
-initialized.</p>
+<p><font papago-translate="translated">나중에 변수의 초기화가 컴파일되면 초기화된 것으로 표시합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">  if (current-&gt;scopeDepth &gt; 0) {
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>defineVariable</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>정의</em> 변수()에서</font></font></div>
 <pre class="insert" translate="no">    <span class="i">markInitialized</span>();
 </pre><pre class="insert-after" translate="no">    return;
   }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>defineVariable</em>()</div>
-<p>That is implemented like so:</p>
-<div class="codehilite"><div class="source-file"><em>compiler.c</em><br/>
-add after <em>parseVariable</em>()</div>
+<p><font papago-translate="translated">그것은 이렇게 구현됩니다:</font></p>
+<div class="codehilite"><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>parse</em>V<em>ariable</em>() 후에 추가</font></font></div>
 <pre translate="no"><span class="k">static</span> <span class="t">void</span> <span class="i">markInitialized</span>() {
   <span class="i">current</span>-&gt;<span class="i">locals</span>[<span class="i">current</span>-&gt;<span class="i">localCount</span> - <span class="n">1</span>].<span class="i">depth</span> =
       <span class="i">current</span>-&gt;<span class="i">scopeDepth</span>;
 }
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, add after <em>parseVariable</em>()</div>
-<p>So this is <em>really</em> what “declaring” and “defining” a variable means in the
-compiler. “Declaring” is when the variable is added to the scope, and “defining”
-is when it becomes available for use.</p>
-<p>When we resolve a reference to a local variable, we check the scope depth to see
-if it’s fully defined.</p>
+<p><font papago-translate="translated"><em></em>그래서 이것이 컴파일러에서 변수를 "선언"하고 "정의"하는 것이 실제로 의미하는 바입니다.</font><font papago-translate="translated"> "선언"은 변수가 범위에 추가되는 것을 의미하며, "정의"는 변수가 사용 가능하게 되는 것을 의미합니다.</font></p>
+<p><font papago-translate="translated">지역 변수에 대한 참조를 해결할 때, 범위 깊이를 확인하여 그것이 완전히 정의되었는지 확인합니다.</font></p>
 <div class="codehilite"><pre class="insert-before" translate="no">    if (identifiersEqual(name, &amp;local-&gt;name)) {
-</pre><div class="source-file"><em>compiler.c</em><br/>
-in <em>resolveLocal</em>()</div>
+</pre><div class="source-file"><font papago-translate="splitted"><em><font papago-translate="translated">컴파일러.c</font></em></font><br><font papago-translate="splitted"><font papago-translate="translated"> <em>resolve</em>L<em>ocal</em>()에서</font></font></div>
 <pre class="insert" translate="no">      <span class="k">if</span> (<span class="i">local</span>-&gt;<span class="i">depth</span> == -<span class="n">1</span>) {
         <span class="i">error</span>(<span class="s">"Can't read local variable in its own initializer."</span>);
       }
 </pre><pre class="insert-after" translate="no">      return i;
 </pre></div>
 <div class="source-file-narrow"><em>compiler.c</em>, in <em>resolveLocal</em>()</div>
-<p>If the variable has the sentinel depth, it must be a reference to a variable in
-its own initializer, and we report that as an error.</p>
-<p>That’s it for this chapter! We added blocks, local variables, and real,
-honest-to-God lexical scoping. Given that we introduced an entirely different
-runtime representation for variables, we didn’t have to write a lot of code. The
-implementation ended up being pretty clean and efficient.</p>
-<p>You’ll notice that almost all of the code we wrote is in the compiler. Over in
-the runtime, it’s just two little instructions. You’ll see this as a continuing
-<span name="static">trend</span> in clox compared to jlox. One of the biggest
-hammers in the optimizer’s toolbox is pulling work forward into the compiler so
-that you don’t have to do it at runtime. In this chapter, that meant resolving
-exactly which stack slot every local variable occupies. That way, at runtime, no
-lookup or resolution needs to happen.</p>
-<aside name="static">
-<p>You can look at static types as an extreme example of this trend. A statically
-typed language takes all of the type analysis and type error handling and sorts
-it all out during compilation. Then the runtime doesn’t have to waste any time
-checking that values have the proper type for their operation. In fact, in some
-statically typed languages like C, you don’t even <em>know</em> the type at runtime.
-The compiler completely erases any representation of a value’s type leaving just
-the bare bits.</p>
+<p><font papago-translate="translated">변수의 감시 깊이가 있는 경우, 자체 초기화기에서 변수를 참조해야 하며, 이를 오류로 보고합니다.</font></p>
+<p><font papago-translate="translated">이 장은 여기까지입니다!</font><font papago-translate="translated"> 블록, 지역 변수, 그리고 실제 정직한 어휘 범위를 추가했습니다.</font><font papago-translate="translated"> 변수에 대해 완전히 다른 런타임 표현을 도입했기 때문에 많은 코드를 작성할 필요가 없었습니다.</font><font papago-translate="translated"> 구현은 결국 꽤 깨끗하고 효율적이었습니다.</font></p>
+<p><font papago-translate="translated">우리가 작성한 거의 모든 코드가 컴파일러에 있다는 것을 알게 될 것입니다.</font><font papago-translate="translated"> 런타임 동안에는 두 가지 작은 지침만 있으면 됩니다.</font><font papago-translate="translated"> 이것은 jlox와 비교했을 때 clox에서 지속<span name="static">적인 추세</span>로 보일 것입니다.</font><font papago-translate="translated"> 옵티마이저 도구 상자에서 가장 큰 망치 중 하나는 런타임에 작업을 수행할 필요가 없도록 컴파일러로 작업을 앞으로 당기는 것입니다.</font><font papago-translate="translated"> 이 장에서는 모든 로컬 변수가 정확히 어떤 스택 슬롯을 차지하는지를 해결하는 것을 의미했습니다.</font><font papago-translate="translated"> 그렇게 하면 런타임 시 조회나 해결이 필요하지 않습니다.</font></p>
+<aside name="static" style="top: 15553px;">
+<p><font papago-translate="translated">이러한 경향의 극단적인 예로 정적 유형을 살펴볼 수 있습니다.</font><font papago-translate="translated"> 정적으로 입력된 언어는 모든 유형 분석과 유형 오류 처리를 수행하고 컴파일 중에 모든 것을 정렬합니다.</font><font papago-translate="translated"> 그러면 런타임이 값이 작동에 적합한 유형인지 확인하는 데 시간을 낭비할 필요가 없습니다.</font><font papago-translate="translated"> 사실, C와 같은 일부 정적으로 입력된 언어에서는 실행 시 유형조차<em> 알</em> 수 없습니다.</font><font papago-translate="translated"> 컴파일러는 값의 유형에 대한 모든 표현을 완전히 지워버리고, 오직 베어 비트만 남깁니다.</font></p>
 </aside>
 <div class="challenges">
-<h2><a href="#challenges" id="challenges">Challenges</a></h2>
+<h2><a href="https://youhogeon-meritz.github.io/local-variables.html#challenges" id="challenges"><font papago-translate="translated">과제들</font></a></h2>
 <ol>
 <li>
-<p>Our simple local array makes it easy to calculate the stack slot of each
-local variable. But it means that when the compiler resolves a reference to
-a variable, we have to do a linear scan through the array.</p>
-<p>Come up with something more efficient. Do you think the additional
-complexity is worth it?</p>
+<p><font papago-translate="translated">우리의 간단한 로컬 배열 덕분에 각 로컬 변수의 스택 슬롯을 쉽게 계산할 수 있습니다.</font><font papago-translate="translated"> 하지만 컴파일러가 변수에 대한 참조를 해결할 때, 배열을 통해 선형 스캔을 해야 한다는 뜻입니다.</font></p>
+<p><font papago-translate="translated">더 효율적인 방법을 생각해 보세요.</font><font papago-translate="translated"> 추가적인 복잡성이 그만한 가치가 있다고 생각하십니까?</font></p>
 </li>
 <li>
-<p>How do other languages handle code like this:</p>
+<p><font papago-translate="translated">다른 언어들은 이러한 코드를 어떻게 처리하나요:</font></p>
 <div class="codehilite"><pre translate="no"><span class="k">var</span> <span class="i">a</span> = <span class="i">a</span>;
 </pre></div>
-<p>What would you do if it was your language? Why?</p>
+<p><font papago-translate="translated">만약 그것이 당신의 언어라면 어떻게 하시겠습니까?</font><font papago-translate="translated"> 왜요?</font></p>
 </li>
 <li>
-<p>Many languages make a distinction between variables that can be reassigned
-and those that can’t. In Java, the <code translate="no">final</code> modifier prevents you from
-assigning to a variable. In JavaScript, a variable declared with <code translate="no">let</code> can
-be assigned, but one declared using <code translate="no">const</code> can’t. Swift treats <code translate="no">let</code> as
-single-assignment and uses <code translate="no">var</code> for assignable variables. Scala and Kotlin
-use <code translate="no">val</code> and <code translate="no">var</code>.</p>
-<p>Pick a keyword for a single-assignment variable form to add to Lox. Justify
-your choice, then implement it. An attempt to assign to a variable declared
-using your new keyword should cause a compile error.</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">많은 언어들은 재배치할 수 있는 변수와 그렇지 않은 변수를 구분합니다.</font><font papago-translate="translated"> 자바에서는 </font></font><code translate="no">final</code><font papago-translate="splitted"><font papago-translate="translated"> 수식어는 변수에 할당하는 것을 방해합니다.</font><font papago-translate="translated"> JavaScript에서 선언된 변수는 다음과 같습니다 </font></font><code translate="no">let</code><font papago-translate="splitted"><font papago-translate="translated"> 할당할 수 있지만 다음을 사용하여 선언합니다 </font></font><code translate="no">const</code><font papago-translate="splitted"><font papago-translate="translated"> 할 수 없습니다.</font><font papago-translate="translated"> 신속한 간식 </font></font><code translate="no">let</code><font papago-translate="splitted"><font papago-translate="translated"> 단일 assign 및 용도로 </font></font><code translate="no">var</code><font papago-translate="splitted"><font papago-translate="translated"> 할당 가능한 변수에 대해.</font><font papago-translate="translated"> 스칼라 및 코틀린 사용 </font></font><code translate="no">val</code><font papago-translate="splitted"><font papago-translate="translated"> 그리고. </font></font><code translate="no">var</code><font papago-translate="splitted"><font papago-translate="translated">.</font></font></p>
+<p><font papago-translate="translated">Lox에 추가할 단일 할당 변수 양식의 키워드를 선택합니다.</font><font papago-translate="translated"> 선택을 정당화한 다음 실행하세요.</font><font papago-translate="translated"> 새 키워드를 사용하여 선언된 변수에 할당을 시도하면 컴파일 오류가 발생할 수 있습니다.</font></p>
 </li>
 <li>
-<p>Extend clox to allow more than 256 local variables to be in scope at a time.</p>
+<p><font papago-translate="translated">clox를 확장하여 한 번에 256개 이상의 로컬 변수를 범위에 포함할 수 있도록 합니다.</font></p>
 </li>
 </ol>
 </div>
 <footer>
-<a class="next" href="jumping-back-and-forth.html">
-  Next Chapter: “Jumping Back and Forth” →
-</a>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+<a class="next" href="https://youhogeon-meritz.github.io/jumping-back-and-forth.html"><font papago-translate="translated"> 다음 장:</font><font papago-translate="translated"> "앞뒤로 뛰기" → </font></a><font papago-translate="splitted"><font papago-translate="translated"> 로버트 니스트롬이 수작업으로 제작한 -<a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE"> © 2015 ~ 2021</a></font></font>
 </footer>
-</img></img></article>
+</article>
 </div>
-</body>
-</html>
+
+
+</body></html>

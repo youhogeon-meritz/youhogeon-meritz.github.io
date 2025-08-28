@@ -1,166 +1,142 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="stylesheet" type="text/css" href="cid:css-c5d0e69e-d156-43d1-a205-5dcb3aa96e0e@mhtml.blink" />
 
-<html>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-type"/>
 <title>Crafting Interpreters</title>
 <!-- Tell mobile browsers we're optimized for them and they don't need to crop
      the viewport. -->
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="index.css" rel="stylesheet" type="text/css"/>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="https://youhogeon-meritz.github.io/index.css" rel="stylesheet" type="text/css">
 <!-- Oh, God, Source Code Pro is so beautiful it makes me want to cry. -->
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css"/>
-<link href="image/favicon.png" rel="icon" type="image/png">
+<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
+<link href="https://youhogeon-meritz.github.io/image/favicon.png" rel="icon" type="image/png">
 <!-- Google analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-42804721-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</link></head>
+</head>
 <body>
 <article>
 <header>
-<a href="dedication.html"><img alt="Crafting Interpreters by Robert Nystrom" class="header big" src="image/header.png"/><img alt="Crafting Interpreters by Robert Nystrom" class="header small" src="image/header-small.png"/></a>
+<a href="https://youhogeon-meritz.github.io/dedication.html"><img alt="Crafting Interpreters by Robert Nystrom" class="header big" src="https://youhogeon-meritz.github.io/image/header.png"><img alt="Crafting Interpreters by Robert Nystrom" class="header small" src="https://youhogeon-meritz.github.io/image/header-small.png"></a>
 </header>
 <main>
 <div class="intro">
-<blockquote><p>Ever wanted to make your own programming language or wondered how
-they are designed and built?</p><p>If so, this book is for you.</p></blockquote>
+<blockquote><p><font papago-translate="translated">자신만의 프로그래밍 언어를 만들고 싶거나 프로그래밍 언어가 어떻게 설계되고 구축되는지 궁금해한 적이 있습니까?</font></p><p><font papago-translate="translated">그렇다면, 이 책은 당신을 위한 것입니다.</font></p></blockquote>
 <div class="text">
-<p><em>Crafting Interpreters</em> contains everything you need to implement a
-full-featured, efficient scripting language. You’ll learn both high-level
-concepts around parsing and semantics and gritty details like bytecode
-representation and garbage collection. Your brain will light up with new ideas,
-and your hands will get dirty and calloused. It’s a blast.</p>
-<p>Starting from <code translate="no">main()</code>, you build a language that features rich
-syntax, dynamic typing, garbage collection, lexical scope, first-class
-functions, closures, classes, and inheritance. All packed into a few thousand
-lines of clean, fast code that you thoroughly understand because you write each
-one yourself.</p>
-<p>The book is available in four delectable formats:</p>
+<p><font papago-translate="translated"><em>크래프팅 인터프리터는</em> 완벽한 기능을 갖춘 효율적인 스크립팅 언어를 구현하는 데 필요한 모든 것을 포함하고<em> 있습니다.</em></font><font papago-translate="translated"> 구문 분석과 의미론에 관한 고급 개념과 바이트코드 표현 및 가비지 컬렉션과 같은 까다로운 세부 사항을 모두 배우게 될 것입니다.</font><font papago-translate="translated"> 당신의 뇌는 새로운 아이디어로 빛을 발할 것이고, 손은 더럽혀지고 흥분할 것입니다.</font><font papago-translate="translated"> 정말 신나요.</font></p>
+<p><font papago-translate="splitted"><font papago-translate="translated">처음부터 </font></font><code translate="no">main()</code><font papago-translate="splitted"><font papago-translate="translated">, 풍부한 구문, 동적 타이핑, 가비지 컬렉션, 어휘 범위, 일류 함수, 폐쇄, 클래스, 상속을 특징으로 하는 언어를 만듭니다.</font><font papago-translate="translated"> 모두 수천 줄의 깨끗하고 빠른 코드로 포장되어 있으며, 각 코드를 직접 작성하기 때문에 충분히 이해할 수 있습니다.</font></font></p>
+<p><font papago-translate="translated" class="">그 책은 네 가지 맛있는 형식으로 제공됩니다:</font></p>
 </div>
 </div>
 <div class="format print">
 <div class="format-info">
-<h3>Print</h3>
-<p>640 pages of beautiful typography and high resolution hand-drawn
-    illustrations. Each page lovingly typeset by the author. The premiere reading
-    experience.</p>
+<h3><font papago-translate="translated">인쇄</font></h3>
+<p><font papago-translate="translated">640페이지 분량의 아름다운 타이포그래피와 고해상도 손 drawn 일러스트레이션.</font><font papago-translate="translated"> 각 페이지는 저자가 사랑스럽게 타이핑합니다.</font><font papago-translate="translated"> 최초의 독서 경험.</font></p>
 <table>
-<tr>
+<tbody><tr>
 <td>
-<a class="action" href="https://www.amazon.com/dp/0990582930" target="_blank">Amazon<small>.com</small></a>
+<a class="action" href="https://www.amazon.com/dp/0990582930"><font papago-translate="translated">Amazon<small>.com</small></font></a>
 </td>
 <td>
-<a class="action" href="https://www.amazon.ca/dp/0990582930" target="_blank"><small>.ca</small></a>
+<a class="action" href="https://www.amazon.ca/dp/0990582930"><small><font papago-translate="translated">.ca</font></small></a>
 </td>
 <td>
-<a class="action" href="https://www.amazon.co.uk/dp/0990582930" target="_blank"><small>.uk</small></a>
+<a class="action" href="https://www.amazon.co.uk/dp/0990582930"><small><font papago-translate="translated">.uk</font></small></a>
 </td>
 <td>
-<a class="action" href="https://www.amazon.com.au/dp/0990582930" target="_blank"><small>.au</small></a>
+<a class="action" href="https://www.amazon.com.au/dp/0990582930"><small><font papago-translate="translated">.au</font></small></a>
 </td>
 <td>
-<a class="action" href="https://www.amazon.de/dp/0990582930" target="_blank"><small>.de</small></a>
+<a class="action" href="https://www.amazon.de/dp/0990582930"><small><font papago-translate="translated">.de</font></small></a>
 </td>
 <td>
-<a class="action" href="https://www.amazon.fr/dp/0990582930" target="_blank"><small>.fr</small></a>
+<a class="action" href="https://www.amazon.fr/dp/0990582930"><small><font papago-translate="translated">.fr</font></small></a>
 </td>
 <td>
-<a class="action" href="https://www.amazon.es/dp/0990582930" target="_blank"><small>.es</small></a>
+<a class="action" href="https://www.amazon.es/dp/0990582930"><small><font papago-translate="translated">.es</font></small></a>
 </td>
 <td>
-<a class="action" href="https://www.amazon.it/dp/0990582930" target="_blank"><small>.it</small></a>
+<a class="action" href="https://www.amazon.it/dp/0990582930"><small><font papago-translate="translated">.it</font></small></a>
 </td>
 <td>
-<a class="action" href="https://www.amazon.co.jp/dp/0990582930" target="_blank"><small>.jp</small></a>
+<a class="action" href="https://www.amazon.co.jp/dp/0990582930"><small><font papago-translate="translated">.jp</font></small></a>
 </td>
 </tr>
-</table>
+</tbody></table>
 <table>
-<tr>
+<tbody><tr>
 <td>
-<a class="action" href="https://www.barnesandnoble.com/w/crafting-interpreters-robert-nystrom/1139915245?ean=9780990582939" target="_blank">Barnes and Noble</a>
+<a class="action" href="https://www.barnesandnoble.com/w/crafting-interpreters-robert-nystrom/1139915245?ean=9780990582939"><font papago-translate="translated">반스 앤 노블</font></a>
 </td>
 <td>
-<a class="action" href="https://www.bookdepository.com/Crafting-Interpreters-Robert-Nystrom/9780990582939" target="_blank">Book Depository</a>
+<a class="action" href="https://www.bookdepository.com/Crafting-Interpreters-Robert-Nystrom/9780990582939"><font papago-translate="translated">도서예탁결제원</font></a>
 </td>
 </tr>
-</table>
-<a class="action" href="/sample.pdf" target="_blank">Download Sample <small>PDF</small></a>
+</tbody></table>
+<a class="action" href="https://youhogeon-meritz.github.io/sample.pdf"><font papago-translate="translated">샘플<small> PDF</small> 다운로드</font></a>
 </div>
 </div>
 <div class="format ebook">
 <div class="format-info">
-<h3>eBook</h3>
-<p>Carefully tuned CSS fits itself to your ebook reader and screen size.
-    Full-color syntax highlighting and live hyperlinks. Like Alan Kay's Dynabook
-    but real.</p>
+<h3><font papago-translate="translated">전자책</font></h3>
+<p><font papago-translate="translated">신중하게 조정된 CSS는 전자책 리더기와 화면 크기에 적합합니다.</font><font papago-translate="translated"> 풀 컬러 구문 강조 및 라이브 하이퍼링크.</font><font papago-translate="translated"> 앨런 케이의 다이나북처럼, 하지만 진짜.</font></p>
 <table>
-<tr>
+<tbody><tr>
 <td>
-<a class="action" href="https://www.amazon.com/dp/B09BCCVLCL" target="_blank">Kindle <small class="hide-small"><span class="hide-medium">Amazon</span>.com</small></a>
+<a class="action" href="https://www.amazon.com/dp/B09BCCVLCL">Kindle <small class="hide-small"><span class="hide-medium">Amazon</span>.com</small></a>
 </td>
 <td>
-<a class="action" href="https://www.amazon.co.uk/dp/B09BCCVLCL" target="_blank"><small>.uk</small></a>
+<a class="action" href="https://www.amazon.co.uk/dp/B09BCCVLCL"><small>.uk</small></a>
 </td>
 <td>
-<a class="action" href="https://www.amazon.ca/dp/B09BCCVLCL" target="_blank"><small>.ca</small></a>
+<a class="action" href="https://www.amazon.ca/dp/B09BCCVLCL"><small>.ca</small></a>
 </td>
 <td>
-<a class="action" href="https://www.amazon.com.au/dp/B09BCCVLCL" target="_blank"><small>.au</small></a>
+<a class="action" href="https://www.amazon.com.au/dp/B09BCCVLCL"><small>.au</small></a>
 </td>
 <td>
-<a class="action" href="https://www.amazon.de/dp/B09BCCVLCL" target="_blank"><small>.de</small></a>
+<a class="action" href="https://www.amazon.de/dp/B09BCCVLCL"><small>.de</small></a>
 </td>
 <td>
-<a class="action" href="https://www.amazon.in/dp/B09BCCVLCL" target="_blank"><small>.in</small></a>
+<a class="action" href="https://www.amazon.in/dp/B09BCCVLCL"><small>.in</small></a>
 </td>
 </tr>
-</table>
+</tbody></table>
 <table>
-<tr>
+<tbody><tr>
 <td>
-<a class="action" href="https://www.amazon.fr/dp/B09BCCVLCL" target="_blank"><small>.fr</small></a>
+<a class="action" href="https://www.amazon.fr/dp/B09BCCVLCL"><small>.fr</small></a>
 </td>
 <td>
-<a class="action" href="https://www.amazon.es/dp/B09BCCVLCL" target="_blank"><small>.es</small></a>
+<a class="action" href="https://www.amazon.es/dp/B09BCCVLCL"><small>.es</small></a>
 </td>
 <td>
-<a class="action" href="https://www.amazon.it/dp/B09BCCVLCL" target="_blank"><small>.it</small></a>
+<a class="action" href="https://www.amazon.it/dp/B09BCCVLCL"><small>.it</small></a>
 </td>
 <td>
-<a class="action" href="https://www.amazon.co.jp/dp/B09BCCVLCL" target="_blank"><small>.jp</small></a>
+<a class="action" href="https://www.amazon.co.jp/dp/B09BCCVLCL"><small>.jp</small></a>
 </td>
 <td>
-<a class="action" href="https://www.amazon.com.br/dp/B09BCCVLCL" target="_blank"><small>.br</small></a>
+<a class="action" href="https://www.amazon.com.br/dp/B09BCCVLCL"><small>.br</small></a>
 </td>
 <td>
-<a class="action" href="https://www.amazon.com.mx/dp/B09BCCVLCL" target="_blank"><small>.mx</small></a>
+<a class="action" href="https://www.amazon.com.mx/dp/B09BCCVLCL"><small>.mx</small></a>
 </td>
 <td>
-<a class="action" href="https://books.apple.com/us/book/crafting-interpreters/id1578795812" target="_blank">Apple Books</a>
+<a class="action" href="https://books.apple.com/us/book/crafting-interpreters/id1578795812">Apple Books</a>
 </td>
 </tr>
-</table>
+</tbody></table>
 <table>
-<tr>
+<tbody><tr>
 <td>
-<a class="action" href="https://play.google.com/store/books/details?id=q0c6EAAAQBAJ" target="_blank">Play Books <small class="hide-small">Google</small></a>
+<a class="action" href="https://play.google.com/store/books/details?id=q0c6EAAAQBAJ">Play Books <small class="hide-small">Google</small></a>
 </td>
 <td>
-<a class="action" href="https://www.barnesandnoble.com/w/crafting-interpreters-robert-nystrom/1139915245?ean=2940164977092" target="_blank">Nook <small class="hide-small">B&amp;N</small></a>
+<a class="action" href="https://www.barnesandnoble.com/w/crafting-interpreters-robert-nystrom/1139915245?ean=2940164977092">Nook <small class="hide-small">B&amp;N</small></a>
 </td>
 <td>
-<a class="action" href="https://www.smashwords.com/books/view/1096463" target="_blank">EPUB <small class="hide-small">Smashwords</small></a>
+<a class="action" href="https://www.smashwords.com/books/view/1096463">EPUB <small class="hide-small">Smashwords</small></a>
 </td>
 </tr>
-</table>
+</tbody></table>
 </div>
 </div>
 <div class="format pdf">
@@ -168,8 +144,8 @@ one yourself.</p>
 <h3>PDF</h3>
 <p>Perfectly mirrors the hand-crafted typesetting and sharp illustrations of
     the print book, but much easier to carry around.</p>
-<a class="action" href="https://payhip.com/b/F0zkr" target="_blank">Buy from Payhip</a>
-<a class="action" href="/sample.pdf" target="_blank">Download Free Sample</a>
+<a class="action" href="https://payhip.com/b/F0zkr">Buy from Payhip</a>
+<a class="action" href="https://youhogeon-meritz.github.io/sample.pdf">Download Free Sample</a>
 </div>
 </div>
 <div class="format web">
@@ -178,39 +154,42 @@ one yourself.</p>
 <p>Meticulous responsive design looks great from your desktop down to your
     phone. Every chapter, aside, and illustration is there. Read the whole book
     for free. Really.</p>
-<a class="action" href="contents.html">Read Now</a>
+<a class="action" href="https://youhogeon-meritz.github.io/contents.html">Read Now</a>
 </div>
 </div>
-<img class="author" src="image/dogshot.jpg"/>
+<img class="author" src="https://youhogeon-meritz.github.io/image/dogshot.jpg">
 <div class="author">
 <h3>About Robert Nystrom</h3>
 <p>I got bitten by the language bug years ago while on paternity leave between
-midnight feedings. I cobbled together a <a href="http://wren.io/" target="_blank">number</a> <a href="http://magpie-lang.org/" target="_blank">of</a> <a href="http://finch.stuffwithstuff.com/" target="_blank">hobby</a> <a href="https://github.com/munificent/vigil" target="_blank">languages</a> before worming my way into an honest-to-God,
-full-time programming language job. Today, I work at Google on the <a href="http://dart.dev/" target="_blank">Dart language</a>.</p>
+midnight feedings. I cobbled together a <a href="http://wren.io/">number</a> <a href="http://magpie-lang.org/">of</a> <a href="http://finch.stuffwithstuff.com/">hobby</a> <a href="https://github.com/munificent/vigil">languages</a> before worming my way into an honest-to-God,
+full-time programming language job. Today, I work at Google on the <a href="http://dart.dev/">Dart language</a>.</p>
 <p>Before I fell in love with languages, I developed games at Electronic Arts
-for eight years. I wrote the best-selling book <em><a href="http://gameprogrammingpatterns.com/" target="_blank">Game Programming
+for eight years. I wrote the best-selling book <em><a href="http://gameprogrammingpatterns.com/">Game Programming
 Patterns</a></em> based on what I learned there. You can read that book for free
 too.</p>
-<p>If you want more, you can find me on Twitter (<a href="https://twitter.com/intent/user?screen_name=munificentbob" target="_blank"><code translate="no">@munificentbob</code></a>), email me at <code translate="no">bob</code>
-at this site's domain (though I am slow to respond), read <a href="http://journal.stuffwithstuff.com/" target="_blank">my blog</a>, or join
-my low frequency mailing list:</p>
+<p><font papago-translate="splitted"><font papago-translate="translated">더 원하시면 트위터()에서 저를 찾을 수 있습니다. 이메일<a href="https://twitter.com/intent/user?screen_name=munificentbob"></a> 주소는 다음과 같습니다 </font></font><code translate="no">bob</code><font papago-translate="splitted"><font papago-translate="translated"> 이 사이트의 도메인(응답 속도는 느리지만)에서<a href="http://journal.stuffwithstuff.com/"> 블로그</a>를 읽거나 저주파 메일링 목록에 참여합니다:</font></font></p>
 <div class="sign-up">
 <!-- Begin MailChimp Signup Form -->
 <div id="mc_embed_signup">
-<form action="//gameprogrammingpatterns.us7.list-manage.com/subscribe/post?u=0952ca43ed2536d6717766b88&amp;id=6e96334109" class="validate" id="mc-embedded-subscribe-form" method="post" name="mc-embedded-subscribe-form" novalidate="" target="_blank">
-<input class="email" id="mce-EMAIL" name="EMAIL" placeholder="Your email address" required="" type="email" value=""/>
+<form action="https://gameprogrammingpatterns.us7.list-manage.com/subscribe/post?u=0952ca43ed2536d6717766b88&amp;id=6e96334109" class="validate" id="mc-embedded-subscribe-form" method="post" name="mc-embedded-subscribe-form" novalidate="" target="_blank">
+<input class="email" id="mce-EMAIL" name="EMAIL" placeholder="이메일 주소" required="" type="email" value="" papago-attr-id="1">
 <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups -->
-<div aria-hidden="true" style="position: absolute; left: -5000px;"><input name="b_0952ca43ed2536d6717766b88_6e96334109" tabindex="-1" type="text" value=""/></div>
-<input class="button" id="mc-embedded-subscribe" name="subscribe" type="submit" value="Sign me up!"/>
+<div aria-hidden="true" style="position: absolute; left: -5000px;"><input name="b_0952ca43ed2536d6717766b88_6e96334109" tabindex="-1" type="text" value=""></div>
+<input class="button" id="mc-embedded-subscribe" name="subscribe" type="submit" value="Sign me up!">
 </form>
 </div>
 <!--End mc_embed_signup -->
 </div>
 </div>
 <footer>
-Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE" target="_blank">© 2015 – 2021</a>
+Handcrafted by Robert Nystrom — <a href="https://github.com/munificent/craftinginterpreters/blob/master/LICENSE">© 2015 – 2021</a>
 </footer>
 </main>
 </article>
-</body>
-</html>
+
+
+<div id="papagoTooltip" margin="5" style="display: none;">
+        <h1 id="tooltipTitle">원문</h1>
+        <p id="tooltipText"></p>
+      </div>
+      </body></html>
